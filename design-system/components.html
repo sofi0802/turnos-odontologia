@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{marca} · Componentes (Revision 1)</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="tokens.css" />
+  <script src="brand.js"></script>
+  <style>
+    /* Componentes de referencia. Solo usan tokens de tokens.css. Datos 100% ficticios. */
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0; min-width: 320px; font-family: var(--ds-fuente); line-height: var(--ds-interlineado);
+      color: var(--ds-texto); background: var(--ds-fondo);
+    }
+    h1, h2, h3 { line-height: var(--ds-interlineado-titulo); margin: 0; }
+    h1 { font-size: var(--ds-texto-2xl); }
+    h2 { font-size: var(--ds-texto-xl); }
+    h3 { font-size: var(--ds-texto-lg); }
+    :focus-visible { outline: var(--ds-foco-ancho) solid var(--ds-foco-color); outline-offset: var(--ds-foco-separacion); }
+
+    /* --- Página de referencia --- */
+    .ref { max-width: var(--ds-ancho-maximo); margin: 0 auto; padding: var(--ds-espacio-3) var(--ds-espacio-2) var(--ds-espacio-5); }
+    .ref-intro { color: var(--ds-texto-suave); margin: var(--ds-espacio-1) 0 0; }
+    .ref-seccion { margin-top: var(--ds-espacio-5); }
+    .ref-seccion > h2 { padding-bottom: var(--ds-espacio-1); border-bottom: var(--ds-borde-ancho) solid var(--ds-borde); margin-bottom: var(--ds-espacio-3); }
+    .ref-sub { font-size: var(--ds-texto-sm); font-weight: var(--ds-peso-medio); color: var(--ds-texto-suave); text-transform: uppercase; letter-spacing: .04em; margin: var(--ds-espacio-3) 0 var(--ds-espacio-1); }
+    .fila { display: flex; flex-wrap: wrap; gap: var(--ds-espacio-1); align-items: center; }
+    .provisorio { display: inline-block; font-size: var(--ds-texto-xs); font-weight: var(--ds-peso-fuerte); color: var(--ds-alerta); background: var(--ds-alerta-fondo); border-radius: var(--ds-radio-pill); padding: 0 var(--ds-espacio-1); }
+
+    /* --- Muestras de color --- */
+    .muestras { display: grid; grid-template-columns: repeat(auto-fill, minmax(9rem, 1fr)); gap: var(--ds-espacio-1); }
+    .muestra { border: var(--ds-borde-ancho) solid var(--ds-borde); border-radius: var(--ds-radio); overflow: hidden; font-size: var(--ds-texto-xs); }
+    .muestra span { display: block; height: 3rem; }
+    .muestra p { margin: 0; padding: var(--ds-espacio-0) var(--ds-espacio-1); }
+    .muestra code { font-family: var(--ds-fuente-mono); color: var(--ds-texto-suave); }
+
+    /* --- Encabezado de la app --- */
+    .encabezado { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ds-espacio-1) var(--ds-espacio-3);
+      padding: var(--ds-espacio-1) var(--ds-espacio-2); background: var(--ds-fondo); border-bottom: var(--ds-borde-ancho) solid var(--ds-borde);
+      box-shadow: var(--ds-sombra-1); border-radius: var(--ds-radio-lg); }
+    .marca { display: flex; align-items: center; gap: var(--ds-espacio-1); font-weight: var(--ds-peso-fuerte); }
+    .marca img { height: 32px; }
+    .nav { display: flex; gap: var(--ds-espacio-0); order: 3; width: 100%; overflow-x: auto; }
+    .nav a { display: flex; align-items: center; min-height: var(--ds-alto-control); padding: 0 var(--ds-espacio-2);
+      color: var(--ds-texto-suave); text-decoration: none; font-weight: var(--ds-peso-medio); border-bottom: 3px solid transparent; white-space: nowrap; }
+    .nav a:hover { color: var(--ds-texto); }
+    .nav a[aria-current='page'] { color: var(--ds-acento-500); border-bottom-color: var(--ds-acento-500); }
+    .usuario { margin-left: auto; display: flex; align-items: center; gap: var(--ds-espacio-1); }
+    .avatar { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-size: var(--ds-texto-xs);
+      font-weight: var(--ds-peso-fuerte); color: var(--ds-acento-700); background: var(--ds-acento-100); }
+    .rol { font-size: var(--ds-texto-xs); color: var(--ds-texto-suave); }
+
+    /* --- Botones --- */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: var(--ds-espacio-1);
+      min-height: var(--ds-alto-control); padding: 0 var(--ds-espacio-2); font: inherit; font-weight: var(--ds-peso-medio);
+      color: var(--ds-texto); background: var(--ds-fondo); border: var(--ds-borde-ancho) solid var(--ds-borde-fuerte);
+      border-radius: var(--ds-radio); cursor: pointer; text-decoration: none;
+      transition: background var(--ds-duracion-rapida) var(--ds-curva), border-color var(--ds-duracion-rapida) var(--ds-curva); }
+    .btn:hover { background: var(--ds-superficie); }
+    .btn-principal { color: var(--ds-acento-texto); background: var(--ds-acento-500); border-color: var(--ds-acento-500); font-weight: var(--ds-peso-fuerte); }
+    .btn-principal:hover { background: var(--ds-acento-600); border-color: var(--ds-acento-600); }
+    .btn-principal:active { background: var(--ds-acento-700); }
+    .btn-fantasma { border-color: transparent; background: transparent; color: var(--ds-acento-500); }
+    .btn-fantasma:hover { background: var(--ds-acento-50); }
+    .btn-peligro { color: var(--ds-error); border-color: var(--ds-error); }
+    .btn-peligro:hover { background: var(--ds-error-fondo); }
+    .btn:disabled { color: var(--ds-texto-deshabilitado); background: var(--ds-superficie); border-color: var(--ds-borde); cursor: not-allowed; }
+    .btn-chico { min-height: 36px; padding: 0 var(--ds-espacio-1); font-size: var(--ds-texto-sm); }
+    .segmentado { display: inline-flex; border: var(--ds-borde-ancho) solid var(--ds-borde-fuerte); border-radius: var(--ds-radio); overflow: hidden; }
+    .segmentado button { min-height: var(--ds-alto-control); padding: 0 var(--ds-espacio-2); font: inherit; font-weight: var(--ds-peso-medio);
+      border: 0; background: var(--ds-fondo); color: var(--ds-texto-suave); cursor: pointer; }
+    .segmentado button + button { border-left: var(--ds-borde-ancho) solid var(--ds-borde-fuerte); }
+    .segmentado button[aria-pressed='true'] { background: var(--ds-acento-500); color: var(--ds-acento-texto); }
+    .flechas { display: inline-flex; gap: var(--ds-espacio-0); }
+    .icono { width: var(--ds-alto-control); padding: 0; }
+
+    /* --- Campos --- */
+    .formulario { display: grid; gap: var(--ds-espacio-2); max-width: 28rem; }
+    .campo { display: grid; gap: var(--ds-espacio-0); }
+    .campo label { font-weight: var(--ds-peso-medio); }
+    .ayuda { font-size: var(--ds-texto-sm); color: var(--ds-texto-suave); margin: 0; }
+    .control { min-height: var(--ds-alto-control); width: 100%; padding: 0 var(--ds-espacio-1); font: inherit; font-size: var(--ds-texto-base);
+      color: var(--ds-texto); background: var(--ds-fondo); border: var(--ds-borde-ancho) solid var(--ds-borde-fuerte); border-radius: var(--ds-radio); }
+    .control:hover { border-color: var(--ds-texto-suave); }
+    .control[aria-invalid='true'] { border-color: var(--ds-error); border-width: 2px; }
+    .control:disabled { background: var(--ds-superficie); color: var(--ds-texto-deshabilitado); }
+    .error-campo { font-size: var(--ds-texto-sm); color: var(--ds-error); margin: 0; font-weight: var(--ds-peso-medio); }
+    .check { display: flex; gap: var(--ds-espacio-1); align-items: flex-start; }
+    .check input { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--ds-acento-500); }
+
+    /* --- Avisos --- */
+    .aviso { display: flex; gap: var(--ds-espacio-1); padding: var(--ds-espacio-1) var(--ds-espacio-2); border-radius: var(--ds-radio); border-left: 4px solid; margin: 0 0 var(--ds-espacio-1); }
+    .aviso strong { display: block; }
+    .aviso-error { color: var(--ds-error); background: var(--ds-error-fondo); }
+    .aviso-ok { color: var(--ds-ok); background: var(--ds-ok-fondo); }
+    .aviso-alerta { color: var(--ds-alerta); background: var(--ds-alerta-fondo); }
+    .aviso-info { color: var(--ds-info); background: var(--ds-info-fondo); }
+
+    /* --- Etiquetas de estado --- */
+    .estado { display: inline-flex; align-items: center; gap: 6px; padding: 2px var(--ds-espacio-1); font-size: var(--ds-texto-xs);
+      font-weight: var(--ds-peso-fuerte); border-radius: var(--ds-radio-pill); white-space: nowrap; }
+    .estado::before { content: ''; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+    .e-reservado { color: var(--ds-turno-reservado); background: var(--ds-turno-reservado-fondo); }
+    .e-confirmado { color: var(--ds-turno-confirmado); background: var(--ds-turno-confirmado-fondo); }
+    .e-sobreturno { color: var(--ds-turno-sobreturno); background: var(--ds-turno-sobreturno-fondo); }
+    .e-ausente { color: var(--ds-turno-ausente); background: var(--ds-turno-ausente-fondo); }
+    .e-atendido { color: var(--ds-turno-atendido); background: var(--ds-turno-atendido-fondo); }
+    .e-cancelado { color: var(--ds-turno-cancelado); background: var(--ds-turno-cancelado-fondo); }
+
+    /* --- Agenda del día --- */
+    .agenda { border: var(--ds-borde-ancho) solid var(--ds-borde); border-radius: var(--ds-radio-lg); overflow: hidden; background: var(--ds-fondo); }
+    .agenda-barra { display: flex; flex-wrap: wrap; gap: var(--ds-espacio-1); align-items: center; padding: var(--ds-espacio-2); background: var(--ds-superficie); border-bottom: var(--ds-borde-ancho) solid var(--ds-borde); }
+    .agenda-fecha { font-size: var(--ds-texto-lg); font-weight: var(--ds-peso-fuerte); flex-basis: 100%; order: -1; }
+    .agenda-filtros { display: grid; grid-template-columns: 1fr 1fr; gap: var(--ds-espacio-1); width: 100%; }
+    .agenda-filtros .btn-principal { grid-column: 1 / -1; }
+    .resumen-dia { display: flex; flex-wrap: wrap; gap: var(--ds-espacio-1); padding: var(--ds-espacio-1) var(--ds-espacio-2); font-size: var(--ds-texto-sm); color: var(--ds-texto-suave); border-bottom: var(--ds-borde-ancho) solid var(--ds-borde); }
+    .resumen-dia b { color: var(--ds-texto); }
+    .franjas { list-style: none; margin: 0; padding: 0; }
+    .franja { display: grid; grid-template-columns: 3.5rem 1fr; gap: var(--ds-espacio-1); padding: var(--ds-espacio-1) var(--ds-espacio-2); border-bottom: var(--ds-borde-ancho) solid var(--ds-superficie-2); }
+    .franja:last-child { border-bottom: 0; }
+    .hora { font-family: var(--ds-fuente-mono); font-size: var(--ds-texto-sm); color: var(--ds-texto-suave); padding-top: var(--ds-espacio-1); }
+    .turno { position: relative; padding: var(--ds-espacio-1) var(--ds-espacio-2) var(--ds-espacio-1) calc(var(--ds-espacio-2) + 2px);
+      background: var(--ds-fondo); border: var(--ds-borde-ancho) solid var(--ds-borde); border-radius: var(--ds-radio); box-shadow: var(--ds-sombra-1); }
+    .turno::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; border-radius: var(--ds-radio) 0 0 var(--ds-radio); background: var(--ds-turno-reservado); }
+    .turno.confirmado::before { background: var(--ds-turno-confirmado); }
+    .turno.sobreturno { background: var(--ds-turno-sobreturno-fondo); }
+    .turno.sobreturno::before { background: var(--ds-turno-sobreturno); }
+    .turno.ausente::before { background: var(--ds-turno-ausente); }
+    .turno.ausente .turno-paciente { text-decoration: line-through; color: var(--ds-texto-suave); }
+    .turno + .turno { margin-top: var(--ds-espacio-1); }
+    .turno-cabecera { display: flex; flex-wrap: wrap; gap: var(--ds-espacio-0) var(--ds-espacio-1); align-items: center; justify-content: space-between; }
+    .turno-paciente { font-weight: var(--ds-peso-fuerte); }
+    .turno-meta { margin: 2px 0 0; font-size: var(--ds-texto-sm); color: var(--ds-texto-suave); }
+    .turno-meta span + span::before { content: ' · '; }
+    .turno-acciones { display: flex; flex-wrap: wrap; gap: var(--ds-espacio-0); margin-top: var(--ds-espacio-1); }
+    .hueco { display: flex; align-items: center; min-height: 40px; padding: 0 var(--ds-espacio-2); font-size: var(--ds-texto-sm); color: var(--ds-texto-suave);
+      border: 1px dashed var(--ds-borde-fuerte); border-radius: var(--ds-radio); }
+    .vacio { text-align: center; padding: var(--ds-espacio-5) var(--ds-espacio-2); }
+    .vacio p { color: var(--ds-texto-suave); margin: var(--ds-espacio-1) auto var(--ds-espacio-2); max-width: 26rem; }
+    .vacio-icono { width: 56px; height: 56px; margin: 0 auto; border-radius: 50%; display: grid; place-items: center; background: var(--ds-acento-50); color: var(--ds-acento-500); font-size: 1.5rem; }
+
+    /* --- Reserva del paciente (móvil) --- */
+    .celular { max-width: 390px; border: var(--ds-borde-ancho) solid var(--ds-borde); border-radius: var(--ds-radio-lg); padding: var(--ds-espacio-2); background: var(--ds-fondo); box-shadow: var(--ds-sombra-2); }
+    .pasos { display: flex; gap: var(--ds-espacio-0); list-style: none; margin: 0 0 var(--ds-espacio-2); padding: 0; }
+    .pasos li { flex: 1; height: 4px; border-radius: var(--ds-radio-pill); background: var(--ds-superficie-2); }
+    .pasos li.hecho { background: var(--ds-acento-500); }
+    .chips { display: grid; grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr)); gap: var(--ds-espacio-1); margin: var(--ds-espacio-1) 0 var(--ds-espacio-2); }
+    .chip { min-height: var(--ds-alto-control); font: inherit; font-family: var(--ds-fuente-mono); font-weight: var(--ds-peso-medio); color: var(--ds-acento-700);
+      background: var(--ds-fondo); border: var(--ds-borde-ancho) solid var(--ds-acento-100); border-radius: var(--ds-radio); cursor: pointer; }
+    .chip:hover { background: var(--ds-acento-50); border-color: var(--ds-acento-500); }
+    .chip[aria-pressed='true'] { background: var(--ds-acento-500); color: var(--ds-acento-texto); border-color: var(--ds-acento-500); }
+    .chip:disabled { color: var(--ds-texto-deshabilitado); background: var(--ds-superficie); border-color: var(--ds-borde); text-decoration: line-through; cursor: not-allowed; }
+    .opciones { display: grid; gap: var(--ds-espacio-1); }
+    .opcion { display: flex; gap: var(--ds-espacio-1); align-items: center; padding: var(--ds-espacio-1) var(--ds-espacio-2); min-height: 56px;
+      border: var(--ds-borde-ancho) solid var(--ds-borde-fuerte); border-radius: var(--ds-radio); cursor: pointer; }
+    .opcion:has(input:checked) { border-color: var(--ds-acento-500); background: var(--ds-acento-50); box-shadow: inset 0 0 0 1px var(--ds-acento-500); }
+    .opcion input { accent-color: var(--ds-acento-500); width: 20px; height: 20px; }
+    .opcion small { display: block; color: var(--ds-texto-suave); }
+    .comprobante { text-align: center; padding: var(--ds-espacio-3) var(--ds-espacio-2); border-radius: var(--ds-radio-lg); background: var(--ds-ok-fondo); }
+    .comprobante .tilde { width: 48px; height: 48px; margin: 0 auto var(--ds-espacio-1); border-radius: 50%; display: grid; place-items: center; background: var(--ds-ok); color: #fff; font-size: 1.5rem; }
+    .numero-reserva { display: inline-block; margin: var(--ds-espacio-1) 0; padding: var(--ds-espacio-1) var(--ds-espacio-2); font-family: var(--ds-fuente-mono);
+      font-size: var(--ds-texto-xl); font-weight: var(--ds-peso-fuerte); letter-spacing: .12em; background: var(--ds-fondo); border: 2px dashed var(--ds-ok); border-radius: var(--ds-radio); }
+    .detalle-lista { display: grid; grid-template-columns: auto 1fr; gap: var(--ds-espacio-0) var(--ds-espacio-2); text-align: left; margin: var(--ds-espacio-2) 0 0; font-size: var(--ds-texto-sm); }
+    .detalle-lista dt { color: var(--ds-texto-suave); }
+    .detalle-lista dd { margin: 0; font-weight: var(--ds-peso-medio); }
+
+    /* --- Diálogo (mostrado estático) --- */
+    .dialogo-demo { position: relative; padding: var(--ds-espacio-4) var(--ds-espacio-2); background: var(--ds-velo); border-radius: var(--ds-radio-lg); }
+    .dialogo { max-width: 30rem; margin: 0 auto; padding: var(--ds-espacio-3); background: var(--ds-fondo); border-radius: var(--ds-radio-lg); box-shadow: var(--ds-sombra-3); }
+    .dialogo p { color: var(--ds-texto-suave); }
+    .dialogo-acciones { display: flex; flex-wrap: wrap-reverse; justify-content: flex-end; gap: var(--ds-espacio-1); margin-top: var(--ds-espacio-3); }
+
+    .dos-columnas { display: grid; gap: var(--ds-espacio-3); }
+
+    @media (min-width: 768px) {
+      .ref { padding: var(--ds-espacio-4) var(--ds-espacio-3) var(--ds-espacio-5); }
+      .nav { order: 0; width: auto; }
+      .agenda-fecha { flex-basis: auto; order: 0; margin-left: auto; }
+      .agenda-filtros { display: flex; align-items: flex-end; }
+      .agenda-filtros .campo { flex: 0 1 14rem; }
+      .agenda-filtros .btn-principal { margin-left: auto; }
+      .franja { grid-template-columns: 4.5rem 1fr; }
+      .turno-fila { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--ds-espacio-1); }
+      .turno-fila .turno + .turno { margin-top: 0; }
+      .dos-columnas { grid-template-columns: 1fr 1fr; align-items: start; }
+    }
+  </style>
+</head>
+<body>
+<main class="ref">
+  <h1><span data-brand-name>Turnos odontología</span> · Design system</h1>
+  <p class="ref-intro">Revision 1 · Aprobado el 2026-11-22. Componentes de referencia para la agenda del personal y la reserva del paciente. Todos los datos son ficticios.
+    <span class="provisorio">Nombre y logo (TBD)</span></p>
+
+  <!-- 1. Fundamentos -->
+  <section class="ref-seccion" aria-labelledby="s-color">
+    <h2 id="s-color">Color</h2>
+    <p class="ref-sub">Marca y neutros</p>
+    <div class="muestras">
+      <div class="muestra"><span style="background:var(--ds-acento-500)"></span><p>Acento <code>#0b6e8a</code></p></div>
+      <div class="muestra"><span style="background:var(--ds-acento-600)"></span><p>Acento hover <code>#095b72</code></p></div>
+      <div class="muestra"><span style="background:var(--ds-acento-50)"></span><p>Acento suave <code>#e8f4f7</code></p></div>
+      <div class="muestra"><span style="background:var(--ds-texto)"></span><p>Texto <code>#1d2a33</code></p></div>
+      <div class="muestra"><span style="background:var(--ds-texto-suave)"></span><p>Texto suave <code>#4c5d69</code></p></div>
+      <div class="muestra"><span style="background:var(--ds-superficie)"></span><p>Superficie <code>#f3f6f8</code></p></div>
+      <div class="muestra"><span style="background:var(--ds-borde-fuerte)"></span><p>Borde <code>#b3c1cb</code></p></div>
+    </div>
+    <p class="ref-sub">Estado del turno (color + texto, nunca solo color)</p>
+    <div class="fila">
+      <span class="estado e-reservado">Reservado</span>
+      <span class="estado e-confirmado">Confirmado</span>
+      <span class="estado e-sobreturno">Sobreturno</span>
+      <span class="estado e-ausente">Ausente</span>
+      <span class="estado e-atendido">Atendido</span>
+      <span class="estado e-cancelado">Cancelado</span>
+    </div>
+    <p class="ref-sub">Tipografía (fuente del sistema)</p>
+    <p style="font-size:var(--ds-texto-2xl);font-weight:700;margin:0;line-height:1.2">Agenda — 32</p>
+    <p style="font-size:var(--ds-texto-xl);font-weight:700;margin:0;line-height:1.2">Lunes 23 de noviembre — 24</p>
+    <p style="font-size:var(--ds-texto-lg);font-weight:600;margin:0">Título de tarjeta — 18</p>
+    <p style="margin:0">Cuerpo de texto y campos — 16</p>
+    <p class="ayuda">Ayudas y errores de campo — 14</p>
+  </section>
+
+  <!-- 2. Encabezado -->
+  <section class="ref-seccion" aria-labelledby="s-enc">
+    <h2 id="s-enc">Encabezado y navegación</h2>
+    <header class="encabezado">
+      <a class="marca" href="#"><img src="assets/logo.svg" alt="Logo provisorio" /></a>
+      <nav class="nav" aria-label="Principal">
+        <a href="#" aria-current="page">Agenda</a>
+        <a href="#">Pacientes</a>
+        <a href="#">Reserva</a>
+        <a href="#">Configuración</a>
+      </nav>
+      <div class="usuario">
+        <span class="avatar" aria-hidden="true">RE</span>
+        <span><span style="display:block;font-weight:600;line-height:1.2">recepcion</span><span class="rol">Recepcionista</span></span>
+        <button class="btn btn-fantasma btn-chico" type="button">Salir</button>
+      </div>
+    </header>
+  </section>
+
+  <!-- 3. Botones -->
+  <section class="ref-seccion" aria-labelledby="s-btn">
+    <h2 id="s-btn">Botones</h2>
+    <div class="fila">
+      <button class="btn btn-principal" type="button">Nuevo turno</button>
+      <button class="btn" type="button">Secundario</button>
+      <button class="btn btn-fantasma" type="button">Fantasma</button>
+      <button class="btn btn-peligro" type="button">Cancelar turno</button>
+      <button class="btn" type="button" disabled>Deshabilitado</button>
+    </div>
+    <p class="ref-sub">Selector de vista y navegación de fechas</p>
+    <div class="fila">
+      <div class="segmentado" role="group" aria-label="Vista">
+        <button type="button" aria-pressed="true">Día</button>
+        <button type="button" aria-pressed="false">Semana</button>
+      </div>
+      <div class="flechas">
+        <button class="btn icono" type="button" aria-label="Día anterior">‹</button>
+        <button class="btn" type="button">Hoy</button>
+        <button class="btn icono" type="button" aria-label="Día siguiente">›</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. Formularios y avisos -->
+  <section class="ref-seccion" aria-labelledby="s-form">
+    <h2 id="s-form">Formularios y avisos</h2>
+    <div class="dos-columnas">
+      <form class="formulario" onsubmit="return false">
+        <div class="campo">
+          <label for="f-pac">Paciente</label>
+          <input class="control" id="f-pac" value="Carla Ficticia" />
+        </div>
+        <div class="campo">
+          <label for="f-pre">Prestación</label>
+          <select class="control" id="f-pre"><option>Consulta (30 min)</option><option>Limpieza (45 min)</option></select>
+        </div>
+        <div class="campo">
+          <label for="f-hora">Inicio</label>
+          <input class="control" id="f-hora" value="10:30" aria-invalid="true" aria-describedby="f-hora-e" />
+          <p class="error-campo" id="f-hora-e">Falta el margen de 10 minutos con el turno de las 10:00.</p>
+        </div>
+        <div class="campo">
+          <label for="f-dni">DNI</label>
+          <input class="control" id="f-dni" inputmode="numeric" placeholder="Ej.: 30111222" aria-describedby="f-dni-a" />
+          <p class="ayuda" id="f-dni-a">Sin puntos.</p>
+        </div>
+        <label class="check"><input type="checkbox" checked /> <span>Acepto recibir recordatorios por WhatsApp o email</span></label>
+      </form>
+      <div>
+        <div class="aviso aviso-error" role="alert"><div><strong>El sillón está ocupado</strong>El Sillón 1 ya tiene un turno de 10:00 a 10:30. Elegí otro sillón u horario.</div></div>
+        <div class="aviso aviso-ok" role="status"><div><strong>Turno creado</strong>Lunes 23/11 a las 10:40 con Dra. Ana Ejemplo.</div></div>
+        <div class="aviso aviso-alerta"><div><strong>Faltan menos de 24 h</strong>Para cancelar, comunicate con el consultorio.</div></div>
+        <div class="aviso aviso-info"><div><strong>Dr. Bruno Prueba ausente</strong>Hay 3 turnos para reasignar el martes 24/11.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. Agenda -->
+  <section class="ref-seccion" aria-labelledby="s-ag">
+    <h2 id="s-ag">Agenda del día (personal)</h2>
+    <div class="agenda">
+      <div class="agenda-barra">
+        <div class="segmentado" role="group" aria-label="Vista">
+          <button type="button" aria-pressed="true">Día</button>
+          <button type="button" aria-pressed="false">Semana</button>
+        </div>
+        <div class="flechas">
+          <button class="btn icono" type="button" aria-label="Día anterior">‹</button>
+          <button class="btn" type="button">Hoy</button>
+          <button class="btn icono" type="button" aria-label="Día siguiente">›</button>
+        </div>
+        <p class="agenda-fecha" style="margin:0">Lunes 23 de noviembre</p>
+        <div class="agenda-filtros">
+          <div class="campo"><label for="a-pro">Profesional</label><select class="control" id="a-pro"><option>Todos</option></select></div>
+          <div class="campo"><label for="a-sil">Sillón</label><select class="control" id="a-sil"><option>Todos</option></select></div>
+          <button class="btn btn-principal" type="button">+ Nuevo turno</button>
+        </div>
+      </div>
+      <div class="resumen-dia"><span><b>5</b> turnos</span><span><b>2</b> confirmados</span><span><b>1</b> sobreturno</span><span><b>1</b> ausente</span></div>
+      <ol class="franjas">
+        <li class="franja"><span class="hora">09:00</span>
+          <div class="turno-fila">
+            <article class="turno confirmado">
+              <div class="turno-cabecera"><span class="turno-paciente">Carla Ficticia</span><span class="estado e-confirmado">Confirmado</span></div>
+              <p class="turno-meta"><span>09:00–09:30</span><span>Consulta</span><span>Dra. Ana Ejemplo</span><span>Sillón 1</span></p>
+            </article>
+            <article class="turno">
+              <div class="turno-cabecera"><span class="turno-paciente">Diego Demo</span><span class="estado e-reservado">Reservado</span></div>
+              <p class="turno-meta"><span>09:00–09:45</span><span>Limpieza</span><span>Dr. Bruno Prueba</span><span>Sillón 2</span></p>
+            </article>
+          </div>
+        </li>
+        <li class="franja"><span class="hora">10:00</span>
+          <div>
+            <article class="turno ausente">
+              <div class="turno-cabecera"><span class="turno-paciente">Elena Ejemplar</span><span class="estado e-ausente">Ausente</span></div>
+              <p class="turno-meta"><span>10:00–10:30</span><span>Consulta</span><span>Dra. Ana Ejemplo</span><span>Sillón 1</span></p>
+            </article>
+          </div>
+        </li>
+        <li class="franja"><span class="hora">10:40</span>
+          <div>
+            <article class="turno sobreturno">
+              <div class="turno-cabecera"><span class="turno-paciente">Fabián Ficcional</span><span class="estado e-sobreturno">Sobreturno</span></div>
+              <p class="turno-meta"><span>10:40–11:10</span><span>Urgencia</span><span>Dra. Ana Ejemplo</span><span>Sillón 2</span></p>
+              <p class="turno-meta">Motivo: dolor agudo</p>
+              <div class="turno-acciones">
+                <button class="btn btn-chico" type="button">Reprogramar</button>
+                <button class="btn btn-chico btn-peligro" type="button">Cancelar</button>
+              </div>
+            </article>
+          </div>
+        </li>
+        <li class="franja"><span class="hora">11:30</span><div class="hueco">Libre hasta las 13:00</div></li>
+      </ol>
+    </div>
+
+    <p class="ref-sub">Día sin turnos</p>
+    <div class="agenda">
+      <div class="vacio">
+        <div class="vacio-icono" aria-hidden="true">📅</div>
+        <h3 style="margin-top:var(--ds-espacio-2)">No hay turnos para el domingo 22/11</h3>
+        <p>Ningún profesional trabaja este día. Pasá al próximo día hábil o cargá un sobreturno si es una urgencia.</p>
+        <div class="fila" style="justify-content:center">
+          <button class="btn" type="button">Ir al lunes 23/11</button>
+          <button class="btn btn-principal" type="button">+ Nuevo turno</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Reserva del paciente -->
+  <section class="ref-seccion" aria-labelledby="s-res">
+    <h2 id="s-res">Reserva online (paciente, móvil)</h2>
+    <div class="dos-columnas">
+      <div class="celular">
+        <ol class="pasos" aria-label="Paso 2 de 3"><li class="hecho"></li><li class="hecho"></li><li></li></ol>
+        <h3>Elegí un horario</h3>
+        <p class="ayuda">Consulta · 30 minutos · lunes 23/11</p>
+        <p class="ref-sub" style="margin-top:var(--ds-espacio-2)">Profesional</p>
+        <div class="opciones">
+          <label class="opcion"><input type="radio" name="pro" checked /> <span>Sin preferencia<small>Te asignamos quien esté libre</small></span></label>
+          <label class="opcion"><input type="radio" name="pro" /> <span>Dra. Ana Ejemplo<small>Mañanas</small></span></label>
+        </div>
+        <p class="ref-sub" style="margin-top:var(--ds-espacio-2)">Mañana</p>
+        <div class="chips">
+          <button class="chip" type="button">09:00</button>
+          <button class="chip" type="button" disabled>09:40</button>
+          <button class="chip" type="button" aria-pressed="true">10:20</button>
+          <button class="chip" type="button">11:00</button>
+          <button class="chip" type="button">11:40</button>
+          <button class="chip" type="button">12:20</button>
+        </div>
+        <button class="btn btn-principal" type="button" style="width:100%">Continuar</button>
+      </div>
+      <div class="celular">
+        <div class="comprobante">
+          <div class="tilde" aria-hidden="true">✓</div>
+          <h3>¡Turno reservado!</h3>
+          <p class="ayuda">Guardá tu número de reserva: lo necesitás para cancelar o reprogramar.</p>
+          <div class="numero-reserva">TRN-4F7K</div>
+          <dl class="detalle-lista">
+            <dt>Día</dt><dd>Lunes 23/11</dd>
+            <dt>Hora</dt><dd>10:20</dd>
+            <dt>Profesional</dt><dd>Dra. Ana Ejemplo</dd>
+            <dt>Dirección</dt><dd>Av. Ficticia 123</dd>
+          </dl>
+        </div>
+        <div class="fila" style="margin-top:var(--ds-espacio-2)">
+          <button class="btn btn-principal" type="button" style="flex:1">Ver mis turnos</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. Diálogo -->
+  <section class="ref-seccion" aria-labelledby="s-dlg">
+    <h2 id="s-dlg">Diálogo de confirmación</h2>
+    <div class="dialogo-demo">
+      <div class="dialogo" role="dialog" aria-modal="true" aria-labelledby="dlg-t">
+        <h3 id="dlg-t">¿Cancelar el turno?</h3>
+        <p>Carla Ficticia · lunes 23/11, 09:00 · Dra. Ana Ejemplo. El horario queda libre para otra reserva y se avisa a la paciente.</p>
+        <div class="dialogo-acciones">
+          <button class="btn" type="button">Volver</button>
+          <button class="btn btn-peligro" type="button">Sí, cancelar turno</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+</body>
+</html>
