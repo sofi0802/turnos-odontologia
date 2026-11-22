@@ -12,15 +12,19 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 /**
- * Escenarios de "Mensaje sin datos de salud" del spec {@code notificaciones-recordatorios} (C-11, RN-NO-01, regla
- * dura 6). El mensaje lleva solo fecha, hora, consultorio y link: ni el nombre del paciente ni el del profesional.
- * El momento del turno es el 2026-12-02 a las 07:30 en Buenos Aires (10:30 UTC).
+ * Escenarios de "Mensaje sin datos de salud" del spec {@code notificaciones-recordatorios} (C-11, RN-NO-01, regla dura
+ * 6) y plantillas de los avisos de la reserva online. Los mensajes llevan solo fecha, hora, consultorio y links:
+ * ni nombres, ni prestación, ni motivo, ni número de reserva, ni DNI. El turno es el 2026-12-02 a las 07:30 en Buenos
+ * Aires (10:30 UTC).
  */
 class MensajeRecordatorioTest {
 
     private static final Instant SIETE_Y_MEDIA = Instant.parse("2026-12-02T10:30:00Z");
     private static final Consultorio CONSULTORIO = new Consultorio("Clínica Ejemplo", "Calle Ficticia 123");
-    private static final String LINK = "https://turnos.example.test/confirmar/abc123";
+    private static final Enlaces ENLACES = Enlaces.de("https://turnos.example.test");
+    private static final String CONFIRMAR = "https://turnos.example.test/confirmar/abc123";
+    private static final String CANCELAR = "https://turnos.example.test/mis-turnos/cancelar";
+    private static final String REPROGRAMAR = "https://turnos.example.test/mis-turnos/reprogramar";
 
     @Test
     @DisplayName("Contenido del recordatorio")
@@ -30,10 +34,12 @@ class MensajeRecordatorioTest {
         DatosDelTurno turno = new DatosDelTurno(SIETE_Y_MEDIA);
 
         // WHEN se arma el recordatorio
-        String texto = MensajeRecordatorio.recordatorio(turno, CONSULTORIO, LINK).texto();
+        String texto = MensajeRecordatorio.recordatorio(turno, CONSULTORIO, ENLACES, "abc123").texto();
 
-        // THEN el mensaje contiene la fecha, la hora, el consultorio, su dirección y el link de confirmar
-        assertThat(texto).contains("02/12/2026", "07:30", "Clínica Ejemplo", "Calle Ficticia 123", LINK);
+        // THEN el mensaje contiene la fecha, la hora, el consultorio, su dirección y los links de confirmar,
+        // cancelar y reprogramar
+        assertThat(texto).contains("02/12/2026", "07:30", "Clínica Ejemplo", "Calle Ficticia 123", CONFIRMAR,
+                CANCELAR, REPROGRAMAR);
         // AND no contiene "Consulta" ni ningún otro nombre de prestación
         assertThat(texto).doesNotContain("Consulta ");
         // AND no contiene el nombre de "Paciente Uno" ni el de la Dra. A
@@ -49,14 +55,15 @@ class MensajeRecordatorioTest {
                 new ContactoPaciente("paciente.uno@example.com", null, false, true));
 
         // WHEN se arma el recordatorio
-        String texto = MensajeRecordatorio.recordatorio(sobreturno.datosDelTurno(), CONSULTORIO, LINK).texto();
+        String texto = MensajeRecordatorio.recordatorio(sobreturno.datosDelTurno(), CONSULTORIO, ENLACES, "abc123")
+                .texto();
 
         // THEN el mensaje no contiene el motivo
         assertThat(texto).doesNotContain(motivo);
     }
 
     @Test
-    void ningunRegistroDeLecturaNiPlantillaTieneCamposDeNombreNiDeSalud() throws Exception {
+    void ningunRegistroDeLecturaNiPlantillaTieneCamposDeNombreNiDeSaludNiDeCredenciales() throws Exception {
         for (Class<? extends Record> tipo : List.of(DatosDelTurno.class, TurnoARecordar.class,
                 ContactoPaciente.class)) {
             assertThat(Arrays.stream(tipo.getRecordComponents()).map(RecordComponent::getName))
@@ -68,10 +75,14 @@ class MensajeRecordatorioTest {
                                 || minuscula.contains("clinic") || minuscula.contains("profesional");
                     });
         }
-        // las plantillas solo reciben cuatro datos (reasignación) o cinco (recordatorio): fecha, hora, consultorio,
-        // dirección y, en el recordatorio, el link
-        assertThat(placeholders(MensajeRecordatorio.class.getDeclaredField("PLANTILLA_RECORDATORIO"))).isEqualTo(5);
-        assertThat(placeholders(MensajeRecordatorio.class.getDeclaredField("PLANTILLA_REASIGNACION"))).isEqualTo(4);
+        // los links se arman solo con la dirección base y las rutas: nada del turno ni del paciente
+        assertThat(Arrays.stream(Enlaces.class.getRecordComponents()).map(RecordComponent::getName))
+                .containsExactly("baseUrl", "rutaCancelar", "rutaReprogramar");
+        // las plantillas solo reciben datos del consultorio, fecha, hora y links
+        assertThat(placeholders("PLANTILLA_RECORDATORIO")).isEqualTo(7);
+        assertThat(placeholders("PLANTILLA_CONFIRMACION")).isEqualTo(6);
+        assertThat(placeholders("PLANTILLA_CANCELACION")).isEqualTo(4);
+        assertThat(placeholders("PLANTILLA_REASIGNACION")).isEqualTo(4);
     }
 
     @Test
@@ -79,7 +90,7 @@ class MensajeRecordatorioTest {
         // 2026-12-03T01:30Z es el 2 de diciembre a las 22:30 en Buenos Aires (UTC-3), no el 3
         DatosDelTurno nocturno = new DatosDelTurno(Instant.parse("2026-12-03T01:30:00Z"));
 
-        assertThat(MensajeRecordatorio.recordatorio(nocturno, CONSULTORIO, LINK).texto())
+        assertThat(MensajeRecordatorio.recordatorio(nocturno, CONSULTORIO, ENLACES, "abc123").texto())
                 .contains("02/12/2026", "22:30");
     }
 
@@ -93,10 +104,27 @@ class MensajeRecordatorioTest {
                 .doesNotContain("http", "Paciente Uno", "Dr. B");
     }
 
-    private static int placeholders(Field plantilla) throws IllegalAccessException {
+    @Test
+    void elAvisoDeReservaTraeFechaHoraConsultorioYLosLinksDeCancelarYReprogramarSinConfirmar() {
+        String texto = MensajeRecordatorio.confirmacion(new DatosDelTurno(SIETE_Y_MEDIA), CONSULTORIO, ENLACES).texto();
+
+        assertThat(texto).contains("02/12/2026", "07:30", "Clínica Ejemplo", "Calle Ficticia 123", CANCELAR,
+                REPROGRAMAR);
+        assertThat(texto).doesNotContain("/confirmar/", "Paciente", "Dr", "Consulta ", "reserva N", "DNI");
+    }
+
+    @Test
+    void elAvisoDeCancelacionInformaFechaHoraYConsultorioSinLinks() {
+        String texto = MensajeRecordatorio.cancelacion(new DatosDelTurno(SIETE_Y_MEDIA), CONSULTORIO).texto();
+
+        assertThat(texto).contains("cancelado", "02/12/2026", "07:30", "Clínica Ejemplo", "Calle Ficticia 123")
+                .doesNotContain("http", "Paciente", "Dr", "Consulta ");
+    }
+
+    private static int placeholders(String nombre) throws ReflectiveOperationException {
+        Field plantilla = MensajeRecordatorio.class.getDeclaredField(nombre);
         assertThat(Modifier.isStatic(plantilla.getModifiers())).isTrue();
         plantilla.setAccessible(true);
-        String texto = (String) plantilla.get(null);
-        return texto.split("%s", -1).length - 1;
+        return ((String) plantilla.get(null)).split("%s", -1).length - 1;
     }
 }

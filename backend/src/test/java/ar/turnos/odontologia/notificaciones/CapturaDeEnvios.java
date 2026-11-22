@@ -1,5 +1,6 @@
 package ar.turnos.odontologia.notificaciones;
 
+import ar.turnos.odontologia.notificaciones.application.AvisarOperacionOnline;
 import ar.turnos.odontologia.notificaciones.application.AvisarReasignacion;
 import ar.turnos.odontologia.notificaciones.application.EnviarRecordatorios;
 import ar.turnos.odontologia.notificaciones.application.GeneradorToken;
@@ -8,6 +9,7 @@ import ar.turnos.odontologia.notificaciones.application.NotificacionRepository;
 import ar.turnos.odontologia.notificaciones.application.TurnosARecordar;
 import ar.turnos.odontologia.notificaciones.domain.Canal;
 import ar.turnos.odontologia.notificaciones.domain.Consultorio;
+import ar.turnos.odontologia.notificaciones.domain.Enlaces;
 import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,9 +93,17 @@ public class CapturaDeEnvios {
     @Primary
     EnviarRecordatorios enviarRecordatoriosCapturado(Registro registro, TurnosARecordar turnos,
             NotificacionRepository notificaciones, GeneradorToken tokens, Consultorio consultorio,
-            @Value("${app.notificaciones.base-url}") String baseUrl, Clock reloj) {
+            Enlaces enlaces, Clock reloj) {
         return new EnviarRecordatorios(turnos, notificaciones, List.of(registro.whatsapp, registro.email), tokens,
-                consultorio, baseUrl, reloj);
+                consultorio, enlaces, reloj);
+    }
+
+    @Bean
+    @Primary
+    AvisarOperacionOnline avisarOperacionOnlineCapturado(Registro registro, TurnosARecordar turnos,
+            NotificacionRepository notificaciones, Consultorio consultorio, Enlaces enlaces, Clock reloj) {
+        return new AvisarOperacionOnline(turnos, notificaciones, List.of(registro.whatsapp, registro.email),
+                consultorio, enlaces, reloj);
     }
 
     @Bean

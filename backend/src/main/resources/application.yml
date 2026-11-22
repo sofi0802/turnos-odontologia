@@ -20,6 +20,9 @@ app:
     activo: ${NOTIFICACIONES_ACTIVO:true}
     # Origen de los links del mensaje: el frontend, que hace el POST de confirmación (no el GET)
     base-url: ${NOTIFICACIONES_BASE_URL:http://localhost:5173}
+    # Pantallas del paciente a las que apuntan los links de cancelar y reprogramar (las define el frontend, C-12)
+    ruta-cancelar: ${NOTIFICACIONES_RUTA_CANCELAR:/mis-turnos/cancelar}
+    ruta-reprogramar: ${NOTIFICACIONES_RUTA_REPROGRAMAR:/mis-turnos/reprogramar}
     intervalo-ms: ${NOTIFICACIONES_INTERVALO_MS:300000}
   consultorio:
     nombre: ${CONSULTORIO_NOMBRE:Consultorio odontológico}

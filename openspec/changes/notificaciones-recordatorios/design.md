@@ -85,6 +85,18 @@ Un objeto de dominio (`MensajeRecordatorio`) arma el texto desde un registro que
 ### D11. Aviso de reasignación detrás de un caso de uso
 `AvisarReasignacion.ejecutar(turnoId)` crea una notificación `REASIGNACION` con las mismas reglas de consentimiento, canal y contenido, leyendo el turno ya reasignado. Sin token y sin link. El punto de entrada para otros módulos es `ServicioNotificaciones.avisarReasignacion(turnoId)`, que devuelve vacío si el paciente no puede recibir comunicaciones. Quien llama se define con C-07: la propuesta es que C-07 agregue la operación "reasignar turno afectado" y que, después de guardar el turno con su nueva fecha, hora y profesional, llame a este aviso a través de un puerto propio de `agenda`, implementado por un adaptador de `notificaciones`, para que `agenda` no dependa de `notificaciones/infrastructure`. Acá se prueba con un doble.
 
+### D12. Avisos de la reserva online: adaptador de `AvisoReservaOnline`
+`AvisoReservaOnlineNotificaciones` (en `notificaciones/infrastructure`) implementa el puerto de C-10 y delega en `ServicioNotificaciones`. Mapeo de tipos: `reservado` y `reprogramado` (turno nuevo) crean una notificación `CONFIRMACION`; `cancelado` crea una `CANCELACION`. No llevan token de confirmación (la reserva no es el recordatorio): `token_confirmacion` queda nulo.
+
+El envío es inmediato. `AvisoSeguro` (C-10) ya captura cualquier excepción del adaptador, y una falla del proveedor deja la fila `FALLIDA` para la política de reintentos de D6. Las plantillas nuevas llevan solo fecha, hora, consultorio y, según el tipo, los links.
+
+**Links**: se arman con `NOTIFICACIONES_BASE_URL` y dos rutas configurables (`NOTIFICACIONES_RUTA_CANCELAR`, por defecto `/mis-turnos/cancelar`, y `NOTIFICACIONES_RUTA_REPROGRAMAR`, por defecto `/mis-turnos/reprogramar`). **Nunca** incluyen el número de reserva, el DNI ni el id del turno: el número de reserva es la credencial para cancelar o reprogramar (RN-AG-07, `POST /api/v1/paciente/reservas/{numeroReserva}/cancelar`), así que el paciente inicia sesión y lo ingresa en la pantalla. Las rutas reales las define Enzo en C-12; el default es una propuesta.
+
+El recordatorio suma los mismos dos links, por RN-NO-01.
+
+*Alternativa descartada*: links con el número de reserva incrustado. Cualquiera que vea el mensaje podría cancelar el turno.
+*Alternativa descartada*: que `reserva` conozca a `notificaciones`. Rompería el desacople que C-07 y C-10 definieron.
+
 ## Risks / Trade-offs
 
 - **[Recordatorios a turnos anteriores a la auditoría]** Un turno sin registro `CREAR` se trata como reservado con tiempo, y podría recibir un recordatorio de más. → En la práctica no hay datos reales anteriores a V4 (solo seed ficticio); se documenta y se cubre con un test.
@@ -93,6 +105,7 @@ Un objeto de dominio (`MensajeRecordatorio`) arma el texto desde un registro que
 - **[Recordatorio de madrugada]** Un turno a las 07:30 se recuerda a las 07:30 del día anterior; uno a las 02:00 de madrugada no es realista. → Se acepta en v1; ventanas horarias de envío quedan para después.
 - **[Recuperación "al menos una vez"]** Una notificación `PENDIENTE` con más de 10 minutos se reprocesa, y cada intento de un recordatorio genera un token nuevo (el anterior no se guarda en claro y no se puede recuperar). Si el primer intento sí llegó a salir y solo se cortó el registro, el paciente puede recibir dos mensajes, y el link viejo queda invalidado: solo sirve el último. → Se prefiere repetir un mensaje a perder un recordatorio. Una excepción sobre una fila ya reclamada cuenta como intento fallido (tope de 3), así una fila "venenosa" no se reprocesa para siempre.
 - **[Plazo de 10 minutos]** Evita que dos corridas reclamen la misma fila solo si un envío termina antes de ese plazo. → El proveedor real (C-posterior a DD-04) debe tener un *timeout* de envío bien menor a 10 minutos; con los adaptadores simulados no hay espera.
+- **[Rutas de los links sin pantalla todavía]** Hasta que C-12 las implemente, los links de cancelar y reprogramar apuntan a una ruta que el frontend aún no tiene. → Son configurables y quedan anotadas para Enzo; no afectan al backend.
 - **[Cambio del `CHECK` compartido]** V6 y V7 tocan la misma restricción. → V7 es idempotente y el orden de merge queda escrito; un test de migración comprueba las siete acciones.
 
 ## Migration Plan

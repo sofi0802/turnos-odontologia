@@ -3,6 +3,7 @@ package ar.turnos.odontologia.notificaciones.application;
 import ar.turnos.odontologia.notificaciones.application.NotificacionRepository.Reintento;
 import ar.turnos.odontologia.notificaciones.domain.Canal;
 import ar.turnos.odontologia.notificaciones.domain.Consultorio;
+import ar.turnos.odontologia.notificaciones.domain.Enlaces;
 import ar.turnos.odontologia.notificaciones.domain.Notificacion;
 import ar.turnos.odontologia.notificaciones.domain.TipoNotificacion;
 import ar.turnos.odontologia.notificaciones.domain.TurnoARecordar;
@@ -32,13 +33,20 @@ public class EnviarRecordatorios {
     private final Despachador despachador;
     private final Clock reloj;
 
+    /** Con las rutas por defecto de los links de cancelar y reprogramar. */
     public EnviarRecordatorios(TurnosARecordar turnos, NotificacionRepository notificaciones,
                                List<NotificacionPort> canales, GeneradorToken tokens, Consultorio consultorio,
                                String baseUrl, Clock reloj) {
+        this(turnos, notificaciones, canales, tokens, consultorio, Enlaces.de(baseUrl), reloj);
+    }
+
+    public EnviarRecordatorios(TurnosARecordar turnos, NotificacionRepository notificaciones,
+                               List<NotificacionPort> canales, GeneradorToken tokens, Consultorio consultorio,
+                               Enlaces enlaces, Clock reloj) {
         this.turnos = Objects.requireNonNull(turnos, "turnos");
         this.notificaciones = Objects.requireNonNull(notificaciones, "notificaciones");
         this.tokens = Objects.requireNonNull(tokens, "tokens");
-        this.despachador = new Despachador(canales, consultorio, baseUrl);
+        this.despachador = new Despachador(canales, consultorio, enlaces);
         this.reloj = Objects.requireNonNull(reloj, "reloj");
     }
 
@@ -119,8 +127,7 @@ public class EnviarRecordatorios {
 
     private void procesarReclamada(Notificacion reclamada, TurnoARecordar turno, Instant ahora) {
         Notificacion notificacion = reclamada;
-        boolean sigueCorrespondiendo = turno.activo() && turno.inicio().isAfter(ahora)
-                && turno.contacto().consentimiento();
+        boolean sigueCorrespondiendo = sigueCorrespondiendo(reclamada, turno, ahora);
         if (!sigueCorrespondiendo) {
             notificaciones.actualizar(notificacion.abandonada());
             return;
@@ -141,6 +148,17 @@ public class EnviarRecordatorios {
             notificacion = notificacion.conHuellaDeToken(HuellaToken.de(token));
         }
         notificaciones.actualizar(despachador.despachar(notificacion, turno, token, ahora));
+    }
+
+    /**
+     * Si todavía tiene sentido avisar: hace falta el consentimiento y, salvo en una cancelación (el turno ya está
+     * cancelado cuando se avisa), que el turno siga activo y no haya empezado.
+     */
+    private static boolean sigueCorrespondiendo(Notificacion notificacion, TurnoARecordar turno, Instant ahora) {
+        if (!turno.contacto().consentimiento()) {
+            return false;
+        }
+        return notificacion.tipo() == TipoNotificacion.CANCELACION || (turno.activo() && turno.inicio().isAfter(ahora));
     }
 
     /**

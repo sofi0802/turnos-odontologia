@@ -583,31 +583,38 @@ class EnviarRecordatoriosTest {
     @Test
     @DisplayName("Un reintento que falla no corta el resto de la corrida")
     void unReintentoQueFallaNoCortaElRestoDeLaCorrida() {
-        // GIVEN una notificación con un tipo sin mensaje (siempre lanza) y otra FALLIDA sana, las dos vencidas
+        // GIVEN una notificación PENDIENTE vieja cuyo procesamiento lanza (el generador de tokens falla la primera
+        // vez) y otra FALLIDA sana, las dos vencidas
         hay(turno(1, en(2026, 12, 3, 10, 0), soloEmail()));
         hay(turno(2, TURNO, conWhatsappYEmail()));
-        repositorio.insertar(Notificacion.pendiente(1L, Canal.EMAIL, TipoNotificacion.CONFIRMACION,
-                ahora().minus(Duration.ofMinutes(30)), null));
+        repositorio.insertar(Notificacion.pendiente(1L, Canal.EMAIL, TipoNotificacion.RECORDATORIO,
+                ahora().minus(Duration.ofMinutes(30)), HuellaToken.de("t1")));
+        EnviarRecordatorios corrida = new EnviarRecordatorios(turnos, repositorio, List.of(whatsapp, email),
+                new TokensQueFallan(1), CONSULTORIO, BASE_URL, reloj);
         Notificacion sana = repositorio.insertar(Notificacion.pendiente(2L, Canal.WHATSAPP,
                 TipoNotificacion.RECORDATORIO, ahora().minus(Duration.ofMinutes(30)), HuellaToken.de("t2")));
         repositorio.actualizar(sana.fallida(ahora().minus(Duration.ofMinutes(10)), true));
 
         // WHEN corre la tarea
-        casoDeUso.ejecutar();
+        corrida.ejecutar();
 
-        // THEN la sana se envía aunque la primera lanzó
+        // THEN la sana se envía aunque la primera lanzó, y la que lanzó cuenta un intento fallido
         assertThat(whatsapp.enviados).hasSize(1);
         assertThat(repositorio.notificaciones.get(1).estado()).isEqualTo(EstadoNotificacion.ENVIADA);
-        assertThat(todoElLog()).contains("IllegalArgumentException").doesNotContain(DATO_PERSONAL);
+        assertThat(repositorio.notificaciones.get(0).estado()).isEqualTo(EstadoNotificacion.FALLIDA);
+        assertThat(repositorio.notificaciones.get(0).intentos()).isEqualTo(1);
+        assertThat(todoElLog()).contains("IllegalStateException").doesNotContain(DATO_PERSONAL);
     }
 
     @Test
     @DisplayName("Una fila que siempre falla termina FALLIDA tras 3 intentos de recuperación")
     void unaFilaQueSiempreFallaTerminaFallidaTras3IntentosDeRecuperacion() {
-        // GIVEN una notificación PENDIENTE vieja cuyo procesamiento siempre lanza (tipo sin mensaje)
+        // GIVEN una notificación PENDIENTE vieja cuyo procesamiento siempre lanza (el generador de tokens falla)
         hay(turno(1, en(2026, 12, 3, 10, 0), soloEmail()));
-        repositorio.insertar(Notificacion.pendiente(1L, Canal.EMAIL, TipoNotificacion.CONFIRMACION,
-                ahora().minus(Duration.ofMinutes(30)), null));
+        repositorio.insertar(Notificacion.pendiente(1L, Canal.EMAIL, TipoNotificacion.RECORDATORIO,
+                ahora().minus(Duration.ofMinutes(30)), HuellaToken.de("t1")));
+        EnviarRecordatorios casoDeUso = new EnviarRecordatorios(turnos, repositorio, List.of(whatsapp, email),
+                new TokensQueFallan(Integer.MAX_VALUE), CONSULTORIO, BASE_URL, reloj);
 
         // WHEN la tarea la intenta recuperar una y otra vez
         casoDeUso.ejecutar();                       // intento 1, espera 5 min
@@ -627,6 +634,24 @@ class EnviarRecordatoriosTest {
         casoDeUso.ejecutar();
         assertThat(repositorio.unica().intentos()).isEqualTo(3);
         assertThat(email.intentos).isZero();
+    }
+
+    /** Generador que lanza en sus primeras {@code fallas} llamadas, con un mensaje que parece un dato personal. */
+    private static final class TokensQueFallan implements GeneradorToken {
+        private int quedan;
+
+        TokensQueFallan(int fallas) {
+            this.quedan = fallas;
+        }
+
+        @Override
+        public String generar() {
+            if (quedan > 0) {
+                quedan--;
+                throw new IllegalStateException(DATO_PERSONAL);
+            }
+            return "token-ficticio-sano";
+        }
     }
 
     private void fallarTresVeces() {
