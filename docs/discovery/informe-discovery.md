@@ -7,7 +7,7 @@
 | **Materia** | Desarrollo de Software (Trabajo Global de Integración) |
 | **Integrantes** | Sofia Indovino (líder), Emanuel Mateo, Juan Sebastián Cabrera, Juan Cruz Grivel, Enzo Mellimaci |
 | **Fecha** | Relevamiento: 2026-11-19. Verificación manual: 2026-11-20 y 2026-11-21 |
-| **Estado** | Versión final (v2). Incluye las correcciones de la verificación manual de 5 fuentes por el equipo. |
+| **Estado** | Versión final (v2.1, 2026-11-22). Incluye las correcciones de la verificación manual de 5 fuentes por el equipo. La v2.1 solo cambia el formato: agrega la portada y separa proveedor, fuente y fecha en cada fila de la tabla A. |
 | **Uso de IA** | Relevamiento y redacción asistidos por un agente de IA (Claude Code). Las afirmaciones se tomaron de las páginas oficiales citadas. El equipo verificó personalmente 5 fuentes y el informe se corrigió con sus hallazgos (ver "Verificación de fuentes"). |
 
 ---
@@ -51,26 +51,30 @@ Todas las fuentes se consultaron el **2026-11-19**.
 
 ### A.1 Identificación
 
-| # | Producto / Proveedor | País · Segmento | Modalidad | URL oficial (consultada 2026-11-19) |
-|---|---|---|---|---|
-| 1 | Bilog | Argentina · Consultorio, clínica, obras sociales | Web y app móvil (nube No evidenciado) | https://bilog.com.ar/ |
-| 2 | DentalTec / Tándem Digital | Argentina · Odontólogo, círculos y federaciones | Web, sin instalación | https://web.dentaltec.com.ar/software-odontologos-argentina |
-| 3 | DentalSoft | Argentina · Consultorio, clínica | Nube | https://dentalsoft.com.ar/ |
-| 4 | DentalCore | Argentina (opera en 8 países LatAm) · Consultorio, clínica | Nube y app de escritorio para Windows | https://dentalcore.app/ |
-| 5 | AgendaPro / AgendaPro Inc. | Chile, con página para Argentina · Consultorio, clínica | Nube (AWS) | https://agendapro.com/ar/dental/software-odontologico |
-| 6 | Dentalink / Engenis SpA (Healthatom) | Chile, con módulo para Argentina · Consultorio, clínica, cadena | Nube | https://www.softwaredentalink.com/ |
-| 7 | Odonthia / Genera Impacto | Argentina · Consultorio, clínica con varios sillones | SaaS web | https://odonthia.com/ |
-| 8 | Órbita / Órbita Global | Argentina · Consultorio, clínica | Nube (AWS) | https://hiorbita.com/ |
-| 9 | Odonto.ar | Argentina (inferido) · Independiente hasta clínica de 10 personas | Web multidispositivo (nube No evidenciado) | https://odonto.ar/ |
-| 10 | VecDent / Vectora | Argentina (inferido) · Independiente, consultorio, clínica | No evidenciado | https://vectora.ar/pages/vecdent/ |
-| 11 | DentiClick / ThunderSkills | Argentina y Venezuela · Consultorio, clínica, centro | Nube (PWA) | https://www.denticlick.app/ |
-| 12 | Clinic Cloud / Doctoralia España (Docplanner) | España, grupo presente en Argentina · Clínicas en general | No evidenciado | https://clinic-cloud.com/ |
-| 13 | Doctocliq | No evidenciado (LatAm, "+20 países") · Consultorio dental, clínica | Nube y apps móviles | https://doctocliq.com/ |
-| 14 | Medesk | No evidenciado ("50 países") · Clínica dental, consultorio | No evidenciado | https://www.medesk.net/es/solutiones/odontologia |
-| 15 | Dentidesk | Chile · Clínica, centro médico, academia | Web y app móvil | https://www.dentidesk.com/ |
-| 16 | Open Dental / Open Dental Software | EE. UU. · Consultorio, clínica | No evidenciado | https://www.opendental.com/ |
+| # | Producto | Proveedor | País · Segmento | Modalidad | Fuente y fecha |
+|---|---|---|---|---|---|
+| 1 | Bilog | No evidenciado | Argentina · Consultorio, clínica, obras sociales | Web y app móvil (nube No evidenciado) | https://bilog.com.ar/ · consultada el 2026-11-19 |
+| 2 | DentalTec | Tándem Digital | Argentina · Odontólogo, círculos y federaciones | Web, sin instalación | https://web.dentaltec.com.ar/software-odontologos-argentina · consultada el 2026-11-19 |
+| 3 | DentalSoft | No evidenciado | Argentina · Consultorio, clínica | Nube | https://dentalsoft.com.ar/ · consultada el 2026-11-19 |
+| 4 | DentalCore | No evidenciado | Argentina (opera en 8 países LatAm) · Consultorio, clínica | Nube y app de escritorio para Windows | https://dentalcore.app/ · consultada el 2026-11-19 |
+| 5 | AgendaPro | AgendaPro Inc. | Chile, con página para Argentina · Consultorio, clínica | Nube (AWS) | https://agendapro.com/ar/dental/software-odontologico · consultada el 2026-11-19 |
+| 6 | Dentalink | Engenis SpA (Healthatom) | Chile, con módulo para Argentina · Consultorio, clínica, cadena | Nube | https://www.softwaredentalink.com/ · consultada el 2026-11-19 |
+| 7 | Odonthia | Genera Impacto | Argentina · Consultorio, clínica con varios sillones | SaaS web | https://odonthia.com/ · consultada el 2026-11-19 |
+| 8 | Órbita | Órbita Global | Argentina · Consultorio, clínica | Nube (AWS) | https://hiorbita.com/ · consultada el 2026-11-19 |
+| 9 | Odonto.ar | No evidenciado | Argentina (inferido) · Independiente hasta clínica de 10 personas | Web multidispositivo (nube No evidenciado) | https://odonto.ar/ · consultada el 2026-11-19 |
+| 10 | VecDent | Vectora | Argentina (inferido) · Independiente, consultorio, clínica | No evidenciado | https://vectora.ar/pages/vecdent/ · consultada el 2026-11-19 |
+| 11 | DentiClick | ThunderSkills | Argentina y Venezuela · Consultorio, clínica, centro | Nube (PWA) | https://www.denticlick.app/ · consultada el 2026-11-19 |
+| 12 | Clinic Cloud | Doctoralia España (Docplanner) | España, grupo presente en Argentina · Clínicas en general | No evidenciado | https://clinic-cloud.com/ · consultada el 2026-11-19 |
+| 13 | Doctocliq | No evidenciado | No evidenciado (LatAm, "+20 países") · Consultorio dental, clínica | Nube y apps móviles | https://doctocliq.com/ · consultada el 2026-11-19 |
+| 14 | Medesk | No evidenciado | No evidenciado ("50 países") · Clínica dental, consultorio | No evidenciado | https://www.medesk.net/es/solutiones/odontologia · consultada el 2026-11-19 |
+| 15 | Dentidesk | No evidenciado | Chile · Clínica, centro médico, academia | Web y app móvil | https://www.dentidesk.com/ · consultada el 2026-11-19 |
+| 16 | Open Dental | Open Dental Software | EE. UU. · Consultorio, clínica | No evidenciado | https://www.opendental.com/ · consultada el 2026-11-19 |
+
+**Proveedor "No evidenciado"**: en la página oficial consultada el 2026-11-19 no se registró una empresa proveedora distinta de la marca del producto. No se completó por deducción.
 
 ### A.2 Gestión de turnos y experiencia del paciente
+
+Las tablas A.2 y A.3 usan el mismo número de fila que A.1: el proveedor, el país, la URL oficial y la fecha de consulta de cada sistema están en esa fila de A.1. Las correcciones de la verificación manual indican su propia fecha en la celda.
 
 | # | Producto | Agenda multiprofesional | Sillón / box | Prevención de solapamientos | Reserva online del paciente | Recordatorios / confirmación | WhatsApp | Lista de espera |
 |---|---|---|---|---|---|---|---|---|
@@ -262,7 +266,6 @@ Aparecen en la mayoría de los sistemas, así que **no diferencian a nadie**: so
 | 3 | Centro de ayuda | https://ayuda.softwaredentalink.com/es/collections/19196578-modulo-exclusivo-para-argentina | Módulo para Argentina con obras sociales, conciliaciones y receta electrónica | Juan Cruz | **Coincide** (2026-11-20 14:36). Las 3 afirmaciones están respaldadas, y la fuente agrega detalle: convenios, planes y aranceles, simulación de presupuesto, recaudación de pago y conciliaciones con estado. Detalle en `verificacion/juan-cruz.md` (PR #1). | Ninguna en el informe. La ficha de Dentalink en A.3 pasa de mencionar solo los títulos a tener **contenido verificado**. |
 | 4 | Video oficial | https://odonthia.com/ (video "Mirá Odonthia por dentro") | Odontograma FDI con dientes temporales; plan gratuito permanente | Enzo | **Coincide** (2026-11-20 16:45). Odontograma FDI (ISO 3950) en el video (min 2:44) con controles de dentición primaria, mixta y edéntulo (min 2:49). Los dientes temporales se confirman en el texto de la página, no en el video. El plan gratis no vence. **Los precios cambiaron**: IA ARS 77.100 y Max ARS 159.100 (el informe decía 76.600 y 158.100). Detalle en `verificacion/enzo.md` (PR #2). | **Ajustar**: se actualizan los precios de Odonthia en A.3 y se aclara que el plan gratis cubre la gestión del consultorio, mientras que la IA, el WhatsApp automático y los mensajes internos son pagos. |
 | 5 | Demo pública | https://vectora.ar/pages/vecdent/ (demo sin registro) | Periodontograma de 6 puntos; portal del paciente; ARS 30.000, 50.000 y 80.000 | Sofia | (2026-11-20 19:29) **Periodontograma: coincide**, con 3 puntos vestibulares (MV, V, DV) y 3 palatinos/linguales (ML, L, DL), más recesión, sangrado, placa, movilidad y furcación; está incluido desde el plan Profesional. **Portal del paciente: NO coincide**: solo administrador, odontólogo y recepcionista crean turnos. Un rol personalizado "paciente" **no pudo crear turnos** y además ve el dashboard con estadísticas de la clínica y el menú Configuración, así que no es autogestión. **Precios: coinciden** ($30.000, $50.000 y $80.000 por mes), pero el sitio no aclara la moneda. Detalle en `verificacion/sofia.md` (PR #3). | **Ajustar**: A.2 VecDent / Reserva online pasa a "No evidenciado". A.3 aclara la moneda y que el periodontograma va desde el plan Profesional. Matriz B: P baja de 3 a 1 y el total, de 2,25 a 2,05. |
-| 6 (opcional) | Sitio oficial | https://dentalcore.app/ | Precio ARS 75.000 contra USD 50 (inconsistencia detectada) | (Libre) | | |
 
 **Problemas ya detectados en el relevamiento automático** (para la reflexión):
 
