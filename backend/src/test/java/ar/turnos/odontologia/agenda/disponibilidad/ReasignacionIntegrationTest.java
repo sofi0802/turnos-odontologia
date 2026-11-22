@@ -170,8 +170,9 @@ class ReasignacionIntegrationTest extends IntegracionDisponibilidadBase {
     }
 
     private void habilitar(long profesional, long prestacion) {
-        jdbc.update("INSERT INTO profesional_prestacion(profesional_id, prestacion_id) VALUES (?, ?)",
-                profesional, prestacion);
+        // La base común ya habilita a todos para "Consulta" (change validar-habilitacion-profesional).
+        jdbc.update("INSERT INTO profesional_prestacion(profesional_id, prestacion_id) VALUES (?, ?) "
+                + "ON CONFLICT DO NOTHING", profesional, prestacion);
     }
 
     private long turnoDePrestacion(long profesional, long prestacion, String inicio) throws Exception {

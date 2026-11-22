@@ -59,6 +59,9 @@ public abstract class IntegracionClinicaBase extends IntegracionSeguridadBase {
         drB = id("INSERT INTO profesional(nombre, apellido, matricula) VALUES ('Bruno','Prueba','MP-0002') RETURNING id");
         sillon1 = id("INSERT INTO sillon(nombre) VALUES ('Sillón 1') RETURNING id");
         consulta = id("INSERT INTO prestacion(nombre, duracion_minutos) VALUES ('Consulta', 30) RETURNING id");
+        // RN-AG-15: los dos profesionales están habilitados para "Consulta" (change validar-habilitacion-profesional).
+        jdbc.update("INSERT INTO profesional_prestacion(profesional_id, prestacion_id) SELECT p.id, ? FROM profesional p",
+                consulta);
         pacienteUno = crearPacienteSinCuenta("Paciente", "Uno", DNI_PACIENTE_UNO, "paciente.uno@example.com");
         pacienteDos = crearPacienteSinCuenta("Paciente", "Dos", "99000002", "paciente.dos@example.com");
         crearPersonal("admin", "ADMIN", clave);
