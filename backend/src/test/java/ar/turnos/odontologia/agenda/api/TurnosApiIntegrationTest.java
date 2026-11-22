@@ -72,6 +72,26 @@ class TurnosApiIntegrationTest extends IntegracionAgendaBase {
         assertProblema(resultado, 409, "MARGEN_INSUFICIENTE");
     }
 
+    @Test
+    @DisplayName("Turno con un profesional no habilitado")
+    void turnoConProfesionalNoHabilitado() throws Exception {
+        // GIVEN recepcion con sesión AND que la Dra. A no está habilitada para "Tratamiento de conducto"
+        long conducto = jdbc.queryForObject("INSERT INTO prestacion(nombre, duracion_minutos) "
+                + "VALUES ('Tratamiento de conducto', 30) RETURNING id", Long.class);
+        jdbc.update("INSERT INTO profesional_prestacion(profesional_id, prestacion_id) VALUES (?, ?)", drB, conducto);
+
+        // WHEN pide POST /api/v1/turnos con la Dra. A, el Sillón 1, "Tratamiento de conducto" e inicio a las 10:00
+        MvcResult resultado = como("recepcion").post(TURNOS, json.writeValueAsString(Map.of(
+                "pacienteId", pacienteUno, "profesionalId", draA, "sillonId", sillon1,
+                "prestacionId", conducto, "inicio", hora(10, 0))))
+                .andReturn();
+
+        // THEN la respuesta es 409 con el código PROFESIONAL_NO_HABILITADO
+        assertProblema(resultado, 409, "PROFESIONAL_NO_HABILITADO");
+        // AND no se crea ningún turno
+        assertThat(jdbc.queryForObject("SELECT count(*) FROM turno", Long.class)).isZero();
+    }
+
     // ---------- Requirement: Datos de entrada inválidos como 422 ----------
 
     @Test

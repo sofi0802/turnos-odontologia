@@ -9,6 +9,7 @@ import ar.turnos.odontologia.agenda.domain.ReferenciaInexistenteException;
 import ar.turnos.odontologia.agenda.domain.Turno;
 import ar.turnos.odontologia.agenda.domain.TurnoRechazadoException;
 import ar.turnos.odontologia.agenda.domain.reglas.ReglasDisponibilidad;
+import ar.turnos.odontologia.configuracion.application.HabilitacionProfesional;
 import java.time.Clock;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
@@ -36,6 +37,7 @@ public class CrearSobreturno {
     private final Agenda agenda;
     private final DisponibilidadProfesional disponibilidad;
     private final ZoneId zona;
+    private final HabilitacionProfesional habilitacion;
 
     /** Sin reglas de disponibilidad: es el constructor anterior a C-07 y lo usan sus tests (design D2). */
     public CrearSobreturno(TurnoRepository turnos, RecursosAgenda recursos,
@@ -48,6 +50,19 @@ public class CrearSobreturno {
     public CrearSobreturno(TurnoRepository turnos, RecursosAgenda recursos,
             SillonesDisponibles sillonesDisponibles, GeneradorNumeroReserva numeros,
             Clock reloj, Margen margen, DisponibilidadProfesional disponibilidad, ZoneId zona) {
+        this(turnos, recursos, sillonesDisponibles, numeros, reloj, margen, disponibilidad, zona,
+                CrearTurno.TODOS_HABILITADOS);
+    }
+
+    /**
+     * @param habilitacion especialidades de cada profesional: RN-AG-06 exceptúa al sobreturno de la agenda del
+     *                     profesional, no de RN-AG-15 (change validar-habilitacion-profesional, design D3)
+     */
+    public CrearSobreturno(TurnoRepository turnos, RecursosAgenda recursos,
+            SillonesDisponibles sillonesDisponibles, GeneradorNumeroReserva numeros,
+            Clock reloj, Margen margen, DisponibilidadProfesional disponibilidad, ZoneId zona,
+            HabilitacionProfesional habilitacion) {
+        this.habilitacion = Objects.requireNonNull(habilitacion, "habilitacion");
         this.disponibilidad = Objects.requireNonNull(disponibilidad, "disponibilidad");
         this.zona = Objects.requireNonNull(zona, "zona");
         this.turnos = Objects.requireNonNull(turnos, "turnos");
@@ -70,6 +85,7 @@ public class CrearSobreturno {
     public Turno ejecutar(CrearSobreturnoCommand comando, Set<Long> descartados) {
         validar(comando);
         RecursosAgenda.Prestacion prestacion = verificarRecursos(comando);
+        CrearTurno.verificarHabilitacion(habilitacion, comando.profesionalId(), comando.prestacionId());
         Intervalo intervalo = new Intervalo(comando.inicio(), comando.inicio().plus(prestacion.duracion()));
         ReglasDisponibilidad.verificar(intervalo, disponibilidad.periodos(comando.profesionalId(), intervalo),
                 zona, false);

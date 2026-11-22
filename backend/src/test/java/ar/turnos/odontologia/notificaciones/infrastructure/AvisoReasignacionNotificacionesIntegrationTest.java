@@ -31,7 +31,9 @@ class AvisoReasignacionNotificacionesIntegrationTest extends IntegracionNotifica
         // GIVEN "Paciente Uno" con consentimiento y un turno con la Dra. Ana Ejemplo el 2026-12-09 a las 10:00,
         // afectado por una licencia suya, y el Dr. Bruno Prueba habilitado para "Consulta"
         contacto(pacienteUno, true, false, "paciente.uno@example.com", null);
-        jdbc.update("INSERT INTO profesional_prestacion(profesional_id, prestacion_id) VALUES (?, ?)", drB, consulta);
+        // La base común ya habilita a todos para "Consulta" (change validar-habilitacion-profesional).
+        jdbc.update("INSERT INTO profesional_prestacion(profesional_id, prestacion_id) VALUES (?, ?) "
+                + "ON CONFLICT DO NOTHING", drB, consulta);
         long original = turnoCreado(pacienteUno, draA, sillon1, diciembre(9, 10, 0)).path("id").asLong();
         MvcResult licencia = como("recepcion").post("/api/v1/profesionales/" + draA + "/ausencias",
                 json.writeValueAsString(Map.of("tipo", "LICENCIA", "inicio", diciembre(7, 0, 0),

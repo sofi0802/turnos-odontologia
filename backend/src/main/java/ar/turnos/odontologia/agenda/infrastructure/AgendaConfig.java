@@ -54,16 +54,18 @@ class AgendaConfig {
 
     @Bean
     CrearTurno crearTurno(TurnoRepository turnos, RecursosAgenda recursos, GeneradorNumeroReserva numeros,
-                          Clock reloj, Margen margen, DisponibilidadProfesional disponibilidad, ZoneId zonaHoraria) {
-        return new CrearTurno(turnos, recursos, numeros, reloj, margen, disponibilidad, zonaHoraria);
+                          Clock reloj, Margen margen, DisponibilidadProfesional disponibilidad, ZoneId zonaHoraria,
+                          HabilitacionProfesional habilitacion) {
+        return new CrearTurno(turnos, recursos, numeros, reloj, margen, disponibilidad, zonaHoraria, habilitacion);
     }
 
     @Bean
     CrearSobreturno crearSobreturno(TurnoRepository turnos, RecursosAgenda recursos,
                                     SillonesDisponibles sillones, GeneradorNumeroReserva numeros,
                                     Clock reloj, Margen margen, DisponibilidadProfesional disponibilidad,
-                                    ZoneId zonaHoraria) {
-        return new CrearSobreturno(turnos, recursos, sillones, numeros, reloj, margen, disponibilidad, zonaHoraria);
+                                    ZoneId zonaHoraria, HabilitacionProfesional habilitacion) {
+        return new CrearSobreturno(turnos, recursos, sillones, numeros, reloj, margen, disponibilidad, zonaHoraria,
+                habilitacion);
     }
 
     @Bean

@@ -26,13 +26,16 @@ public class ReprogramarTurno {
         Turno original = IdentificacionReserva.turnoActivo(turnos, comando.turnoId(), comando.dni(),
                 comando.numeroReserva());
 
+        Long profesional = comando.profesionalId() != null ? comando.profesionalId() : original.profesionalId();
         CrearTurnoCommand datosNuevos = new CrearTurnoCommand(
                 original.pacienteId(),
-                comando.profesionalId() != null ? comando.profesionalId() : original.profesionalId(),
+                profesional,
                 comando.sillonId() != null ? comando.sillonId() : original.sillonId(),
                 original.prestacionId(),
                 comando.inicio());
-        Turno nuevo = crearTurno.preparar(datosNuevos, original.id());
+        // RN-AG-15 solo al cambiar de profesional: con el mismo, el turno ya estaba dado (design D2).
+        boolean cambiaProfesional = !profesional.equals(original.profesionalId());
+        Turno nuevo = crearTurno.preparar(datosNuevos, original.id(), cambiaProfesional);
 
         Turno cancelado = turnos.guardar(original.cancelado());
         return new Reprogramacion(cancelado, turnos.guardar(nuevo));
