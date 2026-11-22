@@ -4,6 +4,7 @@ import ar.turnos.odontologia.notificaciones.application.NotificacionPort.EnvioNo
 import ar.turnos.odontologia.notificaciones.application.NotificacionPort.ResultadoEnvio;
 import ar.turnos.odontologia.notificaciones.domain.Canal;
 import ar.turnos.odontologia.notificaciones.domain.Consultorio;
+import ar.turnos.odontologia.notificaciones.domain.Enlaces;
 import ar.turnos.odontologia.notificaciones.domain.MensajeRecordatorio;
 import ar.turnos.odontologia.notificaciones.domain.Notificacion;
 import ar.turnos.odontologia.notificaciones.domain.TurnoARecordar;
@@ -21,17 +22,16 @@ final class Despachador {
 
     private final Map<Canal, NotificacionPort> puertos = new EnumMap<>(Canal.class);
     private final Consultorio consultorio;
-    private final String baseUrl;
+    private final Enlaces enlaces;
 
-    Despachador(List<NotificacionPort> canales, Consultorio consultorio, String baseUrl) {
+    Despachador(List<NotificacionPort> canales, Consultorio consultorio, Enlaces enlaces) {
         canales.forEach(p -> puertos.put(p.canal(), p));
         this.consultorio = Objects.requireNonNull(consultorio, "consultorio");
-        String base = Objects.requireNonNull(baseUrl, "baseUrl");
-        this.baseUrl = base.endsWith("/") ? base.substring(0, base.length() - 1) : base;
+        this.enlaces = Objects.requireNonNull(enlaces, "enlaces");
     }
 
     /**
-     * @param token el token en claro del link de confirmación; {@code null} si el tipo no lleva link
+     * @param token el token en claro del link de confirmación; {@code null} si el tipo no lleva token
      * @return la notificación {@code ENVIADA}, o {@code FALLIDA} con su próximo intento
      */
     Notificacion despachar(Notificacion notificacion, TurnoARecordar turno, String token, Instant ahora) {
@@ -44,10 +44,11 @@ final class Despachador {
 
     private String cuerpo(Notificacion notificacion, TurnoARecordar turno, String token) {
         return switch (notificacion.tipo()) {
-            case RECORDATORIO -> MensajeRecordatorio.recordatorio(turno.datosDelTurno(), consultorio,
-                    baseUrl + "/confirmar/" + Objects.requireNonNull(token, "token")).texto();
+            case RECORDATORIO -> MensajeRecordatorio.recordatorio(turno.datosDelTurno(), consultorio, enlaces,
+                    Objects.requireNonNull(token, "token")).texto();
+            case CONFIRMACION -> MensajeRecordatorio.confirmacion(turno.datosDelTurno(), consultorio, enlaces).texto();
+            case CANCELACION -> MensajeRecordatorio.cancelacion(turno.datosDelTurno(), consultorio).texto();
             case REASIGNACION -> MensajeRecordatorio.reasignacion(turno.datosDelTurno(), consultorio).texto();
-            default -> throw new IllegalArgumentException("Tipo sin mensaje todavía: " + notificacion.tipo());
         };
     }
 

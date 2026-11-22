@@ -1,5 +1,6 @@
 package ar.turnos.odontologia.notificaciones;
 
+import ar.turnos.odontologia.notificaciones.application.AvisarOperacionOnline;
 import ar.turnos.odontologia.notificaciones.application.AvisarReasignacion;
 import ar.turnos.odontologia.notificaciones.application.EnviarRecordatorios;
 import ar.turnos.odontologia.notificaciones.application.GeneradorToken;
@@ -8,6 +9,7 @@ import ar.turnos.odontologia.notificaciones.application.NotificacionRepository;
 import ar.turnos.odontologia.notificaciones.application.TurnosARecordar;
 import ar.turnos.odontologia.notificaciones.domain.Canal;
 import ar.turnos.odontologia.notificaciones.domain.Consultorio;
+import ar.turnos.odontologia.notificaciones.domain.Enlaces;
 import java.time.Clock;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +41,13 @@ public class CapturaDeEnvios {
             List<NotificacionPort.EnvioNotificacion> todos = new ArrayList<>(whatsapp.enviados);
             todos.addAll(email.enviados);
             String cuerpo = todos.get(todos.size() - 1).cuerpo();
-            return cuerpo.substring(cuerpo.lastIndexOf("/confirmar/") + "/confirmar/".length());
+            // El token es lo único que sigue a /confirmar/ con su alfabeto (base64url): después vienen otros links.
+            java.util.regex.Matcher m = java.util.regex.Pattern.compile("/confirmar/([A-Za-z0-9_-]+)").matcher(cuerpo);
+            String token = null;
+            while (m.find()) {
+                token = m.group(1);
+            }
+            return token;
         }
 
         public int totalEnviados() {
@@ -91,9 +99,17 @@ public class CapturaDeEnvios {
     @Primary
     EnviarRecordatorios enviarRecordatoriosCapturado(Registro registro, TurnosARecordar turnos,
             NotificacionRepository notificaciones, GeneradorToken tokens, Consultorio consultorio,
-            @Value("${app.notificaciones.base-url}") String baseUrl, Clock reloj) {
+            Enlaces enlaces, Clock reloj) {
         return new EnviarRecordatorios(turnos, notificaciones, List.of(registro.whatsapp, registro.email), tokens,
-                consultorio, baseUrl, reloj);
+                consultorio, enlaces, reloj);
+    }
+
+    @Bean
+    @Primary
+    AvisarOperacionOnline avisarOperacionOnlineCapturado(Registro registro, TurnosARecordar turnos,
+            NotificacionRepository notificaciones, Consultorio consultorio, Enlaces enlaces, Clock reloj) {
+        return new AvisarOperacionOnline(turnos, notificaciones, List.of(registro.whatsapp, registro.email),
+                consultorio, enlaces, reloj);
     }
 
     @Bean

@@ -83,12 +83,12 @@ El sistema SHALL enviar por WhatsApp si el paciente tiene WhatsApp y teléfono, 
 - **THEN** no se envía ningún mensaje y no se crea ninguna notificación
 
 ### Requirement: Mensaje sin datos de salud
-El mensaje MUST incluir solo la fecha, la hora, el consultorio (nombre y dirección) y el link para confirmar (regla dura 6). MUST NOT incluir el nombre del paciente ni del profesional, la prestación, el motivo de un sobreturno ni ningún dato clínico.
+El mensaje MUST incluir solo la fecha, la hora, el consultorio (nombre y dirección) y los links de confirmar, cancelar y reprogramar (regla dura 6, RN-NO-01). MUST NOT incluir el nombre del paciente ni del profesional, la prestación, el motivo de un sobreturno ni ningún dato clínico.
 
 #### Scenario: Contenido del recordatorio
 - **GIVEN** un turno de "Paciente Uno" de "Consulta" con la Dra. A el 2026-12-02 a las 07:30
 - **WHEN** se arma el recordatorio
-- **THEN** el mensaje contiene la fecha, la hora, el consultorio, su dirección y el link de confirmar
+- **THEN** el mensaje contiene la fecha, la hora, el consultorio, su dirección y los links de confirmar, cancelar y reprogramar
 - **AND** no contiene "Consulta" ni ningún otro nombre de prestación
 - **AND** no contiene el nombre de "Paciente Uno" ni el de la Dra. A
 
@@ -148,6 +148,61 @@ El sistema SHALL poder avisar a un paciente que su turno fue reasignado por la a
 - **GIVEN** el mismo turno reasignado y "Paciente Uno" sin consentimiento
 - **WHEN** se pide avisarle la reasignación
 - **THEN** no se envía ningún mensaje
+
+### Requirement: Aviso de la reserva online
+El sistema SHALL avisar al paciente que reservó online, con las mismas reglas de consentimiento y canal que el recordatorio, con la fecha, la hora, el consultorio y los links de cancelar y reprogramar. El aviso MUST NOT llevar link de confirmar ni nombres.
+
+#### Scenario: Reserva online con consentimiento
+- **GIVEN** "Paciente Uno" con consentimiento y email que reservó online un turno el 2026-12-02 a las 10:00
+- **WHEN** la reserva online pide el aviso
+- **THEN** se envía un mensaje por email con la fecha, la hora, el consultorio y los links de cancelar y reprogramar
+- **AND** el mensaje no contiene el número de reserva, el DNI, el nombre del paciente ni el del profesional
+
+#### Scenario: Reserva online sin consentimiento
+- **GIVEN** "Paciente Uno" sin consentimiento de comunicaciones que reservó online un turno
+- **WHEN** la reserva online pide el aviso
+- **THEN** no se envía ningún mensaje
+
+### Requirement: Aviso de la cancelación online
+El sistema SHALL avisar al paciente que canceló online, con las mismas reglas de consentimiento y canal, con la fecha, la hora y el consultorio del turno cancelado. El aviso MUST NOT llevar links.
+
+#### Scenario: Cancelación online con consentimiento
+- **GIVEN** "Paciente Uno" con consentimiento y WhatsApp que canceló online su turno del 2026-12-02 a las 10:00
+- **WHEN** la cancelación online pide el aviso
+- **THEN** se envía un mensaje por WhatsApp que informa la cancelación con la fecha, la hora y el consultorio
+- **AND** el mensaje no contiene links ni datos de salud
+
+#### Scenario: Cancelación online sin consentimiento
+- **GIVEN** "Paciente Uno" sin consentimiento que canceló online su turno
+- **WHEN** la cancelación online pide el aviso
+- **THEN** no se envía ningún mensaje
+
+### Requirement: Aviso de la reprogramación online
+El sistema SHALL avisar al paciente que reprogramó online, con la fecha y la hora del turno nuevo y los links de cancelar y reprogramar, con las mismas reglas de consentimiento y canal.
+
+#### Scenario: Reprogramación online con consentimiento
+- **GIVEN** "Paciente Uno" con consentimiento y email que reprogramó online su turno al 2026-12-03 a las 11:00
+- **WHEN** la reprogramación online pide el aviso para el turno nuevo
+- **THEN** se envía un mensaje con la fecha y la hora nuevas y los links de cancelar y reprogramar
+- **AND** el mensaje no menciona la fecha del turno anterior ni datos de salud
+
+### Requirement: Los links no llevan credenciales
+Los links de cancelar y reprogramar SHALL apuntar a las pantallas del paciente configuradas para el consultorio y MUST NOT incluir el número de reserva, el DNI ni ningún dato del paciente: para cancelar o reprogramar, el paciente inicia sesión e ingresa su número de reserva (RN-AG-07).
+
+#### Scenario: El link de cancelar no incluye credenciales
+- **GIVEN** un aviso de reserva online con links de cancelar y reprogramar
+- **WHEN** se arma el mensaje
+- **THEN** los links empiezan con la dirección base configurada
+- **AND** no contienen el número de reserva, el DNI, el email, el teléfono ni el id del turno
+
+### Requirement: Un aviso online fallido queda para reintento
+Si el envío de un aviso online falla, el sistema SHALL dejar la notificación `FALLIDA` y reintentarla con la misma política que el recordatorio, y MUST NOT deshacer ni demorar la operación de reserva, cancelación o reprogramación.
+
+#### Scenario: Falla el envío del aviso de una reserva
+- **GIVEN** "Paciente Uno" con consentimiento y email, y un proveedor que falla
+- **WHEN** la reserva online pide el aviso
+- **THEN** la reserva queda confirmada
+- **AND** la notificación queda `FALLIDA` con un reintento programado
 
 ### Requirement: Los adaptadores simulados no exponen datos
 Los adaptadores simulados de WhatsApp y email MUST NOT escribir en el log el cuerpo del mensaje, el token ni el teléfono o el email completos.

@@ -1,5 +1,6 @@
 package ar.turnos.odontologia.notificaciones.infrastructure;
 
+import ar.turnos.odontologia.notificaciones.application.AvisarOperacionOnline;
 import ar.turnos.odontologia.notificaciones.application.AvisarReasignacion;
 import ar.turnos.odontologia.notificaciones.application.ConfirmarAsistencia;
 import ar.turnos.odontologia.notificaciones.application.EnviarRecordatorios;
@@ -27,13 +28,16 @@ public class ServicioNotificaciones {
 
     private final EnviarRecordatorios enviarRecordatorios;
     private final AvisarReasignacion avisarReasignacion;
+    private final AvisarOperacionOnline avisarOperacionOnline;
     private final ConfirmarAsistencia confirmarAsistencia;
     private final TransactionTemplate transaccion;
 
     ServicioNotificaciones(EnviarRecordatorios enviarRecordatorios, AvisarReasignacion avisarReasignacion,
-                           ConfirmarAsistencia confirmarAsistencia, PlatformTransactionManager transacciones) {
+                           AvisarOperacionOnline avisarOperacionOnline, ConfirmarAsistencia confirmarAsistencia,
+                           PlatformTransactionManager transacciones) {
         this.enviarRecordatorios = enviarRecordatorios;
         this.avisarReasignacion = avisarReasignacion;
+        this.avisarOperacionOnline = avisarOperacionOnline;
         this.confirmarAsistencia = confirmarAsistencia;
         this.transaccion = new TransactionTemplate(transacciones);
     }
@@ -46,6 +50,21 @@ public class ServicioNotificaciones {
     /** C-07 lo llama después de reasignar un turno por la ausencia del profesional (RN-AG-16). */
     public Optional<Notificacion> avisarReasignacion(Long turnoId) {
         return avisarReasignacion.ejecutar(turnoId);
+    }
+
+    /** La reserva online pide el aviso de un turno nuevo (CONFIRMACION, con links de cancelar y reprogramar). */
+    public Optional<Notificacion> avisarReservado(Long turnoId) {
+        return avisarOperacionOnline.reservado(turnoId);
+    }
+
+    /** La cancelación online pide el aviso de un turno que ya está cancelado (CANCELACION, sin links). */
+    public Optional<Notificacion> avisarCancelado(Long turnoId) {
+        return avisarOperacionOnline.cancelado(turnoId);
+    }
+
+    /** La reprogramación online pide el aviso del turno nuevo (CONFIRMACION). */
+    public Optional<Notificacion> avisarReprogramado(Long turnoIdNuevo) {
+        return avisarOperacionOnline.reprogramado(turnoIdNuevo);
     }
 
     /**
