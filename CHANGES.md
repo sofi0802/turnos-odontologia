@@ -313,7 +313,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 
 ### [C-06] `api-turnos`
 - **Estado**: `[x]` completo (2026-11-21, PR #17). Specs: `openspec/specs/agenda-api/`, `auditoria-turnos/` (nuevos) y `agenda-turnos/` (actualizado); change archivado en `openspec/changes/archive/2026-11-21-api-turnos/`. Migración V4
-- **Seguimiento (RN-AG-15)**: `[ ]` en curso (2026-11-22). Crear, reprogramar a otro profesional y sobreturno rechazan con `409 PROFESIONAL_NO_HABILITADO`. Change `openspec/changes/validar-habilitacion-profesional/`, rama `change/C-06-validar-habilitacion`. Sin migración
+- **Seguimiento (RN-AG-15)**: `[x]` completo (2026-11-22, PR #43). Crear, reprogramar a otro profesional y sobreturno rechazan con `409 PROFESIONAL_NO_HABILITADO`. Specs `agenda-turnos` y `agenda-api` actualizadas; change archivado en `openspec/changes/archive/2026-11-22-validar-habilitacion-profesional/`. Sin migración
 - **Responsable**: Sofia Indovino
 - **Scope**:
   - Adaptador JPA del puerto `TurnoRepository` (de C-01) en `agenda/infrastructure`.
