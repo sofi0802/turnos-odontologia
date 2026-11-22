@@ -13,7 +13,7 @@ Al abrirse, la agenda SHALL mostrar el día de hoy pidiendo `GET /api/v1/turnos`
 - **GIVEN** que la API tiene un turno de "Paciente Uno" de 10:00 a 10:30 con la Dra. Ana Ejemplo en el Sillón 1 para "Consulta"
 - **WHEN** se abre la agenda
 - **THEN** se pide `GET /api/v1/turnos?desde=2026-12-01T00:00:00-03:00&hasta=2026-12-02T00:00:00-03:00`
-- **AND** se ve un turno "10:00 – 10:30" de "Paciente Uno" con "Dra. Ana Ejemplo", "Sillón 1" y "Consulta"
+- **AND** se ve un turno "10:00 – 10:30" de "Paciente Uno" con "Ana Ejemplo", "Sillón 1" y "Consulta"
 
 #### Scenario: Día sin turnos
 - **GIVEN** que la API responde `200` con una lista vacía
@@ -49,11 +49,11 @@ La agenda SHALL ofrecer los filtros "Profesional" y "Sillón" con las opciones d
 
 #### Scenario: Filtrar por profesional
 - **GIVEN** la agenda del día abierta
-- **WHEN** se elige "Dra. Ana Ejemplo" en el filtro "Profesional"
+- **WHEN** se elige "Ana Ejemplo" en el filtro "Profesional"
 - **THEN** se pide `GET /api/v1/turnos` del mismo período con `profesionalId=1`
 
 #### Scenario: Filtrar por sillón y profesional a la vez
-- **GIVEN** la agenda filtrada por "Dra. Ana Ejemplo"
+- **GIVEN** la agenda filtrada por "Ana Ejemplo"
 - **WHEN** se elige "Sillón 2" en el filtro "Sillón"
 - **THEN** se pide `GET /api/v1/turnos` del mismo período con `profesionalId=1` y `sillonId=2`
 
@@ -87,7 +87,7 @@ El botón "Nuevo turno" SHALL abrir un formulario con paciente (id), profesional
 
 #### Scenario: Recepción crea un turno
 - **GIVEN** la agenda del día abierta
-- **WHEN** se completa el formulario con el paciente 1, "Dra. Ana Ejemplo", "Sillón 1", "Consulta", 2026-12-01 a las 10:00 y se envía
+- **WHEN** se completa el formulario con el paciente 1, "Ana Ejemplo", "Sillón 1", "Consulta", 2026-12-01 a las 10:00 y se envía
 - **THEN** se pide `POST /api/v1/turnos` con `pacienteId` 1, `profesionalId` 1, `sillonId` 1, `prestacionId` 1 e `inicio` `2026-12-01T10:00:00-03:00`
 - **AND** al responder `201` con `numeroReserva` `R-0001` se ve "Turno creado. Número de reserva: R-0001."
 - **AND** se vuelve a pedir la agenda del día

@@ -1,6 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { crearClienteApi, type ClienteApi } from '../src/shared/api/cliente.ts';
-import { ErrorGenerico, ErrorNegocio, ErrorValidacion } from '../src/shared/api/errores.ts';
+import {
+  ErrorGenerico,
+  ErrorNegocio,
+  ErrorNoEncontrado,
+  ErrorPermiso,
+  ErrorSesion,
+  ErrorValidacion,
+} from '../src/shared/api/errores.ts';
 
 const URL_BASE = 'http://localhost:8080/api/v1';
 
@@ -149,6 +156,68 @@ describe('Error de validación ante un 422', () => {
     expect(error).toBeInstanceOf(ErrorValidacion);
     expect(error).not.toBeInstanceOf(ErrorNegocio);
     expect(error).toMatchObject({ codigo: 'INICIO_EN_EL_PASADO', detalle: 'El turno empieza en el pasado' });
+    expect((error as ErrorValidacion).errores).toEqual([]);
+  });
+
+  it('Datos inválidos con errores de campo', async () => {
+    const cliente = crearClienteApi(
+      URL_BASE,
+      responder(422, {
+        status: 422,
+        detail: 'Hay datos inválidos en el pedido',
+        codigo: 'DATOS_INVALIDOS',
+        errores: [{ campo: 'inicio', mensaje: 'es obligatorio' }, { campo: 'sinMensaje' }, 'basura'],
+      }),
+    );
+
+    const error = await capturarError(cliente.crear('/turnos', {}));
+
+    expect(error).toBeInstanceOf(ErrorValidacion);
+    expect(error).toMatchObject({ codigo: 'DATOS_INVALIDOS' });
+    expect((error as ErrorValidacion).errores).toEqual([{ campo: 'inicio', mensaje: 'es obligatorio' }]);
+  });
+});
+
+describe('Errores de sesión, permiso y recurso inexistente', () => {
+  it('Sin sesión', async () => {
+    const cliente = crearClienteApi(URL_BASE, responder(401, { status: 401, codigo: 'NO_AUTENTICADO' }));
+
+    const error = await capturarError(cliente.obtener('/turnos'));
+
+    expect(error).toBeInstanceOf(ErrorSesion);
+    expect(error).toMatchObject({ codigo: 'NO_AUTENTICADO', estado: 401 });
+  });
+
+  it('Credenciales inválidas', async () => {
+    const cliente = crearClienteApi(
+      URL_BASE,
+      responder(401, { status: 401, detail: 'Usuario o contraseña inválidos', codigo: 'CREDENCIALES_INVALIDAS' }),
+    );
+
+    const error = await capturarError(cliente.crear('/public/login', { username: 'recepcion', password: 'x' }));
+
+    expect(error).toBeInstanceOf(ErrorSesion);
+    expect(error).toMatchObject({ codigo: 'CREDENCIALES_INVALIDAS' });
+    expect((error as ErrorSesion).message).not.toContain('inválidos');
+  });
+
+  it('Acceso denegado', async () => {
+    const cliente = crearClienteApi(URL_BASE, responder(403, { status: 403, codigo: 'ACCESO_DENEGADO' }));
+
+    const error = await capturarError(cliente.crear('/turnos', {}));
+
+    expect(error).toBeInstanceOf(ErrorPermiso);
+    expect(error).not.toBeInstanceOf(ErrorSesion);
+    expect(error).toMatchObject({ codigo: 'ACCESO_DENEGADO', estado: 403 });
+  });
+
+  it('Turno inexistente', async () => {
+    const cliente = crearClienteApi(URL_BASE, responder(404, { status: 404, codigo: 'TURNO_INEXISTENTE' }));
+
+    const error = await capturarError(cliente.crear('/turnos/999999/cancelar', {}));
+
+    expect(error).toBeInstanceOf(ErrorNoEncontrado);
+    expect(error).toMatchObject({ codigo: 'TURNO_INEXISTENTE', estado: 404 });
   });
 });
 
