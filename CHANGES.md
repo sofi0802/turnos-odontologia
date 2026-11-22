@@ -427,7 +427,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 ## FASE 5: Clínica
 
 ### [C-13] `ficha-clinica-odontograma`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-22, PR #39). Specs: `openspec/specs/ficha-clinica/` (nuevo), `agenda-turnos/` y `auditoria-turnos/` (actualizados); change archivado en `openspec/changes/archive/2026-11-22-ficha-clinica-odontograma/`. Migración V8
 - **Responsable**: Emanuel
 - **Scope**:
   - `FichaClinica` y `OdontogramaRegistro` (FDI, permanentes y temporales, historial). **Migración V8**.
