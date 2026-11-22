@@ -329,7 +329,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/04_modelo_de_datos.md` §Turno, §TurnoAuditoria
 
 ### [C-07] `horarios-ausencias-bloqueos`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-22, PR #31). Specs: `openspec/specs/disponibilidad-profesional/` (nuevo) y `agenda-turnos/` (actualizado); change archivado en `openspec/changes/archive/2026-11-22-horarios-ausencias-bloqueos/`. Migración V5 y seed V5_1
 - **Responsable**: Emanuel
 - **Scope**:
   - Entidades `HorarioTrabajo`, `AusenciaProfesional`, `BloqueoAgenda`. **Migración V5**.
