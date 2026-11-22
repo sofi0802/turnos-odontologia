@@ -378,7 +378,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 ## FASE 4: Paciente y notificaciones
 
 ### [C-10] `reserva-online-paciente`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-22, PR #37). Specs: `openspec/specs/disponibilidad-online/`, `reserva-online/`, `turnos-paciente/` (nuevos) y `auditoria-turnos/` (actualizado); change archivado en `openspec/changes/archive/2026-11-22-reserva-online-paciente/`. Sin migración nueva
 - **Responsable**: Juan Sebastián
 - **Scope**:
   - `GET /api/v1/public/disponibilidad?prestacionId&fecha[&profesionalId]`: unión de los huecos de los profesionales habilitados que trabajan ese día, sin datos de terceros (RN-RO-01, 04, 07).
