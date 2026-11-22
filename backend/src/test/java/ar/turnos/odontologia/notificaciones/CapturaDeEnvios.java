@@ -41,7 +41,13 @@ public class CapturaDeEnvios {
             List<NotificacionPort.EnvioNotificacion> todos = new ArrayList<>(whatsapp.enviados);
             todos.addAll(email.enviados);
             String cuerpo = todos.get(todos.size() - 1).cuerpo();
-            return cuerpo.substring(cuerpo.lastIndexOf("/confirmar/") + "/confirmar/".length());
+            // El token es lo único que sigue a /confirmar/ con su alfabeto (base64url): después vienen otros links.
+            java.util.regex.Matcher m = java.util.regex.Pattern.compile("/confirmar/([A-Za-z0-9_-]+)").matcher(cuerpo);
+            String token = null;
+            while (m.find()) {
+                token = m.group(1);
+            }
+            return token;
         }
 
         public int totalEnviados() {

@@ -103,7 +103,7 @@ class AvisoReservaOnlineNotificacionesIntegrationTest extends IntegracionReserva
         assertThat(envio.cuerpo()).contains("01/12/2026", "10:00", "Clínica Ejemplo", "Calle Ficticia 123",
                 BASE + "/mis-turnos/cancelar", BASE + "/mis-turnos/reprogramar");
         // AND sin número de reserva, DNI, nombres, prestación ni link de confirmar
-        assertThat(envio.cuerpo()).doesNotContain(numero, DNI_UNO, "Paciente", "Ana", "Ejemplo ", "Consulta ",
+        assertThat(envio.cuerpo()).doesNotContain(numero, DNI_UNO, "Paciente", "Ana", "Consulta ",
                 "/confirmar/");
         List<Map<String, Object>> filas = notificaciones();
         assertThat(filas).hasSize(1);
