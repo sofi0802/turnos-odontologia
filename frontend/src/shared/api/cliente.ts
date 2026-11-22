@@ -2,6 +2,9 @@ import {
   CODIGO_CONFLICTO_SIN_CODIGO,
   ErrorGenerico,
   ErrorNegocio,
+  ErrorNoEncontrado,
+  ErrorPermiso,
+  ErrorSesion,
   ErrorValidacion,
   leerProblemDetail,
 } from './errores.ts';
@@ -30,6 +33,11 @@ function normalizarRuta(ruta: string): string {
   return ruta.startsWith('/') ? ruta : `/${ruta}`;
 }
 
+/** Indica si el navegador ya tiene el token CSRF que entrega el servidor. */
+export function hayTokenCsrf(): boolean {
+  return leerCookie(COOKIE_CSRF) !== null;
+}
+
 function leerCookie(nombre: string): string | null {
   for (const parte of document.cookie.split(';')) {
     const [clave, ...resto] = parte.trim().split('=');
@@ -53,15 +61,29 @@ async function leerCuerpo(respuesta: Response): Promise<unknown> {
 }
 
 async function traducirError(respuesta: Response): Promise<Error> {
-  if (respuesta.status === 409) {
-    const problema = leerProblemDetail(await leerCuerpo(respuesta));
-    return new ErrorNegocio(problema.codigo ?? CODIGO_CONFLICTO_SIN_CODIGO, problema.detail);
+  switch (respuesta.status) {
+    case 401:
+    case 403:
+    case 404:
+    case 409:
+    case 422:
+      break;
+    default:
+      return new ErrorGenerico(respuesta.status);
   }
-  if (respuesta.status === 422) {
-    const problema = leerProblemDetail(await leerCuerpo(respuesta));
-    return new ErrorValidacion(problema.detail, problema.codigo);
+  const problema = leerProblemDetail(await leerCuerpo(respuesta));
+  switch (respuesta.status) {
+    case 401:
+      return new ErrorSesion(problema.codigo);
+    case 403:
+      return new ErrorPermiso(problema.codigo);
+    case 404:
+      return new ErrorNoEncontrado(problema.codigo);
+    case 409:
+      return new ErrorNegocio(problema.codigo ?? CODIGO_CONFLICTO_SIN_CODIGO, problema.detail);
+    default:
+      return new ErrorValidacion(problema.detail, problema.codigo, problema.errores);
   }
-  return new ErrorGenerico(respuesta.status);
 }
 
 /** Crea un cliente con una URL base dada; las pantallas usan `api`. */

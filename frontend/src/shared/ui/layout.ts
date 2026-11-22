@@ -1,15 +1,22 @@
 import type { Pagina } from '../../pages/pagina.ts';
+import type { Sesion } from '../sesion/sesion.ts';
 
 export interface Layout {
   readonly contenido: HTMLElement;
   /** Marca el enlace de la página activa y cierra el menú. */
   mostrar(pagina: Pagina): void;
+  /** Muestra el usuario y el botón "Salir", o los oculta si no hay sesión. */
+  mostrarSesion(sesion: Sesion | null): void;
+}
+
+export interface OpcionesLayout {
+  alSalir(): void;
 }
 
 const ID_MENU = 'menu-principal';
 
 /** Arma el encabezado con el menú y el área de contenido dentro de `raiz`. */
-export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[]): Layout {
+export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[], opciones: OpcionesLayout): Layout {
   const encabezado = document.createElement('header');
   encabezado.className = 'encabezado';
 
@@ -42,6 +49,18 @@ export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[]): Layo
   });
   menu.append(lista);
 
+  const usuario = document.createElement('div');
+  usuario.className = 'usuario';
+  usuario.hidden = true;
+  const nombre = document.createElement('span');
+  nombre.className = 'usuario-nombre';
+  const salir = document.createElement('button');
+  salir.type = 'button';
+  salir.className = 'boton-secundario';
+  salir.textContent = 'Salir';
+  salir.addEventListener('click', () => opciones.alSalir());
+  usuario.append(nombre, salir);
+
   function abrirMenu(abierto: boolean): void {
     menu.classList.toggle('abierto', abierto);
     boton.setAttribute('aria-expanded', String(abierto));
@@ -49,7 +68,7 @@ export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[]): Layo
 
   boton.addEventListener('click', () => abrirMenu(!menu.classList.contains('abierto')));
 
-  encabezado.append(marca, boton, menu);
+  encabezado.append(marca, boton, menu, usuario);
 
   const contenido = document.createElement('main');
   contenido.className = 'contenido';
@@ -67,6 +86,10 @@ export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[]): Layo
         }
       }
       abrirMenu(false);
+    },
+    mostrarSesion(sesion) {
+      usuario.hidden = sesion === null;
+      nombre.textContent = sesion?.username ?? '';
     },
   };
 }

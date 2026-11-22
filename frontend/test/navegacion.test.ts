@@ -1,13 +1,19 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
-import { iniciarApp } from '../src/app.ts';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { Router } from '../src/shared/ui/router.ts';
+import { abrirApp, ServidorFalso } from './apoyo.ts';
 
 let raiz: HTMLElement;
 let router: Router | undefined;
 
+/** Abre la aplicación con una sesión ficticia de `recepcion` (la Agenda es privada desde C-09). */
 function abrirEn(hash: string): void {
-  history.replaceState(null, '', hash === '' ? window.location.pathname : hash);
-  router = iniciarApp(raiz);
+  const app = abrirApp(new ServidorFalso(), hash);
+  raiz = app.raiz;
+  router = app.router;
+}
+
+async function esperarTitulo(esperado: string): Promise<void> {
+  await vi.waitFor(() => expect(titulo()).toBe(esperado));
 }
 
 function esperarHashchange(): Promise<void> {
@@ -52,11 +58,6 @@ async function elegir(texto: string): Promise<void> {
   await cambio;
 }
 
-beforeEach(() => {
-  raiz = document.createElement('div');
-  document.body.replaceChildren(raiz);
-});
-
 afterEach(() => {
   router?.detener();
   router = undefined;
@@ -67,18 +68,25 @@ describe('Páginas disponibles', () => {
     abrirEn('#/reserva');
     expect(titulo()).toBe('Reserva');
   });
+
+  it('Abrir la página de ingreso por su dirección', () => {
+    abrirEn('#/ingreso');
+    expect(titulo()).toBe('Ingresar');
+    const textos = [...raiz.querySelectorAll('nav a')].map((a) => a.textContent);
+    expect(textos).not.toContain('Ingresar');
+  });
 });
 
 describe('Página inicial y direcciones desconocidas', () => {
-  it('Abrir la aplicación sin dirección', () => {
+  it('Abrir la aplicación sin dirección', async () => {
     abrirEn('');
-    expect(titulo()).toBe('Agenda');
+    await esperarTitulo('Agenda');
     expect(window.location.hash).toBe('#/agenda');
   });
 
-  it('Dirección desconocida', () => {
+  it('Dirección desconocida', async () => {
     abrirEn('#/no-existe');
-    expect(titulo()).toBe('Agenda');
+    await esperarTitulo('Agenda');
     expect(window.location.hash).toBe('#/agenda');
   });
 });
@@ -104,7 +112,7 @@ describe('Navegación sin recargar', () => {
     history.back();
     await cambio;
 
-    expect(titulo()).toBe('Agenda');
+    await esperarTitulo('Agenda');
   });
 });
 

@@ -361,7 +361,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/09_decisiones_y_supuestos.md` §DD-03, §DD-06
 
 ### [C-09] `frontend-agenda-personal`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-22, PR pendiente). Change `openspec/changes/frontend-agenda-personal/` (specs nuevas `frontend-sesion-personal` y `frontend-agenda-personal`; deltas a `frontend-cliente-api` y `frontend-navegacion`). Evidencia: 99 tests y capturas en `verify/`
 - **Responsable**: Enzo
 - **Scope**:
   - Login del personal, agenda diaria y semanal filtrable por profesional o sillón (US-014), formulario para crear y cancelar turnos con mensajes por código de error.
