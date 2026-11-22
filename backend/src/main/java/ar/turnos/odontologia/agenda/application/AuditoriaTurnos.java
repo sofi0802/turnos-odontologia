@@ -8,5 +8,5 @@ public interface AuditoriaTurnos {
 
     void registrar(Long turnoId, Accion accion, String actor, Long turnoRelacionadoId);
 
-    enum Accion { CREAR, CANCELAR, REPROGRAMAR, SOBRETURNO, EXTENDER, CONFIRMAR }
+    enum Accion { CREAR, CANCELAR, REPROGRAMAR, SOBRETURNO, EXTENDER, CONFIRMAR, AUSENTE }
 }

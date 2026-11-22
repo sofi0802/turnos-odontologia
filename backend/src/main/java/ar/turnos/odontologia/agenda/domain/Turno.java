@@ -104,6 +104,15 @@ public record Turno(
                 EstadoTurno.CONFIRMADO, numeroReserva, esSobreturno, motivoSobreturno, extendido, motivoExtension);
     }
 
+    /**
+     * C-13: el mismo turno en estado {@link EstadoTurno#AUSENTE}: el paciente no se presentó y el turno deja de
+     * ocupar la agenda (RN-AG-17). Conserva todos los campos, incluidos los de sobreturno y extensión de C-08.
+     */
+    public Turno ausente() {
+        return new Turno(id, pacienteId, profesionalId, sillonId, prestacionId, intervalo,
+                EstadoTurno.AUSENTE, numeroReserva, esSobreturno, motivoSobreturno, extendido, motivoExtension);
+    }
+
     public boolean esActivo() {
         return estado.esActivo();
     }

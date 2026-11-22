@@ -12,6 +12,8 @@ import ar.turnos.odontologia.agenda.application.CrearTurno;
 import ar.turnos.odontologia.agenda.application.CrearTurnoCommand;
 import ar.turnos.odontologia.agenda.application.ExtenderTurno;
 import ar.turnos.odontologia.agenda.application.ExtenderTurnoCommand;
+import ar.turnos.odontologia.agenda.application.MarcarAusencia;
+import ar.turnos.odontologia.agenda.application.MarcarAusenciaCommand;
 import ar.turnos.odontologia.agenda.application.ReasignarTurno;
 import ar.turnos.odontologia.agenda.application.ReasignarTurnoCommand;
 import ar.turnos.odontologia.agenda.application.ReprogramarTurno;
@@ -48,6 +50,7 @@ public class ServicioAgenda {
     private final ReprogramarTurno reprogramarTurno;
     private final ConfirmarTurno confirmarTurno;
     private final ReasignarTurno reasignarTurno;
+    private final MarcarAusencia marcarAusencia;
     private final ConsultaAgenda consulta;
     private final AuditoriaTurnos auditoria;
     private final TransactionTemplate transaccion;
@@ -55,7 +58,7 @@ public class ServicioAgenda {
 
     ServicioAgenda(CrearTurno crearTurno, CrearSobreturno crearSobreturno, ExtenderTurno extenderTurno,
                    CancelarTurno cancelarTurno, ReprogramarTurno reprogramarTurno, ConfirmarTurno confirmarTurno,
-                   ReasignarTurno reasignarTurno,
+                   ReasignarTurno reasignarTurno, MarcarAusencia marcarAusencia,
                    ConsultaAgenda consulta, AuditoriaTurnos auditoria, PlatformTransactionManager transacciones) {
         this.crearTurno = crearTurno;
         this.crearSobreturno = crearSobreturno;
@@ -64,6 +67,7 @@ public class ServicioAgenda {
         this.reprogramarTurno = reprogramarTurno;
         this.confirmarTurno = confirmarTurno;
         this.reasignarTurno = reasignarTurno;
+        this.marcarAusencia = marcarAusencia;
         this.consulta = consulta;
         this.auditoria = auditoria;
         this.transaccion = new TransactionTemplate(transacciones);
@@ -146,6 +150,18 @@ public class ServicioAgenda {
             auditoria.registrar(resultado.original().id(), Accion.REPROGRAMAR, actor, resultado.nuevo().id());
             auditoria.registrar(resultado.nuevo().id(), Accion.CREAR, actor, null);
             return resultado.nuevo();
+        });
+    }
+
+    /**
+     * C-13: marca la ausencia del paciente y registra la auditoría {@code AUSENTE} en la misma transacción. Si el
+     * caso de uso la rechaza, no queda ningún registro (design D6).
+     */
+    public Turno marcarAusencia(MarcarAusenciaCommand comando, String actor) {
+        return enTransaccion(() -> {
+            Turno turno = marcarAusencia.ejecutar(comando);
+            auditoria.registrar(turno.id(), Accion.AUSENTE, actor, null);
+            return turno;
         });
     }
 

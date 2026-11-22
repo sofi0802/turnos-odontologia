@@ -7,6 +7,7 @@ import ar.turnos.odontologia.agenda.application.CrearTurno;
 import ar.turnos.odontologia.agenda.application.DisponibilidadProfesional;
 import ar.turnos.odontologia.agenda.application.ExtenderTurno;
 import ar.turnos.odontologia.agenda.application.GeneradorNumeroReserva;
+import ar.turnos.odontologia.agenda.application.MarcarAusencia;
 import ar.turnos.odontologia.agenda.application.ReasignarTurno;
 import ar.turnos.odontologia.agenda.application.RecursosAgenda;
 import ar.turnos.odontologia.agenda.application.ReprogramarTurno;
@@ -83,6 +84,11 @@ class AgendaConfig {
     @Bean
     ReprogramarTurno reprogramarTurno(TurnoRepository turnos, CrearTurno crearTurno) {
         return new ReprogramarTurno(turnos, crearTurno);
+    }
+
+    @Bean
+    MarcarAusencia marcarAusencia(TurnoRepository turnos, Clock reloj) {
+        return new MarcarAusencia(turnos, reloj);
     }
 
     @Bean

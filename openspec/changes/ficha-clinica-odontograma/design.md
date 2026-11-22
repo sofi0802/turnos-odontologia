@@ -73,6 +73,7 @@ El `PUT` recibe una lista de 1 a 32 cambios. Primero se valida cada uno en el do
 - **Escrituras** (`PUT` de ficha y odontograma, `POST` de ausencias): `hasRole('ODONTOLOGO')`.
 - **La recepción** queda afuera por la anotación, antes de que el servicio lea algún dato, y no ve contenido.
 - **Odontólogo sin profesional vinculado**: para el odontograma y la ausencia, el servicio necesita el `profesionalId` de la sesión. Si es nulo, se lanza `AccessDeniedException`, que sale como `403 ACCESO_DENEGADO` igual que el resto de los permisos.
+  - *Nota del apply*: la base ya impide ese caso (`CHECK usuario_odontologo_con_profesional` de V3), así que el control es una defensa. El test del escenario inyecta un principal sin profesional con `user(...)` y `csrf()` de spring-security-test, y descarta el contexto con `@DirtiesContext` porque `csrf()` modifica el filtro compartido.
 - **Ficha básica**: no necesita profesional, porque firma con el `username`.
 
 ### D6. La ausencia es una operación de la agenda

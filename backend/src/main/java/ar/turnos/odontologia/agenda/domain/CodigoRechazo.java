@@ -22,5 +22,7 @@ public enum CodigoRechazo {
     /** C-07: el profesional destino de una reasignación no está habilitado para la prestación (RN-AG-15). */
     PROFESIONAL_NO_HABILITADO,
     /** C-07: el turno que se quiere reasignar no es del profesional o no se cruza con la ausencia citada. */
-    TURNO_NO_AFECTADO
+    TURNO_NO_AFECTADO,
+    /** C-13: la ausencia del paciente solo se marca después del inicio del turno (RN-AG-17). */
+    TURNO_NO_INICIADO
 }
