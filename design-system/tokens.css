@@ -1,0 +1,132 @@
+/* Design system — tokens (Revision 1).
+   Fuente única de valores visuales. Conserva las decisiones de la UI existente
+   (frontend/src/styles.css de C-09): acento #0b6e8a, fuente del sistema, radio 0.5rem,
+   objetivos táctiles de 44px. Los alias del final mantienen los nombres que ya usa el frontend. */
+
+:root {
+  /* ---- Color: marca ---- */
+  --ds-acento-50: #e8f4f7;
+  --ds-acento-100: #cfe7ee;
+  --ds-acento-500: #0b6e8a;   /* acento principal (contraste 5.7:1 sobre blanco) */
+  --ds-acento-600: #095b72;   /* hover */
+  --ds-acento-700: #07475a;   /* activo / presionado */
+  --ds-acento-texto: #ffffff;
+
+  /* ---- Color: neutros ---- */
+  --ds-fondo: #ffffff;
+  --ds-superficie: #f3f6f8;
+  --ds-superficie-2: #e9eef2;
+  --ds-borde: #d5dee4;
+  --ds-borde-fuerte: #b3c1cb;
+  --ds-texto: #1d2a33;
+  --ds-texto-suave: #4c5d69;   /* 6.4:1 sobre blanco */
+  --ds-texto-deshabilitado: #7d8b95;
+
+  /* ---- Color: avisos ---- */
+  --ds-error: #a3262a;
+  --ds-error-fondo: #fdf0f0;
+  --ds-ok: #1e6b3a;
+  --ds-ok-fondo: #eef8f1;
+  --ds-alerta: #8a4b00;
+  --ds-alerta-fondo: #fdf3e6;
+  --ds-info: #1f5f99;
+  --ds-info-fondo: #eaf2fb;
+
+  /* ---- Color: estado del turno (texto sobre su fondo, todos ≥ 4.5:1) ---- */
+  --ds-turno-reservado: #1f5f99;
+  --ds-turno-reservado-fondo: #eaf2fb;
+  --ds-turno-confirmado: #1e6b3a;
+  --ds-turno-confirmado-fondo: #eef8f1;
+  --ds-turno-sobreturno: #8a4b00;
+  --ds-turno-sobreturno-fondo: #fdf3e6;
+  --ds-turno-ausente: #a3262a;
+  --ds-turno-ausente-fondo: #fdf0f0;
+  --ds-turno-atendido: #4b3f8a;
+  --ds-turno-atendido-fondo: #f2f0fb;
+  --ds-turno-cancelado: #5b6770;
+  --ds-turno-cancelado-fondo: #f1f3f5;
+
+  /* ---- Tipografía (sin fuentes remotas) ---- */
+  --ds-fuente: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --ds-fuente-mono: ui-monospace, 'Cascadia Mono', Consolas, monospace;
+  --ds-texto-xs: 0.8125rem;   /* 13px: etiquetas */
+  --ds-texto-sm: 0.875rem;    /* 14px: ayudas y errores de campo */
+  --ds-texto-base: 1rem;      /* 16px: cuerpo, inputs (evita zoom en iOS) */
+  --ds-texto-lg: 1.125rem;    /* 18px: títulos de tarjeta */
+  --ds-texto-xl: 1.5rem;      /* 24px: h2 */
+  --ds-texto-2xl: 2rem;       /* 32px: h1 */
+  --ds-peso-normal: 400;
+  --ds-peso-medio: 600;
+  --ds-peso-fuerte: 700;
+  --ds-interlineado: 1.5;
+  --ds-interlineado-titulo: 1.2;
+
+  /* ---- Espaciado (escala de 4px) ---- */
+  --ds-espacio-0: 0.25rem;  /* 4 */
+  --ds-espacio-1: 0.5rem;   /* 8 */
+  --ds-espacio-2: 1rem;     /* 16 */
+  --ds-espacio-3: 1.5rem;   /* 24 */
+  --ds-espacio-4: 2rem;     /* 32 */
+  --ds-espacio-5: 3rem;     /* 48 */
+
+  /* ---- Forma ---- */
+  --ds-radio-sm: 0.25rem;
+  --ds-radio: 0.5rem;
+  --ds-radio-lg: 0.75rem;
+  --ds-radio-pill: 999px;
+  --ds-borde-ancho: 1px;
+  --ds-alto-control: 44px;     /* objetivo táctil mínimo */
+  --ds-ancho-maximo: 72rem;
+
+  /* ---- Sombras ---- */
+  --ds-sombra-1: 0 1px 2px rgb(29 42 51 / 8%);
+  --ds-sombra-2: 0 2px 8px rgb(29 42 51 / 10%);
+  --ds-sombra-3: 0 12px 32px rgb(29 42 51 / 18%);  /* diálogos */
+  --ds-velo: rgb(29 42 51 / 45%);
+
+  /* ---- Foco ---- */
+  --ds-foco-color: var(--ds-acento-500);
+  --ds-foco-ancho: 3px;
+  --ds-foco-separacion: 2px;
+
+  /* ---- Movimiento ---- */
+  --ds-duracion-rapida: 120ms;
+  --ds-duracion: 200ms;
+  --ds-curva: cubic-bezier(0.2, 0, 0, 1);
+
+  /* ---- Puntos de corte (referencia; CSS no permite var() en @media) ----
+     móvil < 768px, escritorio ≥ 768px, ancho ≥ 1200px */
+
+  /* ---- Alias compatibles con frontend/src/styles.css ---- */
+  --color-fondo: var(--ds-fondo);
+  --color-superficie: var(--ds-superficie);
+  --color-texto: var(--ds-texto);
+  --color-texto-suave: var(--ds-texto-suave);
+  --color-acento: var(--ds-acento-500);
+  --color-acento-texto: var(--ds-acento-texto);
+  --color-borde: var(--ds-borde);
+  --color-error: var(--ds-error);
+  --color-error-fondo: var(--ds-error-fondo);
+  --color-ok: var(--ds-ok);
+  --color-ok-fondo: var(--ds-ok-fondo);
+  --color-confirmado: var(--ds-turno-confirmado);
+  --color-sobreturno: var(--ds-turno-sobreturno);
+  --espacio-1: var(--ds-espacio-1);
+  --espacio-2: var(--ds-espacio-2);
+  --espacio-3: var(--ds-espacio-3);
+  --radio: var(--ds-radio);
+  --ancho-maximo: var(--ds-ancho-maximo);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --ds-duracion-rapida: 0ms;
+    --ds-duracion: 0ms;
+  }
+  *,
+  *::before,
+  *::after {
+    transition: none !important;
+    animation: none !important;
+  }
+}
