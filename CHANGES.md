@@ -62,7 +62,7 @@ C-01 crear-turno-sin-solapamientos  [Sofia · OPSX]      ← tarea 1 = scaffoldi
   │           ├── C-11 notificaciones-recordatorios [Juan Cruz]
   │           ├── C-09 frontend-agenda-personal [Enzo]         ← + C-02
   │           └── C-10 reserva-online-paciente [Juan Sebastián] ← + C-07
-  │                 └── C-12 frontend-reserva-paciente [Enzo]  ← + C-02
+  │                 └── C-12 frontend-reserva-paciente [Emanuel]  ← + C-02
   │
 C-02 frontend-base-ts  [Enzo]                            ← independiente: carpeta frontend/
   │
@@ -126,7 +126,7 @@ GATE 4: C-07 ✓ + C-06 ✓ + C-05 ✓
   → C-13 ficha-clinica-odontograma           [Agente B · Emanuel]
 
 GATE 5: C-10 ✓
-  → C-12 frontend-reserva-paciente           [Agente C · Enzo]
+  → C-12 frontend-reserva-paciente           [Agente C · Emanuel]
 
 GATE 6: changes de la entrega ✓
   → C-14 entrega-readme-y-evidencia          [Agente A · Sofia]
@@ -207,9 +207,9 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 |---|---|---|
 | **Sofia Indovino** (líder) | **C-01** (OPSX), C-06, C-14 + revisión de todos los PR | C-15, C-16, C-29 |
 | **Juan Cruz** | C-03, C-08, C-11 | C-17, C-30, C-31 |
-| **Emanuel** | C-04, C-07, C-13 | C-25, C-26, C-27, C-28 |
+| **Emanuel** | C-04, C-07, C-13, C-12 | C-25, C-26, C-27, C-28 |
 | **Juan Sebastián** | C-05, C-10 | C-18, C-19, C-20, C-21 |
-| **Enzo** | C-02, C-09, C-12 | C-22, C-23, C-24, C-32 (backend y pantallas de administración) |
+| **Enzo** | C-02, C-09 | C-22, C-23, C-24, C-32 (backend y pantallas de administración) |
 
 ---
 
@@ -411,12 +411,13 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/02_descripcion_general.md` §Integraciones externas
 
 ### [C-12] `frontend-reserva-paciente`
-- **Estado**: `[ ]` pendiente
-- **Responsable**: Enzo
+- **Estado**: `[ ]` pendiente (propuesta en `openspec/changes/frontend-reserva-paciente/`, 2026-11-23)
+- **Responsable**: Emanuel (antes Enzo; `frontend/` sigue siendo de Enzo y se le avisa en el PR)
 - **Scope**:
   - Registro e inicio de sesión del paciente; elección de prestación, fecha y profesional o "sin preferencia"; listado de horarios; confirmación con número de reserva.
   - "Mis turnos" con cancelar o reprogramar (aviso si faltan menos de 24 h). Responsivo, pensado para el celular.
-- **Dependencias**: `C-02, C-10`
+  - Menú según la sesión (paciente o personal) y las pantallas de los links de C-11 (`/mis-turnos/cancelar`, `/mis-turnos/reprogramar` y `/confirmar/{token}`).
+- **Dependencias**: `C-02, C-10` (y C-11 para los links). El archive de C-09 tiene que hacerse antes que el de C-12, porque los dos modifican `frontend-navegacion`
 - **Governance**: BAJO
 - **Leer antes**:
   - `knowledge-base/06_funcionalidades.md` §Épica 3

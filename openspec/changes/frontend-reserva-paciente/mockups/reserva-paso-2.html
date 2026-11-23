@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reservar turno · Paso 2 · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <header class="app-encabezado">
+    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisorio" /><span data-brand-name>Turnos odontología</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="reserva-paso-1.html" aria-current="page">Reservar turno</a>
+      <a href="mis-turnos.html">Mis turnos</a>
+    </nav>
+    <div class="usuario"><a class="btn btn-fantasma btn-chico" href="mi-cuenta.html">Ingresar</a></div>
+  </header>
+
+  <main class="pagina">
+    <h1>Reservar turno</h1>
+    <section class="panel" aria-labelledby="t-paso">
+      <ol class="pasos" aria-hidden="true"><li class="hecho"></li><li class="hecho"></li><li></li></ol>
+      <p class="paso-numero">Paso 2 de 3</p>
+      <h2 id="t-paso">Elegí día y horario</h2>
+      <p class="subtitulo">Consulta o control · 30 minutos</p>
+
+      <fieldset class="opciones" style="border:0;padding:0;margin:var(--ds-espacio-3) 0 0">
+        <legend class="seccion-titulo" style="margin-top:0">Profesional</legend>
+        <label class="opcion"><input type="radio" name="pro" checked /> <span>Sin preferencia<small>Te asignamos quien esté libre</small></span></label>
+        <label class="opcion"><input type="radio" name="pro" /> <span>Ana Ejemplo</span></label>
+        <label class="opcion"><input type="radio" name="pro" /> <span>Bruno Prueba</span></label>
+      </fieldset>
+
+      <div class="campo" style="margin-top:var(--ds-espacio-3)">
+        <label for="fecha">Día</label>
+        <input class="control" id="fecha" type="date" value="2026-12-01" min="2026-12-01" />
+        <p class="ayuda">Martes 1 de diciembre</p>
+      </div>
+
+      <p class="seccion-titulo" id="t-horarios">Horarios libres</p>
+      <div class="chips" role="group" aria-labelledby="t-horarios">
+        <button class="chip" type="button" aria-pressed="false">10:00</button>
+        <button class="chip" type="button" aria-pressed="true">10:30</button>
+        <button class="chip" type="button" aria-pressed="false">11:00</button>
+        <button class="chip" type="button" aria-pressed="false">11:30</button>
+        <button class="chip" type="button" aria-pressed="false">12:00</button>
+        <button class="chip" type="button" aria-pressed="false">12:30</button>
+        <button class="chip" type="button" aria-pressed="false">14:00</button>
+        <button class="chip" type="button" aria-pressed="false">15:30</button>
+      </div>
+
+      <div class="acciones">
+        <a class="btn" href="reserva-paso-1.html">Volver</a>
+        <a class="btn btn-principal" href="reserva-paso-3.html">Continuar</a>
+      </div>
+    </section>
+  </main>
+  <p class="nota-mockup"><b>Mockup</b> · Sin preferencia y las 10:30 elegidas. Al cambiar el profesional o el día se vuelven a pedir los horarios.</p>
+</body>
+</html>

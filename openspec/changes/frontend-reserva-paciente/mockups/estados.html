@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estados y avisos · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <header class="app-encabezado">
+    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisorio" /><span data-brand-name>Turnos odontología</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="reserva-paso-1.html" aria-current="page">Reservar turno</a>
+      <a href="mis-turnos.html">Mis turnos</a>
+    </nav>
+    <div class="usuario"><a class="btn btn-fantasma btn-chico" href="mi-cuenta.html">Ingresar</a></div>
+  </header>
+
+  <main class="pagina">
+    <h1>Estados y avisos</h1>
+    <div class="pila">
+      <section class="panel" aria-labelledby="e1">
+        <p class="paso-numero">Reserva · paso 2 · día completo</p>
+        <h2 id="e1">Elegí día y horario</h2>
+        <div class="vacio" style="margin-top:var(--ds-espacio-2)">No hay horarios libres para ese día. Probá con otra fecha o con otro profesional.</div>
+        <div class="acciones">
+          <button class="btn" type="button">Volver</button>
+          <button class="btn btn-principal" type="button" disabled>Continuar</button>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="e2">
+        <p class="paso-numero">Reserva · el horario pasó o no quedan alternativas</p>
+        <h2 id="e2">Elegí día y horario</h2>
+        <div class="aviso aviso-error" role="alert" style="margin-top:var(--ds-espacio-2)"><div><strong>El horario elegido ya pasó.</strong></div></div>
+        <div class="aviso aviso-error" role="alert" style="margin-top:var(--ds-espacio-1)"><div><strong>No quedan horarios libres ese día. Elegí otra fecha.</strong></div></div>
+      </section>
+
+      <section class="panel" aria-labelledby="e3">
+        <p class="paso-numero">Reserva abierta con una sesión del personal</p>
+        <h2 id="e3">Reservar turno</h2>
+        <div class="aviso aviso-info" style="margin-top:var(--ds-espacio-2)"><div><strong>La reserva online es para pacientes.</strong>Para dar un turno, usá la Agenda.</div></div>
+      </section>
+
+      <section class="panel" aria-labelledby="e4">
+        <p class="paso-numero">Mi cuenta · sesión vencida y cuenta creada sin ingresar</p>
+        <h2 id="e4">Mi cuenta</h2>
+        <div class="aviso aviso-alerta" style="margin-top:var(--ds-espacio-2)"><div><strong>Tu sesión terminó. Ingresá de nuevo.</strong></div></div>
+        <div class="aviso aviso-ok" style="margin-top:var(--ds-espacio-1)"><div><strong>Tu cuenta se creó.</strong>Ingresá con tu email y tu contraseña.</div></div>
+      </section>
+
+      <section class="panel" aria-labelledby="e5">
+        <p class="paso-numero">Mis turnos · sin turnos y rechazos</p>
+        <h2 id="e5">Mis turnos</h2>
+        <div class="vacio" style="margin-top:var(--ds-espacio-2)">
+          <p>Todavía no tenés turnos.</p>
+          <p style="margin-top:var(--ds-espacio-2)"><a class="btn btn-principal" href="reserva-paso-1.html">Reservar turno</a></p>
+        </div>
+        <div class="aviso aviso-ok" style="margin-top:var(--ds-espacio-2)"><div><strong>Tu turno se canceló.</strong></div></div>
+        <div class="aviso aviso-error" style="margin-top:var(--ds-espacio-1)"><div><strong>No encontramos ese turno.</strong></div></div>
+        <div class="aviso aviso-error" style="margin-top:var(--ds-espacio-1)"><div><strong>El turno ya no está activo.</strong></div></div>
+      </section>
+
+      <section class="panel" aria-labelledby="e6">
+        <p class="paso-numero">Mis turnos con una sesión del personal</p>
+        <h2 id="e6">Mis turnos</h2>
+        <div class="aviso aviso-info" style="margin-top:var(--ds-espacio-2)"><div><strong>Esta sección es para pacientes.</strong></div></div>
+      </section>
+    </div>
+  </main>
+  <p class="nota-mockup"><b>Mockup</b> · Estados secundarios agrupados en una sola página para revisarlos juntos. En la aplicación cada uno aparece en su pantalla.</p>
+</body>
+</html>

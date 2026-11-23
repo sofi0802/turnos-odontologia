@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi cuenta · Crear cuenta · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <header class="app-encabezado">
+    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisorio" /><span data-brand-name>Turnos odontología</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="reserva-paso-1.html">Reservar turno</a>
+      <a href="mis-turnos.html">Mis turnos</a>
+    </nav>
+    <div class="usuario"><a class="btn btn-fantasma btn-chico" href="mi-cuenta.html" aria-current="page">Ingresar</a></div>
+  </header>
+
+  <main class="pagina">
+    <h1>Mi cuenta</h1>
+    <section class="panel">
+      <div class="pestanas" role="tablist" aria-label="Cuenta">
+        <button type="button" role="tab" aria-selected="false" onclick="location.href='mi-cuenta.html'">Ingresar</button>
+        <button type="button" role="tab" aria-selected="true">Crear cuenta</button>
+      </div>
+
+      <form class="formulario" onsubmit="return false" novalidate>
+        <div class="dos-campos">
+          <div class="campo"><label for="nombre">Nombre</label><input class="control" id="nombre" autocomplete="given-name" value="Paciente" /></div>
+          <div class="campo"><label for="apellido">Apellido</label><input class="control" id="apellido" autocomplete="family-name" value="Uno" /></div>
+        </div>
+        <div class="campo">
+          <label for="dni">DNI</label>
+          <input class="control" id="dni" inputmode="numeric" value="99000001" aria-invalid="true" aria-describedby="dni-e" />
+          <p class="error-campo" id="dni-e">Ya hay un paciente registrado con ese DNI. Si es tuyo, ingresá con tu cuenta o contactá al consultorio.</p>
+        </div>
+        <div class="campo">
+          <label for="email">Email</label>
+          <input class="control" id="email" type="email" autocomplete="email" value="paciente.uno@example.com" aria-describedby="email-a" />
+          <p class="ayuda" id="email-a">Es tu usuario para ingresar.</p>
+        </div>
+        <div class="campo">
+          <label for="tel">Teléfono <span class="ayuda">(opcional)</span></label>
+          <input class="control" id="tel" type="tel" autocomplete="tel" />
+        </div>
+        <div class="dos-campos">
+          <div class="campo">
+            <label for="clave">Contraseña</label>
+            <input class="control" id="clave" type="password" autocomplete="new-password" aria-describedby="clave-a" />
+            <p class="ayuda" id="clave-a">Al menos 8 caracteres.</p>
+          </div>
+          <div class="campo"><label for="clave2">Repetí la contraseña</label><input class="control" id="clave2" type="password" autocomplete="new-password" /></div>
+        </div>
+        <button class="btn btn-principal btn-ancho" type="submit">Crear cuenta</button>
+      </form>
+    </section>
+  </main>
+  <p class="nota-mockup"><b>Mockup</b> · 409 DNI_YA_REGISTRADO: el error va en el campo DNI, se conservan los datos y se vacían las contraseñas.</p>
+</body>
+</html>

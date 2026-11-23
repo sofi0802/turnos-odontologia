@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Turno reservado · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <header class="app-encabezado">
+    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisorio" /><span data-brand-name>Turnos odontología</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="reserva-paso-1.html" aria-current="page">Reservar turno</a>
+      <a href="mis-turnos.html">Mis turnos</a>
+    </nav>
+    <div class="usuario">
+      <span class="avatar" aria-hidden="true">PU</span>
+      <span class="usuario-nombre">paciente.uno@example.com</span>
+      <button class="btn btn-fantasma btn-chico" type="button">Salir</button>
+    </div>
+  </header>
+
+  <main class="pagina">
+    <h1>Reservar turno</h1>
+    <section class="panel" aria-labelledby="t-ok">
+      <div class="comprobante" role="status">
+        <div class="tilde" aria-hidden="true">✓</div>
+        <h2 id="t-ok">¡Turno reservado!</h2>
+        <p class="ayuda" style="margin-top:var(--ds-espacio-0)">Guardá tu número de reserva: lo necesitás para cancelar o reprogramar.</p>
+        <div class="numero-reserva">K7P2-9QXM</div>
+        <dl class="detalle-lista">
+          <dt>Día</dt><dd>Martes 1 de diciembre</dd>
+          <dt>Hora</dt><dd>10:30</dd>
+          <dt>Prestación</dt><dd>Consulta o control</dd>
+          <dt>Profesional</dt><dd>Bruno Prueba</dd>
+        </dl>
+      </div>
+      <div class="acciones">
+        <a class="btn" href="reserva-paso-1.html">Reservar otro turno</a>
+        <a class="btn btn-principal" href="mis-turnos.html">Ver mis turnos</a>
+      </div>
+    </section>
+  </main>
+  <p class="nota-mockup"><b>Mockup</b> · Respuesta 201 de una reserva "Sin preferencia": el sistema asignó a Bruno Prueba.</p>
+</body>
+</html>

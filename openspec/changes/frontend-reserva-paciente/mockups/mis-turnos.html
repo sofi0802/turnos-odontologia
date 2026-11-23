@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mis turnos · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <header class="app-encabezado">
+    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisorio" /><span data-brand-name>Turnos odontología</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="reserva-paso-1.html">Reservar turno</a>
+      <a href="mis-turnos.html" aria-current="page">Mis turnos</a>
+    </nav>
+    <div class="usuario">
+      <span class="avatar" aria-hidden="true">PU</span>
+      <span class="usuario-nombre">paciente.uno@example.com</span>
+      <button class="btn btn-fantasma btn-chico" type="button">Salir</button>
+    </div>
+  </header>
+
+  <main class="pagina">
+    <h1>Mis turnos</h1>
+
+    <h2 class="seccion-titulo">Próximos turnos</h2>
+    <article class="turno-paciente">
+      <div class="turno-cabecera">
+        <span class="turno-fecha">Martes 1 de diciembre · 18:00</span>
+        <span class="estado e-confirmado">Confirmado</span>
+      </div>
+      <p class="turno-meta"><span>Extracción simple</span><span>Bruno Prueba</span></p>
+      <p class="turno-numero">Reserva K7P2-9QXM</p>
+      <div class="aviso aviso-alerta"><div><strong>Faltan menos de 24 h.</strong>Para cancelarlo o cambiarlo, contactá al consultorio.</div></div>
+    </article>
+    <article class="turno-paciente">
+      <div class="turno-cabecera">
+        <span class="turno-fecha">Jueves 3 de diciembre · 10:00</span>
+        <span class="estado e-reservado">Reservado</span>
+      </div>
+      <p class="turno-meta"><span>Consulta o control</span><span>Ana Ejemplo</span></p>
+      <p class="turno-numero">Reserva R4MD-2HZC</p>
+      <div class="turno-acciones">
+        <a class="btn" href="mis-turnos-cambiar.html">Cambiar horario</a>
+        <a class="btn btn-peligro" href="mis-turnos-cancelar.html">Cancelar turno</a>
+      </div>
+    </article>
+
+    <h2 class="seccion-titulo">Turnos anteriores</h2>
+    <article class="turno-paciente turno-anterior">
+      <div class="turno-cabecera">
+        <span class="turno-fecha">Viernes 20 de noviembre · 11:00</span>
+        <span class="estado e-cancelado">Cancelado</span>
+      </div>
+      <p class="turno-meta"><span>Limpieza (profilaxis)</span><span>Ana Ejemplo</span></p>
+      <p class="turno-numero">Reserva W8TB-5LNE</p>
+    </article>
+    <article class="turno-paciente turno-anterior">
+      <div class="turno-cabecera">
+        <span class="turno-fecha">Lunes 2 de noviembre · 09:30</span>
+        <span class="estado e-atendido">Atendido</span>
+      </div>
+      <p class="turno-meta"><span>Consulta o control</span><span>Ana Ejemplo</span></p>
+      <p class="turno-numero">Reserva C3QF-7VJA</p>
+    </article>
+
+    <p style="margin-top:var(--ds-espacio-3);text-align:center"><a class="btn btn-principal" href="reserva-paso-1.html">Reservar otro turno</a></p>
+  </main>
+  <p class="nota-mockup"><b>Mockup</b> · Momento actual: martes 1 de diciembre, 08:00. El turno de las 18:00 tiene modificableOnline falso.</p>
+</body>
+</html>
