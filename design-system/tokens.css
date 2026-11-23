@@ -1,7 +1,7 @@
-/* Design system — tokens (Revision 1).
+/* Design system — tokens (Revision 2).
    Fuente única de valores visuales. Conserva las decisiones de la UI existente
    (frontend/src/styles.css de C-09): acento #0b6e8a, fuente del sistema, radio 0.5rem,
-   objetivos táctiles de 44px. Los alias del final mantienen los nombres que ya usa el frontend. */
+   objetivos táctiles de 44px. Revision 2 (C-39): todos los nombres son --ds-*; ya no hay alias. */
 
 :root {
   /* ---- Color: marca ---- */
@@ -97,25 +97,8 @@
   /* ---- Puntos de corte (referencia; CSS no permite var() en @media) ----
      móvil < 768px, escritorio ≥ 768px, ancho ≥ 1200px */
 
-  /* ---- Alias compatibles con frontend/src/styles.css ---- */
-  --color-fondo: var(--ds-fondo);
-  --color-superficie: var(--ds-superficie);
-  --color-texto: var(--ds-texto);
-  --color-texto-suave: var(--ds-texto-suave);
-  --color-acento: var(--ds-acento-500);
-  --color-acento-texto: var(--ds-acento-texto);
-  --color-borde: var(--ds-borde);
-  --color-error: var(--ds-error);
-  --color-error-fondo: var(--ds-error-fondo);
-  --color-ok: var(--ds-ok);
-  --color-ok-fondo: var(--ds-ok-fondo);
-  --color-confirmado: var(--ds-turno-confirmado);
-  --color-sobreturno: var(--ds-turno-sobreturno);
-  --espacio-1: var(--ds-espacio-1);
-  --espacio-2: var(--ds-espacio-2);
-  --espacio-3: var(--ds-espacio-3);
-  --radio: var(--ds-radio);
-  --ancho-maximo: var(--ds-ancho-maximo);
+  /* ---- Capa detrás de los diálogos (antes escrita a mano en los estilos) ---- */
+  --ds-capa-modal: rgb(29 42 51 / 45%);
 }
 
 @media (prefers-reduced-motion: reduce) {

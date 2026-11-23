@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import estilos from '../src/styles.css?raw';
+import { estilos } from './estilos.ts';
 import type { Router } from '../src/shared/ui/router.ts';
 import { abrirApp, json, ServidorFalso } from './apoyo.ts';
 

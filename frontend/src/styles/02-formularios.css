@@ -1,0 +1,56 @@
+/* Formularios y avisos */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-espacio-2);
+}
+
+.formulario-angosto {
+  max-width: 24rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.campo label {
+  font-weight: 600;
+}
+
+.campo-error {
+  margin: 0;
+  min-height: 0;
+  font-size: 0.875rem;
+  color: var(--ds-error);
+}
+
+.campo-error:empty {
+  display: none;
+}
+
+.aviso {
+  margin: 0 0 var(--ds-espacio-2);
+}
+
+.aviso:empty {
+  display: none;
+}
+
+.aviso-error {
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  color: var(--ds-error);
+  background: var(--ds-error-fondo);
+  border-left: 4px solid var(--ds-error);
+  border-radius: var(--ds-radio);
+}
+
+.aviso-ok {
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  color: var(--ds-ok);
+  background: var(--ds-ok-fondo);
+  border-left: 4px solid var(--ds-ok);
+  border-radius: var(--ds-radio);
+}
+

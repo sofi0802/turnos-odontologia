@@ -43,14 +43,14 @@ Se cumple el modo `system-and-mockups`: cada etapa con cambio visual (B, C y D) 
 Quitar los alias de `tokens.css` es un cambio de un archivo compartido, así que sube la revisión a 2 y pide renovar la aprobación del sistema (`design-system/README.md`). Como los alias valen lo mismo que los `--ds-*`, no cambia ningún valor ni el aspecto de ninguna pantalla; el encabezado y el pie azules (etapa B) sí cambian el aspecto, y se aprueban con los mockups de esa etapa. `components.html` se actualiza en la etapa B con la barra lateral, el pie y los estados nuevos.
 
 ### D3. Estilos en módulos con `@import`, y un ayudante para los tests
-`styles.css` pasa a ser una lista de `@import` en este orden: `base`, `componentes` (botones, campos, avisos, diálogos, tarjetas, selector, calendario, buscador), `layout` (encabezado, barra lateral, pie) y un módulo por pantalla o grupo (`portada`, `reserva`, `mi-cuenta`, `agenda`, `nuevo-turno`, `configuracion`). Vite resuelve los `@import` en el build y en el servidor de desarrollo. Los tests que hoy hacen `import estilos from '../src/styles.css?raw'` leen en su lugar `test/estilos.ts`, que junta los módulos con `import.meta.glob('../src/styles/*.css', { query: '?raw', eager: true })` en el orden de `styles.css`; así las reglas de CSS que ya se comprueban (por ejemplo, 44 px en los botones) siguen funcionando sin tocar su texto.
+`styles.css` pasa a ser la importación de los tokens y una lista de `@import` de módulos en `src/styles/`, cortados **de forma contigua y en el mismo orden** que tenía el archivo único, para no alterar la cascada: `01-base`, `02-formularios`, `03-agenda`, `04-dialogos`, `05-reprogramar`, `06-componentes`, `07-selector-prestaciones`, `08-paciente`, `09-buscador-pacientes`, `10-portada`, `11-nuevo-turno` y `12-configuracion`. Los módulos nuevos de la etapa B (barra lateral, encabezado y pie) se suman con su número. Reordenar por tema queda para después, con capturas que lo respalden. Vite resuelve los `@import` en el build y en el servidor de desarrollo. Los tests que hoy hacen `import estilos from '../src/styles.css?raw'` leen en su lugar `test/estilos.ts`, que importa cada módulo con `?raw` y los junta en el orden de `styles.css` (Vitest deja vacíos los `.css` que no están en `css.include`, así que `vite.config.ts` suma `src/styles/` y `design-system/tokens.css`, y `server.fs.allow` suma `../design-system`; un test avisa si un módulo del disco no está en el ayudante); así las reglas de CSS que ya se comprueban (por ejemplo, 44 px en los botones) siguen funcionando sin tocar su texto.
 
 *Alternativa descartada*: dejar un solo archivo y ordenarlo. No resuelve que cada change agregue 200 líneas al final, y el archivo ya choca entre changes en paralelo.
 
 ### D4. La barra lateral reutiliza el `<nav id="menu-principal">`
 Para no romper los tests ni la accesibilidad, el `<nav>` conserva su id, su `aria-label="Principal"`, su botón con `aria-controls="menu-principal"` y `aria-expanded`, y los `li[hidden]` por rol. Cambia dónde está y cómo se ve:
 - Con sesión, `layout.ts` arma una estructura de dos columnas: la barra lateral (`<aside>` con el `<nav>`) a la izquierda y el contenido a la derecha; el encabezado queda arriba a todo el ancho con la marca, el botón "Menú" (solo en el celular) y el usuario con "Salir".
-- Sin sesión no se dibuja la barra lateral: el encabezado ofrece "Reservar turno" y "Ingresar" ("Acceso personal" en la portada), como hoy.
+- Sin sesión no se dibuja la barra lateral: el encabezado ofrece "Reservar turno" y un único botón "Ingresar" a `#/mi-cuenta` arriba a la derecha, también en la portada (decisión de la líder, ver D10).
 - En el celular (menos de 768 px) la barra es un cajón que se desliza desde la izquierda sobre una capa que oscurece el contenido; se cierra al elegir una página, con "Escape" o al tocar la capa. El foco pasa al cajón al abrirlo y vuelve al botón al cerrarlo. Sin animación con `prefers-reduced-motion`.
 - La barra lateral y el encabezado se muestran o se ocultan cuando llega `mostrarSesion`, sin recargar.
 
@@ -69,9 +69,14 @@ Un ayudante `shared/ui/dialogo.ts` arma el diálogo: título, lugar del aviso de
 ### D9. Archive
 Este change modifica `frontend-navegacion`, que también modifican `ingreso-unico-mi-cuenta` y `frontend-portada-y-acceso` (requisitos distintos, pero el mismo archivo de spec), y crea `frontend-sistema-visual`. Se archiva **al final de la etapa D**, después de los archives pendientes de esos dos changes. El delta valida hoy contra los specs vigentes porque solo modifica los requisitos "Menú adaptable a pantallas chicas" y "Menú según la sesión", que ninguno de los dos toca.
 
+### D10. Decisiones de la líder (2026-11-23)
+- **Un solo botón de ingreso**: "Acceso personal" (portada) e "Ingresar" (demás páginas) se unifican en "Ingresar", arriba a la derecha, sin sesión y en todas las páginas. Cambia lo que dejó C-37 (requisito "Acceso del personal" de `frontend-portada`, todavía sin archivar): en la etapa B, cuando `frontend-portada-y-acceso` esté archivado, se agrega al change el delta que modifica ese requisito y sus dos escenarios ("El personal entra desde la portada" y "El botón del personal en el celular"). Mi cuenta mantiene la indicación para el personal, que sigue explicando que el personal ingresa en el mismo formulario.
+- **El pie**: por ahora solo el nombre genérico de la aplicación, "Turnos odontología" (los datos del consultorio siguen `(TBD)`).
+- **Más observaciones**: no hay por ahora; si llegan, se suman como una etapa.
+
 ## UI Mockups
 
-- Design system revision: 1 al proponer; 2 desde la etapa A (se registra al subirla).
+- Design system revision: 1 al proponer; **2 desde la etapa A** (2026-11-23, solo quita los alias y suma `--ds-capa-modal`; sin cambio visual; aprobación pendiente de renovar por la líder).
 - Decision: yes, 2026-11-23. El modo del proyecto es `system-and-mockups`.
 - Mockups: se crean por etapa en `openspec/changes/frontend-uniformidad-visual/mockups/<etapa>/` (B: barra lateral, encabezado, pie, componentes y diálogos; C: pantallas del paciente; D: pantallas del personal). Fuente de referencia: `design-system/components.html` y los mockups de C-12, C-33, C-37 y C-38.
 - Approval: pending (por etapa: A no lleva mockups; B, C y D pending).
@@ -90,6 +95,4 @@ Este change modifica `frontend-navegacion`, que también modifican `ingreso-unic
 
 ## Open Questions
 
-- ¿Los botones "Acceso personal" (portada) e "Ingresar" (demás páginas sin sesión) se unifican en uno solo, por ejemplo "Ingresar"? Se propone conservar lo de C-37; se decide en los mockups de la etapa B.
-- ¿Qué lleva el pie además del nombre de la aplicación? Se propone solo el nombre (los datos del consultorio son `(TBD)`).
-- ¿Hay más observaciones del equipo para sumar como etapa antes de la etapa C?
+Sin preguntas abiertas: la líder las respondió el 2026-11-23 (ver D10).
