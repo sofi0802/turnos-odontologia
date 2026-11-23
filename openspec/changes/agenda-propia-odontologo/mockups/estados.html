@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estados de Mi agenda · Turnos odontología</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <p class="nota-mockup"><b>Mockup C-35.</b> Estado 1: día sin turnos, filtrado por "Sillón 2" (se pide <code>profesionalId=1&amp;sillonId=2</code>).</p>
+  <header class="app-encabezado">
+    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisorio" /><span data-brand-name>Turnos odontología</span></a>
+    <button class="btn menu" type="button" aria-expanded="false">Menú</button>
+    <nav class="nav" aria-label="Principal">
+      <a href="#" aria-current="page">Agenda</a><a href="#">Reserva</a><a href="#">Configuración</a>
+    </nav>
+    <div class="usuario"><span><span class="usuario-nombre">ana.ejemplo</span> <span class="usuario-rol">· Odontóloga</span></span><button class="btn" type="button">Salir</button></div>
+  </header>
+  <main class="pagina">
+    <div class="titulo"><h1>Mi agenda <span class="titulo-profesional">Ana Ejemplo</span></h1></div>
+    <div class="barra">
+      <div class="grupo"><button class="btn" type="button" aria-pressed="true">Día</button><button class="btn" type="button" aria-pressed="false">Semana</button></div>
+      <div class="grupo"><button class="btn btn-icono" type="button" aria-label="Anterior" title="Anterior"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button><button class="btn" type="button">Hoy</button><button class="btn btn-icono" type="button" aria-label="Siguiente" title="Siguiente"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div>
+      <p class="periodo">Martes 1/12</p>
+    </div>
+    <div class="filtros">
+      <div class="campo"><label for="sillon">Sillón</label><select id="sillon" class="control"><option>Sillón 2</option></select></div>
+      <button class="btn btn-principal" type="button">Nuevo turno</button>
+    </div>
+    <p class="vacio">No hay turnos para este día.</p>
+    <section class="estado-mockup">
+      <p><b>Estado 2:</b> la lista de profesionales no se pudo cargar. El título queda solo en "Mi agenda" y la agenda funciona igual.</p>
+      <div class="titulo"><h1>Mi agenda</h1></div>
+      <div class="aviso aviso-alerta">No pudimos cargar la lista de profesionales.</div>
+    </section>
+    <section class="estado-mockup">
+      <p><b>Referencia sin cambios:</b> con sesión de recepción o administración se siguen viendo "Agenda" y los dos filtros.</p>
+      <div class="titulo"><h1>Agenda</h1></div>
+      <div class="filtros" style="grid-template-columns: repeat(auto-fit, minmax(12rem, 16rem)) auto;">
+        <div class="campo"><label for="p2">Profesional</label><select id="p2" class="control"><option>Todos</option></select></div>
+        <div class="campo"><label for="s2">Sillón</label><select id="s2" class="control"><option>Todos</option></select></div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

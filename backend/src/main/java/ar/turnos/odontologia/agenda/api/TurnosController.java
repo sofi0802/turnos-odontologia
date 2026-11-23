@@ -61,11 +61,16 @@ class TurnosController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime desde,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime hasta,
             @RequestParam(required = false) Long profesionalId,
-            @RequestParam(required = false) Long sillonId) {
+            @RequestParam(required = false) Long sillonId,
+            @AuthenticationPrincipal UsuarioAutenticado usuario) {
         if (!hasta.isAfter(desde)) {
             throw new PeriodoInvalidoException();
         }
-        return agenda.agenda(desde.toInstant(), hasta.toInstant(), profesionalId, sillonId).stream()
+        AlcanceAgenda alcance = AlcanceAgenda.para(usuario.rol(), usuario.profesionalId(), profesionalId);
+        if (alcance.sinTurnos()) {
+            return List.of();
+        }
+        return agenda.agenda(desde.toInstant(), hasta.toInstant(), alcance.profesionalId(), sillonId).stream()
                 .map(t -> TurnoAgendaResponse.de(t, zona))
                 .toList();
     }

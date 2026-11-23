@@ -66,6 +66,8 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 **Criterios de aceptación**:
 - [ ] CA-1: se distinguen visualmente los sobreturnos y los turnos confirmados.
 - [ ] CA-2: el diseño es responsivo y se usa desde el celular.
+- [ ] CA-3: el odontólogo ve solo sus turnos y no puede elegir otro profesional; la recepción y el administrador ven los de todos [2026-11-23].
+**Reglas relacionadas**: RN-AG-18
 
 ### US-016: Configurar los horarios de trabajo de cada profesional
 **Como** administrador **quiero** cargar las franjas semanales en que atiende cada profesional **para** que solo se den turnos cuando hay alguien trabajando.

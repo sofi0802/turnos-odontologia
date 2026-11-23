@@ -24,6 +24,39 @@ class AutenticacionIntegrationTest extends IntegracionSeguridadBase {
     }
 
     @Test
+    @DisplayName("Sesión de un odontólogo")
+    void sesionDeUnOdontologo() throws Exception {
+        // GIVEN ana.ejemplo (ODONTOLOGO), vinculada a la Dra. A, con sesión iniciada
+        String clave = contrasenaFicticia();
+        crearPersonal("ana.ejemplo", "ODONTOLOGO", clave);
+        long draA = jdbc.queryForObject("SELECT profesional_id FROM usuario WHERE username = 'ana.ejemplo'", Long.class);
+        Navegador navegador = iniciarSesion("ana.ejemplo", clave);
+
+        // WHEN pide GET /api/v1/public/sesion
+        // THEN la respuesta es 200 con rol ODONTOLOGO y profesionalId igual al id de la Dra. A
+        navegador.get(SESION)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.rol").value("ODONTOLOGO"))
+                .andExpect(jsonPath("$.profesionalId").value(draA));
+    }
+
+    @Test
+    @DisplayName("Sesión de recepción sin profesional")
+    void sesionDeRecepcionSinProfesional() throws Exception {
+        // GIVEN recepcion con sesión iniciada
+        String clave = contrasenaFicticia();
+        crearPersonal("recepcion", "RECEPCIONISTA", clave);
+        Navegador navegador = iniciarSesion("recepcion", clave);
+
+        // WHEN pide GET /api/v1/public/sesion
+        // THEN la respuesta es 200 con rol RECEPCIONISTA AND no incluye profesionalId
+        navegador.get(SESION)
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.rol").value("RECEPCIONISTA"))
+                .andExpect(jsonPath("$.profesionalId").doesNotExist());
+    }
+
+    @Test
     @DisplayName("Login correcto del personal")
     void loginCorrectoDelPersonal() throws Exception {
         String clave = contrasenaFicticia();

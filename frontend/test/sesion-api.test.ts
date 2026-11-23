@@ -38,6 +38,32 @@ describe('Módulo de sesión', () => {
     expect(rutas(fetchSimulado)).toEqual(['GET /public/sesion']);
   });
 
+  it('la sesión del odontólogo trae su profesional (RN-AG-18)', async () => {
+    const fetchSimulado = vi.fn<typeof fetch>().mockResolvedValue(
+      respuesta(200, { autenticado: true, username: 'ana.ejemplo', rol: 'ODONTOLOGO', profesionalId: 1 }),
+    );
+
+    const sesion = await consultarSesion(crearClienteApi(URL_BASE, fetchSimulado));
+
+    expect(sesion).toEqual({ autenticado: true, username: 'ana.ejemplo', rol: 'ODONTOLOGO', profesionalId: 1 });
+  });
+
+  it('solo el odontólogo con un id válido tiene profesional', async () => {
+    const casos: unknown[] = [
+      { autenticado: true, username: 'admin', rol: 'ADMIN', profesionalId: 2 },
+      { autenticado: true, username: 'ana.ejemplo', rol: 'ODONTOLOGO', profesionalId: 0 },
+      { autenticado: true, username: 'ana.ejemplo', rol: 'ODONTOLOGO', profesionalId: '1' },
+      { autenticado: true, username: 'ana.ejemplo', rol: 'ODONTOLOGO', profesionalId: 1.5 },
+    ];
+    for (const cuerpo of casos) {
+      const fetchSimulado = vi.fn<typeof fetch>().mockResolvedValue(respuesta(200, cuerpo));
+
+      const sesion = await consultarSesion(crearClienteApi(URL_BASE, fetchSimulado));
+
+      expect(sesion.profesionalId).toBeUndefined();
+    }
+  });
+
   it('una respuesta sin sesión o con forma desconocida es "sin sesión"', async () => {
     const fetchSimulado = vi
       .fn<typeof fetch>()

@@ -67,14 +67,14 @@ class AutenticacionController {
         csrfTokenRepository.saveToken(csrfTokenRepository.generateToken(request), request, response);
 
         UsuarioAutenticado usuario = (UsuarioAutenticado) autenticacion.getPrincipal();
-        return SesionResponse.de(usuario.getUsername(), usuario.rol());
+        return SesionResponse.de(usuario.getUsername(), usuario.rol(), usuario.profesionalId());
     }
 
     @GetMapping("/sesion")
     SesionResponse sesion() {
         Authentication autenticacion = holderStrategy.getContext().getAuthentication();
         if (autenticacion != null && autenticacion.getPrincipal() instanceof UsuarioAutenticado usuario) {
-            return SesionResponse.de(usuario.getUsername(), usuario.rol());
+            return SesionResponse.de(usuario.getUsername(), usuario.rol(), usuario.profesionalId());
         }
         return SesionResponse.sinSesion();
     }

@@ -148,8 +148,11 @@ export function campo<T extends HTMLElement = HTMLInputElement>(raiz: ParentNode
   return elemento as unknown as T;
 }
 
+/** Botón por su texto visible o, si es un ícono, por su `aria-label` (C-35). */
 export function boton(raiz: ParentNode, texto: string): HTMLButtonElement {
-  const encontrado = [...raiz.querySelectorAll('button')].find((b) => b.textContent?.trim() === texto);
+  const encontrado = [...raiz.querySelectorAll('button')].find(
+    (b) => b.textContent?.trim() === texto || b.getAttribute('aria-label') === texto,
+  );
   if (encontrado === undefined) {
     throw new Error(`No existe el botón ${texto}`);
   }

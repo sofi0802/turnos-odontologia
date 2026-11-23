@@ -19,6 +19,27 @@ function textoDelPeriodo(periodo: Periodo): string {
     : `Semana del ${fechaCorta(periodo.desde)} al ${fechaCorta(sumarDias(periodo.hasta, -1))}`;
 }
 
+const SVG = 'http://www.w3.org/2000/svg';
+
+/** Botón con una flecha; la palabra queda como nombre accesible y texto de ayuda (C-35). */
+function crearBotonFlecha(nombre: string, trazo: string): HTMLButtonElement {
+  const boton = document.createElement('button');
+  boton.type = 'button';
+  boton.className = 'boton-icono';
+  boton.setAttribute('aria-label', nombre);
+  boton.title = nombre;
+  const icono = document.createElementNS(SVG, 'svg');
+  icono.setAttribute('viewBox', '0 0 24 24');
+  icono.setAttribute('width', '20');
+  icono.setAttribute('height', '20');
+  icono.setAttribute('aria-hidden', 'true');
+  const camino = document.createElementNS(SVG, 'path');
+  camino.setAttribute('d', trazo);
+  icono.append(camino);
+  boton.append(icono);
+  return boton;
+}
+
 function idElegido(selector: HTMLSelectElement): number | null {
   return selector.value === '' ? null : Number(selector.value);
 }
@@ -33,6 +54,8 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   let turnos: TurnoAgenda[] = [];
   let consulta = 0;
   let errorDeCarga = false;
+  // RN-AG-18: el odontólogo ve solo su agenda; el backend aplica la misma regla.
+  const profesionalFijo = contexto.sesion.profesionalId;
 
   const exito = crearAviso('status');
   const error = crearAviso('alert');
@@ -45,9 +68,9 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   vistas.setAttribute('aria-label', 'Vista');
   vistas.append(botonDia, botonSemana);
 
-  const anterior = crearBoton('Anterior');
+  const anterior = crearBotonFlecha('Anterior', 'M15 6l-6 6 6 6');
   const botonHoy = crearBoton('Hoy');
-  const siguiente = crearBoton('Siguiente');
+  const siguiente = crearBotonFlecha('Siguiente', 'M9 6l6 6-6 6');
   const navegacion = document.createElement('div');
   navegacion.className = 'grupo-botones';
   navegacion.setAttribute('role', 'group');
@@ -68,7 +91,11 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   nuevo.className = 'boton-principal';
   const filtros = document.createElement('div');
   filtros.className = 'agenda-filtros';
-  filtros.append(profesional.contenedor, sillon.contenedor, nuevo);
+  if (profesionalFijo === undefined) {
+    filtros.append(profesional.contenedor, sillon.contenedor, nuevo);
+  } else {
+    filtros.append(sillon.contenedor, nuevo);
+  }
 
   const avisosCatalogo = document.createElement('div');
   avisosCatalogo.className = 'agenda-avisos';
@@ -76,7 +103,9 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   const lista = document.createElement('div');
   lista.className = 'agenda-lista';
 
-  contenedor.replaceChildren(crearTitulo('Agenda'), exito, error, barra, filtros, avisosCatalogo, lista);
+  const titulo = crearTitulo(profesionalFijo === undefined ? 'Agenda' : 'Mi agenda');
+
+  contenedor.replaceChildren(titulo, exito, error, barra, filtros, avisosCatalogo, lista);
 
   const control: ControlAgenda = {
     api: contexto.api,
@@ -106,7 +135,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   };
 
   function filtrosActuales(): Filtros {
-    return { profesionalId: idElegido(profesional.control), sillonId: idElegido(sillon.control) };
+    return { profesionalId: profesionalFijo ?? idElegido(profesional.control), sillonId: idElegido(sillon.control) };
   }
 
   function actualizarBarra(): void {
@@ -171,6 +200,13 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
     catalogos = cargados;
     cambiarOpciones(profesional.control, opcionesDe(cargados.profesionales));
     cambiarOpciones(sillon.control, opcionesDe(cargados.sillones));
+    const propio = cargados.profesionales.find((item) => item.id === profesionalFijo);
+    if (propio !== undefined) {
+      const nombre = document.createElement('span');
+      nombre.className = 'agenda-titulo-profesional';
+      nombre.textContent = propio.nombre;
+      titulo.append(nombre);
+    }
     avisosCatalogo.replaceChildren(
       ...cargados.avisos.map((textoAviso) => {
         const parrafo = crearAviso('status');

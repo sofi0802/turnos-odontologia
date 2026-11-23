@@ -1,0 +1,83 @@
+/* Mockups de C-35 (agenda-propia-odontologo). Usa solo variables de design-system/tokens.css (Revision 1).
+   Reproduce el armado actual de la agenda del personal (C-09) y marca lo que cambia. Datos 100% ficticios. */
+
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; font-family: var(--ds-fuente); line-height: var(--ds-interlineado);
+  color: var(--ds-texto); background: var(--ds-fondo); }
+h1, h2, h3 { margin: 0; line-height: var(--ds-interlineado-titulo); }
+p { margin: 0; }
+:focus-visible { outline: var(--ds-foco-ancho) solid var(--ds-foco-color); outline-offset: var(--ds-foco-separacion); }
+
+/* --- Encabezado --- */
+.app-encabezado { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ds-espacio-1);
+  padding: var(--ds-espacio-1) var(--ds-espacio-2); background: var(--ds-superficie); border-bottom: var(--ds-borde-ancho) solid var(--ds-borde); }
+.marca { display: flex; align-items: center; gap: var(--ds-espacio-1); font-weight: var(--ds-peso-fuerte); color: var(--ds-texto); text-decoration: none; min-height: var(--ds-alto-control); }
+.marca img { height: 28px; }
+.nav { display: none; gap: var(--ds-espacio-0); }
+.nav a { display: flex; align-items: center; min-height: var(--ds-alto-control); padding: 0 var(--ds-espacio-1); border-radius: var(--ds-radio);
+  color: var(--ds-texto); text-decoration: none; }
+.nav a[aria-current='page'] { background: var(--ds-fondo); color: var(--ds-acento-500); font-weight: var(--ds-peso-fuerte); }
+.menu { margin-left: auto; }
+.usuario { display: flex; align-items: center; gap: var(--ds-espacio-1); width: 100%; justify-content: space-between; }
+.usuario-nombre { color: var(--ds-texto-suave); }
+.usuario-rol { font-size: var(--ds-texto-xs); color: var(--ds-texto-suave); }
+
+/* --- Botones y campos --- */
+.btn { display: inline-flex; align-items: center; justify-content: center; min-height: var(--ds-alto-control); padding: 0 var(--ds-espacio-2);
+  font: inherit; color: var(--ds-texto); background: var(--ds-fondo); border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio); cursor: pointer; text-decoration: none; white-space: nowrap; }
+.btn[aria-pressed='true'], .btn-principal { color: var(--ds-acento-texto); background: var(--ds-acento-500); border-color: var(--ds-acento-500); font-weight: var(--ds-peso-fuerte); }
+.btn-icono { width: var(--ds-alto-control); padding: 0; }
+.campo { display: grid; gap: var(--ds-espacio-0); }
+.campo label { font-weight: var(--ds-peso-medio); }
+.control { min-height: var(--ds-alto-control); width: 100%; padding: 0 var(--ds-espacio-1); font: inherit; color: var(--ds-texto);
+  background: var(--ds-fondo); border: var(--ds-borde-ancho) solid var(--ds-borde-fuerte); border-radius: var(--ds-radio); }
+
+/* --- Página --- */
+.pagina { max-width: 72rem; margin: 0 auto; padding: var(--ds-espacio-3) var(--ds-espacio-2) var(--ds-espacio-5); display: grid; gap: var(--ds-espacio-2); }
+.titulo h1 { font-size: var(--ds-texto-2xl); }
+.titulo-profesional { display: block; margin-top: var(--ds-espacio-0); font-size: var(--ds-texto-lg); font-weight: var(--ds-peso-medio); color: var(--ds-acento-700); }
+.barra { display: flex; flex-wrap: wrap; gap: var(--ds-espacio-1); align-items: center; }
+.grupo { display: flex; flex-wrap: wrap; gap: var(--ds-espacio-1); }
+.periodo { font-size: var(--ds-texto-xl); font-weight: var(--ds-peso-fuerte); line-height: var(--ds-interlineado-titulo); width: 100%; }
+.filtros { display: grid; gap: var(--ds-espacio-1); }
+.filtros .btn-principal { width: 100%; }
+.aviso { padding: var(--ds-espacio-1) var(--ds-espacio-2); border-radius: var(--ds-radio); border-left: 4px solid; }
+.aviso-info { color: var(--ds-info); background: var(--ds-info-fondo); }
+.aviso-alerta { color: var(--ds-alerta); background: var(--ds-alerta-fondo); }
+
+/* --- Turnos --- */
+.lista { display: grid; gap: var(--ds-espacio-1); }
+.turno { padding: var(--ds-espacio-1) var(--ds-espacio-2) var(--ds-espacio-2); background: var(--ds-superficie); border: var(--ds-borde-ancho) solid var(--ds-borde); border-radius: var(--ds-radio); }
+.turno-hora { font-weight: var(--ds-peso-fuerte); }
+.turno-meta { color: var(--ds-texto-suave); }
+.turno-acciones { display: flex; flex-wrap: wrap; gap: var(--ds-espacio-1); margin-top: var(--ds-espacio-1); }
+.etiqueta { display: inline-block; margin-left: var(--ds-espacio-0); padding: 0 var(--ds-espacio-1); font-size: var(--ds-texto-xs); font-weight: var(--ds-peso-fuerte);
+  border: var(--ds-borde-ancho) solid currentColor; border-radius: var(--ds-radio-pill); vertical-align: 2px; }
+.etiqueta-confirmado { color: var(--ds-turno-confirmado); background: var(--ds-turno-confirmado-fondo); }
+.etiqueta-sobreturno { color: var(--ds-turno-sobreturno); background: var(--ds-turno-sobreturno-fondo); }
+.vacio { text-align: center; padding: var(--ds-espacio-3) var(--ds-espacio-2); border: 1px dashed var(--ds-borde-fuerte); border-radius: var(--ds-radio); color: var(--ds-texto-suave); }
+.semana { display: grid; gap: var(--ds-espacio-2); }
+.dia h2 { font-size: var(--ds-texto-base); margin-bottom: var(--ds-espacio-1); }
+
+/* --- Notas del mockup (no son parte de la pantalla) --- */
+.nota-mockup { max-width: 72rem; margin: 0 auto; padding: var(--ds-espacio-1) var(--ds-espacio-2); font-size: var(--ds-texto-xs); color: var(--ds-texto-suave);
+  background: var(--ds-alerta-fondo); border-bottom: var(--ds-borde-ancho) solid var(--ds-borde); }
+.nota-mockup b { color: var(--ds-alerta); }
+.estado-mockup { margin-top: var(--ds-espacio-3); padding-top: var(--ds-espacio-2); border-top: 2px dashed var(--ds-borde-fuerte); }
+.estado-mockup > p { font-size: var(--ds-texto-sm); color: var(--ds-texto-suave); margin-bottom: var(--ds-espacio-1); }
+
+@media (min-width: 768px) {
+  .app-encabezado { flex-wrap: nowrap; padding: var(--ds-espacio-1) var(--ds-espacio-3); }
+  .nav { display: flex; margin: 0 auto; }
+  .menu { display: none; }
+  .usuario { width: auto; }
+  .pagina { padding: var(--ds-espacio-4) var(--ds-espacio-3) var(--ds-espacio-5); }
+  .barra { justify-content: flex-start; }
+  .periodo { width: auto; margin-left: var(--ds-espacio-1); }
+  .filtros { grid-template-columns: 16rem 1fr auto; align-items: end; }
+  .filtros .btn-principal { width: auto; grid-column: 3; }
+}
+@media (min-width: 1024px) {
+  .semana { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}

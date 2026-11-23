@@ -1,0 +1,31 @@
+C-35 agenda-propia-odontologo: evidencia del backend
+====================================================
+
+Fecha: 2026-11-23, rama change/C-35-agenda-propia-odontologo.
+Comando, desde backend/ y con las variables de ../.env cargadas:
+  .\gradlew.bat build integrationTest
+Resultado: BUILD SUCCESSFUL in 7m 39s.
+
+Resultados (build/test-results, sin fallas, errores ni tests salteados):
+  test             450 tests  0 fallas
+  integrationTest  448 tests  0 fallas  (PostgreSQL real, @Tag("integration"))
+
+Tests nuevos de C-35:
+  AlcanceAgendaTest (unitario)
+    - El odontólogo sin filtro ve solo su profesional
+    - El odontólogo que pide otro profesional igual ve el suyo
+    - Un odontólogo sin profesional vinculado no ve ningún turno
+    - Recepción usa el filtro que pide
+    - Un administrador vinculado a un profesional igual ve a todos
+  TurnosApiIntegrationTest (agenda-api, "Consultar la agenda")
+    - El odontólogo sin filtro recibe solo sus turnos
+    - El odontólogo pide la agenda de otro profesional
+    - El odontólogo filtra por un sillón compartido
+    - Recepción y administración ven a todos los profesionales
+  AutenticacionIntegrationTest (seguridad-autenticacion, "Estado de la sesión")
+    - Sesión de un odontólogo
+    - Sesión de recepción sin profesional
+
+Nota: la primera corrida falló al arrancar Spring ('url' must start with "jdbc")
+porque al .env local le faltaba DB_TEST_URL. No era un defecto del código; se
+agregó la variable y se volvió a correr.
