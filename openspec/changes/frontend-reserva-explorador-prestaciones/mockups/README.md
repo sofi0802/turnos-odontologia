@@ -1,7 +1,7 @@
 # Mockups de C-38 `frontend-reserva-explorador-prestaciones`
 
 - Design system revision: 1 (`design-system/README.md`, aprobado el 2026-11-22)
-- Approval: pending
+- Approval: approved (2026-11-23, by leader)
 - Preview: rendered (2026-11-23), capturas en `previews/` a 390 × 844 y 1440 × 900 (página completa), y a 320 px para el selector cerrado, abierto y sin coincidencias. Ninguna pantalla tiene desplazamiento horizontal ni errores en la consola.
 
 Los aprueba la líder antes del apply (`design-system/README.md`, modo `system-and-mockups`). Una vez aprobados, son el criterio de aceptación visual de las tareas de `tasks.md`.
@@ -57,7 +57,7 @@ Los aprueba la líder antes del apply (`design-system/README.md`, modo `system-a
 
 1. **La lista va en el flujo de la página** (empuja "Continuar" hacia abajo), no flotando encima. Evita recortes con el teclado virtual del celular (design D3).
 2. **La lista se abre al enfocar el campo** y muestra todas las prestaciones; la flecha de la derecha abre y cierra para quien no escribe (design D4, pregunta abierta).
-3. **La opción activa** (con el teclado) se marca con fondo suave y una barra de acento a la izquierda; la elegida, en negrita con una tilde. No hay resaltado de las letras coincidentes: no lo pide el spec.
+3. **La opción activa** (con el teclado) se marca con fondo suave y una barra de acento a la izquierda; la elegida, en negrita y con el color de acento, sin tilde (se quitó en la revisión del 2026-11-23 porque corría la duración hacia la izquierda). No hay resaltado de las letras coincidentes: no lo pide el spec.
 4. **La duración está a la derecha** de cada opción ("30 minutos"); para un lector de pantalla se lee "Consulta · 30 minutos".
 5. **No hay indicador de más opciones** en la lista que se desplaza, más allá de la barra de desplazamiento del navegador. Se puede agregar un degradé al borde si la líder lo prefiere.
 6. **El texto de ayuda del paso** cambia a "Buscá la prestación o elegila de la lista. Después elegís el día y el horario." y el campo muestra "Buscá una prestación" mientras está vacío.

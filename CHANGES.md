@@ -586,7 +586,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/README.md` y `design-system/brand.md`
 
 ### [C-38] `frontend-reserva-explorador-prestaciones`
-- **Estado**: `[ ]` propuesta lista (proposal, specs, design y tasks en `openspec/changes/frontend-reserva-explorador-prestaciones/`, 2026-11-23); mockups creados (2026-11-23), falta su aprobación; el apply espera al merge de C-40 (Enzo)
+- **Estado**: `[ ]` propuesta lista (proposal, specs, design y tasks en `openspec/changes/frontend-reserva-explorador-prestaciones/`, 2026-11-23); implementado y verificado en la rama `change/C-38-frontend-reserva-explorador-prestaciones` (2026-11-23; 447 tests, mockups aprobados); falta el PR y el merge
 - **Responsable**: Juan Cruz (avisa a Enzo)
 - **Scope**:
   - En el paso 1 de `#/reserva`, reemplazar la lista con todas las prestaciones por un **explorador**: un selector desplegable con buscador (combobox accesible, con teclado) que muestra solo las coincidencias, con el nombre y la duración de cada prestación.
