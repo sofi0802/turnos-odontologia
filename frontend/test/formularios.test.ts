@@ -4,6 +4,7 @@ import {
   abrirApp,
   boton,
   campo,
+  elegirPaciente,
   errorDeCampo,
   escribir,
   json,
@@ -46,7 +47,7 @@ async function abrirNuevoTurnoCompleto(): Promise<void> {
   await abrirAgenda();
   boton(raiz(), 'Nuevo turno').click();
   const formulario = dialogo();
-  escribir(campo(formulario, 'Id del paciente'), '1');
+  await elegirPaciente(formulario, '99000001', 'Uno, Paciente · DNI 99000001');
   escribir(campo<HTMLSelectElement>(formulario, 'Profesional'), '1');
   escribir(campo<HTMLSelectElement>(formulario, 'Sillón'), '1');
   escribir(campo<HTMLSelectElement>(formulario, 'Prestación'), '1');
@@ -112,7 +113,7 @@ describe('Crear un turno', () => {
   it('Faltan datos en el formulario', async () => {
     await abrirAgenda();
     boton(raiz(), 'Nuevo turno').click();
-    escribir(campo(dialogo(), 'Id del paciente'), '1');
+    await elegirPaciente(dialogo(), '99000001', 'Uno, Paciente · DNI 99000001');
     escribir(campo<HTMLSelectElement>(dialogo(), 'Profesional'), '1');
     escribir(campo<HTMLSelectElement>(dialogo(), 'Prestación'), '1');
     escribir(campo(dialogo(), 'Hora'), '10:00');
@@ -122,6 +123,29 @@ describe('Crear un turno', () => {
     expect(errorDeCampo(dialogo(), 'Sillón')).toBe('Elegí un sillón.');
     expect(errorDeCampo(dialogo(), 'Profesional')).toBe('');
     expect(servidor.a('POST', '/turnos')).toHaveLength(0);
+  });
+
+  it('Paciente escrito pero no elegido', async () => {
+    await abrirNuevoTurnoCompleto();
+    boton(dialogo(), 'Cambiar paciente').click();
+    escribir(campo(dialogo(), 'Paciente'), 'fict');
+
+    boton(dialogo(), 'Crear turno').click();
+
+    expect(servidor.a('POST', '/turnos')).toHaveLength(0);
+    expect(errorDeCampo(dialogo(), 'Paciente')).toBe('Elegí un paciente de la lista.');
+  });
+
+  it('Ya no se pide el id del paciente', async () => {
+    await abrirAgenda();
+
+    boton(raiz(), 'Nuevo turno').click();
+
+    expect(texto(dialogo())).not.toContain('Id del paciente');
+    const primero = dialogo().querySelector<HTMLInputElement>('form input, form select');
+    expect(primero?.getAttribute('role')).toBe('combobox');
+    expect(document.activeElement).toBe(primero);
+    expect(campo(dialogo(), 'Paciente')).toBe(primero);
   });
 
   it('el formulario solo ofrece profesionales activos y propone el día mostrado', async () => {
@@ -145,7 +169,7 @@ describe('Mensajes por código de rechazo', () => {
   it('Solapamiento con el profesional', async () => {
     await enviarConRechazo(409, { status: 409, detail: 'x', codigo: 'SOLAPAMIENTO_PROFESIONAL' });
     expect(alertaDelFormulario()).toContain('El profesional ya tiene un turno en ese horario.');
-    expect(campo(dialogo(), 'Id del paciente').value).toBe('1');
+    expect(texto(dialogo())).toContain('Uno, Paciente · DNI 99000001');
     expect(campo(dialogo(), 'Hora').value).toBe('10:00');
   });
 
@@ -212,6 +236,25 @@ describe('Errores de campo ante un 422', () => {
     boton(dialogo(), 'Crear turno').click();
 
     await vi.waitFor(() => expect(errorDeCampo(dialogo(), 'Profesional')).toBe('no existe'));
+    expect(hayDialogo()).toBe(true);
+  });
+
+  it('Error de la API en el paciente', async () => {
+    servidor.responder('POST /turnos', () =>
+      json(422, {
+        status: 422,
+        detail: 'Hay datos inválidos en el pedido',
+        codigo: 'DATOS_INVALIDOS',
+        errores: [{ campo: 'pacienteId', mensaje: 'no existe' }],
+      }),
+    );
+    await abrirNuevoTurnoCompleto();
+    boton(dialogo(), 'Cambiar paciente').click();
+    await elegirPaciente(dialogo(), 'fict', 'Ficticia, Carla · DNI 99000003');
+
+    boton(dialogo(), 'Crear turno').click();
+
+    await vi.waitFor(() => expect(errorDeCampo(dialogo(), 'Paciente')).toBe('no existe'));
     expect(hayDialogo()).toBe(true);
   });
 

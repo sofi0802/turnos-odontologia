@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { abrirApp, boton, campo, errorDeCampo, escribir, json, ServidorFalso, texto, type AppDePrueba } from './apoyo.ts';
+import { abrirApp, boton, campo, elegirPaciente, errorDeCampo, escribir, json, ServidorFalso, texto, type AppDePrueba } from './apoyo.ts';
 
 let servidor: ServidorFalso;
 let app: AppDePrueba | undefined;
@@ -102,7 +102,7 @@ describe('Sesión vencida', () => {
     await vi.waitFor(() => expect(campo<HTMLSelectElement>(app?.raiz ?? document.body, 'Profesional').options.length).toBe(3));
     boton(app.raiz, 'Nuevo turno').click();
     const dialogo = document.querySelector<HTMLDialogElement>('dialog[open]') ?? document.body;
-    escribir(campo(dialogo, 'Id del paciente'), '1');
+    await elegirPaciente(dialogo, '99000001', 'Uno, Paciente · DNI 99000001');
     escribir(campo<HTMLSelectElement>(dialogo, 'Profesional'), '1');
     escribir(campo<HTMLSelectElement>(dialogo, 'Sillón'), '1');
     escribir(campo<HTMLSelectElement>(dialogo, 'Prestación'), '1');
