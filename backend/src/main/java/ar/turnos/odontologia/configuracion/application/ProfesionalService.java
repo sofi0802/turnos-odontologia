@@ -109,6 +109,11 @@ public class ProfesionalService {
                 throw new ConfiguracionException(CodigoError.SILLON_INACTIVO,
                         "El sillón " + sillon.getNombre() + " está inactivo");
             }
+            // RN-RO-09: un sillón es el habitual de un solo profesional, activo o inactivo
+            if (profesionales.existsBySillonHabitualIdAndIdNot(sillonId, id)) {
+                throw new ConfiguracionException(CodigoError.SILLON_HABITUAL_OCUPADO,
+                        "El sillón " + sillon.getNombre() + " ya es el habitual de otro profesional");
+            }
         }
         profesional.asignarSillonHabitual(sillon);
         return ProfesionalVista.de(profesional);

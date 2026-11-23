@@ -36,12 +36,18 @@
     </div>
     <section role="tabpanel" aria-label="Profesionales">
       <div class="cabecera-seccion"><h2>Profesionales</h2><button class="btn btn-principal" type="button">Agregar profesional</button></div>
+      <div class="aviso aviso-alerta" role="alert" style="margin-bottom:var(--ds-espacio-2)"><div><strong>El profesional se creó, pero no se pudieron guardar sus prestaciones o su sillón.</strong>Ese sillón ya es el habitual de otro profesional. Corregilo desde el detalle de Diego Ficticio.</div></div>
       <ul class="lista-config">
+        <li>
+          <div><div class="item-nombre">Diego Ficticio</div><div class="item-datos"><span>Matrícula MP-0004</span></div><span class="estado-activo">Activo</span></div>
+          <div class="item-acciones"><button class="btn btn-chico" type="button">Ver detalle</button><button class="btn btn-chico" type="button">Editar</button><button class="btn btn-chico btn-peligro" type="button">Desactivar</button></div>
+        </li>
         <li class="item-elegido">
           <div><div class="item-nombre">Ana Ejemplo</div><div class="item-datos"><span>Matrícula MP-0001</span></div><span class="estado-activo">Activo</span></div>
           <div class="item-acciones"><button class="btn btn-chico" type="button">Ocultar detalle</button><button class="btn btn-chico" type="button">Editar</button><button class="btn btn-chico btn-peligro" type="button">Desactivar</button></div>
           <div class="detalle-profesional">
             <h3>Especialidades y sillón habitual</h3>
+            <div class="grupo-config">
             <fieldset>
               <legend>Prestaciones que hace</legend>
               <div class="casillas">
@@ -51,13 +57,22 @@
                 <label class="casilla"><input type="checkbox" /> Tratamiento de conducto</label>
               </div>
             </fieldset>
-            <button class="btn btn-principal" type="button">Guardar prestaciones</button>
-            <div class="campo" style="margin-top:var(--ds-espacio-3);max-width:22rem">
-              <label for="sh">Sillón habitual</label>
-              <select class="control" id="sh"><option>Sin sillón habitual</option><option selected>Sillón 1</option><option>Sillón 2</option></select>
+              <button class="btn btn-principal" type="button">Guardar prestaciones</button>
             </div>
-            <button class="btn" type="button" style="margin-top:var(--ds-espacio-1)">Guardar sillón habitual</button>
-            <div class="aviso aviso-ok" role="status" style="margin-top:var(--ds-espacio-2)"><div>Prestaciones guardadas.</div></div>
+            <div class="grupo-config">
+              <fieldset class="campo">
+                <legend>Sillón habitual</legend>
+                <div class="opciones opciones-sillon">
+                  <label class="opcion"><input type="radio" name="sh" checked /><span>Sillón 1<small>Elegido</small></span></label>
+                  <label class="opcion opcion-ocupada"><input type="radio" name="sh" disabled /><span>Sillón 2<small>Ocupado · Bruno Prueba</small></span></label>
+                  <label class="opcion"><input type="radio" name="sh" /><span>Sillón 3<small>Libre</small></span></label>
+                  <label class="opcion"><input type="radio" name="sh" /><span>Sin sillón habitual<small>Lo asigna la reserva</small></span></label>
+                </div>
+                <span class="ayuda">Un sillón ocupado es el habitual de otro profesional. Para pasarlo, quitáselo primero.</span>
+              </fieldset>
+              <button class="btn" type="button">Guardar sillón habitual</button>
+            </div>
+            <div class="aviso aviso-ok" role="status" style="margin-top:var(--ds-espacio-3)"><div>Prestaciones guardadas.</div></div>
           </div>
         </li>
         <li class="">

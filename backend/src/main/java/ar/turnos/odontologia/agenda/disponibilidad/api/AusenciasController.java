@@ -77,7 +77,7 @@ class AusenciasController {
     TurnoReasignado reasignar(@PathVariable Long id, @PathVariable Long ausenciaId, @PathVariable Long turnoId,
                               @RequestBody ReasignacionSolicitud solicitud,
                               @AuthenticationPrincipal UsuarioAutenticado usuario) {
-        return TurnoReasignado.de(reasignacion.reasignar(id, ausenciaId, turnoId, solicitud.profesionalId(),
+        return TurnoReasignado.de(reasignacion.reasignar(id, Clase.AUSENCIA, ausenciaId, turnoId, solicitud.profesionalId(),
                 solicitud.inicio() == null ? null : solicitud.inicio().toInstant(), solicitud.sillonId(),
                 usuario.getUsername()), zona);
     }

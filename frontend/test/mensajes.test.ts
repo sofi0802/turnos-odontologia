@@ -119,7 +119,8 @@ describe('Mensajes de configuración del consultorio (C-34)', () => {
     ['HORARIO_INVALIDO', 'Revisá los días y las horas de las franjas.'],
     ['FRANJAS_SUPERPUESTAS', 'Hay franjas del mismo día que se superponen.'],
     ['PERIODO_INVALIDO', 'El fin tiene que ser posterior al inicio.'],
-    ['TURNO_NO_AFECTADO', 'Ese turno ya no está afectado por la ausencia.'],
+    ['TURNO_NO_AFECTADO', 'Ese turno ya no está afectado por ese período.'],
+    ['SILLON_HABITUAL_OCUPADO', 'Ese sillón ya es el habitual de otro profesional.'],
   ])('%s tiene su mensaje propio', (codigo, mensaje) => {
     expect(MENSAJES_POR_CODIGO[codigo]).toBe(mensaje);
     expect(mensajeDeError(new ErrorValidacion('detalle', codigo))).toBe(mensaje);

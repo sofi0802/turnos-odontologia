@@ -1,5 +1,8 @@
 import { aIsoConZona, fechaDeInstante, fechaLarga, formatearHora } from '../shared/fecha/zona.ts';
 import { crearCampo, crearEntrada, type Campo } from '../shared/ui/campos.ts';
+import type { ClienteApi } from '../shared/api/cliente.ts';
+import type { Profesional } from './api.ts';
+import { crearSelectorHora, type SelectorHora } from './ui.ts';
 
 /** Ausencia, licencia o bloqueo tal como lo devuelve la API de C-07 (`PeriodoRespuesta`). */
 export interface Periodo {
@@ -51,6 +54,37 @@ export function leerPeriodo(valor: unknown): Periodo | null {
     fin,
     motivo: typeof motivo === 'string' && motivo.trim() !== '' ? motivo : null,
   };
+}
+
+/** Clase de período en la API: `/profesionales/{id}/ausencias` o `/profesionales/{id}/bloqueos`. */
+export type ClasePeriodo = 'ausencias' | 'bloqueos';
+
+/** Lee la lista de `GET /profesionales/{id}/{ausencias|bloqueos}`, descartando lo de forma inesperada. */
+export function leerPeriodos(cuerpo: unknown, ruta: string): Periodo[] {
+  if (!Array.isArray(cuerpo)) {
+    throw new Error(`Respuesta inesperada de ${ruta}`);
+  }
+  return cuerpo.map(leerPeriodo).filter((p): p is Periodo => p !== null);
+}
+
+/**
+ * Vista "Todos los profesionales" (design D12): pide los períodos de cada profesional activo en paralelo
+ * y los une ordenados por inicio. Si falla un pedido, rechaza: no se muestra una lista parcial.
+ */
+export async function cargarPeriodosDeTodos(
+  api: ClienteApi,
+  clase: ClasePeriodo,
+  profesionales: readonly Profesional[],
+): Promise<Periodo[]> {
+  const listas = await Promise.all(
+    profesionales
+      .filter((p) => p.activo)
+      .map(async (profesional) => {
+        const ruta = `/profesionales/${profesional.id}/${clase}`;
+        return leerPeriodos(await api.obtener<unknown>(ruta), ruta).map((p) => ({ ...p, profesionalId: profesional.id }));
+      }),
+  );
+  return listas.flat().sort((a, b) => Date.parse(a.inicio) - Date.parse(b.inicio));
 }
 
 export function leerTurnoAfectado(valor: unknown): TurnoAfectado | null {
@@ -107,21 +141,29 @@ export function textoDeTurno(inicio: string): string {
 /** Campos de un período (design D6): fecha y hora de inicio y de fin, y motivo opcional. */
 export interface CamposPeriodo {
   readonly fechaInicio: Campo<HTMLInputElement>;
-  readonly horaInicio: Campo<HTMLInputElement>;
+  readonly horaInicio: SelectorHora;
   readonly fechaFin: Campo<HTMLInputElement>;
-  readonly horaFin: Campo<HTMLInputElement>;
+  readonly horaFin: SelectorHora;
   readonly motivo: Campo<HTMLInputElement>;
   /** Todos los campos, para `mostrarErrorEnFormulario`. Los `name` son `inicio`, `fin` y `motivo` donde aplica. */
-  readonly todos: readonly Campo<HTMLInputElement>[];
+  readonly todos: readonly (Campo<HTMLInputElement> | SelectorHora)[];
   /** Los nodos a insertar en el formulario, ya agrupados de a dos. */
   readonly nodos: readonly HTMLElement[];
 }
 
 export function crearCamposPeriodo(): CamposPeriodo {
   const fechaInicio = crearCampo('Desde el día', crearEntrada('date', 'inicio'));
-  const horaInicio = crearCampo('a las', crearEntrada('time', 'horaInicio'));
+  const horaInicio = crearSelectorHora('horaInicio', 'Hora de inicio', {
+    valor: '08:00',
+    textoVisible: 'a las',
+    ariaMinutos: 'Minutos del inicio',
+  });
   const fechaFin = crearCampo('Hasta el día', crearEntrada('date', 'fin'));
-  const horaFin = crearCampo('a las', crearEntrada('time', 'horaFin'));
+  const horaFin = crearSelectorHora('horaFin', 'Hora de fin', {
+    valor: '13:00',
+    textoVisible: 'a las',
+    ariaMinutos: 'Minutos del fin',
+  });
   const motivo = crearCampo('Motivo (opcional)', crearEntrada('text', 'motivo'));
   motivo.control.maxLength = 255;
   const ayuda = document.createElement('p');
@@ -137,7 +179,7 @@ export function crearCamposPeriodo(): CamposPeriodo {
 /** Lo que se envía a la API; `null` si falta un dato obligatorio (los marca en los campos). */
 export function leerCamposPeriodo(campos: CamposPeriodo): { inicio: string; fin: string; motivo: string | null } | null {
   let completo = true;
-  for (const campo of [campos.fechaInicio, campos.horaInicio, campos.fechaFin, campos.horaFin]) {
+  for (const campo of [campos.fechaInicio, campos.fechaFin]) {
     const vacio = campo.control.value === '';
     campo.mostrarError(vacio ? 'Completá este dato.' : '');
     completo &&= !vacio;
@@ -147,8 +189,8 @@ export function leerCamposPeriodo(campos: CamposPeriodo): { inicio: string; fin:
   }
   const motivo = campos.motivo.control.value.trim();
   return {
-    inicio: aIsoConZona(campos.fechaInicio.control.value, campos.horaInicio.control.value),
-    fin: aIsoConZona(campos.fechaFin.control.value, campos.horaFin.control.value),
+    inicio: aIsoConZona(campos.fechaInicio.control.value, campos.horaInicio.valor()),
+    fin: aIsoConZona(campos.fechaFin.control.value, campos.horaFin.valor()),
     motivo: motivo === '' ? null : motivo,
   };
 }

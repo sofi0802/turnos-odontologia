@@ -18,9 +18,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 /**
- * Reasignación de un turno afectado por una ausencia o licencia (RN-AG-16, design D10). Verifica lo propio de la
- * ausencia, delega la reasignación en la agenda (transacción y auditoría) y, ya confirmada, pide el aviso al
- * paciente. Un aviso que falla no deshace nada.
+ * Reasignación de un turno afectado por una ausencia o licencia (RN-AG-16, design D10) o por un bloqueo (RN-AG-19,
+ * design D16). Verifica lo propio del período, delega la reasignación en la agenda (transacción y auditoría) y, ya
+ * confirmada, pide el aviso al paciente. Un aviso que falla no deshace nada.
  */
 @Service
 public class ServicioReasignacion {
@@ -50,32 +50,34 @@ public class ServicioReasignacion {
 
     /**
      * @return el turno nuevo
-     * @throws RecursoNoEncontradoException si no existe el profesional o la ausencia no es suya (404)
+     * @param clase si el período citado es una ausencia o un bloqueo (design D16); el resto del flujo es el mismo
+     * @throws RecursoNoEncontradoException si no existe el profesional o el período no es suyo (404)
      * @throws TurnoRechazadoException con {@code TURNO_NO_AFECTADO} si el turno no es del profesional o no se cruza
-     *     con la ausencia, o con el rechazo de la agenda para el turno nuevo (409)
+     *     con el período, o con el rechazo de la agenda para el turno nuevo (409)
      */
-    public Turno reasignar(Long profesionalId, Long ausenciaId, Long turnoId, Long nuevoProfesionalId,
+    public Turno reasignar(Long profesionalId, Clase clase, Long periodoId, Long turnoId, Long nuevoProfesionalId,
                            Instant nuevoInicio, Long nuevoSillonId, String actor) {
-        lectura.executeWithoutResult(estado -> verificarAfectado(profesionalId, ausenciaId, turnoId));
+        lectura.executeWithoutResult(estado -> verificarAfectado(profesionalId, clase, periodoId, turnoId));
         Turno nuevo = agenda.reasignar(
                 new ReasignarTurnoCommand(turnoId, nuevoProfesionalId, nuevoInicio, nuevoSillonId), actor);
         pedirAviso(nuevo.id());
         return nuevo;
     }
 
-    private void verificarAfectado(Long profesionalId, Long ausenciaId, Long turnoId) {
+    private void verificarAfectado(Long profesionalId, Clase clase, Long periodoId, Long turnoId) {
         if (!registro.existeProfesional(profesionalId)) {
             throw new RecursoNoEncontradoException("el profesional");
         }
-        Periodo ausencia = registro.periodo(profesionalId, Clase.AUSENCIA, ausenciaId)
-                .orElseThrow(() -> new RecursoNoEncontradoException("la ausencia"));
-        Intervalo periodo = new Intervalo(ausencia.periodo().inicio(), ausencia.periodo().fin());
+        String nombre = clase == Clase.BLOQUEO ? "el bloqueo" : "la ausencia";
+        Periodo periodoCitado = registro.periodo(profesionalId, clase, periodoId)
+                .orElseThrow(() -> new RecursoNoEncontradoException(nombre));
+        Intervalo periodo = new Intervalo(periodoCitado.periodo().inicio(), periodoCitado.periodo().fin());
         boolean afectado = turnos.buscarQueIntersecan(profesionalId, null, periodo).stream()
                 .anyMatch(t -> t.id().equals(turnoId) && t.profesionalId().equals(profesionalId)
-                        && ausencia.periodo().seCruzaCon(t.intervalo()));
+                        && periodoCitado.periodo().seCruzaCon(t.intervalo()));
         if (!afectado) {
             throw new TurnoRechazadoException(CodigoRechazo.TURNO_NO_AFECTADO,
-                    "El turno no es del profesional o no se cruza con la ausencia");
+                    "El turno no es del profesional o no se cruza con " + nombre);
         }
     }
 

@@ -10,6 +10,7 @@ import {
   type Profesional,
   type Sillon,
 } from './api.ts';
+import { AVISO_FALLA_PARCIAL, crearExtrasAlta, type ExtrasAlta } from './profesional-alta.ts';
 import { crearDetalleProfesional } from './profesional-detalle.ts';
 import {
   abrirDialogo,
@@ -51,7 +52,10 @@ interface DefinicionCatalogo<T extends ElementoCatalogo> {
   /** Cuerpo del `POST` o `PUT` a partir de los valores del formulario. */
   cuerpo(valores: ReadonlyMap<string, string>): object;
   /** Contenido extra de la fila (el detalle del profesional). Devuelve los botones que agrega. */
-  extra?(fila: HTMLLIElement, item: T, contexto: ContextoSeccion): HTMLButtonElement[];
+  /** `items` es la lista vigente de la pestaña (se actualiza al recargar), por si el detalle la necesita. */
+  extra?(fila: HTMLLIElement, item: T, contexto: ContextoSeccion, items: T[]): HTMLButtonElement[];
+  /** Campos que suma el formulario de alta (el alta completa del profesional, design D14). */
+  extrasAlta?(contexto: ContextoSeccion, items: T[]): ExtrasAlta;
 }
 
 function texto(valores: ReadonlyMap<string, string>, nombre: string): string {
@@ -88,11 +92,13 @@ function montarCatalogo<T extends ElementoCatalogo>(
     panel.append(ayuda);
   }
 
+  const vigentes: T[] = [];
   const recargar = cargarEn(
     contenido,
     contexto,
     () => definicion.cargar(contexto.api),
     (items, contenedor) => {
+      vigentes.splice(0, vigentes.length, ...items);
       const lista = crearLista();
       lista.append(...items.map(dibujarFila));
       contenedor.append(lista);
@@ -125,7 +131,7 @@ function montarCatalogo<T extends ElementoCatalogo>(
     }
     const fila = crearFila(definicion.nombre(item), definicion.datos(item), { activo: item.activo, acciones });
     if (definicion.extra !== undefined) {
-      const botones = definicion.extra(fila, item, contexto);
+      const botones = definicion.extra(fila, item, contexto, vigentes);
       let caja = fila.querySelector('.item-acciones');
       if (caja === null && botones.length > 0) {
         caja = document.createElement('div');
@@ -152,9 +158,10 @@ function montarCatalogo<T extends ElementoCatalogo>(
       return crearCampo(c.etiqueta, entrada);
     });
     const titulo = item === null ? `Agregar ${definicion.singular}` : `Editar ${definicion.singular}`;
+    const extras = item === null ? definicion.extrasAlta?.(contexto, vigentes) : undefined;
     const dialogo = abrirDialogo(
       titulo,
-      campos.map((c) => c.contenedor),
+      [...campos.map((c) => c.contenedor), ...(extras?.nodos ?? [])],
       'Guardar',
       item === null ? {} : { resumen: definicion.nombre(item) },
     );
@@ -162,15 +169,34 @@ function montarCatalogo<T extends ElementoCatalogo>(
       evento.preventDefault();
       const valores = new Map(campos.map((c) => [c.control.name, c.control.value]));
       const cuerpo = definicion.cuerpo(valores);
-      void guardando(dialogo.enviar, () =>
-        item === null
-          ? contexto.api.crear(definicion.recurso, cuerpo)
-          : contexto.api.actualizar(`${definicion.recurso}/${item.id}`, cuerpo),
-      ).then(
+      // Falla de un pedido posterior al alta: el elemento ya existe (design D14).
+      let fallaParcial: unknown = null;
+      void guardando(dialogo.enviar, async () => {
+        if (item !== null) {
+          await contexto.api.actualizar(`${definicion.recurso}/${item.id}`, cuerpo);
+          return;
+        }
+        const creado = await contexto.api.crear<unknown>(definicion.recurso, cuerpo);
+        if (extras === undefined) {
+          return;
+        }
+        try {
+          const id = creado !== null && typeof creado === 'object' ? Reflect.get(creado, 'id') : undefined;
+          if (typeof id !== 'number') {
+            throw new Error(`Respuesta inesperada de ${definicion.recurso}`);
+          }
+          await extras.completar(id);
+        } catch (causa) {
+          fallaParcial = causa;
+        }
+      }).then(
         (ok) => {
           if (ok) {
             dialogo.cerrar();
             recargar();
+            if (fallaParcial !== null && !contexto.sesionVencida(fallaParcial)) {
+              errorAccion.textContent = `${AVISO_FALLA_PARCIAL} ${mensajeDeError(fallaParcial)}`;
+            }
           }
         },
         (causa: unknown) => {
@@ -183,15 +209,25 @@ function montarCatalogo<T extends ElementoCatalogo>(
 }
 
 /** "Ver detalle" / "Ocultar detalle" de un profesional, con sus especialidades y su sillón habitual. */
-function detalleDeProfesional(fila: HTMLLIElement, item: Profesional, contexto: ContextoSeccion): HTMLButtonElement[] {
+function detalleDeProfesional(
+  fila: HTMLLIElement,
+  item: Profesional,
+  contexto: ContextoSeccion,
+  todos: Profesional[],
+): HTMLButtonElement[] {
   let actual = item;
   let detalle: HTMLDivElement | null = null;
   const boton = botonChico('Ver detalle');
   boton.setAttribute('aria-expanded', 'false');
   boton.addEventListener('click', () => {
     if (detalle === null) {
-      detalle = crearDetalleProfesional(actual, contexto, (sillonId) => {
+      detalle = crearDetalleProfesional(actual, contexto, todos, (sillonId) => {
         actual = { ...actual, sillonHabitualId: sillonId };
+        // La lista compartida se actualiza para que los demás detalles vean el sillón ya asignado.
+        const posicion = todos.findIndex((p) => p.id === actual.id);
+        if (posicion >= 0) {
+          todos[posicion] = actual;
+        }
       });
       fila.append(detalle);
       fila.classList.add('item-elegido');
@@ -224,6 +260,7 @@ const PROFESIONALES: DefinicionCatalogo<Profesional> = {
   valorInicial: (p, campo) => (campo === 'nombre' ? p.nombre : campo === 'apellido' ? p.apellido : p.matricula),
   cuerpo: (v) => ({ nombre: texto(v, 'nombre'), apellido: texto(v, 'apellido'), matricula: texto(v, 'matricula') }),
   extra: detalleDeProfesional,
+  extrasAlta: crearExtrasAlta,
 };
 
 const SILLONES: DefinicionCatalogo<Sillon> = {

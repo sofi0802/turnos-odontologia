@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -150,6 +151,92 @@ class ReasignacionIntegrationTest extends IntegracionDisponibilidadBase {
         assertThat(status(resultado)).isEqualTo(200);
         assertThat(estadoEnLaBase(cuerpo(resultado).path("turnoId").asLong())).isEqualTo("RESERVADO");
         assertThat(estadoEnLaBase(turno)).isEqualTo("CANCELADO");
+    }
+
+    @Nested
+    @DisplayName("Reasignación por un bloqueo de agenda (RN-AG-19, design D16)")
+    class PorBloqueo {
+
+        private long bloqueo;
+
+        @BeforeEach
+        void prepararBloqueo() throws Exception {
+            // GIVEN un bloqueo de la Dra. Ana Ejemplo el 2026-12-09 de 09:00 a 12:00 (sin la licencia de la base,
+            // para que el único motivo de rechazo posible sea el bloqueo)
+            jdbc.update("DELETE FROM ausencia_profesional");
+            bloqueo = idCreado(bloquear(como("admin"), draA, diciembre(9, 9, 0), diciembre(9, 12, 0)));
+            aviso.reiniciar();
+        }
+
+        @Test
+        @DisplayName("Reasignar a otro profesional el turno de un bloqueo")
+        void reasignarAOtroProfesionalElTurnoDeUnBloqueo() throws Exception {
+            String numeroOriginal = jdbc.queryForObject("SELECT codigo_reserva FROM turno WHERE id = ?",
+                    String.class, turno);
+
+            MvcResult resultado = reasignarPorBloqueo(como("recepcion"), draA, bloqueo, turno, destino(drB, null));
+
+            assertThat(status(resultado)).isEqualTo(200);
+            assertThat(estadoEnLaBase(turno)).isEqualTo("CANCELADO");
+            JsonNode nuevo = cuerpo(resultado);
+            assertThat(nuevo.path("profesionalId").asLong()).isEqualTo(drB);
+            assertThat(nuevo.path("inicio").asText()).isEqualTo(diciembre(9, 10, 0));
+            assertThat(nuevo.path("fin").asText()).isEqualTo(diciembre(9, 10, 30));
+            assertThat(nuevo.path("numeroReserva").asText()).isNotEqualTo(numeroOriginal);
+            assertThat(pacienteDe(nuevo.path("turnoId").asLong())).isEqualTo(pacienteUno);
+            assertThat(aviso.pedidos()).containsExactly(nuevo.path("turnoId").asLong());
+        }
+
+        @Test
+        @DisplayName("Turno que no está afectado por el bloqueo")
+        void turnoQueNoEstaAfectadoPorElBloqueo() throws Exception {
+            long noAfectado = turnoCreado(pacienteDos, draA, sillon1, diciembre(9, 12, 30)).path("id").asLong();
+
+            MvcResult resultado = reasignarPorBloqueo(como("recepcion"), draA, bloqueo, noAfectado,
+                    destino(drB, null));
+
+            assertThat(status(resultado)).isEqualTo(409);
+            assertThat(codigo(resultado)).isEqualTo("TURNO_NO_AFECTADO");
+            assertThat(estadoEnLaBase(noAfectado)).isEqualTo("RESERVADO");
+        }
+
+        @Test
+        @DisplayName("El nuevo horario también cae en el bloqueo")
+        void elNuevoHorarioTambienCaeEnElBloqueo() throws Exception {
+            MvcResult resultado = reasignarPorBloqueo(como("admin"), draA, bloqueo, turno,
+                    destino(null, diciembre(9, 11, 0)));
+
+            assertThat(status(resultado)).isEqualTo(409);
+            assertThat(codigo(resultado)).isEqualTo("AGENDA_BLOQUEADA");
+            assertThat(estadoEnLaBase(turno)).isEqualTo("RESERVADO");
+            assertThat(aviso.pedidos()).isEmpty();
+        }
+
+        @Test
+        @DisplayName("Bloqueo inexistente")
+        void bloqueoInexistente() throws Exception {
+            MvcResult resultado = reasignarPorBloqueo(como("recepcion"), draA, 9999L, turno, destino(drB, null));
+
+            assertThat(status(resultado)).isEqualTo(404);
+            assertThat(codigo(resultado)).isEqualTo("RECURSO_NO_ENCONTRADO");
+            assertThat(estadoEnLaBase(turno)).isEqualTo("RESERVADO");
+        }
+
+        @Test
+        @DisplayName("El odontólogo intenta reasignar el turno de su bloqueo")
+        void elOdontologoIntentaReasignarElTurnoDeSuBloqueo() throws Exception {
+            MvcResult resultado = reasignarPorBloqueo(como("ana.ejemplo"), draA, bloqueo, turno, destino(drB, null));
+
+            assertThat(status(resultado)).isEqualTo(403);
+            assertThat(codigo(resultado)).isEqualTo("ACCESO_DENEGADO");
+            assertThat(estadoEnLaBase(turno)).isEqualTo("RESERVADO");
+        }
+
+        private MvcResult reasignarPorBloqueo(Navegador navegador, long profesional, long idBloqueo, long turnoId,
+                                              Map<String, Object> destino) throws Exception {
+            return navegador.post(bloqueos(profesional) + "/" + idBloqueo + "/turnos/" + turnoId + "/reasignar",
+                    json.writeValueAsString(destino)).andReturn();
+        }
     }
 
     private MvcResult reasignar(Navegador navegador, long profesional, long ausencia, long turnoId,

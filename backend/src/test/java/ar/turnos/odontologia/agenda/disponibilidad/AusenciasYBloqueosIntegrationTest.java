@@ -118,10 +118,40 @@ class AusenciasYBloqueosIntegrationTest extends IntegracionDisponibilidadBase {
         @Test
         @DisplayName("La recepción consulta los bloqueos")
         void laRecepcionConsultaLosBloqueos() throws Exception {
+            // GIVEN un bloqueo de la Dra. Ana Ejemplo el 2026-12-01 de 11:00 a 12:00
+            long id = idCreado(bloquear(como("ana.ejemplo"), draA, diciembre(1, 11, 0), diciembre(1, 12, 0)));
+
+            // WHEN recepcion consulta los bloqueos de la Dra. Ana Ejemplo
             MvcResult resultado = como("recepcion").get(bloqueos(draA)).andReturn();
+
+            // THEN la respuesta es 200 e incluye ese bloqueo
+            assertThat(status(resultado)).isEqualTo(200);
+            assertThat(idsDe(resultado)).containsExactly(id);
+        }
+
+        @Test
+        @DisplayName("La recepción registra un bloqueo")
+        void laRecepcionRegistraUnBloqueo() throws Exception {
+            MvcResult resultado = bloquear(como("recepcion"), draA, diciembre(1, 11, 0), diciembre(1, 12, 0));
 
             assertThat(status(resultado)).isEqualTo(403);
             assertThat(codigo(resultado)).isEqualTo("ACCESO_DENEGADO");
+            assertThat(jdbc.queryForObject("SELECT count(*) FROM bloqueo_agenda", Integer.class)).isZero();
+        }
+
+        @Test
+        @DisplayName("La recepción borra un bloqueo")
+        void laRecepcionBorraUnBloqueo() throws Exception {
+            // GIVEN un bloqueo de la Dra. Ana Ejemplo el 2026-12-01 de 11:00 a 12:00
+            long id = idCreado(bloquear(como("ana.ejemplo"), draA, diciembre(1, 11, 0), diciembre(1, 12, 0)));
+
+            // WHEN recepcion lo borra
+            MvcResult resultado = borrar(como("recepcion"), bloqueos(draA) + "/" + id);
+
+            // THEN la respuesta es 403 ACCESO_DENEGADO y el bloqueo sigue registrado
+            assertThat(status(resultado)).isEqualTo(403);
+            assertThat(codigo(resultado)).isEqualTo("ACCESO_DENEGADO");
+            assertThat(idsDe(como("admin").get(bloqueos(draA)).andReturn())).containsExactly(id);
         }
     }
 

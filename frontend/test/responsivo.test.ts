@@ -249,6 +249,24 @@ describe('Configuración usable en el celular (C-34)', () => {
     expect(regla(escritorio, '.lista-config > li')).toMatch(/grid-template-columns:\s*1fr auto/);
   });
 
+  it('el detalle del profesional separa el botón de su campo y un bloque del otro (D11)', () => {
+    expect(regla(estilos, '.grupo-config')).toMatch(/gap:\s*var\(--ds-espacio-1\)/);
+    expect(regla(estilos, '.grupo-config + .grupo-config')).toMatch(/margin-top:\s*var\(--ds-espacio-3\)/);
+  });
+
+  it('las tarjetas de sillón se acomodan en grilla y la ocupada se distingue por el borde, no solo por el color', () => {
+    expect(regla(estilos, '.opciones-sillon')).toMatch(/minmax\(12rem,\s*1fr\)/);
+    expect(regla(estilos, '.opcion-ocupada')).toMatch(/border-style:\s*dashed/);
+    expect(regla(estilos, '.opcion-ocupada')).toMatch(/cursor:\s*not-allowed/);
+  });
+
+  it('los días y las horas de las franjas se apilan en el celular y van en fila en la computadora', () => {
+    expect(regla(estilos, '.dias-semana')).toMatch(/grid-template-columns:\s*repeat\(2,\s*1fr\)/);
+    expect(regla(estilos, '.hora-5')).toMatch(/display:\s*flex/);
+    const escritorio = estilos.slice(estilos.lastIndexOf('@media (min-width: 768px)'));
+    expect(regla(escritorio, '.dias-semana')).toMatch(/repeat\(7,\s*auto\)/);
+  });
+
   it('los estilos de Configuración usan solo variables del sistema de diseño', () => {
     const reglas = estilos.slice(estilos.indexOf('/* --- Configuración del consultorio (C-34'));
     expect(reglas.length).toBeGreaterThan(0);

@@ -3,6 +3,8 @@ import { boton, campo, escribir, json, texto, type Pedido, type ServidorFalso } 
 import {
   abrirConfiguracion,
   elegirPestana,
+  ponerHora,
+  selectoresDeHora,
   SESION_ADMIN,
   SESION_ODONTOLOGA,
   SESION_ODONTOLOGO_SIN_PROFESIONAL,
@@ -52,12 +54,40 @@ async function abrirHorarios(servidor: ServidorFalso): Promise<HTMLElement> {
   return panel;
 }
 
+const ABREVIATURAS: Record<string, string> = {
+  Lunes: 'Lu',
+  Martes: 'Ma',
+  Miércoles: 'Mi',
+  Jueves: 'Ju',
+  Viernes: 'Vi',
+  Sábado: 'Sá',
+  Domingo: 'Do',
+};
+
+/** Casilla de un día en "Agregar franja" por su nombre completo (su texto visible es la abreviatura). */
+function casillaDia(panel: HTMLElement, nombreDia: string): HTMLInputElement {
+  const casilla = [...panel.querySelectorAll<HTMLLabelElement>('.agregar-franja-dias label.casilla')]
+    .find((l) => l.textContent?.trim() === ABREVIATURAS[nombreDia])
+    ?.querySelector('input');
+  if (casilla === null || casilla === undefined) {
+    throw new Error(`No existe la casilla del día ${nombreDia}`);
+  }
+  return casilla;
+}
+
+function marcarDias(panel: HTMLElement, ...dias: string[]): void {
+  for (const nombre of dias) {
+    const casilla = casillaDia(panel, nombre);
+    if (!casilla.checked) {
+      casilla.click();
+    }
+  }
+}
+
 function agregarFranja(panel: HTMLElement, nombreDia: string, desde: string, hasta: string): void {
-  const selector = campo<HTMLSelectElement>(panel, 'Día');
-  const opcion = [...selector.options].find((o) => o.textContent === nombreDia);
-  escribir(selector, opcion?.value ?? '');
-  escribir(campo(panel, 'Desde'), desde);
-  escribir(campo(panel, 'Hasta'), hasta);
+  marcarDias(panel, nombreDia);
+  ponerHora(panel, 'Desde', desde);
+  ponerHora(panel, 'Hasta', hasta);
   boton(panel, 'Agregar franja').click();
 }
 
@@ -117,7 +147,7 @@ describe('Horarios de trabajo', () => {
     expect(botones).not.toContain('Agregar franja');
     expect(botones).not.toContain('Quitar');
     expect(botones).not.toContain('Guardar horario');
-    expect(panel.querySelector('.agregar-franja')).toBeNull();
+    expect(panel.querySelector('.agregar-franja-dias')).toBeNull();
   });
 });
 
@@ -189,7 +219,7 @@ describe('Edición de horarios por el administrador', () => {
     agregarFranja(panel, 'Sábado', '12:00', '09:00');
 
     expect(dia(panel, 'Sábado').querySelector('.no-atiende')).not.toBeNull();
-    const hasta = campo(panel, 'Hasta');
+    const hasta = selectoresDeHora(panel, 'Hasta').hora;
     expect(hasta.getAttribute('aria-invalid')).toBe('true');
     expect(document.getElementById(hasta.getAttribute('aria-describedby') ?? '')?.textContent).not.toBe('');
   });
@@ -216,5 +246,59 @@ describe('Edición de horarios por el administrador', () => {
 
     await vi.waitFor(() => expect(texto(panel)).toContain('Horario guardado.'));
     expect(servidor.a('PUT', '/profesionales/1/horarios')).toHaveLength(1);
+  });
+});
+
+describe('Franja para varios días', () => {
+  it('Una franja para varios días', async () => {
+    const servidor = conHorarios(servidorCon(SESION_ADMIN));
+    servidor.responder('GET /profesionales/{id}/horarios', (pedido: Pedido) => {
+      const id = Number(pedido.ruta.split('/')[2]);
+      return json(200, { profesionalId: id, franjas: id === 2 ? [] : FRANJAS_ANA });
+    });
+    servidor.responder('PUT /profesionales/{id}/horarios', (pedido: Pedido) =>
+      json(200, { profesionalId: 2, franjas: (pedido.cuerpo as { franjas: object[] }).franjas }),
+    );
+    const panel = await abrirHorarios(servidor);
+    escribir(campo<HTMLSelectElement>(panel, 'Profesional'), '2');
+    await vi.waitFor(() => expect(servidor.a('GET', '/profesionales/2/horarios')).toHaveLength(1));
+    await vi.waitFor(() => expect(dia(panel, 'Lunes').querySelector('.no-atiende')).not.toBeNull());
+
+    marcarDias(panel, 'Lunes', 'Miércoles', 'Viernes');
+    ponerHora(panel, 'Desde', '14:00');
+    ponerHora(panel, 'Hasta', '18:30');
+    boton(panel, 'Agregar franja').click();
+    expect(horasDe(panel, 'Lunes')).toEqual(['14:00 a 18:30']);
+    expect(horasDe(panel, 'Miércoles')).toEqual(['14:00 a 18:30']);
+    expect(horasDe(panel, 'Viernes')).toEqual(['14:00 a 18:30']);
+    expect(dia(panel, 'Martes').querySelector('.no-atiende')).not.toBeNull();
+    boton(panel, 'Guardar horario').click();
+
+    await vi.waitFor(() => expect(texto(panel)).toContain('Horario guardado.'));
+    expect(servidor.ultimo('PUT', '/profesionales/2/horarios').cuerpo).toEqual({
+      franjas: [
+        { dia: 1, desde: '14:00', hasta: '18:30' },
+        { dia: 3, desde: '14:00', hasta: '18:30' },
+        { dia: 5, desde: '14:00', hasta: '18:30' },
+      ],
+    });
+  });
+
+  it('Agregar franja sin días', async () => {
+    const servidor = conHorarios(servidorCon(SESION_ADMIN));
+    const panel = await abrirHorarios(servidor);
+    expect(panel.querySelectorAll('.agregar-franja-dias input[type="checkbox"]')).toHaveLength(7);
+
+    boton(panel, 'Agregar franja').click();
+
+    expect(texto(panel.querySelector('.agregar-franja-dias') as HTMLElement)).toContain('Elegí al menos un día.');
+    expect(panel.querySelectorAll('.franja-nueva')).toHaveLength(0);
+    expect(horasDe(panel, 'Sábado')).toEqual([]);
+    expect(dia(panel, 'Sábado').querySelector('.no-atiende')).not.toBeNull();
+    // Al marcar un día, el aviso desaparece.
+    marcarDias(panel, 'Sábado');
+    boton(panel, 'Agregar franja').click();
+    expect(texto(panel.querySelector('.agregar-franja-dias') as HTMLElement)).not.toContain('Elegí al menos un día.');
+    expect(horasDe(panel, 'Sábado')).toEqual(['09:00 a 12:00']);
   });
 });

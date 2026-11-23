@@ -10,8 +10,8 @@ import {
   type Profesional,
   type Sillon,
 } from './api.ts';
-import { textoDeTurno, type TurnoAfectado } from './periodos.ts';
-import { abrirDialogo, guardando, mostrarErrorEnFormulario, type ContextoSeccion } from './ui.ts';
+import { textoDeTurno, type ClasePeriodo, type TurnoAfectado } from './periodos.ts';
+import { abrirDialogo, crearSelectorHora, guardando, mostrarErrorEnFormulario, type ContextoSeccion } from './ui.ts';
 
 /**
  * Datos que el diálogo "Reasignar" consulta y que quedan en memoria mientras la pestaña está
@@ -53,9 +53,11 @@ export function crearRecursosReasignacion(api: ClienteApi): RecursosReasignacion
 export interface OpcionesReasignacion {
   readonly contexto: ContextoSeccion;
   readonly recursos: RecursosReasignacion;
-  /** Profesional ausente, dueño de la ausencia y del turno. */
+  /** Si el turno está afectado por una ausencia o por un bloqueo (cambia la ruta, design D16). */
+  readonly clase: ClasePeriodo;
+  /** Profesional ausente (o con la agenda bloqueada), dueño del período y del turno. */
   readonly ausenteId: number;
-  readonly ausenciaId: number;
+  readonly periodoId: number;
   readonly turno: TurnoAfectado;
   /** Nombre de la prestación del turno, para el resumen y la ayuda. */
   readonly prestacion: string;
@@ -93,7 +95,11 @@ export function abrirReasignacion(opciones: OpcionesReasignacion): void {
   nuevo.contenedor.append(ayudaProfesional);
 
   const fecha = crearCampo('Otra fecha (opcional)', crearEntrada('date', 'inicio'));
-  const hora = crearCampo('Otra hora (opcional)', crearEntrada('time', 'horaInicio'));
+  const hora = crearSelectorHora('horaInicio', 'Otra hora (opcional)', {
+    opcional: true,
+    ariaHora: 'Hora de inicio',
+    ariaMinutos: 'Minutos del inicio',
+  });
   const grupoHorario = document.createElement('div');
   grupoHorario.className = 'dos-campos';
   grupoHorario.append(fecha.contenedor, hora.contenedor);
@@ -114,7 +120,9 @@ export function abrirReasignacion(opciones: OpcionesReasignacion): void {
     [nuevo.contenedor, grupoHorario, ayudaHorario, grupoSillon],
     'Reasignar',
     {
-      resumen: `${textoDeTurno(turno.inicio)} · ${opciones.prestacion}. Hoy lo tiene ${quien}, que va a estar ausente.`,
+      resumen: `${textoDeTurno(turno.inicio)} · ${opciones.prestacion}. Hoy lo tiene ${quien}, ${
+        opciones.clase === 'bloqueos' ? 'que tiene la agenda bloqueada' : 'que va a estar ausente'
+      }.`,
     },
   );
   dialogo.enviar.disabled = true;
@@ -156,7 +164,7 @@ export function abrirReasignacion(opciones: OpcionesReasignacion): void {
     const profesionalId = Number(nuevo.control.value);
     // Si se elige solo la fecha o solo la hora, el otro dato se conserva del turno.
     const otraFecha = fecha.control.value;
-    const otraHora = hora.control.value;
+    const otraHora = hora.valor();
     const inicio =
       otraFecha === '' && otraHora === ''
         ? null
@@ -166,7 +174,7 @@ export function abrirReasignacion(opciones: OpcionesReasignacion): void {
           );
     const sillonId = sillon.control.value === '' ? null : Number(sillon.control.value);
     const ruta =
-      `/profesionales/${opciones.ausenteId}/ausencias/${opciones.ausenciaId}` +
+      `/profesionales/${opciones.ausenteId}/${opciones.clase}/${opciones.periodoId}` +
       `/turnos/${turno.turnoId}/reasignar`;
     void guardando(dialogo.enviar, () => contexto.api.crear(ruta, { profesionalId, inicio, sillonId })).then(
       (ok) => {

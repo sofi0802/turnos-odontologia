@@ -21,6 +21,7 @@ class ConfiguracionExceptionHandlerTest {
     @CsvSource({
             "MATRICULA_DUPLICADA, 409",
             "NOMBRE_DUPLICADO, 409",
+            "SILLON_HABITUAL_OCUPADO, 409",
             "DURACION_INVALIDA, 422",
             "PRESTACION_INACTIVA, 422",
             "SILLON_INACTIVO, 422",

@@ -58,7 +58,7 @@ Base: `/api/v1`. Formato JSON. Fechas en ISO-8601 con zona horaria.
 | Sillones | `GET/POST /sillones`, `PUT/DELETE /sillones/{id}` | ADMIN |
 | Prestaciones | `GET/POST /prestaciones`, `PUT/DELETE /prestaciones/{id}` | ADMIN |
 | Turnos | `POST /turnos` (crear), `GET /turnos?desde&hasta&profesionalId&sillonId`, `POST /turnos/{id}/cancelar`, `POST /turnos/{id}/reprogramar`, `POST /turnos/sobreturno` | RECEPCIONISTA, ODONTOLOGO |
-| Bloqueos | `POST /profesionales/{id}/bloqueos`, `DELETE /bloqueos/{id}` | ODONTOLOGO, ADMIN |
+| Bloqueos | `GET/POST /profesionales/{id}/bloqueos`, `DELETE /bloqueos/{id}`; `POST /profesionales/{id}/bloqueos/{bloqueoId}/turnos/{turnoId}/reasignar` | ODONTOLOGO, ADMIN; la recepción lee y reasigna (RN-AG-19) |
 | Horarios de trabajo | `GET/PUT /profesionales/{id}/horarios` | ADMIN |
 | Disponibilidad (pública) | `GET /public/disponibilidad?prestacionId&fecha[&profesionalId]` (sin `profesionalId` = "sin preferencia") | Público |
 | Cuenta de paciente | `POST /public/pacientes/registro`, `POST /public/login` | Público |

@@ -6,6 +6,7 @@ import {
   dialogoAbierto,
   elegirPestana,
   enviar,
+  opcionesDe,
   PRESTACIONES_SEED,
   SESION_ADMIN,
   SESION_ODONTOLOGA,
@@ -249,9 +250,28 @@ async function detalleDeAna(servidor: ServidorFalso): Promise<HTMLElement> {
   boton(ana, 'Ver detalle').click();
   return vi.waitFor(() => {
     const detalle = ana.querySelector<HTMLElement>('.detalle-profesional');
-    expect(detalle?.querySelector('select')).not.toBeNull();
+    expect(detalle?.querySelector('input[type="radio"]')).not.toBeNull();
     return detalle as HTMLElement;
   });
+}
+
+const SILLON_3 = { id: 3, nombre: 'Sillón 3', activo: true };
+
+/** Radio de una opción de sillón habitual por su nombre ("Sin sillón habitual" incluido). */
+function opcionSillon(detalle: HTMLElement, nombre: string): HTMLInputElement {
+  const etiqueta = [...detalle.querySelectorAll('label.opcion')].find(
+    (l) => l.querySelector('.opcion-nombre')?.textContent === nombre,
+  );
+  const radio = etiqueta?.querySelector('input');
+  if (radio === null || radio === undefined) {
+    throw new Error(`No existe la opción de sillón ${nombre}`);
+  }
+  return radio;
+}
+
+/** Estado que dice la tarjeta: "Elegido", "Libre" u "Ocupado · <profesional>". */
+function estadoDeSillon(detalle: HTMLElement, nombre: string): string {
+  return opcionSillon(detalle, nombre).closest('label')?.querySelector('small')?.textContent ?? '';
 }
 
 function casilla(detalle: HTMLElement, nombre: string): HTMLInputElement {
@@ -283,15 +303,295 @@ describe('Edición de especialidades y sillón habitual', () => {
     const servidor = servidorCon(SESION_ADMIN);
     servidor.responder('PUT /profesionales/{id}/sillon-habitual', () => json(204));
     const detalle = await detalleDeAna(servidor);
-    const selector = campo<HTMLSelectElement>(detalle, 'Sillón habitual');
-    expect(selector.value).toBe('1');
+    expect(opcionSillon(detalle, 'Sillón 1').checked).toBe(true);
 
-    escribir(selector, '');
-    expect(selector.selectedOptions[0]?.textContent).toBe('Sin sillón habitual');
+    opcionSillon(detalle, 'Sin sillón habitual').click();
+    expect(opcionSillon(detalle, 'Sin sillón habitual').checked).toBe(true);
     boton(detalle, 'Guardar sillón habitual').click();
 
     await vi.waitFor(() => expect(servidor.a('PUT', '/profesionales/1/sillon-habitual')).toHaveLength(1));
     expect(servidor.ultimo('PUT', '/profesionales/1/sillon-habitual').cuerpo).toEqual({ sillonId: null });
+    await vi.waitFor(() => expect(texto(detalle)).toContain('Sillón habitual guardado: Sin sillón habitual.'));
+  });
+
+  it('El administrador elige otro sillón libre', async () => {
+    const servidor = servidorCon(SESION_ADMIN);
+    servidor.responder('GET /sillones', () => json(200, [...SILLONES, SILLON_3]));
+    servidor.responder('PUT /profesionales/{id}/sillon-habitual', () => json(204));
+    const detalle = await detalleDeAna(servidor);
+
+    opcionSillon(detalle, 'Sillón 3').click();
+    expect(estadoDeSillon(detalle, 'Sillón 3')).toBe('Elegido');
+    expect(estadoDeSillon(detalle, 'Sillón 1')).toBe('Libre');
+    boton(detalle, 'Guardar sillón habitual').click();
+
+    await vi.waitFor(() => expect(servidor.a('PUT', '/profesionales/1/sillon-habitual')).toHaveLength(1));
+    expect(servidor.ultimo('PUT', '/profesionales/1/sillon-habitual').cuerpo).toEqual({ sillonId: 3 });
+  });
+
+  it('El detalle separa el bloque de prestaciones del de sillón habitual', async () => {
+    const detalle = await detalleDeAna(servidorCon(SESION_ADMIN));
+
+    const grupos = [...detalle.querySelectorAll<HTMLElement>('.grupo-config')];
+
+    expect(grupos).toHaveLength(2);
+    expect(boton(grupos[0] as HTMLElement, 'Guardar prestaciones')).toBeDefined();
+    expect(boton(grupos[1] as HTMLElement, 'Guardar sillón habitual')).toBeDefined();
+    expect(grupos[1]?.querySelector('.opciones-sillon')).not.toBeNull();
+  });
+});
+
+describe('Sillones habituales ocupados', () => {
+  it('El sillón de otro profesional no se puede elegir', async () => {
+    const servidor = servidorCon(SESION_ADMIN);
+    servidor.responder('GET /sillones', () => json(200, [...SILLONES, SILLON_3]));
+    const detalle = await detalleDeAna(servidor);
+
+    const ocupado = opcionSillon(detalle, 'Sillón 2');
+
+    expect(ocupado.disabled).toBe(true);
+    expect(estadoDeSillon(detalle, 'Sillón 2')).toBe('Ocupado · Bruno Prueba');
+    expect(ocupado.closest('label')?.classList.contains('opcion-ocupada')).toBe(true);
+    expect(opcionSillon(detalle, 'Sillón 1').checked).toBe(true);
+    expect(estadoDeSillon(detalle, 'Sillón 1')).toBe('Elegido');
+    expect(opcionSillon(detalle, 'Sillón 3').disabled).toBe(false);
+    expect(estadoDeSillon(detalle, 'Sillón 3')).toBe('Libre');
+    // "Sin sillón habitual" es una opción más y va al final.
+    const nombres = [...detalle.querySelectorAll('.opciones-sillon .opcion-nombre')].map((n) => n.textContent);
+    expect(nombres).toEqual(['Sillón 1', 'Sillón 2', 'Sillón 3', 'Sin sillón habitual']);
+    expect(opcionSillon(detalle, 'Sin sillón habitual').disabled).toBe(false);
+  });
+
+  it('El sillón lo tomó otro profesional mientras tanto', async () => {
+    const servidor = servidorCon(SESION_ADMIN);
+    servidor.responder('GET /sillones', () => json(200, [...SILLONES, SILLON_3]));
+    servidor.responder('PUT /profesionales/{id}/sillon-habitual', () =>
+      json(409, { status: 409, codigo: 'SILLON_HABITUAL_OCUPADO', detail: 'Sillón ocupado' }),
+    );
+    const detalle = await detalleDeAna(servidor);
+    opcionSillon(detalle, 'Sillón 3').click();
+
+    boton(detalle, 'Guardar sillón habitual').click();
+
+    await vi.waitFor(() => expect(texto(detalle)).toContain('Ese sillón ya es el habitual de otro profesional.'));
+    expect(servidor.ultimo('PUT', '/profesionales/1/sillon-habitual').cuerpo).toEqual({ sillonId: 3 });
+    // El sillón anterior sigue elegido.
+    expect(opcionSillon(detalle, 'Sillón 1').checked).toBe(true);
+    expect(opcionSillon(detalle, 'Sillón 3').checked).toBe(false);
+    expect(estadoDeSillon(detalle, 'Sillón 1')).toBe('Elegido');
+  });
+
+  it('Un profesional inactivo también ocupa su sillón, y el sillón actual se ve aunque esté inactivo', async () => {
+    const servidor = servidorCon(SESION_ADMIN);
+    servidor.responder('GET /profesionales', () =>
+      json(200, [PROFESIONALES[0], { ...PROFESIONALES[1], activo: false }]),
+    );
+    servidor.responder('GET /sillones', () => json(200, [{ ...SILLONES[0], activo: false }, SILLONES[1], SILLON_3]));
+    const detalle = await detalleDeAna(servidor);
+
+    expect(estadoDeSillon(detalle, 'Sillón 2')).toBe('Ocupado · Bruno Prueba');
+    expect(opcionSillon(detalle, 'Sillón 1').checked).toBe(true);
+  });
+
+  it('Dos detalles ven el sillón que se acaba de asignar', async () => {
+    const servidor = servidorCon(SESION_ADMIN);
+    servidor.responder('GET /sillones', () => json(200, [...SILLONES, SILLON_3]));
+    servidor.responder('PUT /profesionales/{id}/sillon-habitual', () => json(204));
+    servidor.responder('GET /profesionales/{id}/prestaciones', () => json(200, []));
+    const { raiz } = await abrirConfiguracion(servidor);
+    const panel = elegirPestana(raiz, 'Profesionales');
+    const ana = await filaCargada(panel, 'Ana Ejemplo');
+    boton(ana, 'Ver detalle').click();
+    const detalleAna = await vi.waitFor(() => {
+      const d = ana.querySelector<HTMLElement>('.detalle-profesional');
+      expect(d?.querySelector('input[type="radio"]')).not.toBeNull();
+      return d as HTMLElement;
+    });
+    opcionSillon(detalleAna, 'Sillón 3').click();
+    boton(detalleAna, 'Guardar sillón habitual').click();
+    await vi.waitFor(() => expect(servidor.a('PUT', '/profesionales/1/sillon-habitual')).toHaveLength(1));
+    await vi.waitFor(() => expect(texto(detalleAna)).toContain('Sillón habitual guardado: Sillón 3.'));
+
+    const bruno = fila(panel, 'Bruno Prueba');
+    boton(bruno, 'Ver detalle').click();
+    const detalleBruno = await vi.waitFor(() => {
+      const d = bruno.querySelector<HTMLElement>('.detalle-profesional');
+      expect(d?.querySelector('input[type="radio"]')).not.toBeNull();
+      return d as HTMLElement;
+    });
+
+    expect(estadoDeSillon(detalleBruno, 'Sillón 3')).toBe('Ocupado · Ana Ejemplo');
+    expect(estadoDeSillon(detalleBruno, 'Sillón 1')).toBe('Libre');
+  });
+});
+
+/** Servidor del alta: el `POST /profesionales` devuelve a Carla Muestra con el id 3 y la agrega a la lista. */
+function servidorDeAlta(): { servidor: ServidorFalso; profesionales: object[] } {
+  const servidor = servidorCon(SESION_ADMIN);
+  const profesionales: object[] = [...PROFESIONALES];
+  servidor.responder('GET /profesionales', () => json(200, profesionales));
+  servidor.responder('GET /sillones', () => json(200, [...SILLONES, SILLON_3]));
+  servidor.responder('POST /profesionales', () => {
+    const nuevo = { id: 3, nombre: 'Carla', apellido: 'Muestra', matricula: 'MP-0003', activo: true, sillonHabitualId: null };
+    profesionales.push(nuevo);
+    return json(201, nuevo);
+  });
+  servidor.responder('PUT /profesionales/{id}/prestaciones', () => json(204));
+  servidor.responder('PUT /profesionales/{id}/sillon-habitual', () => json(204));
+  return { servidor, profesionales };
+}
+
+/** Abre "Agregar profesional" y completa a Carla Muestra, esperando a que carguen las prestaciones y los sillones. */
+async function abrirAlta(servidor: ServidorFalso): Promise<{ panel: HTMLElement; dialogo: HTMLDialogElement }> {
+  const { raiz } = await abrirConfiguracion(servidor);
+  const panel = elegirPestana(raiz, 'Profesionales');
+  await filaCargada(panel, 'Ana Ejemplo');
+  boton(panel, 'Agregar profesional').click();
+  const dialogo = await dialogoAbierto();
+  await vi.waitFor(() => expect(dialogo.querySelectorAll('label.casilla').length).toBeGreaterThan(0));
+  escribir(campo(dialogo, 'Nombre'), 'Carla');
+  escribir(campo(dialogo, 'Apellido'), 'Muestra');
+  escribir(campo(dialogo, 'Matrícula'), 'MP-0003');
+  return { panel, dialogo };
+}
+
+const AVISO_FALLA_PARCIAL = 'El profesional se creó, pero no se pudieron guardar sus prestaciones o su sillón.';
+
+/** Pedidos que cambian datos, en orden. */
+function escrituras(servidor: ServidorFalso): string[] {
+  return servidor.pedidos.filter((p) => p.metodo !== 'GET').map((p) => `${p.metodo} ${p.ruta}`);
+}
+
+describe('Alta completa de un profesional', () => {
+  it('Alta con prestaciones y sillón', async () => {
+    const { servidor } = servidorDeAlta();
+    const { panel, dialogo } = await abrirAlta(servidor);
+    // Los sillones de otros profesionales no se pueden elegir.
+    const selector = campo<HTMLSelectElement>(dialogo, 'Sillón habitual (opcional)');
+    expect(opcionesDe(selector)).toEqual([
+      'Sin sillón habitual',
+      'Sillón 1 (de Ana Ejemplo)',
+      'Sillón 2 (de Bruno Prueba)',
+      'Sillón 3',
+    ]);
+    expect([...selector.options].map((o) => o.disabled)).toEqual([false, true, true, false]);
+    expect(opcionesDe(campo<HTMLSelectElement>(dialogo, 'Sillón habitual (opcional)'))).not.toContain('Sillón 4');
+
+    casilla(dialogo, 'Consulta o control').click();
+    escribir(selector, '3');
+    enviar(dialogo);
+
+    await filaCargada(panel, 'Carla Muestra');
+    expect(escrituras(servidor)).toEqual([
+      'POST /profesionales',
+      'PUT /profesionales/3/prestaciones',
+      'PUT /profesionales/3/sillon-habitual',
+    ]);
+    expect(servidor.ultimo('POST', '/profesionales').cuerpo).toEqual({
+      nombre: 'Carla',
+      apellido: 'Muestra',
+      matricula: 'MP-0003',
+    });
+    expect(servidor.ultimo('PUT', '/profesionales/3/prestaciones').cuerpo).toEqual({ prestacionIds: [1] });
+    expect(servidor.ultimo('PUT', '/profesionales/3/sillon-habitual').cuerpo).toEqual({ sillonId: 3 });
+    expect(dialogo.open).toBe(false);
+    expect(texto(panel)).not.toContain(AVISO_FALLA_PARCIAL);
+  });
+
+  it('Alta sin prestaciones ni sillón', async () => {
+    const { servidor } = servidorDeAlta();
+    const { panel, dialogo } = await abrirAlta(servidor);
+    expect(campo<HTMLSelectElement>(dialogo, 'Sillón habitual (opcional)').value).toBe('');
+
+    enviar(dialogo);
+
+    await filaCargada(panel, 'Carla Muestra');
+    expect(escrituras(servidor)).toEqual(['POST /profesionales']);
+  });
+
+  it('El alta con varias prestaciones y sin sillón solo envía las prestaciones', async () => {
+    const { servidor } = servidorDeAlta();
+    const { panel, dialogo } = await abrirAlta(servidor);
+
+    casilla(dialogo, 'Consulta o control').click();
+    casilla(dialogo, 'Tratamiento de conducto').click();
+    enviar(dialogo);
+
+    await filaCargada(panel, 'Carla Muestra');
+    expect(escrituras(servidor)).toEqual(['POST /profesionales', 'PUT /profesionales/3/prestaciones']);
+    expect(servidor.ultimo('PUT', '/profesionales/3/prestaciones').cuerpo).toEqual({ prestacionIds: [1, 3] });
+  });
+
+  it('Si falla el alta, el formulario sigue abierto y no se envían prestaciones ni sillón', async () => {
+    const { servidor } = servidorDeAlta();
+    servidor.responder('POST /profesionales', () =>
+      json(409, { status: 409, codigo: 'MATRICULA_DUPLICADA', detail: 'Matrícula duplicada' }),
+    );
+    const { dialogo } = await abrirAlta(servidor);
+    casilla(dialogo, 'Consulta o control').click();
+    escribir(campo<HTMLSelectElement>(dialogo, 'Sillón habitual (opcional)'), '3');
+
+    enviar(dialogo);
+
+    await vi.waitFor(() => expect(texto(dialogo)).toContain('Ya existe un profesional con esa matrícula.'));
+    expect(dialogo.open).toBe(true);
+    expect(escrituras(servidor)).toEqual(['POST /profesionales']);
+    expect(casilla(dialogo, 'Consulta o control').checked).toBe(true);
+  });
+
+  it('El formulario de edición no pide prestaciones ni sillón', async () => {
+    const { servidor } = servidorDeAlta();
+    const { raiz } = await abrirConfiguracion(servidor);
+    const panel = elegirPestana(raiz, 'Profesionales');
+
+    boton(await filaCargada(panel, 'Ana Ejemplo'), 'Editar').click();
+    const dialogo = await dialogoAbierto();
+
+    expect(dialogo.querySelectorAll('label.casilla')).toHaveLength(0);
+    expect(dialogo.querySelectorAll('select')).toHaveLength(0);
+  });
+});
+
+describe('Falla parcial del alta de un profesional', () => {
+  it('Falla el sillón después del alta', async () => {
+    const { servidor } = servidorDeAlta();
+    servidor.responder('PUT /profesionales/{id}/sillon-habitual', () =>
+      json(409, { status: 409, codigo: 'SILLON_HABITUAL_OCUPADO', detail: 'Sillón ocupado' }),
+    );
+    const { panel, dialogo } = await abrirAlta(servidor);
+    casilla(dialogo, 'Consulta o control').click();
+    escribir(campo<HTMLSelectElement>(dialogo, 'Sillón habitual (opcional)'), '3');
+
+    enviar(dialogo);
+
+    await filaCargada(panel, 'Carla Muestra');
+    await vi.waitFor(() => expect(texto(panel)).toContain(AVISO_FALLA_PARCIAL));
+    expect(texto(panel)).toContain('Ese sillón ya es el habitual de otro profesional.');
+    expect(panel.querySelector('[role="alert"]')?.textContent).toContain(AVISO_FALLA_PARCIAL);
+    expect(dialogo.open).toBe(false);
+    // Las prestaciones ya se habían guardado.
+    expect(escrituras(servidor)).toEqual([
+      'POST /profesionales',
+      'PUT /profesionales/3/prestaciones',
+      'PUT /profesionales/3/sillon-habitual',
+    ]);
+  });
+
+  it('Si fallan las prestaciones, no se intenta el sillón y se avisa igual', async () => {
+    const { servidor } = servidorDeAlta();
+    servidor.responder('PUT /profesionales/{id}/prestaciones', () =>
+      json(422, { status: 422, codigo: 'PRESTACION_INACTIVA', detail: 'Prestación inactiva' }),
+    );
+    const { panel, dialogo } = await abrirAlta(servidor);
+    casilla(dialogo, 'Consulta o control').click();
+    escribir(campo<HTMLSelectElement>(dialogo, 'Sillón habitual (opcional)'), '3');
+
+    enviar(dialogo);
+
+    await filaCargada(panel, 'Carla Muestra');
+    await vi.waitFor(() => expect(texto(panel)).toContain(AVISO_FALLA_PARCIAL));
+    expect(texto(panel)).toContain('Hay una prestación inactiva entre las elegidas.');
+    expect(escrituras(servidor)).toEqual(['POST /profesionales', 'PUT /profesionales/3/prestaciones']);
   });
 });
 
