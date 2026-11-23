@@ -13,7 +13,7 @@ En la prueba del 2026-11-23, la página "Configuración" del personal mostró so
 - **Horarios de trabajo**: franjas semanales por profesional. `ADMIN` las edita y guarda el conjunto completo (`FRANJAS_SUPERPUESTAS`, `HORARIO_INVALIDO`); recepción las lee y el odontólogo ve solo las suyas.
 - **Ausencias y licencias**: `ADMIN` y `RECEPCIONISTA` las registran y borran. Al registrar una, o al pedirlo después, la página lista los turnos que caen en el período y permite reasignar cada uno a otro profesional (RN-AG-16). El odontólogo ve solo las suyas.
 - **Bloqueos de agenda**: `ADMIN` los registra y borra para cualquier profesional; el odontólogo, solo los propios. Recepción no ve la pestaña.
-- **Sesión con el profesional del odontólogo** (backend): `GET /api/v1/public/sesion` y la respuesta del login suman `profesionalId` cuando el usuario es un `ODONTOLOGO` vinculado a un profesional. Hoy el backend solo deja que un odontólogo opere sobre su propio profesional, pero el frontend no tiene forma de saber cuál es. El campo es opcional: no rompe a quien ya consume la respuesta.
+- **Profesional del odontólogo**: las pestañas de agenda usan el `profesionalId` que C-35 ya agregó a la sesión (login y `GET /api/v1/public/sesion`). El backend solo deja que un odontólogo opere sobre su propio profesional, así que la página no le ofrece otros.
 - Mensajes en castellano para los códigos de configuración y de disponibilidad que el frontend todavía no traduce.
 
 ## Capabilities
@@ -22,7 +22,6 @@ En la prueba del 2026-11-23, la página "Configuración" del personal mostró so
 - `frontend-configuracion-consultorio`: la página Configuración del personal, con sus secciones, los permisos de cada rol y los mensajes de error.
 
 ### Modified Capabilities
-- `seguridad-autenticacion`: el estado de la sesión y la respuesta del login informan el profesional de un usuario `ODONTOLOGO`.
 - `frontend-navegacion`: "Páginas disponibles" deja de decir que Configuración muestra solo su título.
 
 ## Impact
@@ -30,11 +29,10 @@ En la prueba del 2026-11-23, la página "Configuración" del personal mostró so
 - **Frontend** (`frontend/`, dueño Enzo; se le avisa en el PR):
   - `src/pages/configuracion.ts` se reemplaza;
   - nuevo módulo `src/configuracion/` con un archivo por sección;
-  - `src/shared/sesion/sesion.ts` lee `profesionalId`;
   - `src/shared/ui/mensajes.ts` suma códigos;
   - `styles.css` agrega las clases que falten del design system.
   - Tests nuevos en `frontend/test/configuracion-*.test.ts`.
-- **Backend** (`usuarios/api`, dueño Juan Sebastián; se le avisa en el PR): `SesionResponse` suma `profesionalId` y se agrega su test. No hay migraciones ni endpoints nuevos.
-- **Fuera de alcance**: el `frontend-navegacion` del menú no cambia (Configuración ya está en el menú del personal). Tampoco la agenda propia del odontólogo (C-35), que podrá reutilizar el `profesionalId` de la sesión.
+- **Backend**: sin cambios. Usa los endpoints de C-04 y C-07, y el `profesionalId` de la sesión que agregó C-35.
+- **Fuera de alcance**: el menú no cambia (Configuración ya está en el menú del personal).
 - **Mockups**: visual, con el modo `system-and-mockups`. El apply espera la aprobación de la líder.
-- **Desvío de la ficha de CHANGES.md**: la ficha decía "sin cambios de backend". El usuario eligió sumar `profesionalId` a la sesión y se anota en la ficha.
+- **Actualización del 2026-11-23**: la primera versión de este proposal sumaba `profesionalId` a la sesión en el backend. C-35 lo implementó antes (PR #57), así que C-34 vuelve a no tener cambios de backend.
