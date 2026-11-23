@@ -614,7 +614,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `openspec/specs/frontend-navegacion/` y los specs `frontend-*` de cada pantalla
 
 ### [C-40] `frontend-nuevo-turno-guiado`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-23, PR pendiente; propuesta y mockups aprobados en el PR #65). Change `openspec/changes/frontend-nuevo-turno-guiado/` (delta de `frontend-agenda-personal`). Evidencia: 381 tests y verificación contra el backend de desarrollo en `mockups/verify/`. Sin migración ni cambios de backend
 - **Responsable**: Enzo
 - **Scope**:
   - Rehacer "Nuevo turno" de la agenda del personal (`ADMIN`, `RECEPCIONISTA` y `ODONTOLOGO`) como un formulario guiado, donde cada paso se habilita cuando el anterior tiene un valor: **prestación → profesional → fecha → horario**, y el **sillón** del profesional se muestra sin poder cambiarlo. El paciente se sigue eligiendo con el buscador de C-36.
