@@ -26,7 +26,7 @@ export interface Pedido {
   readonly encabezados: Headers;
 }
 
-type Manejador = (pedido: Pedido) => Response;
+type Manejador = (pedido: Pedido) => Response | Promise<Response>;
 
 export function json(estado: number, cuerpo?: unknown): Response {
   return new Response(cuerpo === undefined ? null : JSON.stringify(cuerpo), { status: estado });

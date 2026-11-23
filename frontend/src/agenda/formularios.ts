@@ -1,7 +1,9 @@
+import { cargarProfesionales } from '../paciente/catalogo.ts';
 import type { ClienteApi } from '../shared/api/cliente.ts';
-import { ErrorNoEncontrado, ErrorValidacion } from '../shared/api/errores.ts';
+import { ErrorNegocio, ErrorNoEncontrado, ErrorValidacion } from '../shared/api/errores.ts';
 import { aIsoConZona, fechaDeInstante, formatearHora, type Fecha } from '../shared/fecha/zona.ts';
 import {
+  cambiarOpciones,
   crearAviso,
   crearBoton,
   crearCampo,
@@ -10,9 +12,11 @@ import {
   type Campo,
   type Opcion,
 } from '../shared/ui/campos.ts';
-import { mensajeDeError } from '../shared/ui/mensajes.ts';
+import { mensajeDeError, mensajeDeReprogramacion } from '../shared/ui/mensajes.ts';
 import type { Catalogos, ItemCatalogo } from './catalogos.ts';
 import type { TurnoAgenda } from './consulta.ts';
+import { normalizarNumeroReserva } from './numero-reserva.ts';
+import { crearBuscadorHorarios, crearZonaHorarios } from './reprogramacion.ts';
 
 /** Lo que los formularios necesitan de la página de agenda. */
 export interface ControlAgenda {
@@ -121,6 +125,7 @@ function manejarEnvio(
   porCampo: Readonly<Record<string, CampoFormulario>>,
   pedido: () => Promise<unknown>,
   alTerminar: (cuerpo: unknown) => string,
+  mensaje: (causa: unknown) => string = mensajeDeError,
 ): void {
   dialogo.general.textContent = '';
   dialogo.enviar.disabled = true;
@@ -151,10 +156,10 @@ function manejarEnvio(
             destino.mostrarError(mensaje);
           }
         }
-        dialogo.general.textContent = sinCampo.length > 0 ? sinCampo.join(' ') : mensajeDeError(causa);
+        dialogo.general.textContent = sinCampo.length > 0 ? sinCampo.join(' ') : mensaje(causa);
         return;
       }
-      dialogo.general.textContent = mensajeDeError(causa);
+      dialogo.general.textContent = mensaje(causa);
     })
     .finally(() => {
       dialogo.enviar.disabled = false;
@@ -247,32 +252,76 @@ export function abrirCancelacion(control: ControlAgenda, turno: TurnoAgenda): vo
 export function abrirReprogramacion(control: ControlAgenda, turno: TurnoAgenda): void {
   const catalogos = control.catalogos();
   const [dni, numero] = camposDeIdentidad();
+  const profesional = selector('Profesional', 'profesionalId', [{ valor: '', texto: 'Sin cambios' }]);
   const fecha = entrada('Fecha', 'date', 'fecha', fechaDeInstante(turno.inicio));
-  const hora = entrada('Hora', 'time', 'hora', formatearHora(turno.inicio));
-  const profesional = selector('Profesional', 'profesionalId', opcionesActivas(catalogos.profesionales, 'Sin cambios'));
   const sillon = selector('Sillón', 'sillonId', opcionesActivas(catalogos.sillones, 'Sin cambios'));
   const dialogo = abrirDialogo(
     'Reprogramar turno',
     resumenDe(turno),
-    [dni, numero, fecha, hora, profesional, sillon],
+    [dni, numero, profesional, fecha, sillon],
     'Confirmar reprogramación',
   );
+  const identificacion = document.createElement('div');
+  identificacion.className = 'dos-campos';
+  dni.contenedor.before(identificacion);
+  identificacion.append(dni.contenedor, numero.contenedor);
+
+  // Horarios libres del profesional elegido ese día (design D4); el estado vive en reprogramacion.ts.
+  const zona = crearZonaHorarios();
+  fecha.contenedor.after(zona.contenedor);
+  const mostrarHorarios = (): void => {
+    zona.mostrarError('');
+    zona.mostrar(buscador.estado(), buscador.elegido(), (horario) => {
+      buscador.elegir(horario);
+      zona.mostrarError('');
+    });
+  };
+  const buscador = crearBuscadorHorarios(control.api, turno.prestacionId, mostrarHorarios);
+  const buscarHorarios = (): void => {
+    const elegido = profesional.control.value;
+    buscador.buscar(fecha.control.value, elegido === '' ? turno.profesionalId : Number(elegido));
+  };
+  profesional.control.addEventListener('change', buscarHorarios);
+  fecha.control.addEventListener('change', buscarHorarios);
+  sillon.control.addEventListener('change', () => sillon.mostrarError(''));
+  buscarHorarios();
+
+  // Solo los profesionales habilitados para la prestación del turno (design D3).
+  cargarProfesionales(control.api, turno.prestacionId)
+    .then((habilitados) =>
+      cambiarOpciones(profesional.control, [
+        { valor: '', texto: 'Sin cambios' },
+        ...habilitados.map((p) => ({ valor: String(p.id), texto: p.nombre })),
+      ]),
+    )
+    .catch((causa: unknown) => {
+      if (control.sesionVencida(causa)) {
+        dialogo.cerrar();
+        return;
+      }
+      const aviso = crearAviso('status');
+      aviso.className = 'aviso aviso-alerta';
+      aviso.textContent = 'No pudimos cargar los profesionales. Podés reprogramar con el profesional actual.';
+      profesional.contenedor.append(aviso);
+    });
 
   dialogo.formulario.addEventListener('submit', (evento) => {
     evento.preventDefault();
+    sillon.mostrarError('');
     const completos = validarObligatorios([
       [dni, 'Ingresá el DNI.'],
       [numero, 'Ingresá el número de reserva.'],
       [fecha, 'Elegí la fecha.'],
-      [hora, 'Elegí la hora.'],
     ]);
-    if (!completos) {
+    const horario = buscador.elegido();
+    zona.mostrarError(horario === null ? 'Elegí un horario.' : '');
+    if (!completos || horario === null) {
       return;
     }
     const cuerpo: Record<string, string | number> = {
       dni: dni.control.value.trim(),
-      numeroReserva: numero.control.value.trim(),
-      inicio: aIsoConZona(fecha.control.value, hora.control.value),
+      numeroReserva: normalizarNumeroReserva(numero.control.value),
+      inicio: horario.inicio,
     };
     if (profesional.control.value !== '') {
       cuerpo['profesionalId'] = Number(profesional.control.value);
@@ -283,9 +332,16 @@ export function abrirReprogramacion(control: ControlAgenda, turno: TurnoAgenda):
     manejarEnvio(
       control,
       dialogo,
-      { dni, numeroReserva: numero, inicio: hora, profesionalId: profesional, sillonId: sillon },
-      () => control.api.crear<unknown>(`/turnos/${turno.id}/reprogramar`, cuerpo),
+      { dni, numeroReserva: numero, inicio: fecha, profesionalId: profesional, sillonId: sillon },
+      () =>
+        control.api.crear<unknown>(`/turnos/${turno.id}/reprogramar`, cuerpo).catch((causa: unknown) => {
+          if (causa instanceof ErrorNegocio && causa.codigo === 'SOLAPAMIENTO_SILLON') {
+            sillon.mostrarError('Elegí otro sillón para ese horario.');
+          }
+          throw causa;
+        }),
       (respuesta) => `Turno reprogramado. Nuevo número de reserva: ${leerNumeroReserva(respuesta)}.`,
+      mensajeDeReprogramacion,
     );
   });
 }

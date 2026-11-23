@@ -43,7 +43,7 @@ El frontend no sabe qué sillón libre usar en un horario dado (la API pública 
 *Alternativa descartada*: pedir al backend que, sin `sillonId`, elija un sillón libre (como hace `CrearSobreturno`). Es la mejor solución de fondo pero toca `agenda/application` y `agenda/api` (de Sofía); queda como mejora a proponer si la reproducción confirma la causa 1.
 
 ### D3. Profesionales: `GET /public/profesionales?prestacionId=`
-Se pide una vez al abrir el formulario, con el `prestacionId` del turno. Las opciones son "Sin cambios" más los devueltos. El profesional actual del turno no se repite. Si la consulta falla, se avisa y queda solo "Sin cambios".
+Se pide una vez al abrir el formulario, con el `prestacionId` del turno. Las opciones son "Sin cambios" más los devueltos, incluido el profesional actual (así lo muestran el spec y el mockup aprobado: "Sin cambios" conserva al actual sin consultar y elegirlo por nombre pide sus horarios). Si la consulta falla, se avisa y queda solo "Sin cambios".
 
 *Alternativa descartada*: filtrar `catalogos.profesionales` en el cliente. El catálogo no trae las habilitaciones (RN-AG-15), y duplicar la regla en el cliente la dejaría desactualizada.
 
@@ -59,19 +59,19 @@ Una función pura `normalizarNumeroReserva` (en `agenda/`) quita espacios y guio
 Como la disponibilidad cuenta al turno que se reprograma como ocupado, no se ofrecen horarios que se superponen con él (por ejemplo, correrlo 15 minutos). Se aclara con un texto en el formulario. Quitar la limitación exige que el backend ignore el turno (`BuscadorDeHuecos` ya recibe `ignorarTurnoId`) mediante un parámetro o un endpoint de personal autenticado, sin exponerlo en la API pública. Es un cambio de `reserva`/`agenda/api` que se propone aparte si el consultorio lo necesita.
 
 ### D7. Dependencia con el archive de C-09
-`frontend-agenda-personal` todavía no está en `openspec/specs/`: la crea el archive de C-09. El delta de este change modifica el requisito "Reprogramar un turno" de esa capacidad, así que `openspec archive` lo rechaza hasta que C-09 esté archivado (`openspec validate` ya lo informa). El apply puede empezar antes, pero **el archive de C-33 espera al de C-09**. El texto modificado se copió del requisito vigente en `openspec/changes/frontend-agenda-personal/specs/frontend-agenda-personal/spec.md`; si C-09 lo cambia antes de archivarse, se vuelve a copiar.
+`frontend-agenda-personal` no estaba en `openspec/specs/` cuando se propuso este change: la crea el archive de C-09. El delta modifica el requisito "Reprogramar un turno" de esa capacidad, así que `openspec archive` lo habría rechazado antes. **C-09 ya está archivado (2026-11-23)**: el delta valida sin avisos y este change se puede archivar. Si el requisito cambió en el archive de C-09, hay que volver a copiar su texto vigente antes de archivar.
 
 ### D8. Mensajes
-Se agrega a `MENSAJES_POR_CODIGO`: `DATOS_DE_RESERVA_INVALIDOS` ("El DNI o el número de reserva no son correctos."). El de `SOLAPAMIENTO_SILLON` cambia para la reprogramación, que necesita la indicación de elegir otro sillón: se usa un texto específico del formulario, sin alterar el de la creación de turnos. Un código sin texto sigue mostrando el mensaje genérico de `ErrorNegocio`; se agrega un test de que nunca queda vacío ni muestra el código.
+Se agrega a `MENSAJES_POR_CODIGO`: `DATOS_DE_RESERVA_INVALIDOS` ("El DNI o el número de reserva no son correctos."). El de `SOLAPAMIENTO_SILLON` cambia para la reprogramación, que necesita la indicación de elegir otro sillón: se usa un texto específico del formulario, sin alterar el de la creación de turnos. Un código sin texto propio muestra el detalle que informó el servidor (ya en español) o, si no trae detalle, el mensaje genérico de `ErrorNegocio`; se agrega un test de que nunca queda vacío ni muestra el código.
 
 ## UI Mockups
 
 - Design system revision: 1 (`design-system/README.md`, aprobada el 2026-11-22).
 - Decision: yes, 2026-11-23. El modo del proyecto es `system-and-mockups`.
 - Mockups: `openspec/changes/frontend-reprogramacion-agenda/mockups/` (ver su `README.md`). Fuente de referencia: `design-system/components.html`, secciones "Agenda del día (personal)", "Formularios y avisos", "Reserva online" (chips) y "Diálogo de confirmación". Se reutiliza el CSS de los mockups de C-12.
-- Approval: pending.
+- Approval: approved (2026-11-23, by Sofia Indovino, la líder; PR #52). Revisión 1 del design system.
 - Preview: rendered (2026-11-23), capturas en `mockups/previews/` a 390 × 844 y 1440 × 900, sin desplazamiento horizontal ni errores en la consola, botones de horario de 44 px.
-- Visual verify: pending.
+- Visual verify: differences (2026-11-23). 1 major (la grilla de horarios se desbordaba desde 768 px), corregida y repetida; 3 minor aceptadas (resumen del turno, ubicación del aviso y orden de los botones). Sin blockers. Hecha con la API simulada, no con el backend real. Detalle y capturas en `mockups/verify/README.md`.
 
 ## Risks / Trade-offs
 

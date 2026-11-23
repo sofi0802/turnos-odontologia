@@ -24,6 +24,8 @@ export const MENSAJES_POR_CODIGO: Readonly<Record<string, string>> = {
   CANCELACION_FUERA_DE_PLAZO: 'Faltan menos de 24 h. Para cancelarlo o cambiarlo, contactá al consultorio.',
   RESERVA_INEXISTENTE: 'No encontramos ese turno.',
   PROFESIONAL_NO_HABILITADO: 'Ese profesional no atiende esa prestación. Elegí otro.',
+  // No dice cuál de los dos datos falló, igual que el backend (C-33).
+  DATOS_DE_RESERVA_INVALIDOS: 'El DNI o el número de reserva no son correctos.',
   DNI_YA_REGISTRADO:
     'Ya hay un paciente registrado con ese DNI. Si es tuyo, ingresá con tu cuenta o contactá al consultorio.',
   EMAIL_YA_REGISTRADO: 'Ya existe una cuenta con ese email. Ingresá con tu contraseña.',
@@ -49,4 +51,17 @@ export function mensajeDeError(error: unknown): string {
     return error.message;
   }
   return MENSAJE_ERROR_GENERICO;
+}
+
+/** Textos que la reprogramación (C-33) cambia respecto de la creación de turnos. */
+const MENSAJES_REPROGRAMACION: Readonly<Record<string, string>> = {
+  SOLAPAMIENTO_SILLON: 'El sillón ya está ocupado en ese horario. Elegí otro sillón.',
+};
+
+/** Como {@link mensajeDeError}, con la indicación de elegir otro sillón al reprogramar. */
+export function mensajeDeReprogramacion(error: unknown): string {
+  if (error instanceof ErrorNegocio) {
+    return MENSAJES_REPROGRAMACION[error.codigo] ?? mensajeDeError(error);
+  }
+  return mensajeDeError(error);
 }
