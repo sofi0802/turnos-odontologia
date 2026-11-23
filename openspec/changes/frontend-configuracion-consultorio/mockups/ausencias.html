@@ -32,17 +32,26 @@
       <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Margen</button>
       <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Horarios</button>
       <button class="pestana" role="tab" type="button" aria-selected="true">Ausencias</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Bloqueos</button>
     </div>
     <section role="tabpanel" aria-label="Ausencias">
       <div class="cabecera-seccion"><h2>Ausencias y licencias</h2><button class="btn btn-principal" type="button">Registrar ausencia</button></div>
       <div class="campo selector-profesional"><label for="pr">Profesional</label>
-        <select class="control" id="pr"><option selected>Ana Ejemplo</option><option>Bruno Prueba</option></select></div>
-      <ul class="lista-config">
+        <select class="control" id="pr"><option selected>Todos los profesionales</option><option>Ana Ejemplo</option><option>Bruno Prueba</option></select></div>
+      <ul class="lista-config con-columna">
+        <li class="encabezado-columnas"><div>Profesional</div><div>Período</div><div></div></li>
         <li>
+          <div class="item-profesional">Ana Ejemplo</div>
           <div><div class="item-nombre">Ausencia</div><div class="item-datos"><span>Lunes 7 de diciembre, 08:00 a 13:00</span><span>Trámite personal</span></div></div>
           <div class="item-acciones"><button class="btn btn-chico" type="button">Ver turnos afectados</button><button class="btn btn-chico btn-peligro" type="button">Borrar</button></div>
         </li>
         <li>
+          <div class="item-profesional">Bruno Prueba</div>
+          <div><div class="item-nombre">Ausencia</div><div class="item-datos"><span>Martes 8 de diciembre, 14:00 a 18:00</span><span>Curso</span></div></div>
+          <div class="item-acciones"><button class="btn btn-chico" type="button">Ver turnos afectados</button><button class="btn btn-chico btn-peligro" type="button">Borrar</button></div>
+        </li>
+        <li>
+          <div class="item-profesional">Ana Ejemplo</div>
           <div><div class="item-nombre">Licencia</div><div class="item-datos"><span>Lunes 14 de diciembre 08:00 al viernes 18 de diciembre 13:00</span><span>Congreso</span></div></div>
           <div class="item-acciones"><button class="btn btn-chico" type="button">Ver turnos afectados</button><button class="btn btn-chico btn-peligro" type="button">Borrar</button></div>
         </li>

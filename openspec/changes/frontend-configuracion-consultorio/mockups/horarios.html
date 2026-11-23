@@ -48,11 +48,14 @@
         <li><span class="dia">Sábado</span><span class="no-atiende">No atiende</span></li>
         <li><span class="dia">Domingo</span><span class="no-atiende">No atiende</span></li>
       </ul>
-      <form class="agregar-franja" aria-label="Agregar franja">
-        <div class="campo"><label for="fd">Día</label><select class="control" id="fd"><option>Lunes</option><option>Martes</option><option>Sábado</option></select></div>
-        <div class="campo"><label for="fh">Desde</label><input class="control" id="fh" type="time" value="09:00" /></div>
-        <div class="campo"><label for="fa">Hasta</label><input class="control" id="fa" type="time" value="12:00" /></div>
-        <button class="btn" type="button">Agregar franja</button>
+      <form class="agregar-franja-dias" aria-label="Agregar franja">
+        <fieldset class="dias-semana"><legend>Días de la franja</legend><label class="casilla"><input type="checkbox" checked /> Lu</label><label class="casilla"><input type="checkbox" checked /> Ma</label><label class="casilla"><input type="checkbox" checked /> Mi</label><label class="casilla"><input type="checkbox" /> Ju</label><label class="casilla"><input type="checkbox" /> Vi</label><label class="casilla"><input type="checkbox" /> Sá</label><label class="casilla"><input type="checkbox" /> Do</label></fieldset>
+        <div class="horas">
+          <div class="campo"><span class="etiqueta-hora" id="fd-l" style="font-weight:var(--ds-peso-medio)">Desde</span><div class="hora-5"><select class="control" id="fd-h" aria-label="Hora de inicio"><option>00</option><option>01</option><option>02</option><option>03</option><option>04</option><option>05</option><option>06</option><option>07</option><option>08</option><option selected>09</option><option>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option><option>21</option><option>22</option><option>23</option></select><span class="separador" aria-hidden="true">:</span><select class="control" id="fd-m" aria-label="Minutos del inicio"><option selected>00</option><option>05</option><option>10</option><option>15</option><option>20</option><option>25</option><option>30</option><option>35</option><option>40</option><option>45</option><option>50</option><option>55</option></select></div></div>
+          <div class="campo"><span class="etiqueta-hora" id="fa-l" style="font-weight:var(--ds-peso-medio)">Hasta</span><div class="hora-5"><select class="control" id="fa-h" aria-label="Hora de fin"><option>00</option><option>01</option><option>02</option><option>03</option><option>04</option><option>05</option><option>06</option><option>07</option><option>08</option><option>09</option><option>10</option><option>11</option><option selected>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option><option>21</option><option>22</option><option>23</option></select><span class="separador" aria-hidden="true">:</span><select class="control" id="fa-m" aria-label="Minutos del fin"><option selected>00</option><option>05</option><option>10</option><option>15</option><option>20</option><option>25</option><option>30</option><option>35</option><option>40</option><option>45</option><option>50</option><option>55</option></select></div></div>
+        </div>
+        <span class="ayuda">Los minutos avanzan de 5 en 5. La franja se agrega a todos los días marcados.</span>
+        <div><button class="btn" type="button">Agregar franja</button></div>
       </form>
       <div class="acciones">
         <button class="btn" type="button">Descartar cambios</button>

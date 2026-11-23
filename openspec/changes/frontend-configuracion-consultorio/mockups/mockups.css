@@ -213,3 +213,30 @@ p { margin: 0; }
   .agregar-franja, .campo-inline { grid-template-columns: repeat(3, 1fr) auto; align-items: end; }
   .pestanas-config { margin-left: 0; margin-right: 0; padding: 0; }
 }
+
+/* Revisión 2 (segunda prueba): espaciado del detalle, días, horas de 5 en 5 y columna Profesional. Solo tokens existentes. */
+.grupo-config { display: grid; gap: var(--ds-espacio-1); justify-items: start; }
+.grupo-config + .grupo-config { margin-top: var(--ds-espacio-3); }
+.grupo-config fieldset { margin: 0; }
+.grupo-config .campo { width: 100%; max-width: 22rem; }
+.dias-semana { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--ds-espacio-0); border: 0; margin: 0; padding: 0; }
+.dias-semana legend { font-weight: var(--ds-peso-medio); margin-bottom: var(--ds-espacio-1); padding: 0; }
+.hora-5 { display: flex; gap: var(--ds-espacio-0); align-items: center; }
+.hora-5 .control { width: auto; min-width: 4.5rem; flex: 1; }
+.hora-5 .separador { font-family: var(--ds-fuente-mono); font-weight: var(--ds-peso-fuerte); }
+.item-profesional { font-size: var(--ds-texto-sm); color: var(--ds-texto-suave); }
+.item-profesional::before { content: 'Profesional: '; }
+.lista-config > li.encabezado-columnas { display: none; }
+.agregar-franja-dias { display: grid; gap: var(--ds-espacio-2); margin-top: var(--ds-espacio-2); padding: var(--ds-espacio-2); background: var(--ds-fondo); border: 1px dashed var(--ds-borde-fuerte); border-radius: var(--ds-radio); }
+.agregar-franja-dias .horas { display: grid; gap: var(--ds-espacio-2); }
+
+@media (min-width: 768px) {
+  .dias-semana { grid-template-columns: repeat(7, auto); justify-content: start; gap: var(--ds-espacio-2); }
+  .agregar-franja-dias .horas { grid-template-columns: repeat(2, auto); justify-content: start; align-items: end; gap: var(--ds-espacio-3); }
+  .lista-config.con-columna > li { grid-template-columns: 11rem 1fr auto; }
+  .lista-config.con-columna > li.encabezado-columnas { display: grid; background: var(--ds-superficie); font-size: var(--ds-texto-sm); font-weight: var(--ds-peso-medio); color: var(--ds-texto-suave); }
+  .lista-config.con-columna .item-profesional { font-size: inherit; color: var(--ds-texto); font-weight: var(--ds-peso-medio); }
+  .lista-config.con-columna .item-profesional::before { content: none; }
+}
+.velo { overflow-y: auto; }
+.velo .dialogo { margin: auto; }

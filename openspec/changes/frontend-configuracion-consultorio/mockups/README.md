@@ -1,8 +1,9 @@
 # Mockups de C-34 `frontend-configuracion-consultorio`
 
 - Design system revision: 1 (`design-system/README.md`, aprobado el 2026-11-22)
-- Approval: approved (2026-11-23, by Sofia Indovino al mergear el PR #51, que pedía la aprobación)
-- Preview: rendered (2026-11-23). Las capturas están en `previews/`, a 390 × 844 y 1440 × 900. Son de página completa, salvo las de los diálogos, que muestran lo que se ve en pantalla. Ninguna pantalla tiene desplazamiento horizontal, errores en la consola ni recursos que no carguen.
+- Revision: 2 (segunda prueba, 2026-11-23). La revisión 1 la aprobó Sofia Indovino el 2026-11-23 al mergear el PR #51; la revisión 2 reemplaza a las pantallas de la tabla marcadas con (r2).
+- Approval: pending (revisión 2, la aprueba Emanuel antes de las tareas 11.x)
+- Preview: rendered (2026-11-23, Chrome headless con emulación de 390 × 844 y 1440 × 900). Las capturas de la revisión 2 están en `previews/` con el sufijo `-r2-390.png` y `-r2-1440.png`; las de la revisión 1 (sin sufijo) quedan como referencia de lo que no cambió. Son de página completa, salvo las de los diálogos, que muestran el diálogo entero. Ninguna pantalla tiene desplazamiento horizontal ni errores en la consola.
 
 Los aprueba la líder antes del apply (`design-system/README.md`). Una vez aprobados, son el criterio de aceptación visual de las tareas de `tasks.md`.
 
@@ -32,17 +33,18 @@ Los aprueba la líder antes del apply (`design-system/README.md`). Una vez aprob
 
 | Archivo | Pantalla y estado | Requisitos |
 |---|---|---|
-| `profesionales.html` | Admin, Profesionales, con el detalle de Ana Ejemplo abierto ("Prestaciones guardadas.") y un profesional inactivo | Secciones según el rol; Catálogos; Edición de catálogos; Especialidades y sillón habitual; Edición de especialidades |
-| `profesional-formulario.html` | Admin, diálogo "Agregar profesional" con `MATRICULA_DUPLICADA` | Edición de catálogos (Matrícula repetida) |
-| `prestaciones-recepcion.html` | Recepción, Prestaciones solo lectura, sin la pestaña Bloqueos | Catálogos (solo lectura); Secciones según el rol |
+| `profesionales.html` (r2) | Admin, Profesionales: detalle de Ana Ejemplo con cada bloque separado (`.grupo-config`: 8 px entre campo y botón, 24 px entre bloques), "Sillón 2 (de Bruno Prueba)" deshabilitado (el selector se dibuja abierto para mostrarlo) y el aviso de falla parcial "El profesional se creó, pero no se pudieron guardar sus prestaciones o su sillón." | Secciones según el rol; Catálogos; Edición de catálogos; Especialidades y sillón habitual; Edición de especialidades |
+| `profesional-formulario.html` (r2) | Admin, diálogo "Agregar profesional" con casillas de prestaciones, selector de sillón (los ocupados deshabilitados) y `MATRICULA_DUPLICADA` | Edición de catálogos (Matrícula repetida) |
+| `prestaciones-recepcion.html` (r2) | Recepción, Prestaciones solo lectura; ahora con la pestaña Bloqueos (solo lectura) | Catálogos (solo lectura); Secciones según el rol |
 | `sillones-error.html` | Admin, Sillones con la carga fallida y "Reintentar" | Errores al cargar o guardar |
 | `margen.html` | Admin, Margen con `MARGEN_INVALIDO` | Margen entre turnos |
-| `horarios.html` | Admin editando el horario de Ana Ejemplo, con una franja sin guardar y `FRANJAS_SUPERPUESTAS` | Edición de horarios por el administrador |
-| `horarios-recepcion.html` | Recepción, horario de Ana Ejemplo solo lectura ("No atiende" sábado y domingo) | Horarios de trabajo; Profesional de las secciones de agenda |
-| `ausencias.html` | Recepción, lista de ausencias y "Turnos afectados: 2" con "Reasignar" | Ausencias y licencias; Turnos afectados por una ausencia |
-| `ausencia-formulario.html` | Recepción, diálogo "Registrar ausencia" con `PERIODO_INVALIDO` | Registro y borrado de ausencias |
-| `reasignar.html` | Recepción, diálogo "Reasignar turno" con solo los profesionales habilitados | Reasignación de un turno afectado |
-| `bloqueos-odontologo.html` | `ana.ejemplo`, Bloqueos de su profesional fijo, con el aviso "se cruza con 2 turnos dados" | Bloqueos de agenda; Profesional de las secciones de agenda |
+| `horarios.html` (r2) | Admin, "Agregar franja" con casillas Lu a Do y la hora en dos selectores (hora y minutos de 5 en 5); además, editando el horario de Ana Ejemplo, con una franja sin guardar y `FRANJAS_SUPERPUESTAS` | Edición de horarios por el administrador |
+| `horarios-recepcion.html` (r2) | Recepción, con la pestaña Bloqueos, horario de Ana Ejemplo solo lectura ("No atiende" sábado y domingo) | Horarios de trabajo; Profesional de las secciones de agenda |
+| `ausencias.html` (r2) | Recepción, "Todos los profesionales" (por defecto) con la columna Profesional, la pestaña Bloqueos de solo lectura y "Turnos afectados: 2" con "Reasignar" | Ausencias y licencias; Turnos afectados por una ausencia |
+| `ausencia-formulario.html` (r2) | Recepción, diálogo "Registrar ausencia" con selector de profesional, la hora en dos selectores de 5 en 5 y `PERIODO_INVALIDO` | Registro y borrado de ausencias |
+| `reasignar.html` (r2) | Recepción, diálogo "Reasignar turno" con solo los profesionales habilitados y el inicio de 5 en 5 | Reasignación de un turno afectado |
+| `bloqueos-odontologo.html` (r2) | `ana.ejemplo`, Bloqueos de su profesional fijo, con "se cruza con 2 turnos dados", los turnos afectados sin "Reasignar" y "Avisale a la recepción para reasignarlos." |
+| `bloqueos.html` (r2, nueva) | Recepción, Bloqueos de "Todos los profesionales" en solo lectura (sin "Bloquear horario" ni "Borrar"), con la columna Profesional y los turnos afectados con "Reasignar" | Bloqueos de agenda; Profesional de las secciones de agenda |
 | `ausencias-odontologo.html` | `ana.ejemplo`, sus ausencias solo lectura, más el aviso del odontólogo sin profesional vinculado | Ausencias y licencias; Profesional de las secciones de agenda |
 
 ## Cómo verlos
@@ -54,3 +56,7 @@ python -m http.server 8765
 ```
 
 Después se abre `http://localhost:8765/openspec/changes/frontend-configuracion-consultorio/mockups/profesionales.html`. Para ver el celular, se usan las herramientas del navegador a 390 × 844. Los botones de los mockups no hacen nada: muestran cada estado en un archivo aparte.
+
+## Revisión 2: estilos nuevos
+
+`.grupo-config`, `.dias-semana`, `.hora-5`, `.item-profesional` (la columna Profesional, que en 390 px pasa a ser una línea "Profesional: X") y `.agregar-franja-dias`. Usan solo tokens existentes. Los diálogos ahora se desplazan por dentro si no entran en pantalla. El error "Elegí al menos un día." aparece en "Agregar franja" cuando no se marca ningún día, y "Ese sillón ya es el habitual de otro profesional." cuando falla el guardado del sillón; ninguno tiene una captura propia.

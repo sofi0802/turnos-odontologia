@@ -32,6 +32,7 @@
       <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Margen</button>
       <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Horarios</button>
       <button class="pestana" role="tab" type="button" aria-selected="true">Ausencias</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Bloqueos</button>
     </div>
     <section role="tabpanel" aria-label="Ausencias">
       <div class="cabecera-seccion"><h2>Ausencias y licencias</h2><button class="btn btn-principal" type="button">Registrar ausencia</button></div>
@@ -70,9 +71,9 @@
           <span class="ayuda">Solo aparecen los profesionales activos que hacen Consulta o control.</span></div>
         <div class="dos-campos">
           <div class="campo"><label for="nf">Otra fecha (opcional)</label><input class="control" id="nf" type="date" /></div>
-          <div class="campo"><label for="ni">Otra hora (opcional)</label><input class="control" id="ni" type="time" /></div>
+          <div class="campo"><span style="font-weight:var(--ds-peso-medio)">Otra hora (opcional)</span><div class="hora-5"><select class="control" id="ni-h" aria-label="Hora de inicio"><option>00</option><option>01</option><option>02</option><option>03</option><option>04</option><option>05</option><option>06</option><option>07</option><option>08</option><option>09</option><option selected>10</option><option>11</option><option>12</option><option>13</option><option>14</option><option>15</option><option>16</option><option>17</option><option>18</option><option>19</option><option>20</option><option>21</option><option>22</option><option>23</option></select><span class="separador" aria-hidden="true">:</span><select class="control" id="ni-m" aria-label="Minutos del inicio"><option>00</option><option>05</option><option>10</option><option>15</option><option>20</option><option>25</option><option selected>30</option><option>35</option><option>40</option><option>45</option><option>50</option><option>55</option></select></div></div>
         </div>
-        <span class="ayuda">Si no elegís fecha ni hora, el turno queda en el mismo horario.</span>
+        <span class="ayuda">Si no elegís fecha ni hora, el turno queda en el mismo horario. Los minutos avanzan de 5 en 5.</span>
         <div class="dos-campos">
           <div class="campo"><label for="ns">Otro sillón (opcional)</label><select class="control" id="ns"><option>El mismo</option><option>Sillón 1</option><option>Sillón 2</option></select></div>
         </div>
