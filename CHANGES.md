@@ -139,7 +139,7 @@ GATE 4: C-07 ✓ + C-06 ✓ + C-05 ✓
 GATE 5: C-10 ✓
   → C-12 frontend-reserva-paciente           [Agente C · Emanuel]
 
-GATE 5b: C-09 archivado (y C-12 ✓ para C-33)                ← FORK (los 4 en paralelo)
+GATE 5b: C-09 archivado ✓ y C-12 ✓ (2026-11-23)                ← FORK (los 4 en paralelo)
   → C-33 frontend-reprogramacion-agenda      [Agente C · Juan Cruz]
   → C-34 frontend-configuracion-consultorio  [Agente C · Emanuel]
   → C-35 agenda-propia-odontologo            [Agente A · Sofia — después de actualizar la KB]
@@ -381,7 +381,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/09_decisiones_y_supuestos.md` §DD-03, §DD-06
 
 ### [C-09] `frontend-agenda-personal`
-- **Estado**: `[x]` completo (2026-11-22, PR pendiente). Change `openspec/changes/frontend-agenda-personal/` (specs nuevas `frontend-sesion-personal` y `frontend-agenda-personal`; deltas a `frontend-cliente-api` y `frontend-navegacion`). Evidencia: 99 tests y capturas en `verify/`
+- **Estado**: `[x]` completo (2026-11-22; archive el 2026-11-23, antes que C-12). Specs: `openspec/specs/frontend-sesion-personal/` y `frontend-agenda-personal/` (nuevos), `frontend-cliente-api/` y `frontend-navegacion/` (actualizados); change archivado en `openspec/changes/archive/2026-11-23-frontend-agenda-personal/`. Evidencia: 99 tests y capturas en `verify/`
 - **Responsable**: Enzo
 - **Scope**:
   - Login del personal, agenda diaria y semanal filtrable por profesional o sillón (US-014), formulario para crear y cancelar turnos con mensajes por código de error.
@@ -430,7 +430,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/02_descripcion_general.md` §Integraciones externas
 
 ### [C-12] `frontend-reserva-paciente`
-- **Estado**: `[ ]` pendiente (propuesta en `openspec/changes/frontend-reserva-paciente/`, 2026-11-23)
+- **Estado**: `[x]` completo (2026-11-23, PR #47 propuesta y PR #48 apply). Specs: `openspec/specs/frontend-cuenta-paciente/`, `frontend-reserva-paciente/`, `frontend-turnos-paciente/` y `frontend-confirmacion-asistencia/` (nuevos), `frontend-navegacion/` y `frontend-cliente-api/` (actualizados); change archivado en `openspec/changes/archive/2026-11-23-frontend-reserva-paciente/`. Evidencia: 180 tests, mockups aprobados (revisiones 1 y 2) y capturas en `mockups/verify/`
 - **Responsable**: Emanuel (antes Enzo; `frontend/` sigue siendo de Enzo y se le avisa en el PR)
 - **Scope**:
   - Registro e inicio de sesión del paciente; elección de prestación, fecha y profesional o "sin preferencia"; listado de horarios; confirmación con número de reserva.

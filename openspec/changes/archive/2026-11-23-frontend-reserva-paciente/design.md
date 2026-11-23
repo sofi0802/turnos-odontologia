@@ -152,6 +152,6 @@ Solo frontend, sin cambios de backend ni de base. Se despliega con el build de V
 - Design system revision: 1 (`design-system/README.md`, aprobado el 2026-11-22).
 - Decision: yes, 2026-11-23. El modo es `system-and-mockups` en `.active-orchestrator-state.json` y en `design-system/README.md`.
 - Mockups: `openspec/changes/frontend-reserva-paciente/mockups/` (ver su `README.md`). Fuente de referencia: `design-system/components.html`, secciones "Reserva online", "Formularios y avisos" y "Diálogo de confirmación".
-- Approval: pending. La revisión 1 la aprobó Sofia Indovino al mergear el PR #47; la revisión 2 (2026-11-23) saca "Mis turnos" del menú sin sesión y vuelve a la aprobación de la líder.
+- Approval: approved (2026-11-23, by Sofia Indovino). La revisión 1 la aprobó al mergear el PR #47; la revisión 2 (saca "Mis turnos" del menú sin sesión), al mergear el PR #48.
 - Preview: rendered (2026-11-23), capturas en `mockups/previews/` a 390 × 844 y 1440 × 900, sin desplazamiento horizontal ni errores en la consola.
 - Visual verify: differences (2026-11-23), solo minor (encabezado de C-09, fondo y tamaño de títulos); sin blockers ni majors. Detalle y capturas en `mockups/verify/README.md`.
