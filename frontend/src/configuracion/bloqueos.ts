@@ -1,7 +1,15 @@
 import { crearBoton } from '../shared/ui/campos.ts';
 import { nombreCompleto, type Profesional } from './api.ts';
-import { crearCamposPeriodo, leerCamposPeriodo, leerPeriodo, leerPeriodoRegistrado, textoDePeriodo, type Periodo } from './periodos.ts';
-import { montarProfesionalElegido } from './profesional-elegido.ts';
+import {
+  cargarPeriodosDeTodos,
+  crearCamposPeriodo,
+  leerCamposPeriodo,
+  leerPeriodoRegistrado,
+  leerPeriodos,
+  textoDePeriodo,
+  type Periodo,
+} from './periodos.ts';
+import { crearCampoProfesional, leerCampoProfesional, montarProfesionalElegido } from './profesional-elegido.ts';
 import {
   abrirDialogo,
   botonChico,
@@ -14,13 +22,6 @@ import {
   mostrarErrorEnFormulario,
   type ContextoSeccion,
 } from './ui.ts';
-
-function leerBloqueos(cuerpo: unknown, ruta: string): Periodo[] {
-  if (!Array.isArray(cuerpo)) {
-    throw new Error(`Respuesta inesperada de ${ruta}`);
-  }
-  return cuerpo.map(leerPeriodo).filter((p): p is Periodo => p !== null);
-}
 
 /** "El bloqueo se cruza con 2 turnos dados." (o "1 turno dado"). */
 export function textoDeCruce(cantidad: number): string {
@@ -49,28 +50,50 @@ export function montarBloqueos(panel: HTMLElement, contexto: ContextoSeccion): v
   const aviso = document.createElement('div');
   const lista = document.createElement('div');
 
-  montarProfesionalElegido(panel, contexto, 'Tus bloqueos', (id, cargados) => {
-    profesionalId = id;
-    profesionales = cargados;
-    aviso.replaceChildren();
-    cargarLista(id);
-  });
+  montarProfesionalElegido(
+    panel,
+    contexto,
+    'Tus bloqueos',
+    (id, cargados) => {
+      profesionalId = id;
+      profesionales = cargados;
+      aviso.replaceChildren();
+      cargarLista(id);
+    },
+    (cargados) => {
+      profesionalId = null;
+      profesionales = cargados;
+      aviso.replaceChildren();
+      cargarLista(null);
+    },
+  );
   panel.append(aviso, lista);
 
-  function cargarLista(id: number): void {
+  /** `id` es el profesional elegido, o `null` con "Todos los profesionales" (design D12). */
+  function cargarLista(id: number | null): void {
     // Un contenedor nuevo por carga, para que una respuesta tardía de otro profesional no se vea.
     const contenedor = document.createElement('div');
     lista.replaceChildren(contenedor);
-    const ruta = `/profesionales/${id}/bloqueos`;
     recargar = cargarEn(
       contenedor,
       contexto,
-      async () => leerBloqueos(await api.obtener<unknown>(ruta), ruta),
-      (bloqueos, destino) => dibujarLista(id, bloqueos, destino),
+      async () => {
+        if (id === null) {
+          return cargarPeriodosDeTodos(api, 'bloqueos', profesionales);
+        }
+        const ruta = `/profesionales/${id}/bloqueos`;
+        return leerPeriodos(await api.obtener<unknown>(ruta), ruta).map((b) => ({ ...b, profesionalId: id }));
+      },
+      (bloqueos, destino) => dibujarLista(bloqueos, destino, id === null),
     );
   }
 
-  function dibujarLista(id: number, bloqueos: readonly Periodo[], destino: HTMLElement): void {
+  function nombreDe(id: number): string {
+    const profesional = profesionales.find((p) => p.id === id);
+    return profesional === undefined ? '' : nombreCompleto(profesional);
+  }
+
+  function dibujarLista(bloqueos: readonly Periodo[], destino: HTMLElement, conProfesional: boolean): void {
     if (bloqueos.length === 0) {
       const vacio = document.createElement('p');
       vacio.className = 'ayuda';
@@ -78,15 +101,22 @@ export function montarBloqueos(panel: HTMLElement, contexto: ContextoSeccion): v
       destino.append(vacio);
       return;
     }
-    const ul = crearLista();
+    const ul = crearLista(conProfesional);
     for (const bloqueo of bloqueos) {
       const acciones: HTMLButtonElement[] = [];
       if (gestiona) {
         const borrar = botonChico('Borrar', 'peligro');
-        borrar.addEventListener('click', () => borrarBloqueo(id, bloqueo));
+        borrar.addEventListener('click', () => borrarBloqueo(bloqueo.profesionalId, bloqueo));
         acciones.push(borrar);
       }
-      ul.append(crearFila(textoDePeriodo(bloqueo.inicio, bloqueo.fin), [bloqueo.motivo ?? 'Sin motivo'], { acciones }));
+      const datos = [bloqueo.motivo ?? 'Sin motivo'];
+      ul.append(
+        crearFila(
+          textoDePeriodo(bloqueo.inicio, bloqueo.fin),
+          datos,
+          conProfesional ? { acciones, profesional: nombreDe(bloqueo.profesionalId) } : { acciones },
+        ),
+      );
     }
     destino.append(ul);
   }
@@ -121,24 +151,23 @@ export function montarBloqueos(panel: HTMLElement, contexto: ContextoSeccion): v
     aviso.replaceChildren(caja);
   }
 
-  bloquear.addEventListener('click', () => {
-    if (profesionalId !== null) {
-      abrirRegistro(profesionalId);
-    }
-  });
+  bloquear.addEventListener('click', () => abrirRegistro());
 
-  function abrirRegistro(id: number): void {
+  /** Con un profesional elegido, el bloqueo es para él; con "Todos", el formulario pide el profesional. */
+  function abrirRegistro(): void {
+    const campoProfesional = profesionalId === null ? crearCampoProfesional(profesionales) : null;
     const periodo = crearCamposPeriodo();
-    const profesional = profesionales.find((p) => p.id === id);
+    const nombre = profesionalId === null ? '' : nombreDe(profesionalId);
     const dialogo = abrirDialogo(
-      profesional === undefined ? 'Bloquear horario' : `Bloquear horario de ${nombreCompleto(profesional)}`,
-      [...periodo.nodos],
+      nombre === '' ? 'Bloquear horario' : `Bloquear horario de ${nombre}`,
+      [...(campoProfesional === null ? [] : [campoProfesional.contenedor]), ...periodo.nodos],
       'Bloquear',
     );
     dialogo.formulario.addEventListener('submit', (evento) => {
       evento.preventDefault();
+      const id = campoProfesional === null ? profesionalId : leerCampoProfesional(campoProfesional);
       const datos = leerCamposPeriodo(periodo);
-      if (datos === null) {
+      if (id === null || datos === null) {
         return;
       }
       let respuesta: unknown;
@@ -150,14 +179,15 @@ export function montarBloqueos(panel: HTMLElement, contexto: ContextoSeccion): v
             return;
           }
           dialogo.cerrar();
-          if (profesionalId !== id) {
+          if (profesionalId !== null && profesionalId !== id) {
             return;
           }
           mostrarRegistrado(leerPeriodoRegistrado(respuesta)?.turnosAfectados.length ?? 0);
           recargar();
         },
         (causa: unknown) => {
-          if (mostrarErrorEnFormulario(causa, dialogo.general, periodo.todos, contexto)) {
+          const campos = [...(campoProfesional === null ? [] : [campoProfesional]), ...periodo.todos];
+          if (mostrarErrorEnFormulario(causa, dialogo.general, campos, contexto)) {
             dialogo.cerrar();
           }
         },

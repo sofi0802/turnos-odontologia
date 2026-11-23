@@ -62,11 +62,17 @@ export function crearEstado(activo: boolean): HTMLSpanElement {
 export function crearFila(
   nombre: string,
   datos: readonly string[],
-  opciones: { activo?: boolean; acciones?: readonly HTMLButtonElement[] } = {},
+  opciones: { activo?: boolean; acciones?: readonly HTMLButtonElement[]; profesional?: string } = {},
 ): HTMLLIElement {
   const fila = document.createElement('li');
   if (opciones.activo === false) {
     fila.className = 'item-inactivo';
+  }
+  if (opciones.profesional !== undefined) {
+    const quien = document.createElement('div');
+    quien.className = 'item-profesional';
+    quien.textContent = opciones.profesional;
+    fila.append(quien);
   }
   const cuerpo = document.createElement('div');
   const titulo = document.createElement('div');
@@ -99,9 +105,20 @@ export function crearFila(
   return fila;
 }
 
-export function crearLista(): HTMLUListElement {
+export function crearLista(conColumnaProfesional = false): HTMLUListElement {
   const lista = document.createElement('ul');
-  lista.className = 'lista-config';
+  lista.className = conColumnaProfesional ? 'lista-config con-columna' : 'lista-config';
+  if (conColumnaProfesional) {
+    // Encabezado de columnas: solo se ve en pantallas grandes; en el celular cada fila dice "Profesional: …".
+    const encabezado = document.createElement('li');
+    encabezado.className = 'encabezado-columnas';
+    for (const titulo of ['Profesional', 'Período', '']) {
+      const celda = document.createElement('div');
+      celda.textContent = titulo;
+      encabezado.append(celda);
+    }
+    lista.append(encabezado);
+  }
   return lista;
 }
 

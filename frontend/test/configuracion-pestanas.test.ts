@@ -111,6 +111,7 @@ describe('Permisos por rol (design D3)', () => {
       gestionaAusencias: true,
       veBloqueos: true,
       gestionaBloqueos: true,
+      veTodos: true,
       profesionalFijo: false,
       profesionalFijoId: null,
     });
@@ -124,6 +125,7 @@ describe('Permisos por rol (design D3)', () => {
       gestionaAusencias: true,
       veBloqueos: false,
       gestionaBloqueos: false,
+      veTodos: true,
       profesionalFijo: false,
       profesionalFijoId: null,
     });
@@ -137,6 +139,7 @@ describe('Permisos por rol (design D3)', () => {
       gestionaAusencias: false,
       veBloqueos: true,
       gestionaBloqueos: true,
+      veTodos: false,
       profesionalFijo: true,
       profesionalFijoId: 1,
     });

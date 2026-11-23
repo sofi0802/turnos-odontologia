@@ -157,3 +157,58 @@ describe('Bloqueos de agenda', () => {
     expect(panel.querySelector('button')).toBeNull();
   });
 });
+
+describe('Todos los profesionales en bloqueos', () => {
+  it('Bloqueos de todos los profesionales', async () => {
+    const servidor = servidorConBloqueos(SESION_ADMIN, {
+      2: [
+        {
+          id: 7,
+          profesionalId: 2,
+          tipo: 'BLOQUEO',
+          inicio: '2026-12-10T15:00:00-03:00',
+          fin: '2026-12-10T16:00:00-03:00',
+          motivo: 'Reunión',
+        },
+      ],
+      1: [
+        {
+          id: 3,
+          profesionalId: 1,
+          tipo: 'BLOQUEO',
+          inicio: '2026-12-09T11:00:00-03:00',
+          fin: '2026-12-09T12:00:00-03:00',
+          motivo: 'Trámite',
+        },
+      ],
+    });
+    const { raiz } = await abrirConfiguracion(servidor);
+
+    const panel = elegirPestana(raiz, 'Bloqueos');
+
+    await vi.waitFor(() => expect(texto(panel)).toContain('Reunión'));
+    expect(campo<HTMLSelectElement>(panel, 'Profesional').selectedOptions[0]?.textContent).toBe('Todos los profesionales');
+    const filas = [...panel.querySelectorAll<HTMLLIElement>('.lista-config.con-columna > li:not(.encabezado-columnas)')];
+    expect(filas.map((f) => texto(f))).toEqual([
+      expect.stringContaining('Ana Ejemplo'),
+      expect.stringContaining('Bruno Prueba'),
+    ]);
+    expect(texto(filas[0] as HTMLLIElement)).toContain('Miércoles 9 de diciembre, 11:00 a 12:00');
+    expect(texto(filas[1] as HTMLLIElement)).toContain('Bruno Prueba');
+    expect(servidor.a('GET', '/profesionales/1/bloqueos')).toHaveLength(1);
+    expect(servidor.a('GET', '/profesionales/2/bloqueos')).toHaveLength(1);
+  });
+
+  it('Falla la carga de un profesional en la vista de todos', async () => {
+    const servidor = servidorConBloqueos(SESION_ADMIN, {});
+    servidor.responder('GET /profesionales/{id}/bloqueos', (pedido) =>
+      pedido.ruta.split('/')[2] === '2' ? json(500) : json(200, []),
+    );
+    const { raiz } = await abrirConfiguracion(servidor);
+
+    const panel = elegirPestana(raiz, 'Bloqueos');
+
+    await vi.waitFor(() => expect(boton(panel, 'Reintentar')).toBeDefined());
+    expect(panel.querySelector('.lista-config')).toBeNull();
+  });
+});

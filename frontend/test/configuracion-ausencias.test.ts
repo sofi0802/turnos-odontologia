@@ -67,11 +67,26 @@ function completarPeriodo(dialogo: HTMLElement, desde: string, horaDesde: string
   ponerHora(dialogo, 'Hora de fin', horaHasta);
 }
 
-/** Abre la pestaña "Ausencias" y espera la lista de la Dra. Ana Ejemplo. */
-async function abrirAusencias(servidor: ServidorFalso): Promise<HTMLElement> {
+/**
+ * Abre la pestaña "Ausencias" y espera la lista de la Dra. Ana Ejemplo. Para `ADMIN` y `RECEPCIONISTA` la
+ * pestaña abre con "Todos los profesionales", así que se elige a la Dra. Ana Ejemplo en el selector;
+ * el odontólogo (`conSelector` en `false`) ve directamente las suyas.
+ */
+async function abrirAusencias(servidor: ServidorFalso, conSelector = true): Promise<HTMLElement> {
   const { raiz } = await abrirConfiguracion(servidor);
   const panel = elegirPestana(raiz, 'Ausencias');
-  await vi.waitFor(() => expect(servidor.a('GET', '/profesionales/1/ausencias')).toHaveLength(1));
+  if (conSelector) {
+    const selector = await vi.waitFor(() => {
+      const encontrado = panel.querySelector<HTMLSelectElement>('select[name="profesional"]');
+      expect(encontrado).not.toBeNull();
+      return encontrado as HTMLSelectElement;
+    });
+    await vi.waitFor(() => expect(servidor.a('GET', '/profesionales/2/ausencias')).toHaveLength(1));
+    escribir(selector, '1');
+    await vi.waitFor(() => expect(servidor.a('GET', '/profesionales/1/ausencias')).toHaveLength(2));
+  } else {
+    await vi.waitFor(() => expect(servidor.a('GET', '/profesionales/1/ausencias')).toHaveLength(1));
+  }
   await vi.waitFor(() => expect(texto(panel)).not.toContain('Cargando'));
   return panel;
 }
@@ -88,7 +103,7 @@ describe('Ausencias y licencias', () => {
   it('El odontólogo solo ve sus ausencias', async () => {
     const { servidor } = servidorConAusencias(SESION_ODONTOLOGA, [LICENCIA]);
 
-    const panel = await abrirAusencias(servidor);
+    const panel = await abrirAusencias(servidor, false);
 
     await vi.waitFor(() => expect(texto(panel)).toContain('Congreso'));
     expect(texto(panel)).toContain('Licencia');
@@ -311,5 +326,108 @@ describe('Reasignación de un turno afectado', () => {
       sillonId: null,
     });
     expect(filasAfectadas(panel)).toHaveLength(1);
+  });
+});
+
+/** Servidor con una ausencia de Ana (7 de diciembre) y otra de Bruno (3 de diciembre). */
+function servidorConAusenciasDeTodos(sesion: object): ServidorFalso {
+  const servidor = servidorCon(sesion);
+  const deAna = { ...AUSENCIA_4, id: 4, profesionalId: 1 };
+  const deBruno = {
+    id: 8,
+    profesionalId: 2,
+    tipo: 'AUSENCIA',
+    inicio: '2026-12-03T14:00:00-03:00',
+    fin: '2026-12-03T18:00:00-03:00',
+    motivo: 'Curso',
+  };
+  servidor.responder('GET /profesionales/{id}/ausencias', (pedido) =>
+    json(200, pedido.ruta.split('/')[2] === '1' ? [deAna] : [deBruno]),
+  );
+  conEspecialidades(servidor);
+  return servidor;
+}
+
+describe('Todos los profesionales en ausencias y bloqueos', () => {
+  it('Ausencias de todos los profesionales', async () => {
+    const servidor = servidorConAusenciasDeTodos(SESION_RECEPCION_CONFIG);
+    const { raiz } = await abrirConfiguracion(servidor);
+
+    const panel = elegirPestana(raiz, 'Ausencias');
+
+    await vi.waitFor(() => expect(texto(panel)).toContain('Curso'));
+    const selector = campo<HTMLSelectElement>(panel, 'Profesional');
+    expect([...selector.options].map((o) => o.textContent)).toEqual([
+      'Todos los profesionales',
+      'Ana Ejemplo',
+      'Bruno Prueba',
+    ]);
+    expect(selector.selectedOptions[0]?.textContent).toBe('Todos los profesionales');
+    expect(servidor.a('GET', '/profesionales/1/ausencias')).toHaveLength(1);
+    expect(servidor.a('GET', '/profesionales/2/ausencias')).toHaveLength(1);
+    const filas = [...panel.querySelectorAll<HTMLLIElement>('.lista-config.con-columna > li:not(.encabezado-columnas)')];
+    expect(filas).toHaveLength(2);
+    expect(texto(filas[0] as HTMLLIElement)).toContain('Bruno Prueba');
+    expect(texto(filas[0] as HTMLLIElement)).toContain('Jueves 3 de diciembre, 14:00 a 18:00');
+    expect(texto(filas[1] as HTMLLIElement)).toContain('Ana Ejemplo');
+    expect(texto(filas[1] as HTMLLIElement)).toContain('Lunes 7 de diciembre, 08:00 a 13:00');
+    expect(texto(panel.querySelector('.encabezado-columnas') as HTMLElement)).toContain('Profesional');
+  });
+
+  it('Registrar con todos los profesionales elegidos', async () => {
+    const servidor = servidorConAusenciasDeTodos(SESION_ADMIN);
+    servidor.responder('POST /profesionales/{id}/ausencias', (pedido) =>
+      json(201, { periodo: { id: 9, profesionalId: 1, ...(pedido.cuerpo as object) }, turnosAfectados: [] }),
+    );
+    const { raiz } = await abrirConfiguracion(servidor);
+    const panel = elegirPestana(raiz, 'Ausencias');
+    await vi.waitFor(() => expect(texto(panel)).toContain('Curso'));
+
+    boton(panel, 'Registrar ausencia').click();
+    const dialogo = await dialogoAbierto();
+    // El formulario pide el profesional y no asume ninguno.
+    const profesional = campo<HTMLSelectElement>(dialogo, 'Profesional');
+    expect(profesional.value).toBe('');
+    completarPeriodo(dialogo, '2026-12-14', '08:00', '2026-12-14', '13:00');
+    enviar(dialogo);
+    await vi.waitFor(() => expect(texto(dialogo)).toContain('Elegí un profesional.'));
+    expect(servidor.pedidos.filter((p) => p.metodo === 'POST')).toHaveLength(0);
+    escribir(profesional, '1');
+    enviar(dialogo);
+
+    await vi.waitFor(() => expect(servidor.a('POST', '/profesionales/1/ausencias')).toHaveLength(1));
+    expect(servidor.a('POST', '/profesionales/2/ausencias')).toHaveLength(0);
+    await vi.waitFor(() => expect(dialogo.open).toBe(false));
+    // La vista de todos se recarga.
+    await vi.waitFor(() => expect(servidor.a('GET', '/profesionales/2/ausencias')).toHaveLength(2));
+  });
+
+  it('El odontólogo no ve la opción de todos', async () => {
+    const servidor = servidorConAusenciasDeTodos(SESION_ODONTOLOGA);
+    const { raiz } = await abrirConfiguracion(servidor);
+
+    const panel = elegirPestana(raiz, 'Ausencias');
+
+    await vi.waitFor(() => expect(texto(panel)).toContain('Trámite personal'));
+    expect(panel.querySelector('select')).toBeNull();
+    expect(texto(panel)).not.toContain('Todos los profesionales');
+    expect(servidor.a('GET', '/profesionales/2/ausencias')).toHaveLength(0);
+  });
+
+  it('Falla la carga de un profesional en la vista de todos', async () => {
+    const servidor = servidorConAusenciasDeTodos(SESION_RECEPCION_CONFIG);
+    servidor.responder('GET /profesionales/2/ausencias', () => json(500));
+    const { raiz } = await abrirConfiguracion(servidor);
+
+    const panel = elegirPestana(raiz, 'Ausencias');
+
+    const reintentar = await vi.waitFor(() => boton(panel, 'Reintentar'));
+    expect(panel.querySelector('[role="alert"]')?.textContent).toBeTruthy();
+    // No se muestra una lista parcial.
+    expect(panel.querySelector('.lista-config')).toBeNull();
+    expect(texto(panel)).not.toContain('Trámite personal');
+    servidor.responder('GET /profesionales/2/ausencias', () => json(200, []));
+    reintentar.click();
+    await vi.waitFor(() => expect(texto(panel)).toContain('Trámite personal'));
   });
 });

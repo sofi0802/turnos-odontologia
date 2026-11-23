@@ -2,16 +2,17 @@ import { fechaLarga } from '../shared/fecha/zona.ts';
 import { crearBoton, crearCampo, crearSelector } from '../shared/ui/campos.ts';
 import { cargarPrestaciones, nombreCompleto, type Profesional } from './api.ts';
 import {
+  cargarPeriodosDeTodos,
   crearCamposPeriodo,
   leerCamposPeriodo,
-  leerPeriodo,
   leerPeriodoRegistrado,
+  leerPeriodos,
   textoDePeriodo,
   textoDeTurno,
   type Periodo,
   type TurnoAfectado,
 } from './periodos.ts';
-import { montarProfesionalElegido } from './profesional-elegido.ts';
+import { crearCampoProfesional, leerCampoProfesional, montarProfesionalElegido } from './profesional-elegido.ts';
 import { abrirReasignacion, crearRecursosReasignacion } from './reasignacion.ts';
 import {
   abrirDialogo,
@@ -36,13 +37,6 @@ const ESTADOS_DADOS: ReadonlySet<string> = new Set(['RESERVADO', 'CONFIRMADO']);
 
 function textoDeTipo(tipo: string): string {
   return tipo === 'LICENCIA' ? 'Licencia' : 'Ausencia';
-}
-
-function leerAusencias(cuerpo: unknown, ruta: string): Periodo[] {
-  if (!Array.isArray(cuerpo)) {
-    throw new Error(`Respuesta inesperada de ${ruta}`);
-  }
-  return cuerpo.map(leerPeriodo).filter((p): p is Periodo => p !== null);
 }
 
 /**
@@ -107,12 +101,23 @@ export function montarAusencias(panel: HTMLElement, contexto: ContextoSeccion): 
   /** Ausencia cuyos turnos afectados se muestran, para limpiarlos si se borra. */
   let ausenciaMostrada: number | null = null;
 
-  montarProfesionalElegido(panel, contexto, 'Tus ausencias', (id, cargados) => {
-    profesionalId = id;
-    profesionales = cargados;
-    limpiarAfectados();
-    cargarLista(id);
-  });
+  montarProfesionalElegido(
+    panel,
+    contexto,
+    'Tus ausencias',
+    (id, cargados) => {
+      profesionalId = id;
+      profesionales = cargados;
+      limpiarAfectados();
+      cargarLista(id);
+    },
+    (cargados) => {
+      profesionalId = null;
+      profesionales = cargados;
+      limpiarAfectados();
+      cargarLista(null);
+    },
+  );
   panel.append(lista, afectados);
   if (!gestiona && contexto.permisos.profesionalFijoId !== null) {
     const ayuda = document.createElement('p');
@@ -131,20 +136,26 @@ export function montarAusencias(panel: HTMLElement, contexto: ContextoSeccion): 
     return profesional === undefined ? '' : nombreCompleto(profesional);
   }
 
-  function cargarLista(id: number): void {
+  /** `id` es el profesional elegido, o `null` con "Todos los profesionales" (design D12). */
+  function cargarLista(id: number | null): void {
     // Un contenedor nuevo por carga: si llega tarde la respuesta de otro profesional, se dibuja fuera de la vista.
     const contenedor = document.createElement('div');
     lista.replaceChildren(contenedor);
-    const ruta = `/profesionales/${id}/ausencias`;
     recargar = cargarEn(
       contenedor,
       contexto,
-      async () => leerAusencias(await api.obtener<unknown>(ruta), ruta),
-      (ausencias, destino) => dibujarLista(id, ausencias, destino),
+      async () => {
+        if (id === null) {
+          return cargarPeriodosDeTodos(api, 'ausencias', profesionales);
+        }
+        const ruta = `/profesionales/${id}/ausencias`;
+        return leerPeriodos(await api.obtener<unknown>(ruta), ruta).map((a) => ({ ...a, profesionalId: id }));
+      },
+      (ausencias, destino) => dibujarLista(ausencias, destino, id === null),
     );
   }
 
-  function dibujarLista(id: number, ausencias: readonly Periodo[], destino: HTMLElement): void {
+  function dibujarLista(ausencias: readonly Periodo[], destino: HTMLElement, conProfesional: boolean): void {
     if (ausencias.length === 0) {
       const vacio = document.createElement('p');
       vacio.className = 'ayuda';
@@ -152,20 +163,23 @@ export function montarAusencias(panel: HTMLElement, contexto: ContextoSeccion): 
       destino.append(vacio);
       return;
     }
-    const ul = crearLista();
+    const ul = crearLista(conProfesional);
     for (const ausencia of ausencias) {
       const acciones: HTMLButtonElement[] = [];
       if (gestiona) {
         const ver = botonChico('Ver turnos afectados');
-        ver.addEventListener('click', () => verAfectados(id, ausencia));
+        ver.addEventListener('click', () => verAfectados(ausencia.profesionalId, ausencia));
         const borrar = botonChico('Borrar', 'peligro');
-        borrar.addEventListener('click', () => borrarAusencia(id, ausencia));
+        borrar.addEventListener('click', () => borrarAusencia(ausencia.profesionalId, ausencia));
         acciones.push(ver, borrar);
       }
+      const datos = [textoDePeriodo(ausencia.inicio, ausencia.fin), ausencia.motivo ?? 'Sin motivo'];
       ul.append(
-        crearFila(textoDeTipo(ausencia.tipo), [textoDePeriodo(ausencia.inicio, ausencia.fin), ausencia.motivo ?? 'Sin motivo'], {
-          acciones,
-        }),
+        crearFila(
+          textoDeTipo(ausencia.tipo),
+          datos,
+          conProfesional ? { acciones, profesional: nombreDe(ausencia.profesionalId) } : { acciones },
+        ),
       );
     }
     destino.append(ul);
@@ -274,25 +288,24 @@ export function montarAusencias(panel: HTMLElement, contexto: ContextoSeccion): 
     });
   }
 
-  registrar.addEventListener('click', () => {
-    if (profesionalId !== null) {
-      abrirRegistro(profesionalId);
-    }
-  });
+  registrar.addEventListener('click', () => abrirRegistro());
 
-  function abrirRegistro(id: number): void {
+  /** Con un profesional elegido, el alta es para él; con "Todos", el formulario pide el profesional. */
+  function abrirRegistro(): void {
+    const campoProfesional = profesionalId === null ? crearCampoProfesional(profesionales) : null;
     const tipo = crearCampo('Tipo', crearSelector('tipo', TIPOS));
     const periodo = crearCamposPeriodo();
-    const nombre = nombreDe(id);
+    const nombre = profesionalId === null ? '' : nombreDe(profesionalId);
     const dialogo = abrirDialogo(
       nombre === '' ? 'Registrar ausencia' : `Registrar ausencia de ${nombre}`,
-      [tipo.contenedor, ...periodo.nodos],
+      [...(campoProfesional === null ? [] : [campoProfesional.contenedor]), tipo.contenedor, ...periodo.nodos],
       'Registrar',
     );
     dialogo.formulario.addEventListener('submit', (evento) => {
       evento.preventDefault();
+      const id = campoProfesional === null ? profesionalId : leerCampoProfesional(campoProfesional);
       const datos = leerCamposPeriodo(periodo);
-      if (datos === null) {
+      if (id === null || datos === null) {
         return;
       }
       let respuesta: unknown;
@@ -304,7 +317,7 @@ export function montarAusencias(panel: HTMLElement, contexto: ContextoSeccion): 
             return;
           }
           dialogo.cerrar();
-          if (profesionalId !== id) {
+          if (profesionalId !== null && profesionalId !== id) {
             return;
           }
           recargar();
@@ -312,11 +325,12 @@ export function montarAusencias(panel: HTMLElement, contexto: ContextoSeccion): 
           if (registrada !== null) {
             const contenedor = document.createElement('div');
             afectados.replaceChildren(contenedor);
-            mostrarAfectados(contenedor, id, registrada.periodo, registrada.turnosAfectados);
+            mostrarAfectados(contenedor, id, { ...registrada.periodo, profesionalId: id }, registrada.turnosAfectados);
           }
         },
         (causa: unknown) => {
-          if (mostrarErrorEnFormulario(causa, dialogo.general, [tipo, ...periodo.todos], contexto)) {
+          const campos = [...(campoProfesional === null ? [] : [campoProfesional]), tipo, ...periodo.todos];
+          if (mostrarErrorEnFormulario(causa, dialogo.general, campos, contexto)) {
             dialogo.cerrar();
           }
         },

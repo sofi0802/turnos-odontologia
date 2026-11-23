@@ -1,5 +1,7 @@
 import { aIsoConZona, fechaDeInstante, fechaLarga, formatearHora } from '../shared/fecha/zona.ts';
 import { crearCampo, crearEntrada, type Campo } from '../shared/ui/campos.ts';
+import type { ClienteApi } from '../shared/api/cliente.ts';
+import type { Profesional } from './api.ts';
 import { crearSelectorHora, type SelectorHora } from './ui.ts';
 
 /** Ausencia, licencia o bloqueo tal como lo devuelve la API de C-07 (`PeriodoRespuesta`). */
@@ -52,6 +54,37 @@ export function leerPeriodo(valor: unknown): Periodo | null {
     fin,
     motivo: typeof motivo === 'string' && motivo.trim() !== '' ? motivo : null,
   };
+}
+
+/** Clase de período en la API: `/profesionales/{id}/ausencias` o `/profesionales/{id}/bloqueos`. */
+export type ClasePeriodo = 'ausencias' | 'bloqueos';
+
+/** Lee la lista de `GET /profesionales/{id}/{ausencias|bloqueos}`, descartando lo de forma inesperada. */
+export function leerPeriodos(cuerpo: unknown, ruta: string): Periodo[] {
+  if (!Array.isArray(cuerpo)) {
+    throw new Error(`Respuesta inesperada de ${ruta}`);
+  }
+  return cuerpo.map(leerPeriodo).filter((p): p is Periodo => p !== null);
+}
+
+/**
+ * Vista "Todos los profesionales" (design D12): pide los períodos de cada profesional activo en paralelo
+ * y los une ordenados por inicio. Si falla un pedido, rechaza: no se muestra una lista parcial.
+ */
+export async function cargarPeriodosDeTodos(
+  api: ClienteApi,
+  clase: ClasePeriodo,
+  profesionales: readonly Profesional[],
+): Promise<Periodo[]> {
+  const listas = await Promise.all(
+    profesionales
+      .filter((p) => p.activo)
+      .map(async (profesional) => {
+        const ruta = `/profesionales/${profesional.id}/${clase}`;
+        return leerPeriodos(await api.obtener<unknown>(ruta), ruta).map((p) => ({ ...p, profesionalId: profesional.id }));
+      }),
+  );
+  return listas.flat().sort((a, b) => Date.parse(a.inicio) - Date.parse(b.inicio));
 }
 
 export function leerTurnoAfectado(valor: unknown): TurnoAfectado | null {

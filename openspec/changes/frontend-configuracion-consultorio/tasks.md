@@ -104,7 +104,7 @@ Antes de empezar, `./gradlew test` y `./gradlew integrationTest` pasan. Los test
   - Sumar `SILLON_HABITUAL_OCUPADO` y el nuevo texto de `TURNO_NO_AFECTADO` a `mensajes.ts`, con su test.
   - Escribir "El sillón de otro profesional no se puede elegir" y "El sillón lo tomó otro profesional mientras tanto".
 - [x] 11.4 Alta completa del profesional (D14). Escribir "Alta con prestaciones y sillón", "Alta sin prestaciones ni sillón" y "Falla el sillón después del alta".
-- [ ] 11.5 "Todos los profesionales" en Ausencias y Bloqueos (D12).
+- [x] 11.5 "Todos los profesionales" en Ausencias y Bloqueos (D12).
   - Escribir "Ausencias de todos los profesionales", "Bloqueos de todos los profesionales", "Registrar con todos los profesionales elegidos", "El odontólogo no ve la opción de todos" y "Falla la carga de un profesional en la vista de todos".
 - [ ] 11.6 Bloqueos para recepción y la reasignación por bloqueo (D3, D7 y D8).
   - Actualizar `permisos.ts` y su test.

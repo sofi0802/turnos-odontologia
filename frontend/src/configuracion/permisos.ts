@@ -13,6 +13,8 @@ export interface Permisos {
   readonly gestionaAusencias: boolean;
   readonly veBloqueos: boolean;
   readonly gestionaBloqueos: boolean;
+  /** Elegir "Todos los profesionales" en Ausencias y Bloqueos (design D3 y D12). */
+  readonly veTodos: boolean;
   /**
    * `true` si las pestañas de agenda trabajan sobre un profesional fijo (el odontólogo).
    * En ese caso el profesional es `profesionalFijoId`, o `null` si el usuario no tiene uno vinculado.
@@ -28,6 +30,7 @@ const NINGUNO: Permisos = {
   gestionaAusencias: false,
   veBloqueos: false,
   gestionaBloqueos: false,
+  veTodos: false,
   profesionalFijo: false,
   profesionalFijoId: null,
 };
@@ -42,11 +45,12 @@ export function permisos(sesion: Sesion): Permisos {
         gestionaAusencias: true,
         veBloqueos: true,
         gestionaBloqueos: true,
+        veTodos: true,
         profesionalFijo: false,
         profesionalFijoId: null,
       };
     case 'RECEPCIONISTA':
-      return { ...NINGUNO, gestionaAusencias: true };
+      return { ...NINGUNO, gestionaAusencias: true, veTodos: true };
     case 'ODONTOLOGO':
       return {
         ...NINGUNO,
