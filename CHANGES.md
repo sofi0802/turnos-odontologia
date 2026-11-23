@@ -437,6 +437,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - "Mis turnos" con cancelar o reprogramar (aviso si faltan menos de 24 h). Responsivo, pensado para el celular.
   - Menú según la sesión (paciente o personal) y las pantallas de los links de C-11 (`/mis-turnos/cancelar`, `/mis-turnos/reprogramar` y `/confirmar/{token}`).
   - Ajuste de la prueba del 2026-11-23: sin sesión el menú muestra solo "Reservar turno" e "Ingresar"; "Mis turnos" aparece con sesión de paciente. Cambia un mockup aprobado: se actualiza y vuelve a aprobación de la líder.
+  - Fix del 2026-11-23: el change `ingreso-unico-mi-cuenta` (rama `fix/C-12-ingreso-unico`) unifica el ingreso en Mi cuenta (`#/mi-cuenta`) para pacientes y personal: "Salir" del personal, la Agenda sin sesión y la sesión vencida llevan ahí, se elimina la página `#/ingreso` de C-09 y su dirección vieja lleva a `#/mi-cuenta`. Solo redirecciones, sin cambios visuales. Toca `frontend/` (dueño Enzo, avisar en el PR).
 - **Dependencias**: `C-02, C-10` (y C-11 para los links). El archive de C-09 tiene que hacerse antes que el de C-12, porque los dos modifican `frontend-navegacion`
 - **Governance**: BAJO
 - **Leer antes**:

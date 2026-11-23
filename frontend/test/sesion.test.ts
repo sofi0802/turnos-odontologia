@@ -8,6 +8,15 @@ function titulo(): string | null {
   return app?.raiz.querySelector('main h1')?.textContent ?? null;
 }
 
+/** Envía el formulario "Ingresar" de Mi cuenta, el único ingreso de la aplicación. */
+function enviarIngreso(raiz: HTMLElement): void {
+  const formulario = raiz.querySelector<HTMLFormElement>('form[aria-label="Ingresar"]');
+  if (formulario === null) {
+    throw new Error('No está el formulario Ingresar');
+  }
+  formulario.requestSubmit();
+}
+
 beforeEach(() => {
   servidor = new ServidorFalso();
   document.cookie = 'XSRF-TOKEN=token-ficticio-123; path=/';
@@ -25,15 +34,15 @@ describe('Página de ingreso del personal', () => {
     servidor.responder('POST /public/login', () =>
       json(200, { autenticado: true, username: 'recepcion', rol: 'RECEPCIONISTA' }),
     );
-    app = abrirApp(servidor, '#/ingreso');
-    await vi.waitFor(() => expect(titulo()).toBe('Ingresar'));
+    app = abrirApp(servidor, '#/mi-cuenta');
+    await vi.waitFor(() => expect(titulo()).toBe('Mi cuenta'));
     servidor.responder('GET /public/sesion', () =>
       json(200, { autenticado: true, username: 'recepcion', rol: 'RECEPCIONISTA' }),
     );
 
-    escribir(campo(app.raiz, 'Usuario'), 'recepcion');
+    escribir(campo(app.raiz, 'Email'), 'recepcion');
     escribir(campo(app.raiz, 'Contraseña'), 'clave-ficticia');
-    boton(app.raiz, 'Ingresar').click();
+    enviarIngreso(app.raiz);
 
     await vi.waitFor(() => expect(titulo()).toBe('Agenda'));
     expect(servidor.ultimo('POST', '/public/login').cuerpo).toEqual({
@@ -44,14 +53,15 @@ describe('Página de ingreso del personal', () => {
   });
 
   it('Campos vacíos', async () => {
-    app = abrirApp(servidor, '#/ingreso');
-    await vi.waitFor(() => expect(titulo()).toBe('Ingresar'));
+    servidor.sinSesion();
+    app = abrirApp(servidor, '#/mi-cuenta');
+    await vi.waitFor(() => expect(titulo()).toBe('Mi cuenta'));
 
-    escribir(campo(app.raiz, 'Usuario'), 'recepcion');
-    boton(app.raiz, 'Ingresar').click();
+    escribir(campo(app.raiz, 'Email'), 'recepcion');
+    enviarIngreso(app.raiz);
 
     expect(errorDeCampo(app.raiz, 'Contraseña')).toBe('Completá la contraseña.');
-    expect(errorDeCampo(app.raiz, 'Usuario')).toBe('');
+    expect(errorDeCampo(app.raiz, 'Email')).toBe('');
     expect(servidor.a('POST', '/public/login')).toHaveLength(0);
   });
 });
@@ -61,17 +71,18 @@ describe('Credenciales rechazadas', () => {
     servidor.responder('POST /public/login', () =>
       json(401, { status: 401, detail: 'Usuario o contraseña inválidos', codigo: 'CREDENCIALES_INVALIDAS' }),
     );
-    app = abrirApp(servidor, '#/ingreso');
-    await vi.waitFor(() => expect(titulo()).toBe('Ingresar'));
+    servidor.sinSesion();
+    app = abrirApp(servidor, '#/mi-cuenta');
+    await vi.waitFor(() => expect(titulo()).toBe('Mi cuenta'));
 
-    escribir(campo(app.raiz, 'Usuario'), 'recepcion');
+    escribir(campo(app.raiz, 'Email'), 'recepcion');
     escribir(campo(app.raiz, 'Contraseña'), 'clave-incorrecta');
-    boton(app.raiz, 'Ingresar').click();
+    enviarIngreso(app.raiz);
 
-    await vi.waitFor(() => expect(texto(app?.raiz ?? document.body)).toContain('Usuario o contraseña incorrectos.'));
-    expect(campo(app.raiz, 'Usuario').value).toBe('recepcion');
+    await vi.waitFor(() => expect(texto(app?.raiz ?? document.body)).toContain('Email o contraseña incorrectos.'));
+    expect(campo(app.raiz, 'Email').value).toBe('recepcion');
     expect(campo(app.raiz, 'Contraseña').value).toBe('');
-    expect(titulo()).toBe('Ingresar');
+    expect(titulo()).toBe('Mi cuenta');
   });
 });
 
@@ -91,9 +102,9 @@ describe('Sesión vencida', () => {
 
     boton(app.raiz, 'Siguiente').click();
 
-    await vi.waitFor(() => expect(titulo()).toBe('Ingresar'));
+    await vi.waitFor(() => expect(titulo()).toBe('Mi cuenta'));
     expect(texto(app.raiz)).toContain('Tu sesión terminó. Ingresá de nuevo.');
-    expect(window.location.hash).toBe('#/ingreso');
+    expect(window.location.hash).toBe('#/mi-cuenta');
   });
 
   it('Acción sin permiso', async () => {
@@ -125,7 +136,8 @@ describe('Cierre de sesión', () => {
 
     boton(app.raiz, 'Salir').click();
 
-    await vi.waitFor(() => expect(titulo()).toBe('Ingresar'));
+    await vi.waitFor(() => expect(titulo()).toBe('Mi cuenta'));
+    expect(window.location.hash).toBe('#/mi-cuenta');
     expect(servidor.ultimo('POST', '/logout').encabezados.get('X-XSRF-TOKEN')).toBe('token-ficticio-123');
     expect(texto(app.raiz.querySelector('header') ?? app.raiz)).not.toContain('recepcion');
   });
@@ -136,7 +148,8 @@ describe('Cierre de sesión', () => {
 
     boton(app.raiz, 'Salir').click();
 
-    await vi.waitFor(() => expect(titulo()).toBe('Ingresar'));
+    await vi.waitFor(() => expect(titulo()).toBe('Mi cuenta'));
+    expect(window.location.hash).toBe('#/mi-cuenta');
   });
 });
 
@@ -146,8 +159,8 @@ describe('Páginas privadas solo con sesión del personal', () => {
 
     app = abrirApp(servidor, '#/agenda');
 
-    await vi.waitFor(() => expect(titulo()).toBe('Ingresar'));
-    expect(window.location.hash).toBe('#/ingreso');
+    await vi.waitFor(() => expect(titulo()).toBe('Mi cuenta'));
+    expect(window.location.hash).toBe('#/mi-cuenta');
     expect(servidor.a('GET', '/turnos')).toHaveLength(0);
   });
 

@@ -12,9 +12,7 @@ export interface ContextoPagina {
   readonly aviso: string | null;
   /** Muestra otra página por su ruta. */
   irA(ruta: string): void;
-  /** Lleva a la página de ingreso del personal con un aviso opcional. */
-  irAlIngreso(aviso?: string): void;
-  /** Lleva a la cuenta del paciente (`#/mi-cuenta`) con un aviso opcional. */
+  /** Lleva a Mi cuenta (`#/mi-cuenta`), el único ingreso de pacientes y personal, con un aviso opcional. */
   irAMiCuenta(aviso?: string): void;
 }
 
@@ -30,7 +28,7 @@ export interface Pagina {
   readonly titulo: string;
   /** Por defecto `'publica'`. */
   readonly acceso?: Acceso;
-  /** Sin `menu`, la página no figura en el menú (por ejemplo, los ingresos). */
+  /** Sin `menu`, la página no figura en el menú (por ejemplo, Mi cuenta). */
   readonly menu?: GrupoMenu;
   render(contenedor: HTMLElement, contexto: ContextoPagina): void;
 }
