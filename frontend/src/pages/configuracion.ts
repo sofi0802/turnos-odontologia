@@ -17,7 +17,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
     permisos: permisosDelRol,
     sesionVencida(causa) {
       if (esErrorDeSesion(causa)) {
-        contexto.irAlIngreso(MENSAJE_SESION_TERMINADA);
+        contexto.irAMiCuenta(MENSAJE_SESION_TERMINADA);
         return true;
       }
       return false;

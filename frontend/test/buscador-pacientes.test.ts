@@ -338,6 +338,7 @@ describe('Falla de la búsqueda', () => {
   it('Sesión vencida durante la búsqueda', async () => {
     servidor.responder('GET /pacientes', () => json(401, { status: 401, codigo: 'NO_AUTENTICADO' }));
     const dialogo = await abrirNuevoTurnoConSesion();
+    servidor.sinSesion();
 
     escribir(campo(dialogo, 'Paciente'), 'fict');
 

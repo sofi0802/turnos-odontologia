@@ -21,6 +21,11 @@ const ID_MENU = 'menu-principal';
 /** Ruta de la cuenta del paciente, a la que lleva "Ingresar" sin sesión. */
 export const RUTA_MI_CUENTA = 'mi-cuenta';
 
+/** Ruta de la portada, a la que lleva la marca del encabezado. */
+export const RUTA_INICIO = 'inicio';
+
+const TEXTO_INGRESAR = 'Ingresar';
+
 /** Grupo del menú que ve una sesión: el personal ve el suyo; sin sesión o con paciente, el del paciente. */
 export function grupoDeSesion(sesion: Sesion | null): GrupoMenu {
   return sesion !== null && esPersonal(sesion.rol) ? 'personal' : 'paciente';
@@ -31,8 +36,10 @@ export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[], opcio
   const encabezado = document.createElement('header');
   encabezado.className = 'encabezado';
 
-  const marca = document.createElement('span');
+  // La marca lleva a la portada desde cualquier página (C-37).
+  const marca = document.createElement('a');
   marca.className = 'marca';
+  marca.href = `#/${RUTA_INICIO}`;
   marca.textContent = 'Turnos odontología';
 
   const boton = document.createElement('button');
@@ -76,7 +83,7 @@ export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[], opcio
   const ingresar = document.createElement('a');
   ingresar.className = 'btn btn-fantasma';
   ingresar.href = `#/${RUTA_MI_CUENTA}`;
-  ingresar.textContent = 'Ingresar';
+  ingresar.textContent = TEXTO_INGRESAR;
   usuario.append(nombre, salir, ingresar);
 
   function abrirMenu(abierto: boolean): void {
@@ -93,7 +100,21 @@ export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[], opcio
 
   raiz.replaceChildren(encabezado, contenido);
 
+  let textoIngreso: string | undefined;
+  let conSesion = false;
+
+  /** Con un texto propio para ingresar (la portada) y sin sesión, el encabezado no lleva menú ni su botón. */
+  function ajustarEncabezado(): void {
+    const portada = textoIngreso !== undefined;
+    ingresar.textContent = textoIngreso ?? TEXTO_INGRESAR;
+    ingresar.classList.toggle('btn-acceso', portada);
+    ingresar.classList.toggle('btn-fantasma', !portada);
+    encabezado.classList.toggle('encabezado-portada', portada && !conSesion);
+  }
+
   function mostrarSesion(sesion: Sesion | null): void {
+    conSesion = sesion !== null;
+    ajustarEncabezado();
     const grupo = grupoDeSesion(sesion);
     for (const { item, conSesion } of items) {
       item.hidden = item.dataset['grupo'] !== grupo || (conSesion && sesion === null);
@@ -109,6 +130,8 @@ export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[], opcio
   return {
     contenido,
     mostrar(pagina) {
+      textoIngreso = pagina.textoIngreso;
+      ajustarEncabezado();
       for (const { enlace } of items) {
         if (enlace.dataset['ruta'] === pagina.ruta) {
           enlace.setAttribute('aria-current', 'page');

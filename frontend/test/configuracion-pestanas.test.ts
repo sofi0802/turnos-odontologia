@@ -85,7 +85,7 @@ describe('Secciones según el rol', () => {
 
     abrirApp(servidor, '#/configuracion');
 
-    await vi.waitFor(() => expect(window.location.hash).toBe('#/ingreso'));
+    await vi.waitFor(() => expect(window.location.hash).toBe('#/mi-cuenta'));
     expect(servidor.a('GET', '/profesionales')).toHaveLength(0);
   });
 

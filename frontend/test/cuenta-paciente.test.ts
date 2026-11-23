@@ -135,6 +135,37 @@ describe('Cuenta del personal en el ingreso del paciente', () => {
   });
 });
 
+describe('Personal con sesión en Mi cuenta (C-37)', () => {
+  it('Personal con sesión abre su cuenta', async () => {
+    servidor.responder('GET /public/sesion', () => json(200, SESION_RECEPCION));
+    app = abrirApp(servidor, '#/mi-cuenta');
+
+    await vi.waitFor(() => expect(titulo()).toBe('Agenda'));
+    expect(window.location.hash).toBe('#/agenda');
+  });
+
+  it('Personal con sesión abre la dirección vieja del ingreso', async () => {
+    servidor.responder('GET /public/sesion', () => json(200, SESION_RECEPCION));
+    app = abrirApp(servidor, '#/ingreso');
+
+    await vi.waitFor(() => expect(titulo()).toBe('Agenda'));
+    expect(window.location.hash).toBe('#/agenda');
+  });
+});
+
+describe('Indicación para el personal (C-37)', () => {
+  it('Se ve la indicación', async () => {
+    await abrirMiCuenta();
+
+    expect(texto(raiz())).toContain(
+      '¿Sos del personal del consultorio? Ingresá con tu usuario en este mismo formulario.',
+    );
+    expect(campo(raiz(), 'Email')).toBeDefined();
+    boton(raiz(), 'Crear cuenta').click();
+    expect(texto(raiz())).not.toContain('¿Sos del personal del consultorio?');
+  });
+});
+
 describe('Registro del paciente', () => {
   it('Registro con datos válidos', async () => {
     servidor.responder('POST /public/pacientes/registro', () => json(201, { username: 'paciente.uno@example.com' }));
@@ -320,8 +351,8 @@ describe('Salida del paciente', () => {
 
     boton(raiz(), 'Salir').click();
 
-    await vi.waitFor(() => expect(titulo()).toBe('Reservar turno'));
-    expect(window.location.hash).toBe('#/reserva');
+    await vi.waitFor(() => expect(document.title).toBe('Turnos odontología'));
+    expect(window.location.hash).toBe('#/inicio');
     expect(servidor.a('POST', '/logout')).toHaveLength(1);
     expect(raiz().querySelector<HTMLElement>('.usuario-nombre')?.hidden).toBe(true);
     expect(sessionStorage.getItem('turnos.reservaPendiente')).toBeNull();
