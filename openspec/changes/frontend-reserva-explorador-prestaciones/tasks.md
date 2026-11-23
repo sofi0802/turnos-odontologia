@@ -10,7 +10,7 @@
 
 ## 1. Diseño: mockups aprobados (compuerta antes del apply)
 
-- [ ] 1.1 Crear `mockups/` con el paso 1 de la reserva: selector cerrado, abierto con todas las prestaciones, filtrado, sin coincidencias, con una prestación elegida y con una lista larga (unas 12 prestaciones ficticias) en el celular; con HTML y CSS locales que importan `design-system/tokens.css` y `brand.js`; renderizarlos a 390 × 844 y 1440 × 900, guardar las capturas en `mockups/previews/` y completar su `README.md`. Verificar abriendo las capturas y que no hay desplazamiento horizontal
+- [x] 1.1 Crear `mockups/` con el paso 1 de la reserva: selector cerrado, abierto con todas las prestaciones, filtrado, sin coincidencias, con una prestación elegida y con una lista larga (unas 12 prestaciones ficticias) en el celular; con HTML y CSS locales que importan `design-system/tokens.css` y `brand.js`; renderizarlos a 390 × 844 y 1440 × 900, guardar las capturas en `mockups/previews/` y completar su `README.md`. Verificar abriendo las capturas y que no hay desplazamiento horizontal
 - [ ] 1.2 Presentar los mockups y registrar la aprobación de la líder en `design.md` (`Approval: approved (<fecha>, by user)`, `Preview: rendered`). Verificar que la sección UI Mockups lo dice; no empezar el apply sin esto
 
 ## 2. El selector con buscador

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reservar turno · Paso 1 · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <header class="app-encabezado">
+    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisorio" /><span data-brand-name>Turnos odontología</span></a>
+    <nav class="nav" aria-label="Principal"><a href="#" aria-current="page">Reservar turno</a></nav>
+    <div class="usuario"><a class="btn btn-fantasma btn-chico" href="#">Ingresar</a></div>
+  </header>
+  <main class="pagina">
+    <h1>Reservar turno</h1>
+    <section class="panel" aria-labelledby="t-paso">
+      <ol class="pasos" aria-hidden="true"><li class="hecho"></li><li></li><li></li></ol>
+      <p class="paso-numero">Paso 1 de 3</p>
+      <h2 id="t-paso">¿Qué necesitás?</h2>
+      <p class="subtitulo">Buscá la prestación o elegila de la lista. Después elegís el día y el horario.</p>
+
+      <div class="campo selector" style="margin-top:var(--ds-espacio-3)">
+        <label for="prestacion">Prestación</label>
+        <div class="selector-campo">
+          <svg class="lupa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input class="control" id="prestacion" type="text" role="combobox" autocomplete="off" aria-autocomplete="list"
+                 aria-expanded="false" aria-controls="lista-prestaciones"
+                 placeholder="Buscá una prestación" value="" />
+          <button class="selector-flecha" type="button" tabindex="-1" aria-label="Mostrar las prestaciones" aria-expanded="false" aria-controls="lista-prestaciones"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg></button>
+        </div>
+        
+        <p class="sr-solo" role="status" aria-live="polite"></p>
+      </div>
+      <p class="error-aviso" role="alert">Elegí una prestación.</p>
+      <div class="acciones">
+        <a class="btn btn-principal" href="#">Continuar</a>
+      </div>
+    </section>
+  </main>
+  <p class="nota-mockup"><b>Mockup C-38.</b> Se eligió "Continuar" sin elegir. Requisito: Reserva en tres pasos (Continuar sin elegir).</p>
+</body>
+</html>

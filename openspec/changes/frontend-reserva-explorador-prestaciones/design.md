@@ -53,9 +53,9 @@ Patrón combobox con lista (ARIA 1.2): campo `role="combobox"` con `aria-autocom
 
 - Design system revision: 1 (`design-system/README.md`, aprobada el 2026-11-22).
 - Decision: yes, 2026-11-23. El modo del proyecto es `system-and-mockups`.
-- Mockups: `openspec/changes/frontend-reserva-explorador-prestaciones/mockups/` (ver su `README.md`): el paso 1 con el selector cerrado, abierto con todas las prestaciones, filtrado, sin coincidencias y con una prestación elegida, y el selector con una lista larga en el celular. Fuente de referencia: `design-system/components.html` (secciones "Reserva online" y "Formularios y avisos") y los mockups de C-12 y C-37.
+- Mockups: `openspec/changes/frontend-reserva-explorador-prestaciones/mockups/` (ver su `README.md`): el paso 1 con el selector cerrado, abierto con 12 prestaciones (lista larga con desplazamiento propio), filtrado, sin coincidencias, con una prestación elegida y con el error de "Continuar" sin elegir. Fuente de referencia: `design-system/components.html` (secciones "Reserva online" y "Formularios y avisos") y los mockups de C-12 y C-37.
 - Approval: pending.
-- Preview: pending.
+- Preview: rendered (2026-11-23), capturas en `mockups/previews/` a 390 × 844 y 1440 × 900 (y a 320 px), sin desplazamiento horizontal ni errores en la consola, opciones de 48 px y campo de 44 px.
 - Visual verify: pending.
 
 ## Risks / Trade-offs
