@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agregar profesional · Configuración · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body class="con-velo">
+  <header class="app-encabezado">
+    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisorio" /><span data-brand-name>Turnos odontología</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#">Agenda</a>
+      <a href="profesionales.html" aria-current="page">Configuración</a>
+    </nav>
+    <div class="usuario">
+      <span class="avatar" aria-hidden="true">AD</span>
+      <span class="usuario-nombre">admin</span>
+      <button class="btn btn-fantasma btn-chico" type="button">Salir</button>
+    </div>
+  </header>
+
+  <main class="pagina pagina-config">
+    <h1>Configuración</h1>
+    <div class="pestanas-config" role="tablist" aria-label="Secciones de configuración">
+      <button class="pestana" role="tab" type="button" aria-selected="true">Profesionales</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Sillones</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Prestaciones</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Margen</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Horarios</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Ausencias</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Bloqueos</button>
+    </div>
+    <section role="tabpanel" aria-label="Profesionales">
+      <div class="cabecera-seccion"><h2>Profesionales</h2><button class="btn btn-principal" type="button">Agregar profesional</button></div>
+      <ul class="lista-config">
+        <li class="item-elegido">
+          <div><div class="item-nombre">Ana Ejemplo</div><div class="item-datos"><span>Matrícula MP-0001</span></div><span class="estado-activo">Activo</span></div>
+          <div class="item-acciones"><button class="btn btn-chico" type="button">Ocultar detalle</button><button class="btn btn-chico" type="button">Editar</button><button class="btn btn-chico btn-peligro" type="button">Desactivar</button></div>
+          <div class="detalle-profesional">
+            <h3>Especialidades y sillón habitual</h3>
+            <fieldset>
+              <legend>Prestaciones que hace</legend>
+              <div class="casillas">
+                <label class="casilla"><input type="checkbox" checked /> Consulta o control</label>
+                <label class="casilla"><input type="checkbox" checked /> Limpieza (profilaxis)</label>
+                <label class="casilla"><input type="checkbox" checked /> Extracción simple</label>
+                <label class="casilla"><input type="checkbox" /> Tratamiento de conducto</label>
+              </div>
+            </fieldset>
+            <button class="btn btn-principal" type="button">Guardar prestaciones</button>
+            <div class="campo" style="margin-top:var(--ds-espacio-3);max-width:22rem">
+              <label for="sh">Sillón habitual</label>
+              <select class="control" id="sh"><option>Sin sillón habitual</option><option selected>Sillón 1</option><option>Sillón 2</option></select>
+            </div>
+            <button class="btn" type="button" style="margin-top:var(--ds-espacio-1)">Guardar sillón habitual</button>
+            <div class="aviso aviso-ok" role="status" style="margin-top:var(--ds-espacio-2)"><div>Prestaciones guardadas.</div></div>
+          </div>
+        </li>
+        <li class="">
+          <div><div class="item-nombre">Bruno Prueba</div><div class="item-datos"><span>Matrícula MP-0002</span></div><span class="estado-activo">Activo</span></div>
+          <div class="item-acciones"><button class="btn btn-chico" type="button">Ver detalle</button><button class="btn btn-chico" type="button">Editar</button><button class="btn btn-chico btn-peligro" type="button">Desactivar</button></div>
+        </li>
+        <li class="item-inactivo">
+          <div><div class="item-nombre">Carla Muestra</div><div class="item-datos"><span>Matrícula MP-0003</span></div><span class="estado-inactivo">Inactivo</span></div>
+          <div class="item-acciones"><button class="btn btn-chico" type="button">Ver detalle</button><button class="btn btn-chico" type="button">Editar</button><button class="btn btn-chico" type="button">Activar</button></div>
+        </li>
+      </ul>
+    </section>
+  </main>
+  <script>document.querySelector('.pestana[aria-selected="true"]').scrollIntoView({ block: 'nearest', inline: 'center' });</script>
+  <div class="velo">
+    <div class="dialogo" role="dialog" aria-modal="true" aria-labelledby="dlg-t">
+      <h2 id="dlg-t">Agregar profesional</h2>
+      <form class="formulario" style="margin-top:var(--ds-espacio-2)">
+        <div class="aviso aviso-error" role="alert"><div><strong>No se pudo guardar.</strong>Ya existe un profesional con esa matrícula.</div></div>
+        <div class="dos-campos">
+          <div class="campo"><label for="n">Nombre</label><input class="control" id="n" value="Diego" /></div>
+          <div class="campo"><label for="a">Apellido</label><input class="control" id="a" value="Ficticio" /></div>
+        </div>
+        <div class="campo"><label for="m">Matrícula</label><input class="control" id="m" value="MP-0002" aria-invalid="true" /></div>
+        <div class="dialogo-acciones">
+          <button class="btn" type="button">Cancelar</button>
+          <button class="btn btn-principal" type="button">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
