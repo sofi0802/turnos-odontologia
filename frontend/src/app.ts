@@ -2,7 +2,6 @@ import { borrarReservaPendiente } from './paciente/reserva.ts';
 import { paginaAgenda } from './pages/agenda.ts';
 import { paginaConfiguracion } from './pages/configuracion.ts';
 import { paginaConfirmar } from './pages/confirmar.ts';
-import { paginaIngreso } from './pages/ingreso.ts';
 import { paginaMiCuenta } from './pages/mi-cuenta.ts';
 import { paginaMisTurnos } from './pages/mis-turnos.ts';
 import { crearTitulo, type ContextoPagina, type Pagina } from './pages/pagina.ts';
@@ -25,13 +24,15 @@ export const PAGINAS: readonly Pagina[] = [
   paginaConfiguracion,
   paginaReserva,
   paginaMisTurnos,
-  paginaIngreso,
   paginaMiCuenta,
   paginaConfirmar,
 ];
 
 export const MENSAJE_SOLO_PERSONAL = 'Esta sección es solo para el personal del consultorio.';
 export const MENSAJE_SOLO_PACIENTES = 'Esta sección es para pacientes.';
+
+/** Direcciones viejas que siguen sirviendo: `#/ingreso` era el ingreso del personal (C-09). */
+const REDIRECCIONES: Readonly<Record<string, string>> = { ingreso: paginaMiCuenta.ruta };
 
 /** Arma la aplicación dentro de `raiz` y muestra la página de la dirección actual. */
 export function iniciarApp(raiz: HTMLElement, api: ClienteApi = apiPorDefecto): Router {
@@ -52,7 +53,7 @@ export function iniciarApp(raiz: HTMLElement, api: ClienteApi = apiPorDefecto): 
       }
       void cerrarSesion(api).then(() => {
         mostrarSesion(null);
-        irA(eraPaciente ? paginaReserva.ruta : paginaIngreso.ruta);
+        irA(eraPaciente ? paginaReserva.ruta : paginaMiCuenta.ruta);
       });
     },
   });
@@ -75,11 +76,6 @@ export function iniciarApp(raiz: HTMLElement, api: ClienteApi = apiPorDefecto): 
       sesionLista,
       aviso,
       irA,
-      irAlIngreso(nuevoAviso) {
-        avisoPendiente = nuevoAviso ?? null;
-        mostrarSesion(null);
-        irA(paginaIngreso.ruta);
-      },
       irAMiCuenta(nuevoAviso) {
         avisoPendiente = nuevoAviso ?? null;
         irA(paginaMiCuenta.ruta);
@@ -137,11 +133,10 @@ export function iniciarApp(raiz: HTMLElement, api: ClienteApi = apiPorDefecto): 
     layout.contenido.removeAttribute('aria-busy');
 
     if (!sesion.autenticado) {
-      // Sin sesión, cada grupo va a su propio ingreso (design D2 de C-12).
-      const ingreso = acceso === 'paciente' ? paginaMiCuenta : paginaIngreso;
-      history.replaceState(history.state, '', `#/${ingreso.ruta}`);
+      // Sin sesión, pacientes y personal ingresan en Mi cuenta (design D3 de ingreso-unico-mi-cuenta).
+      history.replaceState(history.state, '', `#/${paginaMiCuenta.ruta}`);
       mostrarSesion(null);
-      dibujar(ingreso, SIN_SESION);
+      dibujar(paginaMiCuenta, SIN_SESION);
       return;
     }
     mostrarSesion(sesion);
@@ -156,9 +151,14 @@ export function iniciarApp(raiz: HTMLElement, api: ClienteApi = apiPorDefecto): 
     dibujar(pagina, sesion);
   }
 
-  const router = crearRouter(PAGINAS, paginaAgenda, (pagina) => {
-    void mostrar(pagina);
-  });
+  const router = crearRouter(
+    PAGINAS,
+    paginaAgenda,
+    (pagina) => {
+      void mostrar(pagina);
+    },
+    REDIRECCIONES,
+  );
   router.actualizar();
   return router;
 }

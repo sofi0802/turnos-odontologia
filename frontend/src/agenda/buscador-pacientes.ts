@@ -13,7 +13,7 @@ export interface PacienteEncontrado {
 
 /** Lo que el buscador necesita de quien lo usa. */
 export interface OpcionesBuscador {
-  /** Si el error es de sesión vencida, lleva al ingreso y devuelve `true`. */
+  /** Si el error es de sesión vencida, lleva a Mi cuenta y devuelve `true`. */
   sesionVencida(causa: unknown): boolean;
   /** Espera después de la última tecla, en milisegundos (300 por defecto). */
   esperaMs?: number;
