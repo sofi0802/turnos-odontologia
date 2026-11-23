@@ -36,7 +36,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `backend/.../notificaciones/` | Juan Cruz | V7 |
 | `backend/.../clinica/` | Emanuel | V8 |
 | `frontend/` | Enzo | — |
-| **Ajustes del MVP (C-33 a C-39)** | | |
+| **Ajustes del MVP (C-33 a C-40)** | | |
 | `frontend/` agenda: reprogramación (C-33) | Juan Cruz (avisa a Enzo) | — |
 | `frontend/` página Configuración (C-34) | Emanuel (avisa a Enzo) | — |
 | `backend/.../agenda/api` y `frontend/` agenda propia del odontólogo (C-35) | Sofia (avisa a Juan Sebastián y a Enzo) | — |
@@ -44,6 +44,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `frontend/` portada y acceso (C-37) | Juan Cruz (avisa a Enzo) | — |
 | `frontend/` explorador de prestaciones en la reserva (C-38) | Juan Cruz (avisa a Enzo) | — |
 | `frontend/` barra lateral, colores y estilo uniforme (C-39) | Juan Cruz (avisa a Enzo) | — |
+| `frontend/` agenda: nuevo turno guiado por prestación (C-40) | Enzo (si la disponibilidad necesita filtrar por sillón, avisa a Juan Sebastián) | — |
 | **Post-MVP** | | |
 | `backend/.../agenda/` lista de espera, `configuracion/` política de cancelación | Sofia (C-16 avisa a Emanuel) | V9, V10 |
 | `backend/.../notificaciones/` consentimiento | Juan Cruz | V11 |
@@ -77,6 +78,7 @@ C-01 crear-turno-sin-solapamientos  [Sofia · OPSX]      ← tarea 1 = scaffoldi
   │     C-04 + C-07 + C-09 ── C-34 frontend-configuracion-consultorio [Emanuel]
   │     C-05 + C-06 + C-09 ── C-35 agenda-propia-odontologo [Sofia]   ← antes: cambio de regla en la KB
   │     C-05 + C-09 ──────── C-36 buscador-pacientes [Juan Sebastián]
+  │     C-33 + C-35 + C-36 ─ C-40 frontend-nuevo-turno-guiado [Enzo]  ← reusa la disponibilidad de C-33 y el buscador de C-36
   │
   │  Ajustes del MVP, revisión de la aplicación del 2026-11-23 (en orden: los tres tocan el mismo frontend/)
   │     C-12 + ingreso-unico-mi-cuenta ── C-37 frontend-portada-y-acceso [Juan Cruz]
@@ -160,7 +162,12 @@ GATE 5c: C-12 archivado ✓ e `ingreso-unico-mi-cuenta` (fix de C-12, Emanuel) m
   → C-39 frontend-uniformidad-visual         [Agente C · Juan Cruz — después de C-37 y C-38, con C-33 a C-36 ya mergeados]
   (los tres tocan frontend/ y styles.css: un PR por vez, en este orden)
 
-GATE 6: changes de la entrega ✓ (incluye C-33 a C-39)
+GATE 5d: C-33 ✓ + C-35 ✓ + C-36 ✓ (2026-11-23)                ← en paralelo con GATE 5c (otras pantallas)
+  → C-40 frontend-nuevo-turno-guiado         [Agente C · Enzo]
+  (rehace el formulario "Nuevo turno" que tocaron C-35 y C-36: sus tests tienen que seguir pasando.
+   Va antes de la etapa D de C-39, que reestiliza las pantallas del personal: coordinar el orden con Juan Cruz)
+
+GATE 6: changes de la entrega ✓ (incluye C-33 a C-40)
   → C-14 entrega-readme-y-evidencia          [Agente A · Sofia]
 
 ──────────── POST-MVP ────────────
@@ -207,7 +214,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 | Bloque | Changes | Origen |
 |---|---|---|
 | **MVP v1.0** (fases 1 a 6) | C-01 a C-14 | Sección D.3 del informe, lista "imprescindible" |
-| **Ajustes del MVP** (fase 5b) | C-33 a C-39 | Prueba y revisión de la aplicación del 2026-11-23 |
+| **Ajustes del MVP** (fase 5b) | C-33 a C-40 | Prueba y revisión de la aplicación del 2026-11-23 |
 | **Post-MVP v1.x** (fase 7) | C-15 a C-17 | Sección D.3, lista "diferenciador" |
 | **Post-MVP: etapas posteriores** (fases 8 a 10) | C-18 a C-32 | Sección D.3, lista "etapas posteriores" |
 
@@ -242,7 +249,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 | **Juan Cruz** | C-03, C-08, C-11, C-33, C-37, C-38, C-39 | C-17, C-30, C-31 |
 | **Emanuel** | C-04, C-07, C-13, C-12, C-34 | C-25, C-26, C-27, C-28 |
 | **Juan Sebastián** | C-05, C-10, C-36 | C-18, C-19, C-20, C-21 |
-| **Enzo** | C-02, C-09 | C-22, C-23, C-24, C-32 (backend y pantallas de administración) |
+| **Enzo** | C-02, C-09, C-40 | C-22, C-23, C-24, C-32 (backend y pantallas de administración) |
 
 ---
 
@@ -483,8 +490,9 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 ## FASE 5b: Ajustes del MVP
 
 > Surgen de la prueba de la aplicación del 2026-11-23. Son parte del MVP: se hacen antes de C-14. El punto "sin sesión no aparece Mis turnos" quedó dentro de C-12, que todavía estaba abierto.
-> Los changes que tocan `frontend/` avisan en el PR a su dueño, y los de la agenda del personal (C-33, C-35 y C-36) arrancan después del archive de C-09, porque modifican sus specs.
+> Los changes que tocan `frontend/` avisan en el PR a su dueño, y los de la agenda del personal (C-33, C-35, C-36 y C-40) arrancan después del archive de C-09, porque modifican sus specs.
 > C-37, C-38 y C-39 salen de la revisión de la aplicación del 2026-11-23. Van **en ese orden y de a un PR por vez**, porque los tres modifican el encabezado, las rutas y `styles.css`. Las observaciones de otras pantallas que lleguen después se suman como una etapa de C-39, o como un change nuevo si piden comportamiento nuevo. Los tres usan el modo `system-and-mockups` del design system: los mockups se aprueban antes del apply.
+> C-40 es un change nuevo por pedir comportamiento nuevo en "Nuevo turno" de la agenda del personal. Puede ir en paralelo con C-37 y C-38, que tocan otras pantallas, pero su PR se mergea antes de la etapa D de C-39 (pantallas del personal).
 
 ### [C-33] `frontend-reprogramacion-agenda`
 - **Estado**: `[ ]` pendiente
@@ -605,6 +613,29 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/README.md`, `design-system/brand.md` y `design-system/components.html`
   - `openspec/specs/frontend-navegacion/` y los specs `frontend-*` de cada pantalla
 
+### [C-40] `frontend-nuevo-turno-guiado`
+- **Estado**: `[ ]` pendiente
+- **Responsable**: Enzo
+- **Scope**:
+  - Rehacer "Nuevo turno" de la agenda del personal (`ADMIN`, `RECEPCIONISTA` y `ODONTOLOGO`) como un formulario guiado, donde cada paso se habilita cuando el anterior tiene un valor: **prestación → profesional → fecha → horario**, y el **sillón** del profesional se muestra sin poder cambiarlo. El paciente se sigue eligiendo con el buscador de C-36.
+  - **Profesional**: solo los habilitados para la prestación elegida (RN-AG-15), con `GET /public/profesionales?prestacionId=` como en C-33.
+  - **Fecha**: un calendario mensual en el que solo se pueden elegir días desde hoy en adelante; los días pasados se ven deshabilitados. Al elegir un día se cargan sus horarios; si el profesional no tiene horarios libres ese día (no trabaja, está ausente o la agenda está bloqueada, C-07), se avisa y se puede elegir otro día.
+  - **Horario**: los horarios libres del profesional ese día como botones (`GET /public/disponibilidad`), reusando `paciente/horarios.ts` y `paciente/disponibilidad.ts` (C-12 y C-33).
+  - **Sillón**: se muestra, sin poder cambiarlo, el sillón habitual del profesional elegido (campo `sillonHabitualId` de `GET /api/v1/profesionales`, C-04), que es el que se envía al crear el turno. Si el profesional no tiene sillón habitual, se avisa y no se puede crear el turno hasta que el administrador se lo asigne (US-018). Si el sillón está ocupado en ese horario, el backend responde `409 SOLAPAMIENTO_SILLON` y se muestra su mensaje.
+  - Al cambiar un paso anterior, se vacían los que dependen de él.
+  - Con sesión de `ODONTOLOGO` el formulario funciona igual: RN-AG-18 (C-35) limita lo que ve en la agenda, no los turnos que puede crear.
+  - Cambio visual: mockups en `openspec/changes/<change>/mockups/` aprobados por la líder antes del apply (design system Revision 1).
+  - Riesgo conocido: la disponibilidad pública ofrece un horario si hay algún sillón libre, no necesariamente el habitual. Si en las pruebas aparecen horarios ofrecidos con el sillón habitual ocupado, se avisa a Juan Sebastián (dueño de `reserva/`) para filtrar la disponibilidad por sillón.
+  - Tests: un escenario por paso (qué se habilita y con qué opciones), por los días pasados deshabilitados en el calendario, por un día sin horarios, por el sillón habitual mostrado sin poder cambiarlo, por un profesional sin sillón habitual, por vaciar los pasos siguientes y por cada rechazo del backend; los de C-09, C-33, C-35 y C-36 siguen pasando.
+- **Dependencias**: `C-04, C-07, C-09, C-33, C-35, C-36` (y el archive de C-09)
+- **Governance**: MEDIO (reglas de la agenda en la pantalla del personal)
+- **Leer antes**:
+  - `knowledge-base/06_funcionalidades.md` §US-010, §US-018
+  - `knowledge-base/05_reglas_de_negocio.md` §Dominio: Agenda (RN-AG-02 a RN-AG-05, RN-AG-15, RN-AG-18)
+  - `knowledge-base/07_flujos_principales.md` §Flujo 1
+  - `openspec/specs/frontend-agenda-personal/spec.md`, `openspec/specs/disponibilidad-online/spec.md`
+  - `openspec/changes/frontend-reprogramacion-agenda/`, `openspec/changes/buscador-pacientes/` y `openspec/changes/agenda-propia-odontologo/` (lo que se reusa o ya cambió en la agenda)
+
 ---
 
 ## FASE 6: Entrega
@@ -616,7 +647,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `README.md` reproducible: requisitos (Java 21, opcional Docker o PostgreSQL), cómo correr `./gradlew test` (tests de dominio sin base) y los tests de integración.
   - Verificación final: suite en verde, ningún secreto en el repo, `.env.example` completo.
   - Evidencias: informe de Discovery en PDF, estado del orquestador, consulta a Engram para el video.
-- **Dependencias**: `C-01` (mínimo); los demás changes que se hayan completado, incluidos los ajustes C-33 a C-39
+- **Dependencias**: `C-01` (mínimo); los demás changes que se hayan completado, incluidos los ajustes C-33 a C-40
 - **Governance**: BAJO
 - **Leer antes**:
   - `knowledge-base/README.md`
