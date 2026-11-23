@@ -11,6 +11,16 @@ function raiz(): HTMLElement {
   return app.raiz;
 }
 
+const SESION_ODONTOLOGA = { autenticado: true, username: 'ana.ejemplo', rol: 'ODONTOLOGO', profesionalId: 1 };
+
+function titulo(): HTMLElement {
+  const encabezado = raiz().querySelector<HTMLElement>('main h1');
+  if (encabezado === null) {
+    throw new Error('La agenda no tiene título');
+  }
+  return encabezado;
+}
+
 function turnosVisibles(): HTMLElement[] {
   return [...raiz().querySelectorAll<HTMLElement>('.turno')];
 }
@@ -199,6 +209,70 @@ describe('Filtros por profesional y por sillón', () => {
     expect(opciones).toEqual(['Todos']);
     await vi.waitFor(() => expect(turnosVisibles()).toHaveLength(1));
     expect(texto(turnosVisibles()[0] ?? raiz())).toContain('Profesional 1');
+  });
+
+  it('El odontólogo ve solo su agenda', async () => {
+    servidor.responder('GET /public/sesion', () => json(200, SESION_ODONTOLOGA));
+
+    await abrirAgenda();
+
+    expect(raiz().querySelector('select[name="profesionalId"]')).toBeNull();
+    await vi.waitFor(() => expect(texto(titulo())).toContain('Ana Ejemplo'));
+    expect(titulo().firstChild?.textContent).toBe('Mi agenda');
+    expect(ultimaConsulta()).toEqual({
+      desde: '2026-12-01T00:00:00-03:00',
+      hasta: '2026-12-02T00:00:00-03:00',
+      profesionalId: '1',
+    });
+  });
+
+  it('El odontólogo filtra por sillón', async () => {
+    servidor.responder('GET /public/sesion', () => json(200, SESION_ODONTOLOGA));
+    await abrirAgenda();
+    await vi.waitFor(() => expect(campo<HTMLSelectElement>(raiz(), 'Sillón').options).toHaveLength(3));
+
+    escribir(campo<HTMLSelectElement>(raiz(), 'Sillón'), '2');
+    await esperarConsultas(2);
+
+    expect(ultimaConsulta()).toEqual({
+      desde: '2026-12-01T00:00:00-03:00',
+      hasta: '2026-12-02T00:00:00-03:00',
+      profesionalId: '1',
+      sillonId: '2',
+    });
+  });
+
+  it('el odontólogo sin catálogo de profesionales ve solo "Mi agenda"', async () => {
+    servidor.responder('GET /public/sesion', () => json(200, SESION_ODONTOLOGA));
+    servidor.responder('GET /profesionales', () => json(404));
+
+    await abrirAgenda();
+
+    await vi.waitFor(() => expect(texto(raiz())).toContain('No pudimos cargar la lista de profesionales.'));
+    expect(texto(titulo())).toBe('Mi agenda');
+    expect(ultimaConsulta()['profesionalId']).toBe('1');
+  });
+
+  it('Recepción conserva el filtro por profesional', async () => {
+    await abrirAgenda();
+
+    expect(texto(titulo())).toBe('Agenda');
+    expect(campo<HTMLSelectElement>(raiz(), 'Profesional')).toBeDefined();
+    expect(campo<HTMLSelectElement>(raiz(), 'Sillón')).toBeDefined();
+  });
+});
+
+describe('Anterior y Siguiente como flechas', () => {
+  it('Anterior y Siguiente como flechas', async () => {
+    await abrirAgenda();
+
+    for (const nombre of ['Anterior', 'Siguiente']) {
+      const elegido = boton(raiz(), nombre);
+      expect(elegido.textContent?.trim()).toBe('');
+      expect(elegido.getAttribute('aria-label')).toBe(nombre);
+      expect(elegido.title).toBe(nombre);
+      expect(elegido.querySelector('svg[aria-hidden="true"]')).not.toBeNull();
+    }
   });
 });
 

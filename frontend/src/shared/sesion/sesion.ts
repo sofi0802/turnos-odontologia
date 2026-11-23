@@ -10,6 +10,8 @@ export interface Sesion {
   readonly autenticado: boolean;
   readonly username: string | null;
   readonly rol: Rol | null;
+  /** Profesional del odontólogo (RN-AG-18, C-35); no existe para los otros roles. */
+  readonly profesionalId?: number;
 }
 
 export const SIN_SESION: Sesion = { autenticado: false, username: null, rol: null };
@@ -28,6 +30,10 @@ function leerSesion(cuerpo: unknown): Sesion {
   const rol: unknown = Reflect.get(cuerpo, 'rol');
   if (autenticado !== true || typeof username !== 'string' || !esRol(rol)) {
     return SIN_SESION;
+  }
+  const profesionalId: unknown = Reflect.get(cuerpo, 'profesionalId');
+  if (rol === 'ODONTOLOGO' && typeof profesionalId === 'number' && Number.isInteger(profesionalId) && profesionalId > 0) {
+    return { autenticado: true, username, rol, profesionalId };
   }
   return { autenticado: true, username, rol };
 }

@@ -239,10 +239,38 @@ select[aria-invalid='true'] {
   gap: 0.25rem;
 }
 
+/* C-35: Anterior y Siguiente como flechas, con el mismo objetivo táctil de 44 px */
+.boton-icono {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  padding: 0;
+}
+
+.boton-icono svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* C-35: nombre del profesional debajo de "Mi agenda" */
+.agenda-titulo-profesional {
+  display: block;
+  margin-top: var(--ds-espacio-0);
+  font-size: var(--ds-texto-lg);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-acento-700);
+}
+
+/* C-35: la fecha va junto a las flechas y más grande, para que se lea qué día se está mirando */
 .agenda-periodo {
   flex-basis: 100%;
   margin: 0;
-  font-weight: 600;
+  font-size: var(--ds-texto-xl);
+  font-weight: var(--ds-peso-fuerte);
+  line-height: var(--ds-interlineado-titulo);
 }
 
 .agenda-periodo::first-letter {
@@ -850,7 +878,7 @@ select[aria-invalid='true'] {
 
   .agenda-periodo {
     flex-basis: auto;
-    margin-left: auto;
+    margin-left: var(--espacio-1);
   }
 
   .agenda-filtros {

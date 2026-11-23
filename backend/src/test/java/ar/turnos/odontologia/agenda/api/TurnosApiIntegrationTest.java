@@ -186,6 +186,66 @@ class TurnosApiIntegrationTest extends IntegracionAgendaBase {
         assertProblema(resultado, 422, "DATOS_INVALIDOS");
     }
 
+    @Test
+    @DisplayName("El odontólogo sin filtro recibe solo sus turnos")
+    void elOdontologoSinFiltroRecibeSoloSusTurnos() throws Exception {
+        // GIVEN ana.ejemplo (Dra. A) AND un turno a las 10:00 con la Dra. A en el Sillón 1 y otro con el Dr. B en el Sillón 2
+        JsonNode deLaDraA = turnoCreado(pacienteUno, draA, sillon1, hora(10, 0));
+        turnoCreado(pacienteDos, drB, sillon2, hora(10, 0));
+
+        // WHEN pide GET /api/v1/turnos del 2026-12-01 sin profesionalId ni sillonId
+        MvcResult resultado = como("ana.ejemplo").get(agendaDelDia(null)).andReturn();
+
+        // THEN la respuesta es 200 con un solo turno, el de la Dra. A
+        assertThat(idsDeLaAgenda(resultado)).containsExactly(deLaDraA.get("id").asLong());
+    }
+
+    @Test
+    @DisplayName("El odontólogo pide la agenda de otro profesional")
+    void elOdontologoPideLaAgendaDeOtroProfesional() throws Exception {
+        // GIVEN ana.ejemplo (Dra. A) AND un turno a las 10:00 con la Dra. A y otro a las 11:00 con el Dr. B
+        JsonNode deLaDraA = turnoCreado(pacienteUno, draA, sillon1, hora(10, 0));
+        JsonNode delDrB = turnoCreado(pacienteDos, drB, sillon2, hora(11, 0));
+
+        // WHEN pide GET /api/v1/turnos del 2026-12-01 con profesionalId del Dr. B
+        MvcResult resultado = como("ana.ejemplo").get(agendaDelDia(drB)).andReturn();
+
+        // THEN la respuesta es 200 con un solo turno, el de la Dra. A
+        assertThat(idsDeLaAgenda(resultado)).containsExactly(deLaDraA.get("id").asLong());
+        // AND la respuesta no incluye ningún turno del Dr. B
+        assertThat(idsDeLaAgenda(resultado)).doesNotContain(delDrB.get("id").asLong());
+    }
+
+    @Test
+    @DisplayName("El odontólogo filtra por un sillón compartido")
+    void elOdontologoFiltraPorUnSillonCompartido() throws Exception {
+        // GIVEN ana.ejemplo (Dra. A) AND un turno a las 09:00 con la Dra. A y otro a las 11:00 con el Dr. B, los dos en el Sillón 1
+        JsonNode deLaDraA = turnoCreado(pacienteUno, draA, sillon1, hora(9, 0));
+        turnoCreado(pacienteDos, drB, sillon1, hora(11, 0));
+
+        // WHEN pide GET /api/v1/turnos del 2026-12-01 con sillonId del Sillón 1
+        MvcResult resultado = como("ana.ejemplo").get(agendaDelDia(null) + "&sillonId=" + sillon1).andReturn();
+
+        // THEN la respuesta es 200 con un solo turno, el de las 09:00 con la Dra. A
+        assertThat(idsDeLaAgenda(resultado)).containsExactly(deLaDraA.get("id").asLong());
+    }
+
+    @Test
+    @DisplayName("Recepción y administración ven a todos los profesionales")
+    void recepcionYAdministracionVenATodos() throws Exception {
+        // GIVEN un turno a las 10:00 con la Dra. A y otro a las 10:00 con el Dr. B AND admin vinculado al Dr. B
+        long deLaDraA = turnoCreado(pacienteUno, draA, sillon1, hora(10, 0)).get("id").asLong();
+        long delDrB = turnoCreado(pacienteDos, drB, sillon2, hora(10, 0)).get("id").asLong();
+        jdbc.update("UPDATE usuario SET profesional_id = ? WHERE username = 'admin'", drB);
+
+        // WHEN recepcion y luego admin piden GET /api/v1/turnos del 2026-12-01 sin filtros
+        // THEN cada respuesta es 200 con los dos turnos
+        assertThat(idsDeLaAgenda(como("recepcion").get(agendaDelDia(null)).andReturn()))
+                .containsExactlyInAnyOrder(deLaDraA, delDrB);
+        assertThat(idsDeLaAgenda(como("admin").get(agendaDelDia(null)).andReturn()))
+                .containsExactlyInAnyOrder(deLaDraA, delDrB);
+    }
+
     // ---------- Requirement: Cancelar y reprogramar por la API ----------
 
     @Test
@@ -327,6 +387,15 @@ class TurnosApiIntegrationTest extends IntegracionAgendaBase {
     private static String agendaDelDia(Long profesionalId) {
         String url = TURNOS + "?desde=" + hora(0, 0) + "&hasta=" + hora(23, 59);
         return profesionalId == null ? url : url + "&profesionalId=" + profesionalId;
+    }
+
+    private List<Long> idsDeLaAgenda(MvcResult resultado) throws Exception {
+        assertThat(resultado.getResponse().getStatus())
+                .as(resultado.getResponse().getContentAsString())
+                .isEqualTo(200);
+        List<Long> ids = new ArrayList<>();
+        cuerpo(resultado).forEach(turno -> ids.add(turno.get("id").asLong()));
+        return ids;
     }
 
     private void assertProblema(MvcResult resultado, int estado, String codigo) throws Exception {
