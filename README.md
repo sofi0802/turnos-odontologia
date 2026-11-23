@@ -65,3 +65,39 @@ cd backend
 ```
 
 Corre los 14 tests del backend. Los 12 escenarios de `openspec/specs/agenda-turnos/spec.md` están en `CrearTurnoTest` y `MargenTest`, y cada test tiene el mismo nombre que su escenario. La guía completa de instalación (PostgreSQL y frontend) llega con C-14.
+
+### Base de datos y tests de integración
+
+`./gradlew test` no necesita base de datos. Los tests de integración (`./gradlew integrationTest`, que **no** forma parte de `build`) usan PostgreSQL real, con la extensión `btree_gist` (H2 no la soporta). Hace falta Docker.
+
+1. Copiá `.env.example` a `.env` en la raíz del repo y completá `DB_USER` y `DB_PASSWORD` con valores tuyos (el `.env` no se sube al repo). Las URL son:
+   - `DB_URL=jdbc:postgresql://localhost:5432/turnos`: base de desarrollo.
+   - `DB_TEST_URL=jdbc:postgresql://localhost:5432/turnos_test`: base de los tests.
+2. Levantá PostgreSQL desde la raíz del repo:
+
+   ```bash
+   docker compose up -d
+   ```
+
+   La primera vez que se crea el volumen, `docker/initdb/01-crear-turnos-test.sql` crea las dos bases (`turnos` y `turnos_test`). Flyway crea las tablas.
+3. **Si ya tenías el contenedor de antes** (el volumen ya existía), `turnos_test` no se crea sola. Creala una vez, con el usuario de tu `.env`:
+
+   ```bash
+   docker exec turnos-postgres psql -U <DB_USER> -c "CREATE DATABASE turnos_test;"
+   ```
+
+4. Cargá las variables de `.env` en la terminal y corré los tests desde `backend/`:
+
+   ```bash
+   cd backend
+   set -a; . ../.env; set +a      # Git Bash
+   ./gradlew integrationTest
+   ```
+
+   En PowerShell, en lugar de la línea `set -a`:
+
+   ```powershell
+   Get-Content ..\.env | ForEach-Object { if ($_ -match '^\s*([^#=\s]+)\s*=\s*(.*)$') { [Environment]::SetEnvironmentVariable($Matches[1], $Matches[2], 'Process') } }
+   ```
+
+Cuidado: los tests de integración **vacían las tablas** de la base que indica `DB_TEST_URL`. Nunca la apuntes a `turnos`. La base queda expuesta solo en `127.0.0.1`, no en la red local.
