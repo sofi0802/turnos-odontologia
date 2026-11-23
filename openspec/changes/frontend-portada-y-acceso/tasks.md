@@ -9,7 +9,7 @@
 
 ## 1. Diseño: mockups aprobados (compuerta antes del apply)
 
-- [ ] 1.1 Crear `mockups/` con la portada sin sesión (con "Acceso personal" arriba a la derecha, los dos botones y los tres pasos), la portada con sesión de paciente y con sesión del personal, y "Mi cuenta" con la indicación para el personal, con HTML y CSS locales que importan `design-system/tokens.css` y `brand.js`; renderizarlos a 390 × 844 y 1440 × 900, guardar las capturas en `mockups/previews/` y completar su `README.md`. Verificar abriendo las capturas y que no hay desplazamiento horizontal
+- [x] 1.1 Crear `mockups/` con la portada sin sesión (con "Acceso personal" arriba a la derecha, los dos botones y los tres pasos), la portada con sesión de paciente y con sesión del personal, y "Mi cuenta" con la indicación para el personal, con HTML y CSS locales que importan `design-system/tokens.css` y `brand.js`; renderizarlos a 390 × 844 y 1440 × 900, guardar las capturas en `mockups/previews/` y completar su `README.md`. Verificar abriendo las capturas y que no hay desplazamiento horizontal
 - [ ] 1.2 Presentar los mockups y registrar la aprobación de la líder en `design.md` (`Approval: approved (<fecha>, by user)`, `Preview: rendered`). Verificar que la sección UI Mockups lo dice; no empezar el apply sin esto
 
 ## 2. Router y página inicial

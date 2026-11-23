@@ -64,9 +64,9 @@ Enzo publicó una rama (`docs/C-37-nuevo-turno-guiado`) que le da el número C-3
 
 - Design system revision: 1 (`design-system/README.md`, aprobada el 2026-11-22).
 - Decision: yes, 2026-11-23. El modo del proyecto es `system-and-mockups`.
-- Mockups: `openspec/changes/frontend-portada-y-acceso/mockups/` (pendiente de crear, antes del apply). Pantallas: la portada sin sesión, con sesión de paciente y con sesión del personal, y "Mi cuenta" con la indicación para el personal, a 390 × 844 y 1440 × 900.
+- Mockups: `openspec/changes/frontend-portada-y-acceso/mockups/` (ver su `README.md`): la portada sin sesión, con sesión de paciente y con sesión del personal, y Mi cuenta con la indicación para el personal. Fuente de referencia: `design-system/components.html` (encabezado, botones, campos, pestañas) y los mockups de C-12 y C-33.
 - Approval: pending.
-- Preview: pending.
+- Preview: rendered (2026-11-23), capturas en `mockups/previews/` a 390 × 844 y 1440 × 900 (y a 320 px), sin desplazamiento horizontal ni errores en la consola, controles de 44 px.
 - Visual verify: pending.
 
 ## Risks / Trade-offs
