@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reservar turno · Paso 1 · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <header class="app-encabezado">
+    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisorio" /><span data-brand-name>Turnos odontología</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="reserva-paso-1.html" aria-current="page">Reservar turno</a>
+      <a href="mis-turnos.html">Mis turnos</a>
+    </nav>
+    <div class="usuario"><a class="btn btn-fantasma btn-chico" href="mi-cuenta.html">Ingresar</a></div>
+  </header>
+
+  <main class="pagina">
+    <h1>Reservar turno</h1>
+    <section class="panel" aria-labelledby="t-paso">
+      <ol class="pasos" aria-hidden="true"><li class="hecho"></li><li></li><li></li></ol>
+      <p class="paso-numero">Paso 1 de 3</p>
+      <h2 id="t-paso">¿Qué necesitás?</h2>
+      <p class="subtitulo">Elegí la prestación. Después elegís el día y el horario.</p>
+
+      <fieldset class="opciones" style="border:0;padding:0;margin:var(--ds-espacio-3) 0 0">
+        <legend class="seccion-titulo" style="margin-top:0">Prestación</legend>
+        <label class="opcion"><input type="radio" name="prestacion" checked /> <span>Consulta o control<small>30 minutos</small></span></label>
+        <label class="opcion"><input type="radio" name="prestacion" /> <span>Limpieza (profilaxis)<small>45 minutos</small></span></label>
+        <label class="opcion"><input type="radio" name="prestacion" /> <span>Tratamiento de conducto<small>60 minutos</small></span></label>
+        <label class="opcion"><input type="radio" name="prestacion" /> <span>Extracción simple<small>30 minutos</small></span></label>
+      </fieldset>
+
+      <div class="acciones">
+        <a class="btn btn-principal" href="reserva-paso-2.html">Continuar</a>
+      </div>
+    </section>
+  </main>
+  <p class="nota-mockup"><b>Mockup</b> · Visitante sin sesión. Prestaciones de ejemplo del seed ficticio.</p>
+</body>
+</html>

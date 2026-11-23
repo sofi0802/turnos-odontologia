@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mis turnos · Cambiar horario · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <header class="app-encabezado">
+    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisorio" /><span data-brand-name>Turnos odontología</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="reserva-paso-1.html">Reservar turno</a>
+      <a href="mis-turnos.html" aria-current="page">Mis turnos</a>
+    </nav>
+    <div class="usuario">
+      <span class="avatar" aria-hidden="true">PU</span>
+      <span class="usuario-nombre">paciente.uno@example.com</span>
+      <button class="btn btn-fantasma btn-chico" type="button">Salir</button>
+    </div>
+  </header>
+
+  <main class="pagina">
+    <h1>Mis turnos</h1>
+    <div class="aviso aviso-ok" role="status" style="margin-bottom:var(--ds-espacio-2)">
+      <div><strong>Cambiamos tu turno al jueves 3 de diciembre a las 11:00.</strong>Tu nuevo número de reserva es P9XG-4KTW.</div>
+    </div>
+    <h2 class="seccion-titulo">Próximos turnos</h2>
+    <article class="turno-paciente">
+      <div class="turno-cabecera">
+        <span class="turno-fecha">Jueves 3 de diciembre · 10:00</span>
+        <span class="estado e-reservado">Reservado</span>
+      </div>
+      <p class="turno-meta"><span>Consulta o control</span><span>Ana Ejemplo</span></p>
+      <p class="turno-numero">Reserva R4MD-2HZC</p>
+
+      <div class="cambio">
+        <h3>Elegí el nuevo horario</h3>
+        <div class="dos-campos" style="margin-top:var(--ds-espacio-2)">
+          <div class="campo">
+            <label for="pro">Profesional</label>
+            <select class="control" id="pro"><option>Ana Ejemplo</option><option>Bruno Prueba</option><option>Sin preferencia</option></select>
+          </div>
+          <div class="campo">
+            <label for="fecha">Día</label>
+            <input class="control" id="fecha" type="date" value="2026-12-03" min="2026-12-01" />
+          </div>
+        </div>
+        <div class="chips" role="group" aria-label="Horarios libres">
+          <button class="chip" type="button" aria-pressed="false">10:40</button>
+          <button class="chip" type="button" aria-pressed="true">11:00</button>
+          <button class="chip" type="button" aria-pressed="false">11:30</button>
+          <button class="chip" type="button" aria-pressed="false">12:00</button>
+        </div>
+        <div class="turno-acciones">
+          <button class="btn" type="button">Volver</button>
+          <button class="btn btn-principal" type="button">Cambiar a las 11:00</button>
+        </div>
+      </div>
+    </article>
+  </main>
+  <p class="nota-mockup"><b>Mockup</b> · Arriba, el aviso que aparece después de un cambio correcto (200). Abajo, el cambio de horario abierto dentro del turno, con el mismo profesional elegido.</p>
+</body>
+</html>

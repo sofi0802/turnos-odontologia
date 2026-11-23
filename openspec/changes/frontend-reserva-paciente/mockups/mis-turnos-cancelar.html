@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mis turnos · Cancelar · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <header class="app-encabezado">
+    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisorio" /><span data-brand-name>Turnos odontología</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="reserva-paso-1.html">Reservar turno</a>
+      <a href="mis-turnos.html" aria-current="page">Mis turnos</a>
+    </nav>
+    <div class="usuario">
+      <span class="avatar" aria-hidden="true">PU</span>
+      <span class="usuario-nombre">paciente.uno@example.com</span>
+      <button class="btn btn-fantasma btn-chico" type="button">Salir</button>
+    </div>
+  </header>
+
+  <main class="pagina">
+    <h1>Mis turnos</h1>
+    <h2 class="seccion-titulo">Próximos turnos</h2>
+    <article class="turno-paciente">
+      <div class="turno-cabecera">
+        <span class="turno-fecha">Jueves 3 de diciembre · 10:00</span>
+        <span class="estado e-reservado">Reservado</span>
+      </div>
+      <p class="turno-meta"><span>Consulta o control</span><span>Ana Ejemplo</span></p>
+      <p class="turno-numero">Reserva R4MD-2HZC</p>
+    </article>
+  </main>
+
+  <div class="velo">
+    <div class="dialogo" role="dialog" aria-modal="true" aria-labelledby="dlg-t">
+      <h2 id="dlg-t">¿Cancelar el turno?</h2>
+      <p>Jueves 3 de diciembre a las 10:00 · Ana Ejemplo. El horario queda libre para otra persona.</p>
+      <div class="dialogo-acciones">
+        <a class="btn" href="mis-turnos.html">Volver</a>
+        <a class="btn btn-peligro" href="mis-turnos.html">Sí, cancelar turno</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
