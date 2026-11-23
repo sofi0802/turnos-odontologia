@@ -394,7 +394,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/06_funcionalidades.md` §Épica 3
 
 ### [C-11] `notificaciones-recordatorios`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-23, PR #40). Specs: `openspec/specs/notificaciones-recordatorios/` y `confirmacion-asistencia/` (nuevos), `agenda-turnos/` y `auditoria-turnos/` (actualizados); change archivado en `openspec/changes/archive/2026-11-23-notificaciones-recordatorios/`. Migración V7. Incluye los avisos de la reserva online (puerto de C-10) y de reasignación (puerto de C-07); los links de cancelar y reprogramar quedan a cargo de C-12 (rutas `/mis-turnos/cancelar` y `/mis-turnos/reprogramar`, configurables)
 - **Responsable**: Juan Cruz
 - **Scope**:
   - `NotificacionPort` con `WhatsAppAdapter` y `EmailAdapter` **simulados** (log o servidor SMTP de desarrollo; DD-04).
