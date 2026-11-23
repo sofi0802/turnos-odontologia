@@ -1,7 +1,7 @@
 # Mockups de C-12 `frontend-reserva-paciente`
 
 - Design system revision: 1 (`design-system/README.md`, aprobado el 2026-11-22)
-- Approval: pending
+- Approval: pending (revisión 2 del 2026-11-23: sin sesión el menú muestra solo "Reservar turno" e "Ingresar"; cambian los encabezados de `mi-cuenta`, `mi-cuenta-registro`, `reserva-paso-1`, `reserva-paso-2`, `confirmar-asistencia` y `estados`). La revisión 1 la aprobó Sofia Indovino al mergear el PR #47.
 - Preview: rendered (2026-11-23), capturas en `previews/` a 390 × 844 y 1440 × 900 (página completa). Ninguna pantalla tiene desplazamiento horizontal ni errores en la consola.
 
 Los aprueba la líder antes del apply (`design-system/README.md`). Una vez aprobados, son el criterio de aceptación visual de las tareas de `tasks.md`.

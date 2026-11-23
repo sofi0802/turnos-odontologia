@@ -144,6 +144,56 @@ describe('Error de negocio ante un 409', () => {
   });
 });
 
+describe('Horarios alternativos en un error de negocio', () => {
+  it('Rechazo con alternativas', async () => {
+    const cliente = crearClienteApi(
+      URL_BASE,
+      responder(409, {
+        status: 409,
+        codigo: 'SIN_DISPONIBILIDAD',
+        alternativas: [{ inicio: '2026-12-01T11:00:00-03:00', fin: '2026-12-01T11:30:00-03:00' }],
+      }),
+    );
+
+    const error = await capturarError(cliente.crear('/paciente/reservas', {}));
+
+    expect(error).toBeInstanceOf(ErrorNegocio);
+    expect(error).toMatchObject({
+      codigo: 'SIN_DISPONIBILIDAD',
+      alternativas: [{ inicio: '2026-12-01T11:00:00-03:00', fin: '2026-12-01T11:30:00-03:00' }],
+    });
+  });
+
+  it('Rechazo sin alternativas', async () => {
+    const cliente = crearClienteApi(URL_BASE, responder(409, { status: 409, codigo: 'SOLAPAMIENTO_PROFESIONAL' }));
+
+    const error = await capturarError(cliente.crear('/turnos', {}));
+
+    expect(error).toBeInstanceOf(ErrorNegocio);
+    expect((error as ErrorNegocio).alternativas).toEqual([]);
+  });
+
+  it('Alternativas incompletas', async () => {
+    const cliente = crearClienteApi(
+      URL_BASE,
+      responder(409, {
+        status: 409,
+        codigo: 'SIN_DISPONIBILIDAD',
+        alternativas: [
+          { inicio: '2026-12-01T11:00:00-03:00' },
+          { inicio: '2026-12-01T11:30:00-03:00', fin: '2026-12-01T12:00:00-03:00' },
+        ],
+      }),
+    );
+
+    const error = await capturarError(cliente.crear('/paciente/reservas', {}));
+
+    expect((error as ErrorNegocio).alternativas).toEqual([
+      { inicio: '2026-12-01T11:30:00-03:00', fin: '2026-12-01T12:00:00-03:00' },
+    ]);
+  });
+});
+
 describe('Error de validación ante un 422', () => {
   it('Inicio en el pasado', async () => {
     const cliente = crearClienteApi(

@@ -1,11 +1,14 @@
-import type { Pagina } from '../../pages/pagina.ts';
-import type { Sesion } from '../sesion/sesion.ts';
+import type { GrupoMenu, Pagina } from '../../pages/pagina.ts';
+import { esPersonal, type Sesion } from '../sesion/sesion.ts';
 
 export interface Layout {
   readonly contenido: HTMLElement;
   /** Marca el enlace de la página activa y cierra el menú. */
   mostrar(pagina: Pagina): void;
-  /** Muestra el usuario y el botón "Salir", o los oculta si no hay sesión. */
+  /**
+   * Muestra el grupo del menú que corresponde a la sesión y, en el encabezado,
+   * el usuario y "Salir", o el enlace "Ingresar" si no hay sesión (design D3 de C-12).
+   */
   mostrarSesion(sesion: Sesion | null): void;
 }
 
@@ -14,6 +17,14 @@ export interface OpcionesLayout {
 }
 
 const ID_MENU = 'menu-principal';
+
+/** Ruta de la cuenta del paciente, a la que lleva "Ingresar" sin sesión. */
+export const RUTA_MI_CUENTA = 'mi-cuenta';
+
+/** Grupo del menú que ve una sesión: el personal ve el suyo; sin sesión o con paciente, el del paciente. */
+export function grupoDeSesion(sesion: Sesion | null): GrupoMenu {
+  return sesion !== null && esPersonal(sesion.rol) ? 'personal' : 'paciente';
+}
 
 /** Arma el encabezado con el menú y el área de contenido dentro de `raiz`. */
 export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[], opciones: OpcionesLayout): Layout {
@@ -37,21 +48,24 @@ export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[], opcio
   menu.setAttribute('aria-label', 'Principal');
 
   const lista = document.createElement('ul');
-  const enlaces = paginas.map((pagina) => {
-    const enlace = document.createElement('a');
-    enlace.href = `#/${pagina.ruta}`;
-    enlace.textContent = pagina.titulo;
-    enlace.dataset['ruta'] = pagina.ruta;
-    const item = document.createElement('li');
-    item.append(enlace);
-    lista.append(item);
-    return enlace;
-  });
+  const items = paginas
+    .filter((pagina) => pagina.menu !== undefined)
+    .map((pagina) => {
+      const enlace = document.createElement('a');
+      enlace.href = `#/${pagina.ruta}`;
+      enlace.textContent = pagina.titulo;
+      enlace.dataset['ruta'] = pagina.ruta;
+      const item = document.createElement('li');
+      item.dataset['grupo'] = pagina.menu;
+      item.append(enlace);
+      lista.append(item);
+      // Las páginas que exigen sesión de paciente (Mis turnos) no se ofrecen al visitante.
+      return { item, enlace, conSesion: pagina.acceso === 'paciente' };
+    });
   menu.append(lista);
 
   const usuario = document.createElement('div');
   usuario.className = 'usuario';
-  usuario.hidden = true;
   const nombre = document.createElement('span');
   nombre.className = 'usuario-nombre';
   const salir = document.createElement('button');
@@ -59,7 +73,11 @@ export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[], opcio
   salir.className = 'boton-secundario';
   salir.textContent = 'Salir';
   salir.addEventListener('click', () => opciones.alSalir());
-  usuario.append(nombre, salir);
+  const ingresar = document.createElement('a');
+  ingresar.className = 'btn btn-fantasma';
+  ingresar.href = `#/${RUTA_MI_CUENTA}`;
+  ingresar.textContent = 'Ingresar';
+  usuario.append(nombre, salir, ingresar);
 
   function abrirMenu(abierto: boolean): void {
     menu.classList.toggle('abierto', abierto);
@@ -75,10 +93,23 @@ export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[], opcio
 
   raiz.replaceChildren(encabezado, contenido);
 
+  function mostrarSesion(sesion: Sesion | null): void {
+    const grupo = grupoDeSesion(sesion);
+    for (const { item, conSesion } of items) {
+      item.hidden = item.dataset['grupo'] !== grupo || (conSesion && sesion === null);
+    }
+    nombre.hidden = sesion === null;
+    salir.hidden = sesion === null;
+    ingresar.hidden = sesion !== null;
+    nombre.textContent = sesion?.username ?? '';
+  }
+
+  mostrarSesion(null);
+
   return {
     contenido,
     mostrar(pagina) {
-      for (const enlace of enlaces) {
+      for (const { enlace } of items) {
         if (enlace.dataset['ruta'] === pagina.ruta) {
           enlace.setAttribute('aria-current', 'page');
         } else {
@@ -87,9 +118,6 @@ export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[], opcio
       }
       abrirMenu(false);
     },
-    mostrarSesion(sesion) {
-      usuario.hidden = sesion === null;
-      nombre.textContent = sesion?.username ?? '';
-    },
+    mostrarSesion,
   };
 }

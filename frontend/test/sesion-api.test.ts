@@ -1,6 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { crearClienteApi } from '../src/shared/api/cliente.ts';
-import { cerrarSesion, consultarSesion, esPersonal, iniciarSesion } from '../src/shared/sesion/sesion.ts';
+import {
+  cerrarSesion,
+  consultarSesion,
+  esPaciente,
+  esPersonal,
+  iniciarSesion,
+  registrarPaciente,
+} from '../src/shared/sesion/sesion.ts';
 
 const URL_BASE = 'http://localhost:8080/api/v1';
 
@@ -84,5 +91,55 @@ describe('Módulo de sesión', () => {
     expect(esPersonal('ODONTOLOGO')).toBe(true);
     expect(esPersonal('PACIENTE')).toBe(false);
     expect(esPersonal(null)).toBe(false);
+  });
+});
+
+describe('Registro del paciente (C-12)', () => {
+  beforeEach(borrarCookie);
+  afterEach(borrarCookie);
+
+  const datos = {
+    nombre: 'Paciente',
+    apellido: 'Uno',
+    dni: '99000001',
+    email: 'paciente.uno@example.com',
+    telefono: null,
+    password: 'clave-ficticia-1',
+  };
+
+  it('pide la sesión antes si no hay cookie CSRF y envía el registro sin la repetición', async () => {
+    const fetchSimulado = vi
+      .fn<typeof fetch>()
+      .mockResolvedValueOnce(respuesta(200, { autenticado: false }))
+      .mockResolvedValueOnce(respuesta(201, { username: 'paciente.uno@example.com', rol: 'PACIENTE' }));
+
+    await registrarPaciente(crearClienteApi(URL_BASE, fetchSimulado), datos);
+
+    expect(rutas(fetchSimulado)).toEqual(['GET /public/sesion', 'POST /public/pacientes/registro']);
+    const cuerpo = JSON.parse(String(fetchSimulado.mock.calls[1]?.[1]?.body)) as Record<string, unknown>;
+    expect(cuerpo).toEqual({
+      nombre: 'Paciente',
+      apellido: 'Uno',
+      dni: '99000001',
+      email: 'paciente.uno@example.com',
+      password: 'clave-ficticia-1',
+    });
+  });
+
+  it('con cookie CSRF envía solo el registro, con el teléfono si lo hay', async () => {
+    document.cookie = 'XSRF-TOKEN=token-ficticio; path=/';
+    const fetchSimulado = vi.fn<typeof fetch>().mockResolvedValue(respuesta(201, {}));
+
+    await registrarPaciente(crearClienteApi(URL_BASE, fetchSimulado), { ...datos, telefono: '1100000000' });
+
+    expect(rutas(fetchSimulado)).toEqual(['POST /public/pacientes/registro']);
+    const cuerpo = JSON.parse(String(fetchSimulado.mock.calls[0]?.[1]?.body)) as Record<string, unknown>;
+    expect(cuerpo['telefono']).toBe('1100000000');
+  });
+
+  it('esPaciente solo con el rol PACIENTE', () => {
+    expect(esPaciente('PACIENTE')).toBe(true);
+    expect(esPaciente('RECEPCIONISTA')).toBe(false);
+    expect(esPaciente(null)).toBe(false);
   });
 });

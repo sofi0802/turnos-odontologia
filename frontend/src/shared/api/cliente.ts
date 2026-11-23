@@ -80,7 +80,7 @@ async function traducirError(respuesta: Response): Promise<Error> {
     case 404:
       return new ErrorNoEncontrado(problema.codigo);
     case 409:
-      return new ErrorNegocio(problema.codigo ?? CODIGO_CONFLICTO_SIN_CODIGO, problema.detail);
+      return new ErrorNegocio(problema.codigo ?? CODIGO_CONFLICTO_SIN_CODIGO, problema.detail, problema.alternativas);
     default:
       return new ErrorValidacion(problema.detail, problema.codigo, problema.errores);
   }
