@@ -68,9 +68,9 @@ Se agrega a `MENSAJES_POR_CODIGO`: `DATOS_DE_RESERVA_INVALIDOS` ("El DNI o el n�
 
 - Design system revision: 1 (`design-system/README.md`, aprobada el 2026-11-22).
 - Decision: yes, 2026-11-23. El modo del proyecto es `system-and-mockups`.
-- Mockups: `openspec/changes/frontend-reprogramacion-agenda/mockups/` (pendiente de crear en la etapa de diseño, antes del apply). Pantallas: el diálogo "Reprogramar turno" con los botones de horario, el día sin horarios, el error por sillón, y a 390 × 844 y 1440 × 900.
+- Mockups: `openspec/changes/frontend-reprogramacion-agenda/mockups/` (ver su `README.md`). Fuente de referencia: `design-system/components.html`, secciones "Agenda del día (personal)", "Formularios y avisos", "Reserva online" (chips) y "Diálogo de confirmación". Se reutiliza el CSS de los mockups de C-12.
 - Approval: pending.
-- Preview: pending.
+- Preview: rendered (2026-11-23), capturas en `mockups/previews/` a 390 × 844 y 1440 × 900, sin desplazamiento horizontal ni errores en la consola, botones de horario de 44 px.
 - Visual verify: pending.
 
 ## Risks / Trade-offs

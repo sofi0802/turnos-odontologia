@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reprogramar · Día sin horarios · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <header class="app-encabezado">
+    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisorio" /><span data-brand-name>Turnos odontología</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#" aria-current="page">Agenda</a>
+      <a href="#">Configuración</a>
+    </nav>
+    <div class="usuario">
+      <span class="avatar" aria-hidden="true">RE</span>
+      <span class="usuario-nombre">recepcion</span>
+      <button class="btn btn-fantasma btn-chico" type="button">Salir</button>
+    </div>
+  </header>
+  <main class="pagina pagina-ancha">
+    <h1>Agenda</h1>
+    <p class="agenda-fecha" style="margin-top:var(--ds-espacio-1)">Martes 1 de diciembre</p>
+    <ol class="franjas">
+      <li class="franja"><span class="hora">09:00</span>
+        <article class="turno confirmado">
+          <div class="turno-cabecera"><span class="turno-nombre">Carla Ficticia</span><span class="estado e-confirmado">Confirmado</span></div>
+          <p class="turno-meta"><span>09:00–09:30</span><span>Limpieza</span><span>Bruno Prueba</span><span>Sillón 2</span></p>
+        </article>
+      </li>
+      <li class="franja"><span class="hora">10:00</span>
+        <article class="turno">
+          <div class="turno-cabecera"><span class="turno-nombre">Paciente Uno</span><span class="estado e-reservado">Reservado</span></div>
+          <p class="turno-meta"><span>10:00–10:30</span><span>Consulta</span><span>Ana Ejemplo</span><span>Sillón 1</span></p>
+          <div class="turno-acciones">
+            <button class="btn btn-chico btn-peligro" type="button">Cancelar</button>
+            <button class="btn btn-chico" type="button">Reprogramar</button>
+          </div>
+        </article>
+      </li>
+    </ol>
+  </main>
+  <div class="velo">
+    <div class="dialogo" role="dialog" aria-modal="true" aria-labelledby="dlg-t">
+      <h2 id="dlg-t">Reprogramar turno</h2>
+      <p class="resumen-turno">Paciente Uno · Consulta · martes 1/12, 10:00 · Ana Ejemplo · Sillón 1</p>
+      <form class="formulario" novalidate>
+        <div class="dos-campos">
+          <div class="campo">
+            <label for="dni">DNI del paciente</label>
+            <input class="control" id="dni" inputmode="numeric" autocomplete="off" value="99000001" />
+          </div>
+          <div class="campo">
+            <label for="nro">Número de reserva</label>
+            <input class="control" id="nro" autocomplete="off" value="R4MD-2HZC" />
+          </div>
+        </div>
+        <div class="campo">
+          <label for="pro">Profesional</label>
+          <select class="control" id="pro"><option>Sin cambios</option><option>Ana Ejemplo</option><option selected>Bruno Prueba</option></select>
+        </div>
+        <div class="campo">
+          <label for="fecha">Fecha</label>
+          <input class="control" id="fecha" type="date" value="2026-12-01" />
+        </div>
+        <fieldset class="campo">
+          <legend>Horario</legend>
+          <p class="sin-horarios" role="status">No hay horarios libres ese día.</p>
+        </fieldset>
+        <div class="campo">
+          <label for="sil">Sillón</label>
+          <select class="control" id="sil"><option>Sin cambios</option><option>Sillón 1</option><option>Sillón 2</option></select>
+        </div>
+        <div class="dialogo-acciones">
+          <button class="btn" type="button">Cerrar</button>
+          <button class="btn btn-principal" type="submit">Confirmar reprogramación</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <p class="nota-mockup"><b>Mockup.</b> Día sin horarios libres para el profesional elegido. Requisito: Horarios libres al reprogramar.</p>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bloqueos · Configuración · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <header class="app-encabezado">
+    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisorio" /><span data-brand-name>Turnos odontología</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#">Agenda</a>
+      <a href="profesionales.html" aria-current="page">Configuración</a>
+    </nav>
+    <div class="usuario">
+      <span class="avatar" aria-hidden="true">AE</span>
+      <span class="usuario-nombre">ana.ejemplo</span>
+      <button class="btn btn-fantasma btn-chico" type="button">Salir</button>
+    </div>
+  </header>
+
+  <main class="pagina pagina-config">
+    <h1>Configuración</h1>
+    <div class="pestanas-config" role="tablist" aria-label="Secciones de configuración">
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Profesionales</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Sillones</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Prestaciones</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Margen</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Horarios</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Ausencias</button>
+      <button class="pestana" role="tab" type="button" aria-selected="true">Bloqueos</button>
+    </div>
+    <section role="tabpanel" aria-label="Bloqueos">
+      <div class="cabecera-seccion"><h2>Bloqueos de agenda</h2><button class="btn btn-principal" type="button">Bloquear horario</button></div>
+      <p class="profesional-fijo">Tus bloqueos · Ana Ejemplo</p>
+      <div class="aviso aviso-alerta" role="status" style="margin-bottom:var(--ds-espacio-2)"><div><strong>Bloqueo registrado.</strong>El bloqueo se cruza con 2 turnos dados. Avisale a recepción para reprogramarlos.</div></div>
+      <ul class="lista-config">
+        <li>
+          <div><div class="item-nombre">Miércoles 9 de diciembre, 11:00 a 12:00</div><div class="item-datos"><span>Trámite</span></div></div>
+          <div class="item-acciones"><button class="btn btn-chico btn-peligro" type="button">Borrar</button></div>
+        </li>
+        <li>
+          <div><div class="item-nombre">Jueves 17 de diciembre, 08:00 a 09:30</div><div class="item-datos"><span>Sin motivo</span></div></div>
+          <div class="item-acciones"><button class="btn btn-chico btn-peligro" type="button">Borrar</button></div>
+        </li>
+      </ul>
+    </section>
+  </main>
+  <script>document.querySelector('.pestana[aria-selected="true"]').scrollIntoView({ block: 'nearest', inline: 'center' });</script>
+</body>
+</html>
