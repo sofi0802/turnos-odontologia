@@ -149,4 +149,86 @@ class EspecialidadesYSillonHabitualIntegrationTest extends ConfiguracionIntegrat
         obtener("/profesionales/" + ana)
                 .andExpect(jsonPath("$.sillonHabitualId").value(nullValue()));
     }
+
+    @Test
+    @DisplayName("Sillón habitual de otro profesional")
+    void sillonHabitualDeOtroProfesional() throws Exception {
+        // GIVEN la Dra. Ana Ejemplo con el "Sillón 1" como sillón habitual
+        long ana = crearProfesional("Ana", "Ejemplo", "MP-0001");
+        long bruno = crearProfesional("Bruno", "Prueba", "MP-0002");
+        long sillon1 = crearSillon("Sillón 1");
+        long sillon2 = crearSillon("Sillón 2");
+        asignarSillon(ana, sillon1);
+        asignarSillon(bruno, sillon2);
+
+        // WHEN el administrador asigna el "Sillón 1" como sillón habitual del Dr. Bruno Prueba
+        putJson("/profesionales/" + bruno + "/sillon-habitual", """
+                {"sillonId":%d}""".formatted(sillon1))
+                // THEN el cambio se rechaza con 409 y SILLON_HABITUAL_OCUPADO
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.codigo").value("SILLON_HABITUAL_OCUPADO"));
+
+        // AND la Dra. Ana Ejemplo sigue con el "Sillón 1" y el Dr. Bruno Prueba conserva el que tenía
+        obtener("/profesionales/" + ana).andExpect(jsonPath("$.sillonHabitualId").value(sillon1));
+        obtener("/profesionales/" + bruno).andExpect(jsonPath("$.sillonHabitualId").value(sillon2));
+    }
+
+    @Test
+    @DisplayName("Sillón habitual de un profesional inactivo")
+    void sillonHabitualDeUnProfesionalInactivo() throws Exception {
+        // GIVEN un profesional inactivo con el "Sillón 2" como sillón habitual
+        long bruno = crearProfesional("Bruno", "Prueba", "MP-0002");
+        long ana = crearProfesional("Ana", "Ejemplo", "MP-0001");
+        long sillon2 = crearSillon("Sillón 2");
+        asignarSillon(bruno, sillon2);
+        postVacio("/profesionales/" + bruno + "/desactivar").andExpect(status().isOk());
+
+        // WHEN el administrador asigna el "Sillón 2" como sillón habitual de la Dra. Ana Ejemplo
+        putJson("/profesionales/" + ana + "/sillon-habitual", """
+                {"sillonId":%d}""".formatted(sillon2))
+                // THEN el cambio se rechaza con 409 y SILLON_HABITUAL_OCUPADO
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.codigo").value("SILLON_HABITUAL_OCUPADO"));
+    }
+
+    @Test
+    @DisplayName("Volver a asignar el mismo sillón")
+    void volverAAsignarElMismoSillon() throws Exception {
+        // GIVEN la Dra. Ana Ejemplo con el "Sillón 1" como sillón habitual
+        long ana = crearProfesional("Ana", "Ejemplo", "MP-0001");
+        long sillon1 = crearSillon("Sillón 1");
+        asignarSillon(ana, sillon1);
+
+        // WHEN el administrador le asigna otra vez el "Sillón 1"
+        putJson("/profesionales/" + ana + "/sillon-habitual", """
+                {"sillonId":%d}""".formatted(sillon1))
+                // THEN el cambio se acepta y la Dra. Ana Ejemplo sigue con el "Sillón 1"
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.sillonHabitualId").value(sillon1));
+    }
+
+    @Test
+    @DisplayName("Liberar un sillón y asignarlo a otro profesional")
+    void liberarUnSillonYAsignarloAOtroProfesional() throws Exception {
+        // GIVEN la Dra. Ana Ejemplo con el "Sillón 1" como sillón habitual, que el administrador le quitó
+        long ana = crearProfesional("Ana", "Ejemplo", "MP-0001");
+        long bruno = crearProfesional("Bruno", "Prueba", "MP-0002");
+        long sillon1 = crearSillon("Sillón 1");
+        asignarSillon(ana, sillon1);
+        putJson("/profesionales/" + ana + "/sillon-habitual", """
+                {"sillonId":null}""").andExpect(status().isOk());
+
+        // WHEN el administrador asigna el "Sillón 1" como sillón habitual del Dr. Bruno Prueba
+        putJson("/profesionales/" + bruno + "/sillon-habitual", """
+                {"sillonId":%d}""".formatted(sillon1))
+                .andExpect(status().isOk());
+
+        // THEN el Dr. Bruno Prueba figura con el "Sillón 1" como sillón habitual
+        obtener("/profesionales/" + bruno).andExpect(jsonPath("$.sillonHabitualId").value(sillon1));
+    }
+
+    private void asignarSillon(long profesional, long sillon) throws Exception {
+        putJson("/profesionales/" + profesional + "/sillon-habitual", """
+                {"sillonId":%d}""".formatted(sillon)).andExpect(status().isOk());
+    }
 }

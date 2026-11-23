@@ -65,7 +65,7 @@ public class ConfiguracionExceptionHandler {
 
     static HttpStatus statusDe(CodigoError codigo) {
         return switch (codigo) {
-            case MATRICULA_DUPLICADA, NOMBRE_DUPLICADO -> HttpStatus.CONFLICT;
+            case MATRICULA_DUPLICADA, NOMBRE_DUPLICADO, SILLON_HABITUAL_OCUPADO -> HttpStatus.CONFLICT;
             case RECURSO_NO_ENCONTRADO -> HttpStatus.NOT_FOUND;
             case DURACION_INVALIDA, PRESTACION_INACTIVA, SILLON_INACTIVO, MARGEN_INVALIDO,
                  DATOS_INVALIDOS -> HttpStatus.UNPROCESSABLE_ENTITY;

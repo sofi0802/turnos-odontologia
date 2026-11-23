@@ -3,17 +3,22 @@ package ar.turnos.odontologia.agenda.disponibilidad.application;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import ar.turnos.odontologia.agenda.application.ReasignarTurnoCommand;
 import ar.turnos.odontologia.agenda.application.TurnoRepository;
 import ar.turnos.odontologia.agenda.disponibilidad.application.RegistroDisponibilidad.Clase;
 import ar.turnos.odontologia.agenda.disponibilidad.application.RegistroDisponibilidad.Periodo;
+import ar.turnos.odontologia.agenda.domain.CodigoRechazo;
 import ar.turnos.odontologia.agenda.domain.EstadoTurno;
 import ar.turnos.odontologia.agenda.domain.Intervalo;
 import ar.turnos.odontologia.agenda.domain.NumeroReserva;
 import ar.turnos.odontologia.agenda.domain.Turno;
+import ar.turnos.odontologia.agenda.domain.TurnoRechazadoException;
 import ar.turnos.odontologia.agenda.domain.reglas.PeriodoSinAtencion;
 import ar.turnos.odontologia.agenda.infrastructure.ServicioAgenda;
 import java.time.Instant;
@@ -36,6 +41,7 @@ class ServicioReasignacionTest {
     private static final Long DRA_A = 1L;
     private static final Long DR_B = 2L;
     private static final Long AUSENCIA = 10L;
+    private static final Long BLOQUEO = 20L;
     private static final Long TURNO = 100L;
     private static final Instant INICIO = Instant.parse("2026-12-09T13:00:00Z");
 
@@ -63,9 +69,55 @@ class ServicioReasignacionTest {
         ServicioReasignacion servicio = new ServicioReasignacion(registro, turnos, agenda,
                 new StaticListableBeanFactory().getBeanProvider(AvisoReasignacion.class), transacciones);
 
-        Turno resultado = servicio.reasignar(DRA_A, AUSENCIA, TURNO, DR_B, null, null, "recepcion");
+        Turno resultado = servicio.reasignar(DRA_A, Clase.AUSENCIA, AUSENCIA, TURNO, DR_B, null, null, "recepcion");
 
         assertThat(resultado).isSameAs(nuevo);
+    }
+
+    @Test
+    @DisplayName("Con la clase BLOQUEO busca el período entre los bloqueos y verifica que el turno esté afectado")
+    void conBloqueoUsaLosBloqueos() {
+        PeriodoSinAtencion bloqueo = PeriodoSinAtencion.de(PeriodoSinAtencion.Tipo.BLOQUEO,
+                Instant.parse("2026-12-09T12:00:00Z"), Instant.parse("2026-12-09T15:00:00Z"));
+        when(registro.periodo(DRA_A, Clase.BLOQUEO, BLOQUEO))
+                .thenReturn(Optional.of(new Periodo(BLOQUEO, DRA_A, bloqueo, null)));
+        ServicioReasignacion servicio = servicio();
+
+        Turno resultado = servicio.reasignar(DRA_A, Clase.BLOQUEO, BLOQUEO, TURNO, DR_B, null, null, "recepcion");
+
+        assertThat(resultado).isSameAs(nuevo);
+    }
+
+    @Test
+    @DisplayName("Un id de ausencia citado como bloqueo no existe: 404 y no se reasigna nada")
+    void elIdDeUnaAusenciaNoSirveComoBloqueo() {
+        // AUSENCIA existe como ausencia (ver prepararTurnoAfectado), pero no como bloqueo
+        ServicioReasignacion servicio = servicio();
+
+        assertThatThrownBy(() -> servicio.reasignar(DRA_A, Clase.BLOQUEO, AUSENCIA, TURNO, DR_B, null, null,
+                "recepcion")).isInstanceOf(RecursoNoEncontradoException.class)
+                .hasMessage("No existe el bloqueo");
+        verify(agenda, never()).reasignar(any(ReasignarTurnoCommand.class), any());
+    }
+
+    @Test
+    @DisplayName("Un turno que no se cruza con el bloqueo se rechaza con TURNO_NO_AFECTADO")
+    void turnoFueraDelBloqueo() {
+        PeriodoSinAtencion bloqueo = PeriodoSinAtencion.de(PeriodoSinAtencion.Tipo.BLOQUEO,
+                Instant.parse("2026-12-09T20:00:00Z"), Instant.parse("2026-12-09T21:00:00Z"));
+        when(registro.periodo(DRA_A, Clase.BLOQUEO, BLOQUEO))
+                .thenReturn(Optional.of(new Periodo(BLOQUEO, DRA_A, bloqueo, null)));
+        ServicioReasignacion servicio = servicio();
+
+        assertThatThrownBy(() -> servicio.reasignar(DRA_A, Clase.BLOQUEO, BLOQUEO, TURNO, DR_B, null, null,
+                "recepcion")).isInstanceOfSatisfying(TurnoRechazadoException.class,
+                e -> assertThat(e.codigo()).isEqualTo(CodigoRechazo.TURNO_NO_AFECTADO));
+        verify(agenda, never()).reasignar(any(ReasignarTurnoCommand.class), any());
+    }
+
+    private ServicioReasignacion servicio() {
+        return new ServicioReasignacion(registro, turnos, agenda,
+                new StaticListableBeanFactory().getBeanProvider(AvisoReasignacion.class), transacciones);
     }
 
     private static Turno turno(Long id, Long profesional) {

@@ -12,6 +12,9 @@ public interface ProfesionalRepository extends JpaRepository<ProfesionalEntity, 
 
     boolean existsByMatriculaAndIdNot(String matricula, Long id);
 
+    /** Si otro profesional, activo o inactivo, tiene ese sillón como habitual (RN-RO-09). */
+    boolean existsBySillonHabitualIdAndIdNot(Long sillonId, Long profesionalId);
+
     List<ProfesionalEntity> findAllByOrderByApellidoAscNombreAsc();
 
     @Query("""
