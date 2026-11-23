@@ -52,12 +52,12 @@ Los estilos y `tokens.css` SHALL usar únicamente variables `--ds-*`; MUST NOT q
 - **AND** no hay colores `#rrggbb` ni `rgb()` fuera de `tokens.css`
 
 ### Requirement: Estilos en módulos
-Los estilos SHALL estar repartidos en archivos CSS por tema (base, componentes y una por pantalla o grupo de pantallas) que `styles.css` importa en un orden fijo, sin cambiar el aspecto ni el comportamiento de ninguna pantalla.
+Los estilos SHALL estar repartidos en archivos CSS por tema (base, componentes y una por pantalla o grupo de pantallas) que `styles.css` importa en un orden fijo (el de las reglas del archivo único anterior, para no alterar la cascada), sin cambiar el aspecto ni el comportamiento de ninguna pantalla.
 
 #### Scenario: Módulos importados en orden
 - **WHEN** se lee `styles.css`
-- **THEN** solo contiene importaciones de módulos, en el orden base, componentes y pantallas
-- **AND** cada módulo importado existe
+- **THEN** solo contiene importaciones, primero la de los tokens y después la de cada módulo en un orden fijo
+- **AND** cada módulo importado existe, no está vacío y no hay módulos sin importar
 
 #### Scenario: Sin cambios de comportamiento
 - **WHEN** se corren todos los tests de la aplicación después de partir los estilos

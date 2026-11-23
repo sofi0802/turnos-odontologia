@@ -1,0 +1,178 @@
+/* Nuevo turno guiado (C-40): solo variables --ds-*, como en los mockups aprobados (PR #65). */
+.dos-columnas,
+.fecha-y-horario {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.dialogo .campo-deshabilitado legend,
+.campo-calendario:disabled legend {
+  color: var(--ds-texto-deshabilitado);
+}
+
+.dialogo select:disabled {
+  color: var(--ds-texto-deshabilitado);
+  background: var(--ds-superficie);
+  cursor: not-allowed;
+}
+
+.sillon-nuevo-turno .etiqueta-campo {
+  font-weight: var(--ds-peso-medio);
+}
+
+.sillon-fijo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--ds-espacio-1);
+  min-height: var(--ds-alto-control);
+  margin: 0;
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-texto);
+  background: var(--ds-superficie);
+  border-radius: var(--ds-radio);
+}
+
+.sillon-fijo .sillon-nombre {
+  white-space: nowrap;
+}
+
+.sillon-fijo .sillon-detalle {
+  font-size: var(--ds-texto-sm);
+  font-weight: var(--ds-peso-normal);
+  color: var(--ds-texto-suave);
+}
+
+.calendario {
+  padding: 2px;
+  background: var(--ds-fondo);
+  border-radius: var(--ds-radio);
+}
+
+.calendario.bloqueado {
+  opacity: 0.55;
+}
+
+.cal-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1);
+  margin-bottom: var(--ds-espacio-1);
+}
+
+.cal-nav {
+  min-width: var(--ds-alto-control);
+  min-height: var(--ds-alto-control);
+  font-size: var(--ds-texto-lg);
+  color: var(--ds-acento-500);
+  background: transparent;
+  border-color: transparent;
+}
+
+.cal-nav:disabled {
+  color: var(--ds-texto-deshabilitado);
+  background: var(--ds-superficie);
+}
+
+.cal-mes {
+  margin: 0;
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.cal-mes::first-letter {
+  text-transform: uppercase;
+}
+
+.cal-semana,
+.cal-dias {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0;
+}
+
+.cal-semana span {
+  padding-bottom: 2px;
+  font-size: var(--ds-texto-xs);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-texto-suave);
+  text-align: center;
+}
+
+.cal-dia {
+  min-width: 0;
+  min-height: var(--ds-alto-control);
+  padding: 0;
+  font-variant-numeric: tabular-nums;
+  color: var(--ds-texto);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid transparent;
+  border-radius: var(--ds-radio);
+}
+
+.cal-dia:hover:not(:disabled) {
+  background: var(--ds-acento-50);
+  border-color: var(--ds-acento-100);
+}
+
+.cal-dia.hoy {
+  font-weight: var(--ds-peso-fuerte);
+  border-color: var(--ds-acento-500);
+}
+
+.cal-dia[aria-pressed='true'] {
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-acento-texto);
+  background: var(--ds-acento-500);
+  border-color: var(--ds-acento-500);
+}
+
+.cal-dia:disabled {
+  color: var(--ds-texto-deshabilitado);
+  text-decoration: line-through;
+  background: transparent;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.cal-dia.otro-mes {
+  visibility: hidden;
+}
+
+.dialogo .cal-ayuda {
+  font-size: var(--ds-texto-xs);
+}
+
+@media (min-width: 768px) {
+  .dialogo.dialogo-ancho {
+    max-width: 52rem;
+  }
+
+  .dos-columnas {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+
+  .fecha-y-horario {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: var(--ds-espacio-3);
+    align-items: start;
+  }
+
+  .calendario {
+    padding: var(--ds-espacio-1);
+    border: var(--ds-borde-ancho) solid var(--ds-borde);
+  }
+
+  .cal-semana,
+  .cal-dias {
+    gap: 2px;
+  }
+
+  .fecha-y-horario .chips {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+/* Fin del nuevo turno guiado (C-40) */
+

@@ -1,0 +1,472 @@
+/* --- Configuración del consultorio (C-34, design D11). Solo variables del design system. --- */
+.pagina-config {
+  max-width: 64rem;
+}
+
+.btn-chico {
+  padding: 0 var(--ds-espacio-1);
+  font-size: var(--ds-texto-sm);
+}
+
+.pestanas-config {
+  display: flex;
+  gap: var(--ds-espacio-0);
+  margin: 0 0 var(--ds-espacio-3);
+  overflow-x: auto;
+  border-bottom: var(--ds-borde-ancho) solid var(--ds-borde);
+  scrollbar-width: thin;
+}
+
+.pestana {
+  flex: none;
+  min-height: var(--ds-alto-control);
+  padding: 0 var(--ds-espacio-2);
+  font: inherit;
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-texto-suave);
+  white-space: nowrap;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-bottom: 3px solid transparent;
+}
+
+.pestana[aria-selected='true'] {
+  color: var(--ds-acento-500);
+  border-bottom-color: var(--ds-acento-500);
+}
+
+.cabecera-seccion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1);
+  margin-bottom: var(--ds-espacio-2);
+}
+
+.cabecera-seccion h2 {
+  margin: 0;
+  font-size: var(--ds-texto-lg);
+}
+
+.lista-config {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-lg);
+}
+
+.lista-config > li {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  padding: var(--ds-espacio-2);
+}
+
+.lista-config > li + li {
+  border-top: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.item-nombre {
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.item-datos {
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.item-datos span + span::before {
+  content: ' · ';
+}
+
+.item-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1);
+}
+
+.item-inactivo .item-nombre {
+  color: var(--ds-texto-suave);
+}
+
+.item-elegido {
+  background: var(--ds-acento-50);
+}
+
+.estado-activo,
+.estado-inactivo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--ds-texto-xs);
+  font-weight: var(--ds-peso-medio);
+}
+
+.estado-activo::before,
+.estado-inactivo::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.estado-activo {
+  color: var(--ds-ok);
+}
+
+.estado-activo::before {
+  background: var(--ds-ok);
+}
+
+.estado-inactivo {
+  color: var(--ds-texto-suave);
+}
+
+.estado-inactivo::before {
+  border: 2px solid currentColor;
+}
+
+.detalle-profesional {
+  grid-column: 1 / -1;
+  margin-top: var(--ds-espacio-1);
+  padding: var(--ds-espacio-2);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio);
+}
+
+.detalle-profesional h3 {
+  margin: 0 0 var(--ds-espacio-1);
+}
+
+.detalle-profesional fieldset {
+  margin: 0 0 var(--ds-espacio-2);
+  padding: 0;
+  border: 0;
+}
+
+.detalle-profesional legend {
+  margin-bottom: var(--ds-espacio-1);
+  font-weight: var(--ds-peso-medio);
+}
+
+.casillas {
+  display: grid;
+  gap: var(--ds-espacio-0);
+}
+
+.casilla {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  min-height: var(--ds-alto-control);
+}
+
+.casilla input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--ds-acento-500);
+}
+
+.etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-0);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.etiquetas li {
+  padding: 2px var(--ds-espacio-1);
+  font-size: var(--ds-texto-sm);
+  background: var(--ds-superficie);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-pill);
+}
+
+.selector-profesional {
+  max-width: 22rem;
+  margin-bottom: var(--ds-espacio-2);
+}
+
+.profesional-fijo {
+  margin: 0 0 var(--ds-espacio-2);
+  font-weight: var(--ds-peso-medio);
+}
+
+.franjas {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-lg);
+}
+
+.franjas > li {
+  display: grid;
+  gap: var(--ds-espacio-0);
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+}
+
+.franjas > li + li {
+  border-top: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.franjas .dia {
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.franjas .no-atiende {
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.franja {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1);
+}
+
+.franja + .franja {
+  margin-top: var(--ds-espacio-0);
+}
+
+.franja-horas {
+  font-family: var(--ds-fuente-mono);
+}
+
+.franja-nueva .franja-horas {
+  color: var(--ds-alerta);
+}
+
+.franja-nueva .franja-horas::after {
+  content: 'sin guardar';
+  margin-left: var(--ds-espacio-1);
+  font-family: var(--ds-fuente);
+  font-size: var(--ds-texto-xs);
+}
+
+.agregar-franja-dias {
+  display: grid;
+  gap: var(--ds-espacio-2);
+  margin-top: var(--ds-espacio-2);
+  padding: var(--ds-espacio-2);
+  background: var(--ds-fondo);
+  border: 1px dashed var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio);
+}
+
+.agregar-franja-dias .horas {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.acciones-config {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  gap: var(--ds-espacio-1);
+  margin-top: var(--ds-espacio-3);
+}
+
+.acciones-config .btn {
+  flex: 1 1 10rem;
+}
+
+.margen-valor {
+  font-family: var(--ds-fuente-mono);
+  font-size: var(--ds-texto-xl);
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.campo-margen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--ds-espacio-1);
+}
+
+.campo-margen .campo {
+  width: 8rem;
+}
+
+.afectados {
+  margin-top: var(--ds-espacio-2);
+  padding: var(--ds-espacio-2);
+  background: var(--ds-alerta-fondo);
+  border-radius: var(--ds-radio);
+}
+
+.afectados h3 {
+  margin: 0 0 var(--ds-espacio-1);
+  color: var(--ds-alerta);
+}
+
+.afectados .lista-config {
+  margin-top: var(--ds-espacio-1);
+}
+
+/* Revisión 2: espaciado del detalle, días, horas de 5 en 5, columna Profesional y sillón habitual. */
+.grupo-config {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  justify-items: start;
+}
+
+.grupo-config + .grupo-config {
+  margin-top: var(--ds-espacio-3);
+}
+
+.grupo-config fieldset {
+  margin: 0;
+}
+
+.grupo-config .campo {
+  width: 100%;
+  max-width: 22rem;
+}
+
+.dias-semana {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--ds-espacio-0);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.dias-semana legend {
+  margin-bottom: var(--ds-espacio-1);
+  padding: 0;
+  font-weight: var(--ds-peso-medio);
+}
+
+.etiqueta-hora {
+  font-weight: var(--ds-peso-medio);
+}
+
+.hora-5 {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-0);
+}
+
+.hora-5 .control {
+  flex: 1;
+  width: auto;
+  min-width: 4.5rem;
+}
+
+.hora-5 .separador {
+  font-family: var(--ds-fuente-mono);
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.item-profesional {
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.item-profesional::before {
+  content: 'Profesional: ';
+}
+
+.lista-config > li.encabezado-columnas {
+  display: none;
+}
+
+fieldset.campo {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+fieldset.campo > legend {
+  margin-bottom: var(--ds-espacio-1);
+  padding: 0;
+  font-weight: var(--ds-peso-medio);
+}
+
+.opciones-sillon {
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  width: 100%;
+}
+
+.opcion-ocupada {
+  color: var(--ds-texto-deshabilitado);
+  background: var(--ds-superficie);
+  border-color: var(--ds-borde);
+  border-style: dashed;
+  cursor: not-allowed;
+}
+
+.opcion-ocupada small {
+  color: var(--ds-texto-deshabilitado);
+}
+
+.grupo-config:has(.opciones-sillon) {
+  justify-items: stretch;
+}
+
+.grupo-config:has(.opciones-sillon) > .btn {
+  justify-self: start;
+}
+
+.grupo-config fieldset.campo:has(.opciones-sillon) {
+  max-width: none;
+}
+
+@media (min-width: 768px) {
+  .lista-config > li {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+
+  .franjas > li {
+    grid-template-columns: 8rem 1fr;
+    align-items: start;
+  }
+
+  .dias-semana {
+    grid-template-columns: repeat(7, auto);
+    justify-content: start;
+    gap: var(--ds-espacio-2);
+  }
+
+  .agregar-franja-dias .horas {
+    grid-template-columns: repeat(2, auto);
+    justify-content: start;
+    align-items: end;
+    gap: var(--ds-espacio-3);
+  }
+
+  .lista-config.con-columna > li {
+    grid-template-columns: 11rem 1fr auto;
+  }
+
+  .lista-config.con-columna > li.encabezado-columnas {
+    display: grid;
+    background: var(--ds-superficie);
+    font-size: var(--ds-texto-sm);
+    font-weight: var(--ds-peso-medio);
+    color: var(--ds-texto-suave);
+  }
+
+  .lista-config.con-columna .item-profesional {
+    font-size: inherit;
+    font-weight: var(--ds-peso-medio);
+    color: var(--ds-texto);
+  }
+
+  .lista-config.con-columna .item-profesional::before {
+    content: none;
+  }
+}

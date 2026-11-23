@@ -1,0 +1,134 @@
+/* Agenda */
+.agenda-barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  margin-bottom: var(--ds-espacio-2);
+}
+
+.grupo-botones {
+  display: flex;
+  gap: 0.25rem;
+}
+
+/* C-35: Anterior y Siguiente como flechas, con el mismo objetivo táctil de 44 px */
+.boton-icono {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  padding: 0;
+}
+
+.boton-icono svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* C-35: nombre del profesional debajo de "Mi agenda" */
+.agenda-titulo-profesional {
+  display: block;
+  margin-top: var(--ds-espacio-0);
+  font-size: var(--ds-texto-lg);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-acento-700);
+}
+
+/* C-35: la fecha va junto a las flechas y más grande, para que se lea qué día se está mirando */
+.agenda-periodo {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: var(--ds-texto-xl);
+  font-weight: var(--ds-peso-fuerte);
+  line-height: var(--ds-interlineado-titulo);
+}
+
+.agenda-periodo::first-letter {
+  text-transform: uppercase;
+}
+
+.agenda-filtros {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-espacio-1);
+  margin-bottom: var(--ds-espacio-2);
+}
+
+.agenda-avisos {
+  color: var(--ds-texto-suave);
+}
+
+.agenda-lista {
+  display: block;
+}
+
+.agenda-lista[aria-busy='true'] {
+  opacity: 0.6;
+}
+
+.agenda-dia h2 {
+  margin: var(--ds-espacio-2) 0 var(--ds-espacio-1);
+  font-size: 1rem;
+  text-transform: capitalize;
+}
+
+.agenda-vacia {
+  color: var(--ds-texto-suave);
+}
+
+.turnos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-espacio-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.turno {
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  background: var(--ds-superficie);
+  border: 1px solid var(--ds-borde);
+  border-radius: var(--ds-radio);
+}
+
+.turno p {
+  margin: 0;
+}
+
+.turno-horario {
+  font-weight: 700;
+}
+
+.turno-detalle {
+  color: var(--ds-texto-suave);
+  overflow-wrap: anywhere;
+}
+
+.turno-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1);
+  margin-top: var(--ds-espacio-1);
+}
+
+.etiqueta {
+  display: inline-block;
+  padding: 0 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+}
+
+.etiqueta-confirmado {
+  color: var(--ds-turno-confirmado);
+}
+
+.etiqueta-sobreturno {
+  color: var(--ds-turno-sobreturno);
+}
+

@@ -1,8 +1,9 @@
 # Design system del proyecto
 
 Mode: system-and-mockups
-Revision: 1
-Approval: approved (2026-11-22, by user)
+Revision: 2
+Approval: pending (Revision 1 aprobada el 2026-11-22, by user; la Revision 2 solo quita alias y no cambia ningún valor: falta que la líder la renueve)
+Revisiones: ver "Historial de revisiones" al final.
 Decisión: Sofia Indovino (líder), 2026-11-22. Reemplaza la política `off` del 2026-11-18 a pedido explícito de la líder.
 
 ## Qué significa
@@ -15,7 +16,7 @@ Decisión: Sofia Indovino (líder), 2026-11-22. Reemplaza la política `off` del
 
 | Archivo | Para qué |
 |---|---|
-| `tokens.css` | Única fuente de colores, tipografía, espaciado, radios, sombras, foco y movimiento (con `prefers-reduced-motion`). Al final trae **alias con los nombres que ya usa `frontend/src/styles.css`** (`--color-acento`, `--espacio-1`, …), así el frontend lo adopta sin renombrar. |
+| `tokens.css` | Única fuente de colores, tipografía, espaciado, radios, sombras, foco y movimiento (con `prefers-reduced-motion`). Todos los nombres son `--ds-*`; desde la Revision 2 ya no hay alias (`--color-*`, `--espacio-*`, `--radio`, `--ancho-maximo`). |
 | `brand.md` | Nombre, logo, tono, voz y reglas de uso, con su fuente o `(TBD)`. |
 | `brand.js` | Constante `BRAND_NAME` y binding de `[data-brand-name]` para las vistas previas HTML. |
 | `components.html` | Referencia de componentes y estados: encabezado, botones, campos, avisos, estados del turno, agenda del día, día vacío, reserva móvil del paciente, comprobante y diálogo. |
@@ -43,3 +44,10 @@ Decisión: Sofia Indovino (líder), 2026-11-22. Reemplaza la política `off` del
 ## Cómo ver las vistas previas
 
 Abrir `design-system/components.html` con doble clic en el navegador (no requiere servidor), o ver las capturas en `previews/`.
+
+## Historial de revisiones
+
+| Revisión | Fecha | Qué cambió | Aprobación |
+|---|---|---|---|
+| 1 | 2026-11-22 | Sistema inicial: tokens, marca, componentes y vistas previas. | Aprobada por la líder (2026-11-22) |
+| 2 | 2026-11-23 | C-39 etapa A: se quitan los alias `--color-*`, `--espacio-*`, `--radio` y `--ancho-maximo` de `tokens.css` (el frontend usa solo `--ds-*`) y se suma `--ds-capa-modal` (la capa detrás de los diálogos, antes escrita a mano con el mismo valor). **No cambia ningún valor ni el aspecto de ninguna pantalla** (capturas de antes y después idénticas, ver `openspec/changes/frontend-uniformidad-visual/mockups/`). | Pendiente de renovar |

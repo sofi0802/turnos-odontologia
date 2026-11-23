@@ -1,0 +1,200 @@
+/* Portada (C-37, mockups de openspec/changes/frontend-portada-y-acceso), solo con --ds-*. */
+.marca {
+  color: inherit;
+  text-decoration: none;
+}
+
+.encabezado-portada {
+  flex-wrap: nowrap;
+}
+
+.encabezado-portada .menu-boton,
+.encabezado-portada .menu {
+  display: none;
+}
+
+.encabezado-portada .usuario {
+  width: auto;
+}
+
+.btn-acceso {
+  min-height: var(--ds-alto-control);
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-acento-500);
+  white-space: nowrap;
+  border-color: var(--ds-acento-500);
+}
+
+.inicio {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 0 0 var(--ds-espacio-5);
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ds-espacio-3);
+  align-items: center;
+  padding: var(--ds-espacio-4) var(--ds-espacio-3);
+  background: linear-gradient(135deg, var(--ds-acento-50), var(--ds-fondo) 75%);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-lg);
+}
+
+.hero .eyebrow {
+  margin: 0 0 var(--ds-espacio-1);
+  font-size: var(--ds-texto-sm);
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-acento-700);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(1.75rem, 6.5vw, 2.75rem);
+  line-height: 1.15;
+}
+
+.hero-lead {
+  max-width: 34rem;
+  margin: var(--ds-espacio-2) 0 0;
+  font-size: var(--ds-texto-lg);
+  color: var(--ds-texto-suave);
+}
+
+.hero-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1);
+  margin-top: var(--ds-espacio-3);
+}
+
+.hero-acciones .btn {
+  flex: 1 1 12rem;
+  min-height: var(--ds-alto-control);
+}
+
+.hero-ilustracion svg {
+  display: block;
+  width: 100%;
+  max-width: 22rem;
+  height: auto;
+  margin: 0 auto;
+}
+
+.seccion-pasos {
+  margin-top: var(--ds-espacio-5);
+}
+
+.seccion-pasos > h2 {
+  font-size: var(--ds-texto-xl);
+}
+
+.tarjetas-pasos {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ds-espacio-2);
+  margin: var(--ds-espacio-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tarjeta-paso {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--ds-espacio-0) var(--ds-espacio-2);
+  align-content: start;
+  align-items: start;
+  padding: var(--ds-espacio-2);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-lg);
+  box-shadow: var(--ds-sombra-1);
+}
+
+.tarjeta-paso h3 {
+  margin: 0;
+  align-self: end;
+  font-size: var(--ds-texto-lg);
+}
+
+.tarjeta-paso h3 span {
+  margin-right: var(--ds-espacio-0);
+  color: var(--ds-acento-500);
+}
+
+.tarjeta-paso p {
+  margin: 0;
+  color: var(--ds-texto-suave);
+}
+
+.paso-icono {
+  display: grid;
+  grid-row: span 2;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  color: var(--ds-acento-500);
+  background: var(--ds-acento-50);
+  border-radius: 50%;
+}
+
+.paso-icono svg {
+  width: 26px;
+  height: 26px;
+}
+
+.nota-personal {
+  margin: var(--ds-espacio-3) 0 0;
+  padding-top: var(--ds-espacio-2);
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+  text-align: center;
+  border-top: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+@media (max-width: 479px) {
+  .encabezado-portada {
+    gap: var(--ds-espacio-1);
+  }
+
+  .encabezado-portada .marca {
+    font-size: var(--ds-texto-sm);
+  }
+
+  .encabezado-portada .btn-acceso {
+    padding: 0 var(--ds-espacio-1);
+    font-size: var(--ds-texto-sm);
+  }
+}
+
+@media (min-width: 768px) {
+  .hero {
+    grid-template-columns: 1.15fr 0.85fr;
+    padding: var(--ds-espacio-5);
+  }
+
+  .hero-acciones .btn {
+    flex: 0 0 auto;
+  }
+
+  .tarjetas-pasos {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .tarjeta-paso {
+    grid-template-columns: minmax(0, 1fr);
+    padding: var(--ds-espacio-3);
+  }
+
+  .paso-icono {
+    grid-row: auto;
+  }
+
+  .tarjeta-paso h3 {
+    align-self: start;
+  }
+}
+

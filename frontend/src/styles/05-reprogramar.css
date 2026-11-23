@@ -1,0 +1,40 @@
+/* Reprogramar turno (C-33): horarios libres como botones .chip dentro del diálogo. */
+.dos-campos {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.dialogo fieldset {
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+.dialogo legend {
+  padding: 0;
+  font-weight: 600;
+}
+
+.dialogo .chips {
+  margin-top: var(--ds-espacio-1);
+}
+
+.dialogo .ayuda {
+  margin-top: var(--ds-espacio-1);
+}
+
+.sin-horarios {
+  padding: var(--ds-espacio-2);
+  margin: var(--ds-espacio-1) 0 0;
+  color: var(--ds-texto-suave);
+  text-align: center;
+  border: 1px dashed var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio);
+}
+
+.buscando {
+  margin: var(--ds-espacio-1) 0 0;
+  color: var(--ds-texto-suave);
+}
+

@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import estilos from '../src/styles.css?raw';
+import { estilos } from './estilos.ts';
 import { abrirApp, boton, campo, escribir, json, ServidorFalso, turno, type AppDePrueba } from './apoyo.ts';
 
 // jsdom no aplica media queries ni calcula el diseño: estos tests comprueban la
@@ -66,7 +66,7 @@ describe('Agenda usable en el celular', () => {
     // Desde 768 px, filtros en fila y los días de la semana en columnas que se ajustan al ancho.
     expect(regla(reglasDeEscritorio(), '.agenda-filtros')).toMatch(/flex-direction:\s*row/);
     expect(regla(reglasDeEscritorio(), '.agenda-lista')).toMatch(/grid-template-columns:\s*repeat\(auto-fill, minmax\(/);
-    expect(regla(estilos, '.contenido')).toMatch(/max-width:\s*var\(--ancho-maximo\)/);
+    expect(regla(estilos, '.contenido')).toMatch(/max-width:\s*var\(--ds-ancho-maximo\)/);
   });
 });
 
@@ -192,7 +192,7 @@ describe('Reprogramar turno en el celular (C-33)', () => {
     // Con 320 px de ancho caben tres columnas de 5,5 rem: la grilla no fuerza desplazamiento horizontal.
     expect(regla(reglasDeCelular(), '.dialogo fieldset')).toMatch(/min-width:\s*0/);
     // El diálogo cabe en la pantalla y se desplaza por dentro, sin ancho fijo.
-    expect(regla(reglasDeCelular(), '.dialogo')).toMatch(/max-height:\s*calc\(100dvh - 2 \* var\(--espacio-2\)\)/);
+    expect(regla(reglasDeCelular(), '.dialogo')).toMatch(/max-height:\s*calc\(100dvh - 2 \* var\(--ds-espacio-2\)\)/);
     expect(regla(reglasDeCelular(), '.dialogo')).toMatch(/overflow-y:\s*auto/);
     expect(regla(reglasDeCelular(), '.dialogo')).toMatch(/width:\s*calc\(100% - /);
     // DNI y número de reserva uno debajo del otro en el celular, lado a lado desde 768 px.

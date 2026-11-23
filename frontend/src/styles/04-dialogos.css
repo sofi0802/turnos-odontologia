@@ -1,0 +1,30 @@
+/* Diálogo de los formularios */
+.dialogo {
+  width: calc(100% - 2rem);
+  max-width: 32rem;
+  max-height: calc(100dvh - 2 * var(--ds-espacio-2));
+  padding: var(--ds-espacio-3) var(--ds-espacio-2);
+  overflow-y: auto;
+  color: var(--ds-texto);
+  border: 1px solid var(--ds-borde);
+  border-radius: var(--ds-radio);
+}
+
+.dialogo::backdrop {
+  background: var(--ds-capa-modal);
+}
+
+.dialogo h2 {
+  margin-top: 0;
+}
+
+.dialogo-resumen {
+  color: var(--ds-texto-suave);
+}
+
+.dialogo-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1);
+}
+

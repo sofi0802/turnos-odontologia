@@ -1,0 +1,196 @@
+/* Selector de prestaciones con buscador (C-38, mockups de openspec/changes/frontend-reserva-explorador-prestaciones), solo con --ds-*. */
+.selector,
+.selector .control {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.selector-campo {
+  position: relative;
+}
+
+.selector-campo .lupa {
+  position: absolute;
+  top: 50%;
+  left: var(--ds-espacio-1);
+  width: 20px;
+  height: 20px;
+  color: var(--ds-texto-suave);
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.selector-campo .control {
+  padding-right: var(--ds-alto-control);
+  padding-left: calc(var(--ds-espacio-1) + 20px + var(--ds-espacio-1));
+}
+
+.selector-campo .control[aria-expanded='true'] {
+  border-color: var(--ds-acento-500);
+  box-shadow: inset 0 0 0 1px var(--ds-acento-500);
+}
+
+.selector-flecha {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: var(--ds-alto-control);
+  height: var(--ds-alto-control);
+  padding: 0;
+  color: var(--ds-texto-suave);
+  background: transparent;
+  border: 0;
+  border-radius: var(--ds-radio);
+  cursor: pointer;
+}
+
+.selector-flecha svg {
+  width: 20px;
+  height: 20px;
+  transition: transform var(--ds-duracion-rapida);
+}
+
+.selector-flecha[aria-expanded='true'] svg {
+  transform: rotate(180deg);
+}
+
+.selector-lista {
+  max-height: 16rem;
+  margin: var(--ds-espacio-0) 0 0;
+  padding: var(--ds-espacio-0);
+  overflow-y: auto;
+  list-style: none;
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio-lg);
+  box-shadow: var(--ds-sombra-1);
+}
+
+.selector-opcion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1);
+  min-height: 48px;
+  padding: var(--ds-espacio-0) var(--ds-espacio-1);
+  border-radius: var(--ds-radio);
+  cursor: pointer;
+}
+
+.selector-opcion[aria-selected='true'] {
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-acento-700);
+}
+
+.selector-opcion.activa,
+.selector-opcion:hover {
+  background: var(--ds-acento-50);
+  box-shadow: inset 3px 0 0 var(--ds-acento-500);
+}
+
+.selector-opcion .nombre {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.selector-opcion small {
+  flex: none;
+  font-weight: var(--ds-peso-normal);
+  color: var(--ds-texto-suave);
+  white-space: nowrap;
+}
+
+.selector-vacio {
+  margin: var(--ds-espacio-0) 0 0;
+  padding: var(--ds-espacio-2);
+  color: var(--ds-texto-suave);
+  text-align: center;
+  overflow-wrap: anywhere;
+  background: var(--ds-superficie);
+  border: var(--ds-borde-ancho) dashed var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio-lg);
+}
+
+.chips {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr));
+  gap: var(--ds-espacio-1);
+  margin: 0;
+}
+
+.chip {
+  min-height: var(--ds-alto-control);
+  font-family: var(--ds-fuente-mono);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-acento-700);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-acento-100);
+  border-radius: var(--ds-radio);
+}
+
+.chip[aria-pressed='true'] {
+  color: var(--ds-acento-texto);
+  background: var(--ds-acento-500);
+  border-color: var(--ds-acento-500);
+}
+
+.vacio {
+  margin: 0;
+  padding: var(--ds-espacio-3) var(--ds-espacio-2);
+  text-align: center;
+  color: var(--ds-texto-suave);
+  border: 1px dashed var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio);
+}
+
+.resumen {
+  margin: 0;
+  padding: var(--ds-espacio-2);
+  background: var(--ds-superficie);
+  border-radius: var(--ds-radio);
+}
+
+.detalle-lista {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--ds-espacio-1) var(--ds-espacio-2);
+  margin: 0;
+}
+
+.detalle-lista dt {
+  color: var(--ds-texto-suave);
+}
+
+.detalle-lista dd {
+  margin: 0;
+  font-weight: var(--ds-peso-medio);
+}
+
+.comprobante {
+  padding: var(--ds-espacio-3) var(--ds-espacio-2);
+  text-align: center;
+  background: var(--ds-ok-fondo);
+  border-radius: var(--ds-radio-lg);
+}
+
+.comprobante .detalle-lista {
+  margin-top: var(--ds-espacio-2);
+  font-size: var(--ds-texto-sm);
+  text-align: left;
+}
+
+.numero-reserva {
+  display: inline-block;
+  margin: var(--ds-espacio-1) 0;
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  font-family: var(--ds-fuente-mono);
+  font-size: var(--ds-texto-xl);
+  font-weight: var(--ds-peso-fuerte);
+  letter-spacing: 0.12em;
+  background: var(--ds-fondo);
+  border: 2px dashed var(--ds-ok);
+  border-radius: var(--ds-radio);
+}
+
