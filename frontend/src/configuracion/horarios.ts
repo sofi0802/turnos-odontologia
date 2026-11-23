@@ -1,5 +1,5 @@
 import type { ClienteApi } from '../shared/api/cliente.ts';
-import { crearAviso, crearBoton, crearCampo, crearSelector } from '../shared/ui/campos.ts';
+import { crearAviso, crearBoton } from '../shared/ui/campos.ts';
 import { mensajeDeError } from '../shared/ui/mensajes.ts';
 import { montarProfesionalElegido } from './profesional-elegido.ts';
 import { botonChico, cargarEn, crearCabecera, crearSelectorHora, guardando, type ContextoSeccion } from './ui.ts';
@@ -155,34 +155,61 @@ function dibujarHorario(
     return;
   }
 
-  // Alta de franjas en la copia local.
+  // Alta de franjas en la copia local: una franja con el mismo horario por cada día marcado.
   const formulario = document.createElement('form');
-  formulario.className = 'agregar-franja';
+  formulario.className = 'agregar-franja-dias';
   formulario.noValidate = true;
   formulario.setAttribute('aria-label', 'Agregar franja');
-  const dia = crearCampo(
-    'Día',
-    crearSelector(
-      'dia',
-      DIAS.map((nombre, indice) => ({ valor: String(indice + 1), texto: nombre })),
-    ),
-  );
-  const desde = crearSelectorHora('desde', 'Desde', { valor: '09:00' });
-  const hasta = crearSelectorHora('hasta', 'Hasta', { valor: '12:00' });
+  const grupoDias = document.createElement('fieldset');
+  grupoDias.className = 'dias-semana';
+  const leyenda = document.createElement('legend');
+  leyenda.textContent = 'Días de la franja';
+  grupoDias.append(leyenda);
+  const casillas = DIAS.map((nombre, indice) => {
+    const etiqueta = document.createElement('label');
+    etiqueta.className = 'casilla';
+    const casilla = document.createElement('input');
+    casilla.type = 'checkbox';
+    casilla.name = 'dias';
+    casilla.value = String(indice + 1);
+    casilla.setAttribute('aria-label', nombre);
+    etiqueta.append(casilla, ` ${nombre.slice(0, 2)}`);
+    grupoDias.append(etiqueta);
+    return casilla;
+  });
+  const errorDias = document.createElement('p');
+  errorDias.className = 'campo-error';
+  errorDias.setAttribute('role', 'alert');
+  const desde = crearSelectorHora('desde', 'Desde', { valor: '09:00', ariaHora: 'Hora de inicio', ariaMinutos: 'Minutos del inicio' });
+  const hasta = crearSelectorHora('hasta', 'Hasta', { valor: '12:00', ariaHora: 'Hora de fin', ariaMinutos: 'Minutos del fin' });
+  const horas = document.createElement('div');
+  horas.className = 'horas';
+  horas.append(desde.contenedor, hasta.contenedor);
+  const ayudaHoras = document.createElement('span');
+  ayudaHoras.className = 'ayuda';
+  ayudaHoras.textContent = 'Los minutos avanzan de 5 en 5. La franja se agrega a todos los días marcados.';
   const agregar = crearBoton('Agregar franja', 'submit');
   agregar.className = 'btn';
-  formulario.append(dia.contenedor, desde.contenedor, hasta.contenedor, agregar);
+  const cajaAgregar = document.createElement('div');
+  cajaAgregar.append(agregar);
+  formulario.append(grupoDias, errorDias, horas, ayudaHoras, cajaAgregar);
   formulario.addEventListener('submit', (evento) => {
     evento.preventDefault();
+    errorDias.textContent = '';
     desde.mostrarError('');
     hasta.mostrarError('');
+    const elegidos = casillas.filter((c) => c.checked).map((c) => Number(c.value));
+    if (elegidos.length === 0) {
+      errorDias.textContent = 'Elegí al menos un día.';
+      return;
+    }
     const inicio = desde.valor();
     const fin = hasta.valor();
     if (inicio >= fin) {
       hasta.mostrarError('"Hasta" tiene que ser posterior a "Desde".');
       return;
     }
-    local = ordenar([...local, { dia: Number(dia.control.value), desde: inicio, hasta: fin, nueva: true }]);
+    local = ordenar([...local, ...elegidos.map((d) => ({ dia: d, desde: inicio, hasta: fin, nueva: true }))]);
     limpiarAvisos();
     pintarLista();
   });

@@ -99,7 +99,7 @@ Antes de empezar, `./gradlew test` y `./gradlew integrationTest` pasan. Los test
 - [x] 11.1 `crearSelectorHora` en `src/configuracion/ui.ts` (D13), usado en horarios, ausencias, bloqueos y reasignación; el margen con `step="5"`.
   - Escribir "Los minutos avanzan de 5 en 5" y "Minutos del inicio de una ausencia".
   - Adaptar a la hora en dos selectores los tests existentes que completan horas.
-- [ ] 11.2 "Agregar franja" con casillas de días. Escribir "Una franja para varios días" y "Agregar franja sin días".
+- [x] 11.2 "Agregar franja" con casillas de días. Escribir "Una franja para varios días" y "Agregar franja sin días".
 - [ ] 11.3 Sillones ocupados en el detalle y el espaciado de D11.
   - Sumar `SILLON_HABITUAL_OCUPADO` y el nuevo texto de `TURNO_NO_AFECTADO` a `mensajes.ts`, con su test.
   - Escribir "El sillón de otro profesional no se puede elegir" y "El sillón lo tomó otro profesional mientras tanto".
