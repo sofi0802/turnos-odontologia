@@ -495,7 +495,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 > C-40 es un change nuevo por pedir comportamiento nuevo en "Nuevo turno" de la agenda del personal. Puede ir en paralelo con C-37 y C-38, que tocan otras pantallas, pero su PR se mergea antes de la etapa D de C-39 (pantallas del personal).
 
 ### [C-33] `frontend-reprogramacion-agenda`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` mergeado (PR #55, 2026-11-23); falta archivarlo (`openspec archive frontend-reprogramacion-agenda`)
 - **Responsable**: Juan Cruz
 - **Scope**:
   - En "Reprogramar turno" de la agenda del personal, ofrecer solo los profesionales habilitados para la prestación del turno (RN-AG-15), con `GET /public/profesionales?prestacionId=`. Hoy se ofrecen todos.
@@ -586,7 +586,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/README.md` y `design-system/brand.md`
 
 ### [C-38] `frontend-reserva-explorador-prestaciones`
-- **Estado**: `[ ]` propuesta lista (proposal, specs, design y tasks en `openspec/changes/frontend-reserva-explorador-prestaciones/`, 2026-11-23); implementado y verificado en la rama `change/C-38-frontend-reserva-explorador-prestaciones` (2026-11-23; 447 tests, mockups aprobados); falta el PR y el merge
+- **Estado**: `[x]` mergeado (PR #72, 2026-11-23; 447 tests, mockups aprobados); falta archivarlo
 - **Responsable**: Juan Cruz (avisa a Enzo)
 - **Scope**:
   - En el paso 1 de `#/reserva`, reemplazar la lista con todas las prestaciones por un **explorador**: un selector desplegable con buscador (combobox accesible, con teclado) que muestra solo las coincidencias, con el nombre y la duración de cada prestación.
@@ -603,7 +603,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/components.html` (secciones "Reserva online" y "Formularios y avisos")
 
 ### [C-39] `frontend-uniformidad-visual`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[ ]` propuesta lista (proposal, specs, design y tasks en `openspec/changes/frontend-uniformidad-visual/`, 2026-11-23); se hace en cuatro etapas (A tokens y CSS modular, B barra lateral y componentes, C pantallas del paciente, D pantallas del personal), cada una con su PR; la etapa A no lleva mockups
 - **Responsable**: Juan Cruz (avisa a Enzo)
 - **Scope**:
   - **Barra lateral desplegable** con los botones del menú ("Reservar turno", "Mis turnos", "Agenda", "Configuración"), que muestra solo las opciones del rol que ingresó. En el celular es un cajón con un botón de menú. Sin sesión se mantiene un encabezado simple con "Acceso personal" arriba a la derecha.
@@ -622,7 +622,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `openspec/specs/frontend-navegacion/` y los specs `frontend-*` de cada pantalla
 
 ### [C-40] `frontend-nuevo-turno-guiado`
-- **Estado**: `[x]` completo (2026-11-23, PR pendiente; propuesta y mockups aprobados en el PR #65). Change `openspec/changes/frontend-nuevo-turno-guiado/` (delta de `frontend-agenda-personal`). Evidencia: 381 tests y verificación contra el backend de desarrollo en `mockups/verify/`. Sin migración ni cambios de backend
+- **Estado**: `[x]` mergeado (2026-11-23, PR #69; propuesta y mockups aprobados en el PR #65). Change `openspec/changes/frontend-nuevo-turno-guiado/` (delta de `frontend-agenda-personal`). Evidencia: 381 tests y verificación contra el backend de desarrollo en `mockups/verify/`. Sin migración ni cambios de backend
 - **Responsable**: Enzo
 - **Scope**:
   - Rehacer "Nuevo turno" de la agenda del personal (`ADMIN`, `RECEPCIONISTA` y `ODONTOLOGO`) como un formulario guiado, donde cada paso se habilita cuando el anterior tiene un valor: **prestación → profesional → fecha → horario**, y el **sillón** del profesional se muestra sin poder cambiarlo. El paciente se sigue eligiendo con el buscador de C-36.
