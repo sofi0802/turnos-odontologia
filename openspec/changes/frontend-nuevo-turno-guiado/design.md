@@ -77,6 +77,6 @@ Solo frontend. Se despliega con el build de Vite; se revierte con el PR.
 - Design system revision: 1 (`design-system/README.md`).
 - Decision: yes, 2026-11-23 (cambio visual en modo `system-and-mockups`).
 - Mockups: `openspec/changes/frontend-nuevo-turno-guiado/mockups/`.
-- Approval: pending.
+- Approval: approved (2026-11-23, by Sofia Indovino, la líder; PR #65).
 - Preview: rendered (2026-11-23): `mockups/previews/` a 390 × 844 y 1440 × 900, sin desplazamiento horizontal ni errores de consola. En la computadora el calendario y los horarios van lado a lado (diálogo de hasta 52 rem); en el celular se apilan y los días miden 46 × 44 px.
-- Visual verify: pending.
+- Visual verify: passed (2026-11-23): contra el backend de desarrollo, con diferencias menores anotadas en `mockups/verify/README.md` (una corregida).

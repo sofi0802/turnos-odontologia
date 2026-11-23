@@ -2,7 +2,18 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { crearBuscadorPacientes, type BuscadorPacientes } from '../src/agenda/buscador-pacientes.ts';
 import type { ClienteApi } from '../src/shared/api/cliente.ts';
 import { ErrorGenerico, ErrorSesion } from '../src/shared/api/errores.ts';
-import { abrirApp, boton, campo, errorDeCampo, escribir, json, ServidorFalso, texto, type AppDePrueba } from './apoyo.ts';
+import {
+  abrirApp,
+  boton,
+  campo,
+  errorDeCampo,
+  escribir,
+  json,
+  responderPasosDelNuevoTurno,
+  ServidorFalso,
+  texto,
+  type AppDePrueba,
+} from './apoyo.ts';
 
 // Datos ficticios, iguales al seed de la KB.
 const UNO = { id: 1, nombre: 'Paciente', apellido: 'Uno', dni: '99000001' };
@@ -324,7 +335,11 @@ describe('Falla de la búsqueda', () => {
 
   it('Error del servidor', async () => {
     servidor.responder('GET /pacientes', () => json(500));
+    responderPasosDelNuevoTurno(servidor);
     const dialogo = await abrirNuevoTurnoConSesion();
+    // Desde C-40 el profesional se habilita al elegir la prestación.
+    escribir(campo<HTMLSelectElement>(dialogo, 'Prestación'), '1');
+    await vi.waitFor(() => expect(campo<HTMLSelectElement>(dialogo, 'Profesional').disabled).toBe(false));
     escribir(campo<HTMLSelectElement>(dialogo, 'Profesional'), '1');
 
     escribir(campo(dialogo, 'Paciente'), 'fict');

@@ -4,10 +4,13 @@ import {
   abrirApp,
   boton,
   campo,
+  completarPasosDelNuevoTurno,
   elegirPaciente,
   errorDeCampo,
   escribir,
+  horarioElegido,
   json,
+  responderPasosDelNuevoTurno,
   ServidorFalso,
   texto,
   turno,
@@ -43,16 +46,13 @@ async function abrirAgenda(): Promise<void> {
   await vi.waitFor(() => expect(campo<HTMLSelectElement>(raiz(), 'Profesional').options.length).toBeGreaterThan(1));
 }
 
-async function abrirNuevoTurnoCompleto(): Promise<void> {
+/** Abre "Nuevo turno" y recorre sus pasos guiados (C-40) hasta el horario `hora` del 2026-12-01. */
+async function abrirNuevoTurnoCompleto(hora = '10:00'): Promise<void> {
   await abrirAgenda();
   boton(raiz(), 'Nuevo turno').click();
   const formulario = dialogo();
   await elegirPaciente(formulario, '99000001', 'Uno, Paciente · DNI 99000001');
-  escribir(campo<HTMLSelectElement>(formulario, 'Profesional'), '1');
-  escribir(campo<HTMLSelectElement>(formulario, 'Sillón'), '1');
-  escribir(campo<HTMLSelectElement>(formulario, 'Prestación'), '1');
-  escribir(campo(formulario, 'Fecha'), '2026-12-01');
-  escribir(campo(formulario, 'Hora'), '10:00');
+  await completarPasosDelNuevoTurno(formulario, { hora });
 }
 
 async function enviarConRechazo(estado: number, cuerpo: unknown): Promise<void> {
@@ -60,18 +60,23 @@ async function enviarConRechazo(estado: number, cuerpo: unknown): Promise<void> 
   await abrirNuevoTurnoCompleto();
   boton(dialogo(), 'Crear turno').click();
   await vi.waitFor(() => expect(servidor.a('POST', '/turnos')).toHaveLength(1));
-  await vi.waitFor(() => expect(dialogo().querySelector('[role="alert"]')?.textContent ?? '').not.toBe(''));
+  await vi.waitFor(() => expect(alertaDelFormulario().trim()).not.toBe(''));
 }
 
 function alertaDelFormulario(): string {
   return [...dialogo().querySelectorAll('[role="alert"]')].map((a) => a.textContent).join(' ');
 }
 
+/** Pedidos de la agenda (sin el de los turnos del sillón habitual que hace el nuevo turno de C-40). */
+function consultasDeLaAgenda(): ReturnType<ServidorFalso['a']> {
+  return servidor.a('GET', '/turnos').filter((p) => !p.query.has('sillonId'));
+}
+
 beforeEach(() => {
   vi.useFakeTimers({ toFake: ['Date'] });
   vi.setSystemTime(new Date('2026-12-01T11:00:00Z'));
   servidor = new ServidorFalso();
-  servidor.responder('GET /turnos', () => json(200, [turno()]));
+  responderPasosDelNuevoTurno(servidor, { agenda: [turno()] });
   document.cookie = 'XSRF-TOKEN=token-ficticio-123; path=/';
 });
 
@@ -103,8 +108,8 @@ describe('Crear un turno', () => {
       inicio: '2026-12-01T10:00:00-03:00',
     });
     expect(hayDialogo()).toBe(false);
-    await vi.waitFor(() => expect(servidor.a('GET', '/turnos')).toHaveLength(2));
-    expect(Object.fromEntries(servidor.ultimo('GET', '/turnos').query)).toEqual({
+    await vi.waitFor(() => expect(consultasDeLaAgenda()).toHaveLength(2));
+    expect(Object.fromEntries(consultasDeLaAgenda()[1]?.query ?? [])).toEqual({
       desde: '2026-12-01T00:00:00-03:00',
       hasta: '2026-12-02T00:00:00-03:00',
     });
@@ -114,13 +119,15 @@ describe('Crear un turno', () => {
     await abrirAgenda();
     boton(raiz(), 'Nuevo turno').click();
     await elegirPaciente(dialogo(), '99000001', 'Uno, Paciente · DNI 99000001');
-    escribir(campo<HTMLSelectElement>(dialogo(), 'Profesional'), '1');
     escribir(campo<HTMLSelectElement>(dialogo(), 'Prestación'), '1');
-    escribir(campo(dialogo(), 'Hora'), '10:00');
+    await vi.waitFor(() => expect(campo<HTMLSelectElement>(dialogo(), 'Profesional').disabled).toBe(false));
+    escribir(campo<HTMLSelectElement>(dialogo(), 'Profesional'), '1');
+    dialogo().querySelector<HTMLButtonElement>('.cal-dia[data-fecha="2026-12-01"]')?.click();
+    await vi.waitFor(() => expect(dialogo().querySelectorAll('.chips button').length).toBeGreaterThan(0));
 
     boton(dialogo(), 'Crear turno').click();
 
-    expect(errorDeCampo(dialogo(), 'Sillón')).toBe('Elegí un sillón.');
+    expect(texto(dialogo().querySelector('fieldset .campo-error') ?? dialogo())).toBe('Elegí un horario.');
     expect(errorDeCampo(dialogo(), 'Profesional')).toBe('');
     expect(servidor.a('POST', '/turnos')).toHaveLength(0);
   });
@@ -148,20 +155,23 @@ describe('Crear un turno', () => {
     expect(campo(dialogo(), 'Paciente')).toBe(primero);
   });
 
-  it('el formulario solo ofrece profesionales activos y propone el día mostrado', async () => {
-    servidor.responder('GET /profesionales', () =>
+  // C-40 reemplazó "solo profesionales activos y el día mostrado": los profesionales salen de los
+  // habilitados para la prestación y la fecha, del calendario desde hoy (spec frontend-agenda-personal).
+  it('el formulario solo ofrece prestaciones activas y el calendario empieza en el mes de hoy', async () => {
+    servidor.responder('GET /prestaciones', () =>
       json(200, [
-        { id: 1, nombre: 'Ana', apellido: 'Ejemplo', activo: true },
-        { id: 3, nombre: 'Carla', apellido: 'Inactiva', activo: false },
+        { id: 1, nombre: 'Consulta', duracionMinutos: 30, activo: true },
+        { id: 3, nombre: 'Prestación Inactiva', duracionMinutos: 30, activo: false },
       ]),
     );
     await abrirAgenda();
+    boton(raiz(), 'Siguiente').click();
 
     boton(raiz(), 'Nuevo turno').click();
 
-    const opciones = [...campo<HTMLSelectElement>(dialogo(), 'Profesional').options].map((o) => o.textContent);
-    expect(opciones).toEqual(['Elegí un profesional', 'Ana Ejemplo']);
-    expect(campo(dialogo(), 'Fecha').value).toBe('2026-12-01');
+    const opciones = [...campo<HTMLSelectElement>(dialogo(), 'Prestación').options].map((o) => o.textContent);
+    expect(opciones).toEqual(['Elegí una prestación', 'Consulta']);
+    expect(texto(dialogo().querySelector('.cal-mes') ?? dialogo())).toBe('diciembre de 2026');
   });
 });
 
@@ -170,7 +180,7 @@ describe('Mensajes por código de rechazo', () => {
     await enviarConRechazo(409, { status: 409, detail: 'x', codigo: 'SOLAPAMIENTO_PROFESIONAL' });
     expect(alertaDelFormulario()).toContain('El profesional ya tiene un turno en ese horario.');
     expect(texto(dialogo())).toContain('Uno, Paciente · DNI 99000001');
-    expect(campo(dialogo(), 'Hora').value).toBe('10:00');
+    expect(horarioElegido(dialogo())).toBe('10:00');
   });
 
   it('Margen insuficiente', async () => {
@@ -195,13 +205,12 @@ describe('Mensajes por código de rechazo', () => {
 
   it('Fuera del horario del profesional', async () => {
     servidor.responder('POST /turnos', () => json(409, { status: 409, codigo: 'FUERA_DE_HORARIO' }));
-    await abrirNuevoTurnoCompleto();
-    escribir(campo(dialogo(), 'Hora'), '15:00');
+    await abrirNuevoTurnoCompleto('15:00');
 
     boton(dialogo(), 'Crear turno').click();
 
     await vi.waitFor(() => expect(alertaDelFormulario()).toContain('El profesional no atiende en ese horario.'));
-    expect(campo(dialogo(), 'Hora').value).toBe('15:00');
+    expect(horarioElegido(dialogo())).toBe('15:00');
     expect(campo<HTMLSelectElement>(dialogo(), 'Profesional').value).toBe('1');
   });
 

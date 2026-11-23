@@ -292,3 +292,53 @@ describe('Portada usable en el celular (C-37)', () => {
     expect(portada).not.toMatch(/var\(--(?!ds-)/);
   });
 });
+
+describe('Nuevo turno guiado en el celular y en la computadora (C-40)', () => {
+  const MARCA = '/* Nuevo turno guiado (C-40)';
+
+  function seccion(): string {
+    const inicio = estilos.indexOf(MARCA);
+    const fin = estilos.indexOf('/* Fin del nuevo turno guiado (C-40) */');
+    return inicio === -1 || fin === -1 ? '' : estilos.slice(inicio, fin);
+  }
+
+  function celular(): string {
+    const css = seccion();
+    const media = css.indexOf('@media');
+    return media === -1 ? css : css.slice(0, media);
+  }
+
+  function escritorio(): string {
+    const css = seccion();
+    const media = css.indexOf('@media (min-width: 768px)');
+    return media === -1 ? '' : css.slice(media);
+  }
+
+  it('Calendario en el celular', () => {
+    // Siete columnas que se reparten el ancho, sin anchos fijos: entran desde 320 px.
+    expect(regla(celular(), '.cal-dias')).toMatch(/grid-template-columns:\s*repeat\(7, minmax\(0, 1fr\)\)/);
+    expect(regla(celular(), '.cal-dia')).toMatch(/min-height:\s*var\(--ds-alto-control\)/);
+    expect(regla(celular(), '.cal-dia')).toMatch(/min-width:\s*0/);
+    // El día elegido no se distingue solo por el color, y los pasados se tachan.
+    expect(regla(celular(), ".cal-dia[aria-pressed='true']")).toMatch(/font-weight:/);
+    expect(regla(celular(), '.cal-dia:disabled')).toMatch(/text-decoration:\s*line-through/);
+    expect(regla(celular(), '.cal-dia.otro-mes')).toMatch(/visibility:\s*hidden/);
+    expect(regla(celular(), '.cal-nav')).toMatch(/min-height:\s*var\(--ds-alto-control\)/);
+    const anchosFijos = [...seccion().matchAll(/(?<!-)width:\s*(\d+)px/g)].map((m) => Number(m[1]));
+    expect(anchosFijos.filter((ancho) => ancho > 320)).toEqual([]);
+  });
+
+  it('Nuevo turno en la computadora', () => {
+    // El diálogo se ensancha y pone el calendario y los horarios lado a lado (mockups aprobados).
+    expect(regla(escritorio(), '.dialogo.dialogo-ancho')).toMatch(/max-width:\s*52rem/);
+    expect(regla(escritorio(), '.fecha-y-horario')).toMatch(/grid-template-columns:/);
+    expect(regla(escritorio(), '.dos-columnas')).toMatch(/grid-template-columns:\s*1fr 1fr/);
+  });
+
+  it('los estilos del nuevo turno usan solo variables del sistema de diseño', () => {
+    expect(seccion().length).toBeGreaterThan(0);
+    expect(seccion()).not.toMatch(/#[0-9a-fA-F]{3,8}\b/);
+    expect(seccion()).not.toMatch(/rgba?\(/);
+    expect(seccion()).toMatch(/var\(--ds-/);
+  });
+});

@@ -5,6 +5,8 @@ export interface ItemCatalogo {
   readonly id: number;
   readonly nombre: string;
   readonly activo: boolean;
+  /** Solo en profesionales: su sillón habitual (C-40 lo muestra y lo envía al crear un turno). */
+  readonly sillonHabitualId: number | null;
 }
 
 export interface Catalogos {
@@ -36,7 +38,13 @@ function leerItem(tipo: TipoCatalogo, elemento: unknown): ItemCatalogo | null {
     return null;
   }
   const visible = tipo === 'profesionales' && typeof apellido === 'string' ? `${nombre} ${apellido}` : nombre;
-  return { id, nombre: visible, activo: Reflect.get(elemento, 'activo') !== false };
+  const sillon: unknown = tipo === 'profesionales' ? Reflect.get(elemento, 'sillonHabitualId') : null;
+  return {
+    id,
+    nombre: visible,
+    activo: Reflect.get(elemento, 'activo') !== false,
+    sillonHabitualId: typeof sillon === 'number' ? sillon : null,
+  };
 }
 
 async function cargar(api: ClienteApi, tipo: TipoCatalogo): Promise<ItemCatalogo[]> {

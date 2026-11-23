@@ -1,7 +1,7 @@
 # Mockups de C-40 `frontend-nuevo-turno-guiado`
 
 - Design system revision: 1 (`design-system/README.md`, aprobado el 2026-11-22)
-- Approval: pending (los aprueba la líder antes del apply)
+- Approval: approved (2026-11-23, by Sofia Indovino, la líder; PR #65)
 - Preview: rendered (2026-11-23), capturas en `previews/` a 390 × 844 y 1440 × 900. Ninguna pantalla tiene desplazamiento horizontal ni errores en la consola. Los días del calendario miden 46 × 44 px en el celular.
 
 Una vez aprobados, son el criterio de aceptación visual de las tareas de `tasks.md`.
