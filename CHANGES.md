@@ -36,11 +36,14 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `backend/.../notificaciones/` | Juan Cruz | V7 |
 | `backend/.../clinica/` | Emanuel | V8 |
 | `frontend/` | Enzo | — |
-| **Ajustes del MVP (C-33 a C-36)** | | |
+| **Ajustes del MVP (C-33 a C-39)** | | |
 | `frontend/` agenda: reprogramación (C-33) | Juan Cruz (avisa a Enzo) | — |
 | `frontend/` página Configuración (C-34) | Emanuel (avisa a Enzo) | — |
 | `backend/.../agenda/api` y `frontend/` agenda propia del odontólogo (C-35) | Sofia (avisa a Juan Sebastián y a Enzo) | — |
 | `backend/.../usuarios/` búsqueda de pacientes y `frontend/` buscador (C-36) | Juan Sebastián (avisa a Enzo) | V20 |
+| `frontend/` portada y acceso (C-37) | Juan Cruz (avisa a Enzo) | — |
+| `frontend/` explorador de prestaciones en la reserva (C-38) | Juan Cruz (avisa a Enzo) | — |
+| `frontend/` barra lateral, colores y estilo uniforme (C-39) | Juan Cruz (avisa a Enzo) | — |
 | **Post-MVP** | | |
 | `backend/.../agenda/` lista de espera, `configuracion/` política de cancelación | Sofia (C-16 avisa a Emanuel) | V9, V10 |
 | `backend/.../notificaciones/` consentimiento | Juan Cruz | V11 |
@@ -74,6 +77,11 @@ C-01 crear-turno-sin-solapamientos  [Sofia · OPSX]      ← tarea 1 = scaffoldi
   │     C-04 + C-07 + C-09 ── C-34 frontend-configuracion-consultorio [Emanuel]
   │     C-05 + C-06 + C-09 ── C-35 agenda-propia-odontologo [Sofia]   ← antes: cambio de regla en la KB
   │     C-05 + C-09 ──────── C-36 buscador-pacientes [Juan Sebastián]
+  │
+  │  Ajustes del MVP, revisión de la aplicación del 2026-11-23 (en orden: los tres tocan el mismo frontend/)
+  │     C-12 + ingreso-unico-mi-cuenta ── C-37 frontend-portada-y-acceso [Juan Cruz]
+  │     C-12 + C-37 ──────── C-38 frontend-reserva-explorador-prestaciones [Juan Cruz]
+  │     C-33 a C-38 ──────── C-39 frontend-uniformidad-visual [Juan Cruz]
   │
 C-02 frontend-base-ts  [Enzo]                            ← independiente: carpeta frontend/
   │
@@ -146,7 +154,13 @@ GATE 5b: C-09 archivado ✓ y C-12 ✓ (2026-11-23)                ← FORK (los
   → C-36 buscador-pacientes                  [Agente B · Juan Sebastián]
   (C-33, C-35 y C-36 tocan la agenda del personal en frontend/: coordinar el orden de los PR para evitar conflictos)
 
-GATE 6: changes de la entrega ✓ (incluye C-33 a C-36)
+GATE 5c: C-12 archivado ✓ e `ingreso-unico-mi-cuenta` (fix de C-12, Emanuel) mergeado        ← SECUENCIA
+  → C-37 frontend-portada-y-acceso           [Agente C · Juan Cruz]
+  → C-38 frontend-reserva-explorador-prestaciones  [Agente C · Juan Cruz — después de C-37]
+  → C-39 frontend-uniformidad-visual         [Agente C · Juan Cruz — después de C-37 y C-38, con C-33 a C-36 ya mergeados]
+  (los tres tocan frontend/ y styles.css: un PR por vez, en este orden)
+
+GATE 6: changes de la entrega ✓ (incluye C-33 a C-39)
   → C-14 entrega-readme-y-evidencia          [Agente A · Sofia]
 
 ──────────── POST-MVP ────────────
@@ -193,7 +207,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 | Bloque | Changes | Origen |
 |---|---|---|
 | **MVP v1.0** (fases 1 a 6) | C-01 a C-14 | Sección D.3 del informe, lista "imprescindible" |
-| **Ajustes del MVP** (fase 5b) | C-33 a C-36 | Prueba de la aplicación del 2026-11-23 |
+| **Ajustes del MVP** (fase 5b) | C-33 a C-39 | Prueba y revisión de la aplicación del 2026-11-23 |
 | **Post-MVP v1.x** (fase 7) | C-15 a C-17 | Sección D.3, lista "diferenciador" |
 | **Post-MVP: etapas posteriores** (fases 8 a 10) | C-18 a C-32 | Sección D.3, lista "etapas posteriores" |
 
@@ -225,7 +239,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 | Integrante | MVP | Post-MVP (sugerido, por afinidad con su módulo) |
 |---|---|---|
 | **Sofia Indovino** (líder) | **C-01** (OPSX), C-06, C-35, C-14 + revisión de todos los PR | C-15, C-16, C-29 |
-| **Juan Cruz** | C-03, C-08, C-11, C-33 | C-17, C-30, C-31 |
+| **Juan Cruz** | C-03, C-08, C-11, C-33, C-37, C-38, C-39 | C-17, C-30, C-31 |
 | **Emanuel** | C-04, C-07, C-13, C-12, C-34 | C-25, C-26, C-27, C-28 |
 | **Juan Sebastián** | C-05, C-10, C-36 | C-18, C-19, C-20, C-21 |
 | **Enzo** | C-02, C-09 | C-22, C-23, C-24, C-32 (backend y pantallas de administración) |
@@ -469,6 +483,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 
 > Surgen de la prueba de la aplicación del 2026-11-23. Son parte del MVP: se hacen antes de C-14. El punto "sin sesión no aparece Mis turnos" quedó dentro de C-12, que todavía estaba abierto.
 > Los changes que tocan `frontend/` avisan en el PR a su dueño, y los de la agenda del personal (C-33, C-35 y C-36) arrancan después del archive de C-09, porque modifican sus specs.
+> C-37, C-38 y C-39 salen de la revisión de la aplicación del 2026-11-23. Van **en ese orden y de a un PR por vez**, porque los tres modifican el encabezado, las rutas y `styles.css`. Las observaciones de otras pantallas que lleguen después se suman como una etapa de C-39, o como un change nuevo si piden comportamiento nuevo. Los tres usan el modo `system-and-mockups` del design system: los mockups se aprueban antes del apply.
 
 ### [C-33] `frontend-reprogramacion-agenda`
 - **Estado**: `[ ]` pendiente
@@ -534,6 +549,60 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/05_reglas_de_negocio.md` §Dominio: Excepciones globales
   - `knowledge-base/06_funcionalidades.md` §US-010
 
+### [C-37] `frontend-portada-y-acceso`
+- **Estado**: `[ ]` pendiente
+- **Responsable**: Juan Cruz (avisa a Enzo, dueño de `frontend/`)
+- **Scope**:
+  - **Portada pública** en la página inicial (`#/`): pantalla descriptiva del consultorio y de la aplicación (qué hace y cómo se usa en tres pasos), atractiva, con ilustraciones SVG propias (sin recursos remotos ni fotos de personas). Dos botones principales: "Reservar turno" (`#/reserva`, sin registrarse antes) e "Ingresar a mi cuenta" (`#/mi-cuenta`). Arriba a la derecha, el botón "Acceso personal" para empleados (`#/mi-cuenta`).
+  - **Un solo lugar para iniciar sesión**: `#/mi-cuenta`, para pacientes y personal, y crear cuenta solo para pacientes. Lo resuelve `ingreso-unico-mi-cuenta` (fix de C-12, Emanuel, todavía sin mergear): C-37 lo da por hecho y no rehace el login.
+  - **Después de ingresar**, redirigir según el rol: PACIENTE a `#/mis-turnos`; ADMIN, RECEPCIONISTA y ODONTOLOGO a `#/agenda`. Con una sesión activa, la portada ofrece ir a su espacio en lugar de pedir ingresar.
+  - **Decisión pendiente de la líder, antes del propose**: se pidió que la portada sea `#/ingreso`, pero `ingreso-unico-mi-cuenta` elimina esa dirección y la redirige a `#/mi-cuenta`. Recomendado: portada en `#/`, y `#/ingreso` sigue redirigiendo a `#/mi-cuenta` para no romper marcadores.
+  - Modifica los specs `frontend-navegacion`, `frontend-sesion-personal` y `frontend-cuenta-paciente`. Modo `system-and-mockups`: mockups de la portada y de Mi cuenta aprobados antes del apply.
+  - Tests: portada sin sesión con sus tres botones, "Acceso personal" va a `#/mi-cuenta`, redirección por rol, portada con sesión activa, los enlaces viejos y los de los avisos siguen funcionando; los tests de C-09 y C-12 siguen pasando.
+- **Dependencias**: `C-09, C-12` y `ingreso-unico-mi-cuenta` mergeado
+- **Governance**: MEDIO (flujo de acceso y de sesión, solo en el frontend)
+- **Leer antes**:
+  - `knowledge-base/03_actores_y_roles.md` §RBAC
+  - `knowledge-base/06_funcionalidades.md` §US-020
+  - `openspec/specs/frontend-navegacion/`, `openspec/specs/frontend-sesion-personal/` y `openspec/specs/frontend-cuenta-paciente/`
+  - `design-system/README.md` y `design-system/brand.md`
+
+### [C-38] `frontend-reserva-explorador-prestaciones`
+- **Estado**: `[ ]` pendiente
+- **Responsable**: Juan Cruz (avisa a Enzo)
+- **Scope**:
+  - En el paso 1 de `#/reserva`, reemplazar la lista con todas las prestaciones por un **explorador**: un selector desplegable con buscador (combobox accesible, con teclado) que muestra solo las coincidencias, con el nombre y la duración de cada prestación.
+  - Al elegir una prestación se sigue con el flujo actual. No cambian los pasos 2 y 3 ni lo que se envía a la API.
+  - Sin categorías de prestaciones: necesitarían un cambio en el backend y quedan fuera.
+  - **Decisión pendiente de la líder, antes del propose**: confirmar el formato del explorador (recomendado: selector con buscador; alternativa: lista con panel de detalle).
+  - Modifica el spec `frontend-reserva-paciente`. Modo `system-and-mockups`.
+  - Tests: buscar por parte del nombre, sin coincidencias, elegir con el teclado y con el toque, el celular; los de C-12 siguen pasando.
+- **Dependencias**: `C-12, C-37`
+- **Governance**: BAJO (presentación)
+- **Leer antes**:
+  - `knowledge-base/06_funcionalidades.md` §US-020
+  - `openspec/specs/frontend-reserva-paciente/`
+  - `design-system/components.html` (secciones "Reserva online" y "Formularios y avisos")
+
+### [C-39] `frontend-uniformidad-visual`
+- **Estado**: `[ ]` pendiente
+- **Responsable**: Juan Cruz (avisa a Enzo)
+- **Scope**:
+  - **Barra lateral desplegable** con los botones del menú ("Reservar turno", "Mis turnos", "Agenda", "Configuración"), que muestra solo las opciones del rol que ingresó. En el celular es un cajón con un botón de menú. Sin sesión se mantiene un encabezado simple con "Acceso personal" arriba a la derecha.
+  - **Color**: el margen superior (encabezado) y el inferior (pie, con su texto si lo tiene) pasan al azul de los botones, con texto blanco y contraste suficiente (AA).
+  - **Hover y foco** en todos los botones según su estilo (principal, secundario, peligro, fantasma, botones de horario y opciones), con transiciones suaves y respeto de `prefers-reduced-motion`.
+  - **Más bonito y uniforme**: aire entre elementos, tarjetas con sombra suave, bordes redondeados consistentes, jerarquía tipográfica clara, íconos SVG propios, estados vacíos y de carga con ilustración, y los mismos botones, campos, avisos y diálogos en todas las pantallas (por ejemplo, el orden de los botones y el lugar del aviso en los diálogos).
+  - **Base técnica**: dejar solo `--ds-*` (eliminar los alias `--color-*`, `--espacio-*` y `--radio`) y partir `styles.css` en módulos, sin cambiar el comportamiento.
+  - Por etapas, cada una con mockups aprobados y capturas de antes y después a 390 y 1440 px: (A) tokens y CSS modular, (B) barra lateral y componentes comunes, (C) pantallas del paciente, (D) pantallas del personal. Si hace falta, design system revisión 2.
+  - Las observaciones de otras pantallas (de la revisión del equipo) se suman como etapa.
+  - Fuera de alcance: funcionalidades nuevas, backend, logo y nombre definitivos (TBD), modo oscuro y librerías de UI o de íconos.
+  - Tests: los existentes siguen pasando, y se agregan los de la barra lateral por rol, los estados hover y foco, y las reglas de CSS.
+- **Dependencias**: `C-33, C-34, C-35, C-36, C-37, C-38`
+- **Governance**: BAJO (presentación), pero toca todas las pantallas: se hace por etapas
+- **Leer antes**:
+  - `design-system/README.md`, `design-system/brand.md` y `design-system/components.html`
+  - `openspec/specs/frontend-navegacion/` y los specs `frontend-*` de cada pantalla
+
 ---
 
 ## FASE 6: Entrega
@@ -545,7 +614,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `README.md` reproducible: requisitos (Java 21, opcional Docker o PostgreSQL), cómo correr `./gradlew test` (tests de dominio sin base) y los tests de integración.
   - Verificación final: suite en verde, ningún secreto en el repo, `.env.example` completo.
   - Evidencias: informe de Discovery en PDF, estado del orquestador, consulta a Engram para el video.
-- **Dependencias**: `C-01` (mínimo); los demás changes que se hayan completado, incluidos los ajustes C-33 a C-36
+- **Dependencias**: `C-01` (mínimo); los demás changes que se hayan completado, incluidos los ajustes C-33 a C-39
 - **Governance**: BAJO
 - **Leer antes**:
   - `knowledge-base/README.md`
