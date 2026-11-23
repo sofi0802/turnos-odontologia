@@ -227,3 +227,13 @@ Textos fijos nuevos: "Elegí al menos un día.", "Avisale a la recepción para r
 - **Revisión 2 de los mockups (segunda prueba, 2026-11-23):** Approval: approved (2026-11-23, by Emanuel), con el ajuste 2b. Se actualizan `profesionales.html`, `profesional-formulario.html`, `horarios.html`, `ausencias.html`, `bloqueos-odontologo.html` y `reasignar.html`, y se agrega `bloqueos.html` (vista de recepción y de "Todos los profesionales"). El apply de las tareas de frontend espera la aprobación de Emanuel.
 - Preview: rendered (2026-11-23). Las capturas están en `mockups/previews/`, a 390 × 844 y 1440 × 900, sin desplazamiento horizontal ni errores en la consola.
 - Visual verify: differences (2026-11-23). Solo hay diferencias minor (el encabezado de C-09, los botones de los diálogos y el tono del recuadro de turnos afectados cuando no hay ninguno); no hay blockers ni majors. Detalle y capturas en `mockups/verify/README.md`.
+- Visual verify (revisión 2): passed (2026-11-23). Se hizo en el navegador de la app con el backend y el frontend de esta rama (`bootRun` y `npm run dev`), como `admin`, `recepcion` y `ana.ejemplo`, a 1440 × 900 y 390 × 844. Se comprobó:
+  - las tarjetas de sillón con "Ocupado · …" y el `409 SILLON_HABITUAL_OCUPADO` real;
+  - el alta con prestaciones y el sillón "(de …)" deshabilitado;
+  - las franjas para varios días y "Elegí al menos un día.";
+  - los minutos de 5 en 5;
+  - "Todos los profesionales" con la columna Profesional en ausencias y bloqueos;
+  - los turnos afectados por un bloqueo con "Reasignar" para admin y recepción;
+  - el odontólogo sin selector ni "Reasignar".
+
+  No hay desplazamiento horizontal a 390 px ni errores en la consola, salvo el `409` provocado a propósito. Hay una diferencia minor: en Bloqueos de recepción, el texto de ayuda queda debajo del recuadro de turnos afectados y no encima. No se guardaron capturas en el repo, porque la base de desarrollo tiene un profesional cargado a mano con un nombre que podría ser real (regla dura 1).

@@ -487,7 +487,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `openspec/changes/frontend-agenda-personal/` (reprogramación en la agenda)
 
 ### [C-34] `frontend-configuracion-consultorio`
-- **Estado**: `[ ]` en curso (PR #60). La primera versión está aplicada: la página Configuración con siete pestañas y permisos por rol, con mockups aprobados por la líder en el PR #51. Faltan los ajustes de la segunda prueba del 2026-11-23 (tareas 9 a 12 del change).
+- **Estado**: `[x]` completo (2026-11-23, PR #60; el archive va en un PR aparte). La página Configuración tiene siete pestañas con permisos por rol. Incluye los ajustes de la segunda prueba: sillón habitual exclusivo (RN-RO-09), alta completa, franjas para varios días, horas de 5 en 5, "Todos los profesionales" y reasignación desde bloqueos (RN-AG-19). Mockups: revisión 1 aprobada por la líder (PR #51) y revisión 2 aprobada por Emanuel. Tests: 367 del frontend, 477 unitarios y 487 de integración del backend.
 - **Responsable**: Emanuel
 - **Scope**:
   - Completar la página "Configuración" (hoy solo muestra el título) sobre los endpoints que ya existen de C-04 y C-07: profesionales, sillones y prestaciones (alta, edición, activar y desactivar), especialidades por profesional, sillón habitual, margen entre turnos, horarios de trabajo, ausencias y bloqueos.

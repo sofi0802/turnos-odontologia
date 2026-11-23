@@ -44,3 +44,16 @@ Prueba hecha con Playwright sobre el backend (`master` con C-35) y el frontend d
 ## Capturas
 
 Las capturas están en esta carpeta y se llaman `<usuario>-<pestaña>-<ancho>.png`, por ejemplo `recepcion-ausencias-1440.png` o `ana.ejemplo-horarios-390.png`. Las de `admin` empiezan con `admin-`. Además hay tres de escrituras de recepción y Ana: `recepcion-ausencia-registrada-1440.png`, `ana.ejemplo-bloqueo-formulario-1440.png` y `ana.ejemplo-bloqueo-registrado-1440.png`.
+
+## Revisión 2 (segunda prueba, 2026-11-23)
+
+Resultado: passed (2026-11-23). Se hizo en el navegador de la app con el backend y el frontend de esta rama (`bootRun` y `npm run dev`), como `admin`, `recepcion` y `ana.ejemplo`, a 1440 × 900 y 390 × 844. Se comprobó:
+  - las tarjetas de sillón con "Ocupado · …" y el `409 SILLON_HABITUAL_OCUPADO` real;
+  - el alta con prestaciones y el sillón "(de …)" deshabilitado;
+  - las franjas para varios días y "Elegí al menos un día.";
+  - los minutos de 5 en 5;
+  - "Todos los profesionales" con la columna Profesional en ausencias y bloqueos;
+  - los turnos afectados por un bloqueo con "Reasignar" para admin y recepción;
+  - el odontólogo sin selector ni "Reasignar".
+
+  No hay desplazamiento horizontal a 390 px ni errores en la consola, salvo el `409` provocado a propósito. Hay una diferencia minor: en Bloqueos de recepción, el texto de ayuda queda debajo del recuadro de turnos afectados y no encima. No se guardaron capturas en el repo, porque la base de desarrollo tiene un profesional cargado a mano con un nombre que podría ser real (regla dura 1).
