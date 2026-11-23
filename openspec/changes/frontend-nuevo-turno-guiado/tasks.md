@@ -4,9 +4,9 @@ Cada escenario de la spec tiene un test con el mismo nombre. Comandos desde `fro
 
 ## 0. Línea de base y mockups (antes del apply)
 
-- [ ] 0.1 Correr `npm test` y `npm run build` sobre la rama y registrar la cantidad de tests; verificar que todo pasa antes de tocar código *(2026-11-23, sobre `master` d8cc8fa: 327 de 328 tests pasan; falla "Abrir Configuración sin sesión" y `npm run build` no compila porque `pages/configuracion.ts` usa `irAlIngreso`. Es previo a C-40: el PR #60 (C-34) y el PR #59 (`ingreso-unico-mi-cuenta`, que quitó `irAlIngreso` y `#/ingreso`) chocan entre sí. Se avisa a Emanuel, dueño de los dos; esta tarea queda abierta hasta que `master` vuelva a estar en verde.)*
+- [x] 0.1 Correr `npm test` y `npm run build` sobre la rama y registrar la cantidad de tests; verificar que todo pasa antes de tocar código *(2026-11-23: sobre `master` d8cc8fa fallaba "Abrir Configuración sin sesión" y el build no compilaba por el choque entre los PR #59 y #60. Se arregló en `master` 40f67d2 (PR #67, C-37); ahí la línea de base da 345 tests en verde en 22 archivos y `npm run build` compila.)*
 - [x] 0.2 Crear `mockups/` con el diálogo "Nuevo turno" guiado en sus estados (al abrir, profesional elegido con su sillón, calendario con días pasados deshabilitados, horarios del día, día sin horarios, profesional sin sillón habitual), con HTML y CSS locales que importan `design-system/tokens.css` y `brand.js`; renderizarlos a 390 × 844 y 1440 × 900, guardar las capturas en `mockups/previews/` y completar su `README.md`. Verificar abriendo las capturas y que no hay desplazamiento horizontal
-- [ ] 0.3 Presentar los mockups y registrar la aprobación de la líder en `design.md` (`Approval: approved (<fecha>, by user)`, `Preview: rendered`). Verificar que la sección UI Mockups lo dice; no empezar el grupo 1 sin esto
+- [x] 0.3 Presentar los mockups y registrar la aprobación de la líder en `design.md` (`Approval: approved (<fecha>, by user)`, `Preview: rendered`). Verificar que la sección UI Mockups lo dice; no empezar el grupo 1 sin esto
 
 ## 1. Piezas reutilizables
 
