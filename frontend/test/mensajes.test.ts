@@ -7,7 +7,7 @@ import {
   ErrorValidacion,
   MENSAJE_ERROR_GENERICO,
 } from '../src/shared/api/errores.ts';
-import { MENSAJES_POR_CODIGO, mensajeDeError } from '../src/shared/ui/mensajes.ts';
+import { MENSAJES_POR_CODIGO, mensajeDeError, mensajeDeReprogramacion } from '../src/shared/ui/mensajes.ts';
 
 describe('Mensajes por código', () => {
   it.each([
@@ -60,4 +60,50 @@ describe('Mensajes por código', () => {
     expect(mensajeDeError(new ErrorGenerico(500))).toBe(MENSAJE_ERROR_GENERICO);
     expect(mensajeDeError(new TypeError('interno'))).toBe(MENSAJE_ERROR_GENERICO);
   });
+});
+
+describe('Mensajes de rechazo de la reprogramación', () => {
+  it('DATOS_DE_RESERVA_INVALIDOS no dice cuál de los dos datos falló', () => {
+    const texto = 'El DNI o el número de reserva no son correctos.';
+    expect(mensajeDeError(new ErrorNegocio('DATOS_DE_RESERVA_INVALIDOS', 'El DNI no corresponde al turno'))).toBe(texto);
+    expect(mensajeDeReprogramacion(new ErrorNegocio('DATOS_DE_RESERVA_INVALIDOS', 'detalle'))).toBe(texto);
+  });
+
+  it('SOLAPAMIENTO_SILLON al reprogramar indica elegir otro sillón y la creación conserva su texto', () => {
+    const error = new ErrorNegocio('SOLAPAMIENTO_SILLON', 'detalle del servidor');
+    expect(mensajeDeReprogramacion(error)).toBe('El sillón ya está ocupado en ese horario. Elegí otro sillón.');
+    // la creación de turnos conserva su texto de C-09
+    expect(mensajeDeError(error)).toBe('El sillón ya está ocupado en ese horario.');
+  });
+
+  it('PROFESIONAL_NO_HABILITADO tiene su texto al reprogramar', () => {
+    expect(mensajeDeReprogramacion(new ErrorNegocio('PROFESIONAL_NO_HABILITADO', 'x'))).toBe(
+      'Ese profesional no atiende esa prestación. Elegí otro.',
+    );
+  });
+
+  it.each(['PROFESIONAL_AUSENTE', 'AGENDA_BLOQUEADA', 'FUERA_DE_HORARIO'])(
+    '%s tiene su texto propio al reprogramar',
+    (codigo) => {
+      const texto = mensajeDeReprogramacion(new ErrorNegocio(codigo, ''));
+      expect(texto).toBe(MENSAJES_POR_CODIGO[codigo]);
+      expect(texto).not.toBe('');
+      expect(texto).not.toContain(codigo);
+    },
+  );
+
+  it('los tres textos de ausencia, bloqueo y horario son distintos entre sí', () => {
+    const textos = ['PROFESIONAL_AUSENTE', 'AGENDA_BLOQUEADA', 'FUERA_DE_HORARIO'].map((c) => MENSAJES_POR_CODIGO[c]);
+    expect(new Set(textos).size).toBe(3);
+  });
+
+  it.each(['CODIGO_QUE_NO_EXISTE', 'SIN_SILLON_DISPONIBLE', 'X'])(
+    'el código %s sin texto muestra el mensaje genérico, nunca vacío ni el código',
+    (codigo) => {
+      const texto = mensajeDeReprogramacion(new ErrorNegocio(codigo, ''));
+      expect(texto).toBe(MENSAJE_ERROR_GENERICO);
+      expect(texto).not.toBe('');
+      expect(texto).not.toContain(codigo);
+    },
+  );
 });
