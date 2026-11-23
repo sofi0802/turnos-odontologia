@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nuevo turno: coincidencias · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <header class="app-encabezado">
+    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisorio" /><span data-brand-name>Turnos odontología</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#" aria-current="page">Agenda</a>
+      <a href="#">Reserva</a>
+      <a href="#">Configuración</a>
+    </nav>
+    <div class="usuario"><span class="usuario-nombre">recepcion</span><button class="btn btn-chico" type="button">Salir</button></div>
+  </header>
+
+  <div class="velo">
+    <div class="dialogo" role="dialog" aria-modal="true" aria-labelledby="dlg-t">
+      <h2 id="dlg-t">Nuevo turno</h2>
+      <form class="formulario" onsubmit="return false">
+        <div class="campo buscador">
+          <label for="f-pac">Paciente</label>
+          <div class="buscador-entrada">
+            <svg class="lupa" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m13 13 4.5 4.5"/></svg>
+            <input class="control" id="f-pac" type="text" value="paciente" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="f-pac-lista" aria-activedescendant="f-pac-op2" aria-describedby="f-pac-estado f-pac-error" />
+          </div>
+          <ul class="buscador-lista" id="f-pac-lista" role="listbox" aria-label="Pacientes encontrados">
+            <li id="f-pac-op1" role="option" aria-selected="false"><span class="nombre">Dos, Paciente</span><span class="dni">· DNI 99000002</span></li>
+            <li id="f-pac-op2" role="option" aria-selected="true"><span class="nombre">Uno, Paciente</span><span class="dni">· DNI 99000001</span></li>
+          </ul>
+          <p class="buscador-estado" id="f-pac-estado" role="status">2 pacientes encontrados.</p>
+          <p class="error-campo" id="f-pac-error"></p>
+        </div>
+        <div class="campo"><label for="f-prof">Profesional</label><select class="control" id="f-prof"><option>Elegí un profesional</option><option>Ana Ejemplo</option><option>Bruno Prueba</option></select></div>
+        <div class="campo"><label for="f-sil">Sillón</label><select class="control" id="f-sil"><option>Elegí un sillón</option><option>Sillón 1</option><option>Sillón 2</option></select></div>
+        <div class="campo"><label for="f-pre">Prestación</label><select class="control" id="f-pre"><option>Elegí una prestación</option><option>Consulta</option></select></div>
+        <div class="campo"><label for="f-fecha">Fecha</label><input class="control" id="f-fecha" type="date" value="2026-12-01" /></div>
+        <div class="campo"><label for="f-hora">Hora</label><input class="control" id="f-hora" type="time" /></div>
+        <div class="dialogo-acciones">
+          <button class="btn btn-principal" type="submit">Crear turno</button>
+          <button class="btn" type="button">Cerrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <p class="nota-mockup"><b>Mockup</b> · Se escribió "paciente" y, con flecha abajo dos veces, la opción activa es "Uno, Paciente". Enter la elige sin enviar el formulario; Escape cierra la lista y no el diálogo. Spec <code>frontend-buscador-pacientes</code>: Lista de coincidencias; Buscador manejable con el teclado. <a href="nuevo-turno-seleccionado.html">Ver el paciente elegido</a> · <a href="estados-buscador.html">Ver los demás estados</a>.</p>
+</body>
+</html>
