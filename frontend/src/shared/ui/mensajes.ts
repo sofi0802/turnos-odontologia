@@ -29,6 +29,17 @@ export const MENSAJES_POR_CODIGO: Readonly<Record<string, string>> = {
   DNI_YA_REGISTRADO:
     'Ya hay un paciente registrado con ese DNI. Si es tuyo, ingresá con tu cuenta o contactá al consultorio.',
   EMAIL_YA_REGISTRADO: 'Ya existe una cuenta con ese email. Ingresá con tu contraseña.',
+  // Configuración del consultorio (C-34, design D10).
+  MATRICULA_DUPLICADA: 'Ya existe un profesional con esa matrícula.',
+  NOMBRE_DUPLICADO: 'Ya existe otro con ese nombre.',
+  DURACION_INVALIDA: 'La duración tiene que ser mayor que 0 y múltiplo de 5.',
+  PRESTACION_INACTIVA: 'Hay una prestación inactiva entre las elegidas.',
+  SILLON_INACTIVO: 'El sillón elegido está inactivo.',
+  MARGEN_INVALIDO: 'El margen tiene que ser de 10 minutos o más.',
+  HORARIO_INVALIDO: 'Revisá los días y las horas de las franjas.',
+  FRANJAS_SUPERPUESTAS: 'Hay franjas del mismo día que se superponen.',
+  PERIODO_INVALIDO: 'El fin tiene que ser posterior al inicio.',
+  TURNO_NO_AFECTADO: 'Ese turno ya no está afectado por la ausencia.',
 };
 
 export const MENSAJE_SIN_PERMISO = 'No tenés permiso para esta acción.';

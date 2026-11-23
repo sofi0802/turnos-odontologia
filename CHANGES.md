@@ -487,7 +487,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `openspec/changes/frontend-agenda-personal/` (reprogramación en la agenda)
 
 ### [C-34] `frontend-configuracion-consultorio`
-- **Estado**: `[ ]` listo para el apply: proposal, specs, design, tasks y mockups en `openspec/changes/frontend-configuracion-consultorio/`. Mockups aprobados por la líder al mergear el PR #51.
+- **Estado**: `[x]` completo (2026-11-23; el archive va en un PR aparte). La página Configuración tiene siete pestañas con permisos por rol, más los tests `frontend/test/configuracion-*.test.ts`. La verificación visual está en `openspec/changes/frontend-configuracion-consultorio/mockups/verify/`. Mockups aprobados por la líder al mergear el PR #51.
 - **Responsable**: Emanuel
 - **Scope**:
   - Completar la página "Configuración" (hoy solo muestra el título) sobre los endpoints que ya existen de C-04 y C-07: profesionales, sillones y prestaciones (alta, edición, activar y desactivar), especialidades por profesional, sillón habitual, margen entre turnos, horarios de trabajo, ausencias y bloqueos.

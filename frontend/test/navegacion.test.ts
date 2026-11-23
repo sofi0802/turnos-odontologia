@@ -142,7 +142,8 @@ describe('Navegación sin recargar', () => {
 
     await elegir('Configuración');
 
-    expect(titulo()).toBe('Configuración');
+    // Desde C-34, Configuración verifica la sesión del personal antes de dibujarse, como Agenda.
+    await esperarTitulo('Configuración');
     expect(Reflect.get(window, 'marcaDelDocumento')).toBe(marcaDelDocumento);
     expect(enlacesActivos()).toEqual(['Configuración']);
   });

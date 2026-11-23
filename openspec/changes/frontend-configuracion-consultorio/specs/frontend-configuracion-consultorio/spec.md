@@ -34,7 +34,13 @@ Datos ficticios de los escenarios (salvo que el escenario diga otra cosa):
 - **Para `RECEPCIONISTA`:** las mismas, menos "Bloqueos".
 - **Para `ODONTOLOGO`:** las mismas siete.
 
-La pestaña elegida MUST quedar marcada con `aria-selected` y solo su contenido MUST estar visible.
+La pestaña elegida MUST quedar marcada con `aria-selected` y solo su contenido MUST estar visible. Como Agenda, la página MUST exigir una sesión del personal: sin sesión lleva a `#/ingreso` sin pedir datos de configuración.
+
+#### Scenario: Abrir Configuración sin sesión
+- **GIVEN** que `GET /api/v1/public/sesion` informa que no hay sesión
+- **WHEN** se abre la aplicación en `#/configuracion`
+- **THEN** se muestra la página de ingreso en la dirección `#/ingreso`
+- **AND** no se envía ningún pedido a `/api/v1/profesionales`
 
 #### Scenario: Pestañas del administrador
 - **GIVEN** una sesión de `admin`
