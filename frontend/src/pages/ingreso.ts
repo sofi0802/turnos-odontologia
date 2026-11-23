@@ -10,7 +10,6 @@ export const MENSAJE_CREDENCIALES = 'Usuario o contraseña incorrectos.';
 export const paginaIngreso: Pagina = {
   ruta: 'ingreso',
   titulo: 'Ingresar',
-  enMenu: false,
   render(contenedor, contexto) {
     const usuario = crearCampo('Usuario', crearEntrada('text', 'username'));
     usuario.control.autocomplete = 'username';

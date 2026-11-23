@@ -36,6 +36,11 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `backend/.../notificaciones/` | Juan Cruz | V7 |
 | `backend/.../clinica/` | Emanuel | V8 |
 | `frontend/` | Enzo | — |
+| **Ajustes del MVP (C-33 a C-36)** | | |
+| `frontend/` agenda: reprogramación (C-33) | Juan Cruz (avisa a Enzo) | — |
+| `frontend/` página Configuración (C-34) | Emanuel (avisa a Enzo) | — |
+| `backend/.../agenda/api` y `frontend/` agenda propia del odontólogo (C-35) | Sofia (avisa a Juan Sebastián y a Enzo) | — |
+| `backend/.../usuarios/` búsqueda de pacientes y `frontend/` buscador (C-36) | Juan Sebastián (avisa a Enzo) | V20 |
 | **Post-MVP** | | |
 | `backend/.../agenda/` lista de espera, `configuracion/` política de cancelación | Sofia (C-16 avisa a Emanuel) | V9, V10 |
 | `backend/.../notificaciones/` consentimiento | Juan Cruz | V11 |
@@ -63,6 +68,12 @@ C-01 crear-turno-sin-solapamientos  [Sofia · OPSX]      ← tarea 1 = scaffoldi
   │           ├── C-09 frontend-agenda-personal [Enzo]         ← + C-02
   │           └── C-10 reserva-online-paciente [Juan Sebastián] ← + C-07
   │                 └── C-12 frontend-reserva-paciente [Emanuel]  ← + C-02
+  │
+  │  Ajustes del MVP (después del archive de C-09)
+  │     C-09 + C-10 + C-12 ── C-33 frontend-reprogramacion-agenda [Juan Cruz]
+  │     C-04 + C-07 + C-09 ── C-34 frontend-configuracion-consultorio [Emanuel]
+  │     C-05 + C-06 + C-09 ── C-35 agenda-propia-odontologo [Sofia]   ← antes: cambio de regla en la KB
+  │     C-05 + C-09 ──────── C-36 buscador-pacientes [Juan Sebastián]
   │
 C-02 frontend-base-ts  [Enzo]                            ← independiente: carpeta frontend/
   │
@@ -128,7 +139,14 @@ GATE 4: C-07 ✓ + C-06 ✓ + C-05 ✓
 GATE 5: C-10 ✓
   → C-12 frontend-reserva-paciente           [Agente C · Emanuel]
 
-GATE 6: changes de la entrega ✓
+GATE 5b: C-09 archivado (y C-12 ✓ para C-33)                ← FORK (los 4 en paralelo)
+  → C-33 frontend-reprogramacion-agenda      [Agente C · Juan Cruz]
+  → C-34 frontend-configuracion-consultorio  [Agente C · Emanuel]
+  → C-35 agenda-propia-odontologo            [Agente A · Sofia — después de actualizar la KB]
+  → C-36 buscador-pacientes                  [Agente B · Juan Sebastián]
+  (C-33, C-35 y C-36 tocan la agenda del personal en frontend/: coordinar el orden de los PR para evitar conflictos)
+
+GATE 6: changes de la entrega ✓ (incluye C-33 a C-36)
   → C-14 entrega-readme-y-evidencia          [Agente A · Sofia]
 
 ──────────── POST-MVP ────────────
@@ -175,6 +193,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 | Bloque | Changes | Origen |
 |---|---|---|
 | **MVP v1.0** (fases 1 a 6) | C-01 a C-14 | Sección D.3 del informe, lista "imprescindible" |
+| **Ajustes del MVP** (fase 5b) | C-33 a C-36 | Prueba de la aplicación del 2026-11-23 |
 | **Post-MVP v1.x** (fase 7) | C-15 a C-17 | Sección D.3, lista "diferenciador" |
 | **Post-MVP: etapas posteriores** (fases 8 a 10) | C-18 a C-32 | Sección D.3, lista "etapas posteriores" |
 
@@ -205,10 +224,10 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 
 | Integrante | MVP | Post-MVP (sugerido, por afinidad con su módulo) |
 |---|---|---|
-| **Sofia Indovino** (líder) | **C-01** (OPSX), C-06, C-14 + revisión de todos los PR | C-15, C-16, C-29 |
-| **Juan Cruz** | C-03, C-08, C-11 | C-17, C-30, C-31 |
-| **Emanuel** | C-04, C-07, C-13, C-12 | C-25, C-26, C-27, C-28 |
-| **Juan Sebastián** | C-05, C-10 | C-18, C-19, C-20, C-21 |
+| **Sofia Indovino** (líder) | **C-01** (OPSX), C-06, C-35, C-14 + revisión de todos los PR | C-15, C-16, C-29 |
+| **Juan Cruz** | C-03, C-08, C-11, C-33 | C-17, C-30, C-31 |
+| **Emanuel** | C-04, C-07, C-13, C-12, C-34 | C-25, C-26, C-27, C-28 |
+| **Juan Sebastián** | C-05, C-10, C-36 | C-18, C-19, C-20, C-21 |
 | **Enzo** | C-02, C-09 | C-22, C-23, C-24, C-32 (backend y pantallas de administración) |
 
 ---
@@ -417,6 +436,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - Registro e inicio de sesión del paciente; elección de prestación, fecha y profesional o "sin preferencia"; listado de horarios; confirmación con número de reserva.
   - "Mis turnos" con cancelar o reprogramar (aviso si faltan menos de 24 h). Responsivo, pensado para el celular.
   - Menú según la sesión (paciente o personal) y las pantallas de los links de C-11 (`/mis-turnos/cancelar`, `/mis-turnos/reprogramar` y `/confirmar/{token}`).
+  - Ajuste de la prueba del 2026-11-23: sin sesión el menú muestra solo "Reservar turno" e "Ingresar"; "Mis turnos" aparece con sesión de paciente. Cambia un mockup aprobado: se actualiza y vuelve a aprobación de la líder.
 - **Dependencias**: `C-02, C-10` (y C-11 para los links). El archive de C-09 tiene que hacerse antes que el de C-12, porque los dos modifican `frontend-navegacion`
 - **Governance**: BAJO
 - **Leer antes**:
@@ -445,6 +465,76 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 
 ---
 
+## FASE 5b: Ajustes del MVP
+
+> Surgen de la prueba de la aplicación del 2026-11-23. Son parte del MVP: se hacen antes de C-14. El punto "sin sesión no aparece Mis turnos" quedó dentro de C-12, que todavía estaba abierto.
+> Los changes que tocan `frontend/` avisan en el PR a su dueño, y los de la agenda del personal (C-33, C-35 y C-36) arrancan después del archive de C-09, porque modifican sus specs.
+
+### [C-33] `frontend-reprogramacion-agenda`
+- **Estado**: `[ ]` pendiente
+- **Responsable**: Juan Cruz
+- **Scope**:
+  - En "Reprogramar turno" de la agenda del personal, ofrecer solo los profesionales habilitados para la prestación del turno (RN-AG-15), con `GET /public/profesionales?prestacionId=`. Hoy se ofrecen todos.
+  - Reemplazar la fecha y la hora libres por los horarios disponibles del profesional elegido (`GET /public/disponibilidad`), como botones, igual que en la reserva del paciente (reusar `paciente/horarios.ts` y `paciente/disponibilidad.ts` de C-12).
+  - Reproducir y corregir por qué la reprogramación desde la agenda falla con un horario válido (revisar la identificación con DNI y número de reserva, y el mensaje de cada código de rechazo).
+  - Riesgo conocido: la disponibilidad pública cuenta el propio turno como ocupado. Si se necesita ofrecer horarios que se superponen con él, el backend tiene que excluirlo (se avisa a Sofia, dueña de `agenda/api`).
+  - Tests: un escenario por cada caso; los de C-09 siguen pasando.
+- **Dependencias**: `C-09, C-10, C-12` (y el archive de C-09)
+- **Governance**: MEDIO (reglas de la agenda en la pantalla del personal)
+- **Leer antes**:
+  - `knowledge-base/05_reglas_de_negocio.md` §Dominio: Agenda (RN-AG-15)
+  - `knowledge-base/06_funcionalidades.md` §US-012, §US-018
+  - `openspec/changes/frontend-agenda-personal/` (reprogramación en la agenda)
+
+### [C-34] `frontend-configuracion-consultorio`
+- **Estado**: `[ ]` pendiente
+- **Responsable**: Emanuel
+- **Scope**:
+  - Completar la página "Configuración" (hoy solo muestra el título) sobre los endpoints que ya existen de C-04 y C-07: profesionales, sillones y prestaciones (alta, edición, activar y desactivar), especialidades por profesional, sillón habitual, margen entre turnos, horarios de trabajo, ausencias y bloqueos.
+  - Permisos según la matriz RBAC: `ADMIN` edita; `RECEPCIONISTA` y `ODONTOLOGO` solo leen, salvo las ausencias (recepción) y los bloqueos propios (odontólogo).
+  - Cambio visual: mockups en `openspec/changes/<change>/mockups/` aprobados por la líder antes del apply (design system Revision 1).
+  - Sin cambios de backend. Tests: un escenario por cada sección y por cada permiso.
+- **Dependencias**: `C-04, C-07, C-09` (y el archive de C-09)
+- **Governance**: MEDIO (configuración que afecta la agenda)
+- **Leer antes**:
+  - `knowledge-base/03_actores_y_roles.md` §RBAC: matriz de permisos
+  - `knowledge-base/04_modelo_de_datos.md` §Profesional, §Sillon, §Prestacion, §HorarioTrabajo, §BloqueoAgenda, §Configuracion
+  - `knowledge-base/06_funcionalidades.md` §Épica 1, §US-015 a §US-018
+
+### [C-35] `agenda-propia-odontologo`
+- **Estado**: `[ ]` pendiente
+- **Responsable**: Sofia Indovino
+- **Scope**:
+  - **Cambio de regla de negocio**: hoy la KB dice que el `ODONTOLOGO` ve toda la agenda y "puede filtrar la propia". Antes del propose, actualizar `03_actores_y_roles.md` (y `05_reglas_de_negocio.md` si corresponde) con la regla nueva: cada odontólogo ve solo sus turnos del día y de la semana.
+  - Backend: `GET /api/v1/turnos` con sesión de `ODONTOLOGO` filtra siempre por el profesional de su usuario, aunque pida otro `profesionalId` (que no se pueda saltear desde la API).
+  - Frontend: con sesión de odontólogo, la agenda fija el filtro en su profesional y no ofrece los demás.
+  - Tests: Ana no recibe los turnos de Bruno aunque los pida; recepción y admin siguen viendo todos.
+- **Dependencias**: `C-05, C-06, C-09` (y el archive de C-09)
+- **Governance**: ALTO (autorización: se propone y se revisa antes de escribir código)
+- **Leer antes**:
+  - `knowledge-base/03_actores_y_roles.md` §RBAC: matriz de permisos
+  - `knowledge-base/06_funcionalidades.md` §US-014
+  - `knowledge-base/09_decisiones_y_supuestos.md` §DD-10
+  - `openspec/specs/seguridad-autorizacion/spec.md`, `openspec/specs/agenda-api/spec.md`
+
+### [C-36] `buscador-pacientes`
+- **Estado**: `[ ]` pendiente
+- **Responsable**: Juan Sebastián
+- **Scope**:
+  - Backend: `GET /api/v1/pacientes?q=` para el personal (`ADMIN`, `RECEPCIONISTA` y `ODONTOLOGO`), que busca por DNI o por nombre y apellido y devuelve una lista corta: id, nombre, apellido y DNI. Sin datos de salud ni de contacto (Ley 25.326). Hoy no existe ningún endpoint para buscar pacientes.
+  - Frontend: en "Nuevo turno" y "Sobreturno" de la agenda, reemplazar el campo "Id del paciente" por un buscador que muestra las coincidencias y guarda el id elegido.
+  - **Migración V20** (reservada), solo si hace falta un índice para la búsqueda.
+  - Tests: búsqueda por DNI exacto, por parte del apellido, sin resultados, el paciente no puede usar el endpoint (`403`) y la respuesta no trae otros datos.
+- **Dependencias**: `C-05, C-09` (y el archive de C-09)
+- **Governance**: ALTO (datos personales de pacientes)
+- **Leer antes**:
+  - `knowledge-base/03_actores_y_roles.md` §RBAC: matriz de permisos (Paciente, datos de contacto)
+  - `knowledge-base/04_modelo_de_datos.md` §Paciente
+  - `knowledge-base/05_reglas_de_negocio.md` §Dominio: Excepciones globales
+  - `knowledge-base/06_funcionalidades.md` §US-010
+
+---
+
 ## FASE 6: Entrega
 
 ### [C-14] `entrega-readme-y-evidencia`
@@ -454,7 +544,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `README.md` reproducible: requisitos (Java 21, opcional Docker o PostgreSQL), cómo correr `./gradlew test` (tests de dominio sin base) y los tests de integración.
   - Verificación final: suite en verde, ningún secreto en el repo, `.env.example` completo.
   - Evidencias: informe de Discovery en PDF, estado del orquestador, consulta a Engram para el video.
-- **Dependencias**: `C-01` (mínimo); los demás changes que se hayan completado
+- **Dependencias**: `C-01` (mínimo); los demás changes que se hayan completado, incluidos los ajustes C-33 a C-36
 - **Governance**: BAJO
 - **Leer antes**:
   - `knowledge-base/README.md`

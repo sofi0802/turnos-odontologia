@@ -46,7 +46,7 @@ En pantallas de menos de 768 px de ancho, el menú SHALL quedar oculto detrás d
 #### Scenario: Abrir el menú en el celular
 - **GIVEN** la aplicación abierta sin sesión en una pantalla de 390 × 844 px con el menú cerrado
 - **WHEN** se toca el botón del menú
-- **THEN** se ven los enlaces "Reservar turno" y "Mis turnos"
+- **THEN** se ve el enlace "Reservar turno" y no el de "Mis turnos"
 - **AND** el botón informa que el menú está expandido
 
 #### Scenario: Elegir una página en el celular
@@ -63,12 +63,12 @@ En pantallas de menos de 768 px de ancho, el menú SHALL quedar oculto detrás d
 ## ADDED Requirements
 
 ### Requirement: Menú según la sesión
-El menú SHALL mostrar "Agenda" y "Configuración" con una sesión del personal, y "Reservar turno" y "Mis turnos" sin sesión o con una sesión de paciente. Al iniciar o cerrar una sesión, el menú MUST actualizarse sin recargar el documento. Sin sesión, el encabezado SHALL ofrecer además el enlace "Ingresar" a `#/mi-cuenta`.
+El menú SHALL mostrar "Agenda" y "Configuración" con una sesión del personal, "Reservar turno" y "Mis turnos" con una sesión de paciente, y solo "Reservar turno" sin sesión. Al iniciar o cerrar una sesión, el menú MUST actualizarse sin recargar el documento. Sin sesión, el encabezado SHALL ofrecer además el enlace "Ingresar" a `#/mi-cuenta`.
 
 #### Scenario: Menú de un visitante
 - **GIVEN** un navegador sin sesión
 - **WHEN** se abre la aplicación en `#/reserva`
-- **THEN** el menú tiene solo los enlaces "Reservar turno" y "Mis turnos"
+- **THEN** el menú tiene solo el enlace "Reservar turno"
 - **AND** el encabezado tiene el enlace "Ingresar" a `#/mi-cuenta`
 
 #### Scenario: Menú del personal
@@ -79,5 +79,5 @@ El menú SHALL mostrar "Agenda" y "Configuración" con una sesión del personal,
 #### Scenario: El menú cambia al ingresar como paciente
 - **GIVEN** la página `#/mi-cuenta` abierta sin sesión
 - **WHEN** "Paciente Uno" ingresa correctamente
-- **THEN** el menú tiene los enlaces "Reservar turno" y "Mis turnos"
+- **THEN** el menú pasa a tener los enlaces "Reservar turno" y "Mis turnos"
 - **AND** el encabezado muestra `paciente.uno@example.com` y "Salir" en lugar de "Ingresar"

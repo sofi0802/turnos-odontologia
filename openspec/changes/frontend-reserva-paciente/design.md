@@ -65,6 +65,7 @@ Alternativa descartada: sumar `privadaPaciente: true` al lado de `privada`. Dos 
 ### D3. El layout filtra el menú con la sesión
 - `crearLayout` recibe todas las páginas con `menu`.
 - `mostrarSesion(sesion)` oculta con `hidden` los `<li>` del grupo que no corresponde y muestra "Ingresar" (enlace a `#/mi-cuenta`) sin sesión, o el usuario y "Salir" con sesión.
+- Sin sesión también oculta las páginas con `acceso: 'paciente'` (Mis turnos): el visitante ve solo "Reservar turno" e "Ingresar". Lo pidió el responsable después de probar la aplicación (2026-11-23).
 - Como `app.ts` ya llama a `mostrarSesion` en cada navegación y en cada login o logout, el menú queda al día sin recargar.
 - `alSalir` lleva a `#/reserva` si la sesión era de paciente, y a `#/ingreso` si era del personal, como hoy.
 
@@ -151,6 +152,6 @@ Solo frontend, sin cambios de backend ni de base. Se despliega con el build de V
 - Design system revision: 1 (`design-system/README.md`, aprobado el 2026-11-22).
 - Decision: yes, 2026-11-23. El modo es `system-and-mockups` en `.active-orchestrator-state.json` y en `design-system/README.md`.
 - Mockups: `openspec/changes/frontend-reserva-paciente/mockups/` (ver su `README.md`). Fuente de referencia: `design-system/components.html`, secciones "Reserva online", "Formularios y avisos" y "Diálogo de confirmación".
-- Approval: pending. La aprueba la líder antes del apply (`design-system/README.md`).
+- Approval: pending. La revisión 1 la aprobó Sofia Indovino al mergear el PR #47; la revisión 2 (2026-11-23) saca "Mis turnos" del menú sin sesión y vuelve a la aprobación de la líder.
 - Preview: rendered (2026-11-23), capturas en `mockups/previews/` a 390 × 844 y 1440 × 900, sin desplazamiento horizontal ni errores en la consola.
-- Visual verify: pendiente. En verify se comparan `#/reserva`, `#/mi-cuenta`, `#/mis-turnos` y `#/confirmar` con los mockups aprobados, a 390 × 844 y 1440 × 900, con capturas en `mockups/verify/`.
+- Visual verify: differences (2026-11-23), solo minor (encabezado de C-09, fondo y tamaño de títulos); sin blockers ni majors. Detalle y capturas en `mockups/verify/README.md`.

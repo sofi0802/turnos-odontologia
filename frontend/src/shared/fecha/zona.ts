@@ -101,3 +101,17 @@ export function aIsoConZona(fecha: Fecha, hora: string): string {
 export function formatearHora(instante: Date | string): string {
   return HORA.format(new Date(instante));
 }
+
+const FECHA_LARGA = new Intl.DateTimeFormat('es-AR', {
+  timeZone: ZONA,
+  weekday: 'long',
+  day: 'numeric',
+  month: 'long',
+});
+
+/** Fecha larga en la zona del consultorio, por ejemplo "martes 1 de diciembre". */
+export function fechaLarga(instante: Date | string): string {
+  const partesFecha = FECHA_LARGA.formatToParts(new Date(instante));
+  const valor = (tipo: Intl.DateTimeFormatPartTypes): string => partesFecha.find((p) => p.type === tipo)?.value ?? '';
+  return `${valor('weekday')} ${valor('day')} de ${valor('month')}`;
+}

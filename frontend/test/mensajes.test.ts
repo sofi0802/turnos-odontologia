@@ -25,6 +25,24 @@ describe('Mensajes por código', () => {
     expect(MENSAJES_POR_CODIGO[codigo]).toBe(mensaje);
   });
 
+  it.each([
+    ['SIN_DISPONIBILIDAD', 'Ese horario se ocupó recién. Elegí otro.'],
+    ['CANCELACION_FUERA_DE_PLAZO', 'Faltan menos de 24 h. Para cancelarlo o cambiarlo, contactá al consultorio.'],
+    ['RESERVA_INEXISTENTE', 'No encontramos ese turno.'],
+    ['PROFESIONAL_NO_HABILITADO', 'Ese profesional no atiende esa prestación. Elegí otro.'],
+    [
+      'DNI_YA_REGISTRADO',
+      'Ya hay un paciente registrado con ese DNI. Si es tuyo, ingresá con tu cuenta o contactá al consultorio.',
+    ],
+    ['EMAIL_YA_REGISTRADO', 'Ya existe una cuenta con ese email. Ingresá con tu contraseña.'],
+  ])('%s de la reserva online tiene su mensaje (C-12)', (codigo, mensaje) => {
+    expect(mensajeDeError(new ErrorNegocio(codigo, 'detalle del servidor'))).toBe(mensaje);
+  });
+
+  it('RESERVA_INEXISTENTE en un 404 usa la tabla', () => {
+    expect(mensajeDeError(new ErrorNoEncontrado('RESERVA_INEXISTENTE'))).toBe('No encontramos ese turno.');
+  });
+
   it('un código desconocido usa el detail de la API', () => {
     expect(mensajeDeError(new ErrorNegocio('OTRO_CODIGO', 'Regla ficticia'))).toBe('Regla ficticia');
   });

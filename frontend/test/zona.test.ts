@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import {
   aIsoConZona,
   diaDeLaSemana,
+  fechaLarga,
   fechaDeInstante,
   formatearHora,
   hoy,
@@ -55,6 +56,12 @@ describe('Fechas en America/Argentina/Buenos_Aires', () => {
   it('formatear la hora de un instante en UTC', () => {
     expect(formatearHora('2026-12-01T13:00:00Z')).toBe('10:00');
     expect(formatearHora('2026-12-01T10:30:00-03:00')).toBe('10:30');
+  });
+
+  it('fecha larga en español en la zona del consultorio (C-12)', () => {
+    expect(fechaLarga('2026-12-01T13:30:00Z')).toBe('martes 1 de diciembre');
+    expect(fechaLarga('2026-12-02T02:00:00Z')).toBe('martes 1 de diciembre');
+    expect(fechaLarga('2026-12-03T10:00:00-03:00')).toBe('jueves 3 de diciembre');
   });
 
   it('fecha de un instante en la zona del consultorio', () => {

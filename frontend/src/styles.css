@@ -1,26 +1,11 @@
-/* Estilos base mobile first. La política visual del proyecto es "off":
-   no hay design system, solo variables locales. */
+/* Estilos base mobile first. Los valores salen del design system (Revision 1):
+   tokens.css define las variables --ds-* y los alias --color-*, --espacio-*, --radio
+   y --ancho-maximo que usa la agenda de C-09. */
+@import '../../design-system/tokens.css';
+
 :root {
-  --color-fondo: #ffffff;
-  --color-superficie: #f3f6f8;
-  --color-texto: #1d2a33;
-  --color-texto-suave: #4c5d69;
-  --color-acento: #0b6e8a;
-  --color-acento-texto: #ffffff;
-  --color-borde: #d5dee4;
-  --color-error: #a3262a;
-  --color-error-fondo: #fdf0f0;
-  --color-ok: #1e6b3a;
-  --color-ok-fondo: #eef8f1;
-  --color-confirmado: #1e6b3a;
-  --color-sobreturno: #8a4b00;
-  --espacio-1: 0.5rem;
-  --espacio-2: 1rem;
-  --espacio-3: 1.5rem;
-  --radio: 0.5rem;
-  --ancho-maximo: 72rem;
-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
-  line-height: 1.5;
+  font-family: var(--ds-fuente);
+  line-height: var(--ds-interlineado);
   color: var(--color-texto);
   background: var(--color-fondo);
 }
@@ -375,7 +360,465 @@ select[aria-invalid='true'] {
   gap: var(--espacio-1);
 }
 
+/* Componentes del design system (design-system/components.html, Revision 1), solo con --ds-*.
+   Los usan las páginas del paciente de C-12. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-espacio-1);
+  min-height: var(--ds-alto-control);
+  padding: 0 var(--ds-espacio-2);
+  font: inherit;
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-texto);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-principal {
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-acento-texto);
+  background: var(--ds-acento-500);
+  border-color: var(--ds-acento-500);
+}
+
+.btn-fantasma {
+  color: var(--ds-acento-500);
+  background: transparent;
+  border-color: transparent;
+}
+
+.btn-peligro {
+  color: var(--ds-error);
+  border-color: var(--ds-error);
+}
+
+.btn:disabled {
+  color: var(--ds-texto-deshabilitado);
+  background: var(--ds-superficie);
+  border-color: var(--ds-borde);
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.control {
+  min-height: var(--ds-alto-control);
+  width: 100%;
+  font-size: var(--ds-texto-base);
+  border-color: var(--ds-borde-fuerte);
+}
+
+.control[aria-invalid='true'] {
+  border-width: 2px;
+}
+
+.error-campo {
+  font-size: var(--ds-texto-sm);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-error);
+}
+
+.aviso-alerta {
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  color: var(--ds-alerta);
+  background: var(--ds-alerta-fondo);
+  border-left: 4px solid var(--ds-alerta);
+  border-radius: var(--ds-radio);
+}
+
+.aviso-info {
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  color: var(--ds-info);
+  background: var(--ds-info-fondo);
+  border-left: 4px solid var(--ds-info);
+  border-radius: var(--ds-radio);
+}
+
+.estado {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-espacio-0);
+  padding: 2px var(--ds-espacio-1);
+  font-size: var(--ds-texto-xs);
+  font-weight: var(--ds-peso-fuerte);
+  white-space: nowrap;
+  border-radius: var(--ds-radio-pill);
+}
+
+.estado::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: currentColor;
+  border-radius: 50%;
+}
+
+.e-reservado {
+  color: var(--ds-turno-reservado);
+  background: var(--ds-turno-reservado-fondo);
+}
+
+.e-confirmado {
+  color: var(--ds-turno-confirmado);
+  background: var(--ds-turno-confirmado-fondo);
+}
+
+.e-atendido {
+  color: var(--ds-turno-atendido);
+  background: var(--ds-turno-atendido-fondo);
+}
+
+.e-cancelado {
+  color: var(--ds-turno-cancelado);
+  background: var(--ds-turno-cancelado-fondo);
+}
+
+.e-ausente {
+  color: var(--ds-turno-ausente);
+  background: var(--ds-turno-ausente-fondo);
+}
+
+.pasos {
+  display: flex;
+  gap: var(--ds-espacio-0);
+  margin: 0 0 var(--ds-espacio-1);
+  padding: 0;
+  list-style: none;
+}
+
+.pasos li {
+  flex: 1;
+  height: 4px;
+  background: var(--ds-superficie-2);
+  border-radius: var(--ds-radio-pill);
+}
+
+.pasos li.hecho {
+  background: var(--ds-acento-500);
+}
+
+.paso-numero {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.opciones {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.opciones legend {
+  margin-bottom: var(--ds-espacio-1);
+  padding: 0;
+  font-weight: var(--ds-peso-medio);
+}
+
+.opcion {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  min-height: 56px;
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio);
+  cursor: pointer;
+}
+
+.opcion:has(input:checked) {
+  background: var(--ds-acento-50);
+  border-color: var(--ds-acento-500);
+  box-shadow: inset 0 0 0 1px var(--ds-acento-500);
+}
+
+.opcion input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  min-height: 0;
+  accent-color: var(--ds-acento-500);
+}
+
+.opcion small {
+  display: block;
+  color: var(--ds-texto-suave);
+}
+
+.chips {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr));
+  gap: var(--ds-espacio-1);
+  margin: 0;
+}
+
+.chip {
+  min-height: var(--ds-alto-control);
+  font-family: var(--ds-fuente-mono);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-acento-700);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-acento-100);
+  border-radius: var(--ds-radio);
+}
+
+.chip[aria-pressed='true'] {
+  color: var(--ds-acento-texto);
+  background: var(--ds-acento-500);
+  border-color: var(--ds-acento-500);
+}
+
+.vacio {
+  margin: 0;
+  padding: var(--ds-espacio-3) var(--ds-espacio-2);
+  text-align: center;
+  color: var(--ds-texto-suave);
+  border: 1px dashed var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio);
+}
+
+.resumen {
+  margin: 0;
+  padding: var(--ds-espacio-2);
+  background: var(--ds-superficie);
+  border-radius: var(--ds-radio);
+}
+
+.detalle-lista {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--ds-espacio-1) var(--ds-espacio-2);
+  margin: 0;
+}
+
+.detalle-lista dt {
+  color: var(--ds-texto-suave);
+}
+
+.detalle-lista dd {
+  margin: 0;
+  font-weight: var(--ds-peso-medio);
+}
+
+.comprobante {
+  padding: var(--ds-espacio-3) var(--ds-espacio-2);
+  text-align: center;
+  background: var(--ds-ok-fondo);
+  border-radius: var(--ds-radio-lg);
+}
+
+.comprobante .detalle-lista {
+  margin-top: var(--ds-espacio-2);
+  font-size: var(--ds-texto-sm);
+  text-align: left;
+}
+
+.numero-reserva {
+  display: inline-block;
+  margin: var(--ds-espacio-1) 0;
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  font-family: var(--ds-fuente-mono);
+  font-size: var(--ds-texto-xl);
+  font-weight: var(--ds-peso-fuerte);
+  letter-spacing: 0.12em;
+  background: var(--ds-fondo);
+  border: 2px dashed var(--ds-ok);
+  border-radius: var(--ds-radio);
+}
+
+/* Páginas del paciente (mockups de C-12) */
+[hidden] {
+  display: none !important;
+}
+
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.ayuda,
+.subtitulo {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.subtitulo {
+  font-size: var(--ds-texto-base);
+}
+
+.pila {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.turno-fecha::first-letter,
+.detalle-lista dd::first-letter,
+.campo .ayuda::first-letter {
+  text-transform: uppercase;
+}
+
+.pagina-paciente {
+  display: grid;
+  gap: var(--ds-espacio-2);
+  max-width: 36rem;
+  margin: 0 auto;
+}
+
+.panel {
+  display: grid;
+  gap: var(--ds-espacio-2);
+  padding: var(--ds-espacio-3) var(--ds-espacio-2);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-lg);
+  box-shadow: var(--ds-sombra-1);
+}
+
+.panel h2,
+.panel p,
+.pagina-paciente h2 {
+  margin: 0;
+}
+
+.acciones {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--ds-espacio-1);
+}
+
+.acciones .btn {
+  width: 100%;
+}
+
+.seccion-titulo {
+  margin: var(--ds-espacio-2) 0 0;
+  font-size: var(--ds-texto-sm);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pestanas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+  border: var(--ds-borde-ancho) solid var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio);
+}
+
+.pestanas button {
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-texto-suave);
+  border: 0;
+  border-radius: 0;
+}
+
+.pestanas button + button {
+  border-left: var(--ds-borde-ancho) solid var(--ds-borde-fuerte);
+}
+
+.pestanas button[aria-selected='true'] {
+  color: var(--ds-acento-texto);
+  background: var(--ds-acento-500);
+}
+
+.lista-turnos {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.turno-paciente {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  padding: var(--ds-espacio-2);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-lg);
+  box-shadow: var(--ds-sombra-1);
+}
+
+.turno-paciente p {
+  margin: 0;
+}
+
+.turno-anterior {
+  background: var(--ds-superficie);
+  box-shadow: none;
+}
+
+.turno-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-0) var(--ds-espacio-1);
+}
+
+.turno-fecha {
+  font-size: var(--ds-texto-lg);
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.turno-meta,
+.turno-numero {
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.turno-numero {
+  font-family: var(--ds-fuente-mono);
+}
+
+.turno-paciente .turno-acciones {
+  flex-direction: column;
+  margin-top: 0;
+}
+
+.cambio {
+  display: grid;
+  gap: var(--ds-espacio-2);
+  padding-top: var(--ds-espacio-2);
+  border-top: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
 @media (min-width: 768px) {
+  .panel {
+    padding: var(--ds-espacio-4);
+  }
+
+  .chips {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .acciones {
+    flex-direction: row-reverse;
+  }
+
+  .acciones .btn {
+    flex: 1 1 10rem;
+    width: auto;
+  }
+
+  .turno-paciente .turno-acciones {
+    flex-direction: row;
+  }
+
   .encabezado {
     flex-wrap: nowrap;
     padding: var(--espacio-1) var(--espacio-3);

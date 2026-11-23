@@ -20,6 +20,13 @@ export const MENSAJES_POR_CODIGO: Readonly<Record<string, string>> = {
   AGENDA_BLOQUEADA: 'La agenda del profesional está bloqueada en ese horario.',
   TURNO_INEXISTENTE: 'El turno ya no existe.',
   ACCESO_DENEGADO: 'No tenés permiso para esta acción.',
+  SIN_DISPONIBILIDAD: 'Ese horario se ocupó recién. Elegí otro.',
+  CANCELACION_FUERA_DE_PLAZO: 'Faltan menos de 24 h. Para cancelarlo o cambiarlo, contactá al consultorio.',
+  RESERVA_INEXISTENTE: 'No encontramos ese turno.',
+  PROFESIONAL_NO_HABILITADO: 'Ese profesional no atiende esa prestación. Elegí otro.',
+  DNI_YA_REGISTRADO:
+    'Ya hay un paciente registrado con ese DNI. Si es tuyo, ingresá con tu cuenta o contactá al consultorio.',
+  EMAIL_YA_REGISTRADO: 'Ya existe una cuenta con ese email. Ingresá con tu contraseña.',
 };
 
 export const MENSAJE_SIN_PERMISO = 'No tenés permiso para esta acción.';

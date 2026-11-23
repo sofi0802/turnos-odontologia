@@ -62,7 +62,7 @@ Las skills están instaladas en el repo (`.claude/skills/` y `.agents/skills/`, 
 
 El plan completo está en [CHANGES.md](CHANGES.md). Resumen:
 
-- **Total**: 32 changes en 10 fases. **MVP**: C-01 a C-14 (fases 1 a 6). **Post-MVP**: C-15 a C-32, que arrancan cuando el MVP esté completo y la KB ampliada.
+- **Total**: 36 changes en 10 fases. **MVP**: C-01 a C-14 (fases 1 a 6) más los ajustes C-33 a C-36 (fase 5b, de la prueba del 2026-11-23). **Post-MVP**: C-15 a C-32, que arrancan cuando el MVP esté completo y la KB ampliada.
 - **Camino crítico del MVP** (7): `C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14`.
 - **Primer change**: `C-01` (`crear-turno-sin-solapamientos`). Es el change del ciclo OPSX y lo hace solo la líder. Su tarea 1 (scaffolding del backend) se mergea temprano para desbloquear C-03.
 

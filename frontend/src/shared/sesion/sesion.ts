@@ -56,3 +56,26 @@ export async function cerrarSesion(api: ClienteApi): Promise<void> {
 export function esPersonal(rol: Rol | null): boolean {
   return rol !== null && ROLES_DEL_PERSONAL.includes(rol);
 }
+
+export function esPaciente(rol: Rol | null): boolean {
+  return rol === 'PACIENTE';
+}
+
+/** Datos del registro del paciente, sin la repetición de la contraseña. */
+export interface DatosRegistro {
+  readonly nombre: string;
+  readonly apellido: string;
+  readonly dni: string;
+  readonly email: string;
+  readonly telefono: string | null;
+  readonly password: string;
+}
+
+/** Crea la cuenta del paciente; el registro no inicia la sesión (spec "Sesión iniciada después del registro"). */
+export async function registrarPaciente(api: ClienteApi, datos: DatosRegistro): Promise<void> {
+  if (!hayTokenCsrf()) {
+    await api.obtener<unknown>('/public/sesion');
+  }
+  const { telefono, ...resto } = datos;
+  await api.crear<unknown>('/public/pacientes/registro', telefono === null ? resto : { ...resto, telefono });
+}

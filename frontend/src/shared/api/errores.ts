@@ -13,15 +13,24 @@ export class ErrorApi extends Error {
   }
 }
 
+/** Horario que el servidor ofrece en lugar del rechazado, tal como lo envió. */
+export interface HorarioAlternativo {
+  readonly inicio: string;
+  readonly fin: string;
+}
+
 /** Respuesta 409: una regla de negocio rechazó el pedido. */
 export class ErrorNegocio extends ErrorApi {
   readonly codigo: string;
   readonly detalle: string;
+  /** Horarios que ofrece el servidor (por ejemplo, con `SIN_DISPONIBILIDAD`); vacía si no trae. */
+  readonly alternativas: readonly HorarioAlternativo[];
 
-  constructor(codigo: string, detalle: string) {
+  constructor(codigo: string, detalle: string, alternativas: readonly HorarioAlternativo[] = []) {
     super(detalle || codigo);
     this.codigo = codigo;
     this.detalle = detalle;
+    this.alternativas = alternativas;
   }
 }
 
@@ -93,6 +102,7 @@ export interface ProblemDetail {
   readonly detail: string;
   readonly codigo: string | null;
   readonly errores: readonly ErrorCampo[];
+  readonly alternativas: readonly HorarioAlternativo[];
 }
 
 function esObjeto(valor: unknown): valor is Record<string, unknown> {
@@ -106,13 +116,33 @@ function textoNoVacio(valor: unknown): string | null {
 /** Interpreta un cuerpo de error desconocido; nunca falla. */
 export function leerProblemDetail(cuerpo: unknown): ProblemDetail {
   if (!esObjeto(cuerpo)) {
-    return { detail: '', codigo: null, errores: [] };
+    return { detail: '', codigo: null, errores: [], alternativas: [] };
   }
   return {
     detail: textoNoVacio(cuerpo['detail']) ?? '',
     codigo: textoNoVacio(cuerpo['codigo']),
     errores: leerErroresDeCampo(cuerpo['errores']),
+    alternativas: leerAlternativas(cuerpo['alternativas']),
   };
+}
+
+/** Lee la lista `alternativas`; descarta lo que no tenga `inicio` y `fin`. */
+function leerAlternativas(valor: unknown): HorarioAlternativo[] {
+  if (!Array.isArray(valor)) {
+    return [];
+  }
+  const alternativas: HorarioAlternativo[] = [];
+  for (const elemento of valor) {
+    if (!esObjeto(elemento)) {
+      continue;
+    }
+    const inicio = textoNoVacio(elemento['inicio']);
+    const fin = textoNoVacio(elemento['fin']);
+    if (inicio !== null && fin !== null) {
+      alternativas.push({ inicio, fin });
+    }
+  }
+  return alternativas;
 }
 
 /** Lee la lista `errores` del backend; descarta lo que no tenga campo y mensaje. */

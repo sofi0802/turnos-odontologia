@@ -189,6 +189,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
 export const paginaAgenda: Pagina = {
   ruta: 'agenda',
   titulo: 'Agenda',
-  privada: true,
+  acceso: 'personal',
+  menu: 'personal',
   render: dibujar,
 };
