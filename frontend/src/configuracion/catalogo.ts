@@ -51,7 +51,8 @@ interface DefinicionCatalogo<T extends ElementoCatalogo> {
   /** Cuerpo del `POST` o `PUT` a partir de los valores del formulario. */
   cuerpo(valores: ReadonlyMap<string, string>): object;
   /** Contenido extra de la fila (el detalle del profesional). Devuelve los botones que agrega. */
-  extra?(fila: HTMLLIElement, item: T, contexto: ContextoSeccion): HTMLButtonElement[];
+  /** `items` es la lista vigente de la pestaña (se actualiza al recargar), por si el detalle la necesita. */
+  extra?(fila: HTMLLIElement, item: T, contexto: ContextoSeccion, items: T[]): HTMLButtonElement[];
 }
 
 function texto(valores: ReadonlyMap<string, string>, nombre: string): string {
@@ -88,11 +89,13 @@ function montarCatalogo<T extends ElementoCatalogo>(
     panel.append(ayuda);
   }
 
+  const vigentes: T[] = [];
   const recargar = cargarEn(
     contenido,
     contexto,
     () => definicion.cargar(contexto.api),
     (items, contenedor) => {
+      vigentes.splice(0, vigentes.length, ...items);
       const lista = crearLista();
       lista.append(...items.map(dibujarFila));
       contenedor.append(lista);
@@ -125,7 +128,7 @@ function montarCatalogo<T extends ElementoCatalogo>(
     }
     const fila = crearFila(definicion.nombre(item), definicion.datos(item), { activo: item.activo, acciones });
     if (definicion.extra !== undefined) {
-      const botones = definicion.extra(fila, item, contexto);
+      const botones = definicion.extra(fila, item, contexto, vigentes);
       let caja = fila.querySelector('.item-acciones');
       if (caja === null && botones.length > 0) {
         caja = document.createElement('div');
@@ -183,15 +186,25 @@ function montarCatalogo<T extends ElementoCatalogo>(
 }
 
 /** "Ver detalle" / "Ocultar detalle" de un profesional, con sus especialidades y su sillón habitual. */
-function detalleDeProfesional(fila: HTMLLIElement, item: Profesional, contexto: ContextoSeccion): HTMLButtonElement[] {
+function detalleDeProfesional(
+  fila: HTMLLIElement,
+  item: Profesional,
+  contexto: ContextoSeccion,
+  todos: Profesional[],
+): HTMLButtonElement[] {
   let actual = item;
   let detalle: HTMLDivElement | null = null;
   const boton = botonChico('Ver detalle');
   boton.setAttribute('aria-expanded', 'false');
   boton.addEventListener('click', () => {
     if (detalle === null) {
-      detalle = crearDetalleProfesional(actual, contexto, (sillonId) => {
+      detalle = crearDetalleProfesional(actual, contexto, todos, (sillonId) => {
         actual = { ...actual, sillonHabitualId: sillonId };
+        // La lista compartida se actualiza para que los demás detalles vean el sillón ya asignado.
+        const posicion = todos.findIndex((p) => p.id === actual.id);
+        if (posicion >= 0) {
+          todos[posicion] = actual;
+        }
       });
       fila.append(detalle);
       fila.classList.add('item-elegido');

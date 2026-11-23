@@ -249,9 +249,28 @@ async function detalleDeAna(servidor: ServidorFalso): Promise<HTMLElement> {
   boton(ana, 'Ver detalle').click();
   return vi.waitFor(() => {
     const detalle = ana.querySelector<HTMLElement>('.detalle-profesional');
-    expect(detalle?.querySelector('select')).not.toBeNull();
+    expect(detalle?.querySelector('input[type="radio"]')).not.toBeNull();
     return detalle as HTMLElement;
   });
+}
+
+const SILLON_3 = { id: 3, nombre: 'Sillón 3', activo: true };
+
+/** Radio de una opción de sillón habitual por su nombre ("Sin sillón habitual" incluido). */
+function opcionSillon(detalle: HTMLElement, nombre: string): HTMLInputElement {
+  const etiqueta = [...detalle.querySelectorAll('label.opcion')].find(
+    (l) => l.querySelector('.opcion-nombre')?.textContent === nombre,
+  );
+  const radio = etiqueta?.querySelector('input');
+  if (radio === null || radio === undefined) {
+    throw new Error(`No existe la opción de sillón ${nombre}`);
+  }
+  return radio;
+}
+
+/** Estado que dice la tarjeta: "Elegido", "Libre" u "Ocupado · <profesional>". */
+function estadoDeSillon(detalle: HTMLElement, nombre: string): string {
+  return opcionSillon(detalle, nombre).closest('label')?.querySelector('small')?.textContent ?? '';
 }
 
 function casilla(detalle: HTMLElement, nombre: string): HTMLInputElement {
@@ -283,15 +302,125 @@ describe('Edición de especialidades y sillón habitual', () => {
     const servidor = servidorCon(SESION_ADMIN);
     servidor.responder('PUT /profesionales/{id}/sillon-habitual', () => json(204));
     const detalle = await detalleDeAna(servidor);
-    const selector = campo<HTMLSelectElement>(detalle, 'Sillón habitual');
-    expect(selector.value).toBe('1');
+    expect(opcionSillon(detalle, 'Sillón 1').checked).toBe(true);
 
-    escribir(selector, '');
-    expect(selector.selectedOptions[0]?.textContent).toBe('Sin sillón habitual');
+    opcionSillon(detalle, 'Sin sillón habitual').click();
+    expect(opcionSillon(detalle, 'Sin sillón habitual').checked).toBe(true);
     boton(detalle, 'Guardar sillón habitual').click();
 
     await vi.waitFor(() => expect(servidor.a('PUT', '/profesionales/1/sillon-habitual')).toHaveLength(1));
     expect(servidor.ultimo('PUT', '/profesionales/1/sillon-habitual').cuerpo).toEqual({ sillonId: null });
+    await vi.waitFor(() => expect(texto(detalle)).toContain('Sillón habitual guardado: Sin sillón habitual.'));
+  });
+
+  it('El administrador elige otro sillón libre', async () => {
+    const servidor = servidorCon(SESION_ADMIN);
+    servidor.responder('GET /sillones', () => json(200, [...SILLONES, SILLON_3]));
+    servidor.responder('PUT /profesionales/{id}/sillon-habitual', () => json(204));
+    const detalle = await detalleDeAna(servidor);
+
+    opcionSillon(detalle, 'Sillón 3').click();
+    expect(estadoDeSillon(detalle, 'Sillón 3')).toBe('Elegido');
+    expect(estadoDeSillon(detalle, 'Sillón 1')).toBe('Libre');
+    boton(detalle, 'Guardar sillón habitual').click();
+
+    await vi.waitFor(() => expect(servidor.a('PUT', '/profesionales/1/sillon-habitual')).toHaveLength(1));
+    expect(servidor.ultimo('PUT', '/profesionales/1/sillon-habitual').cuerpo).toEqual({ sillonId: 3 });
+  });
+
+  it('El detalle separa el bloque de prestaciones del de sillón habitual', async () => {
+    const detalle = await detalleDeAna(servidorCon(SESION_ADMIN));
+
+    const grupos = [...detalle.querySelectorAll<HTMLElement>('.grupo-config')];
+
+    expect(grupos).toHaveLength(2);
+    expect(boton(grupos[0] as HTMLElement, 'Guardar prestaciones')).toBeDefined();
+    expect(boton(grupos[1] as HTMLElement, 'Guardar sillón habitual')).toBeDefined();
+    expect(grupos[1]?.querySelector('.opciones-sillon')).not.toBeNull();
+  });
+});
+
+describe('Sillones habituales ocupados', () => {
+  it('El sillón de otro profesional no se puede elegir', async () => {
+    const servidor = servidorCon(SESION_ADMIN);
+    servidor.responder('GET /sillones', () => json(200, [...SILLONES, SILLON_3]));
+    const detalle = await detalleDeAna(servidor);
+
+    const ocupado = opcionSillon(detalle, 'Sillón 2');
+
+    expect(ocupado.disabled).toBe(true);
+    expect(estadoDeSillon(detalle, 'Sillón 2')).toBe('Ocupado · Bruno Prueba');
+    expect(ocupado.closest('label')?.classList.contains('opcion-ocupada')).toBe(true);
+    expect(opcionSillon(detalle, 'Sillón 1').checked).toBe(true);
+    expect(estadoDeSillon(detalle, 'Sillón 1')).toBe('Elegido');
+    expect(opcionSillon(detalle, 'Sillón 3').disabled).toBe(false);
+    expect(estadoDeSillon(detalle, 'Sillón 3')).toBe('Libre');
+    // "Sin sillón habitual" es una opción más y va al final.
+    const nombres = [...detalle.querySelectorAll('.opciones-sillon .opcion-nombre')].map((n) => n.textContent);
+    expect(nombres).toEqual(['Sillón 1', 'Sillón 2', 'Sillón 3', 'Sin sillón habitual']);
+    expect(opcionSillon(detalle, 'Sin sillón habitual').disabled).toBe(false);
+  });
+
+  it('El sillón lo tomó otro profesional mientras tanto', async () => {
+    const servidor = servidorCon(SESION_ADMIN);
+    servidor.responder('GET /sillones', () => json(200, [...SILLONES, SILLON_3]));
+    servidor.responder('PUT /profesionales/{id}/sillon-habitual', () =>
+      json(409, { status: 409, codigo: 'SILLON_HABITUAL_OCUPADO', detail: 'Sillón ocupado' }),
+    );
+    const detalle = await detalleDeAna(servidor);
+    opcionSillon(detalle, 'Sillón 3').click();
+
+    boton(detalle, 'Guardar sillón habitual').click();
+
+    await vi.waitFor(() => expect(texto(detalle)).toContain('Ese sillón ya es el habitual de otro profesional.'));
+    expect(servidor.ultimo('PUT', '/profesionales/1/sillon-habitual').cuerpo).toEqual({ sillonId: 3 });
+    // El sillón anterior sigue elegido.
+    expect(opcionSillon(detalle, 'Sillón 1').checked).toBe(true);
+    expect(opcionSillon(detalle, 'Sillón 3').checked).toBe(false);
+    expect(estadoDeSillon(detalle, 'Sillón 1')).toBe('Elegido');
+  });
+
+  it('Un profesional inactivo también ocupa su sillón, y el sillón actual se ve aunque esté inactivo', async () => {
+    const servidor = servidorCon(SESION_ADMIN);
+    servidor.responder('GET /profesionales', () =>
+      json(200, [PROFESIONALES[0], { ...PROFESIONALES[1], activo: false }]),
+    );
+    servidor.responder('GET /sillones', () => json(200, [{ ...SILLONES[0], activo: false }, SILLONES[1], SILLON_3]));
+    const detalle = await detalleDeAna(servidor);
+
+    expect(estadoDeSillon(detalle, 'Sillón 2')).toBe('Ocupado · Bruno Prueba');
+    expect(opcionSillon(detalle, 'Sillón 1').checked).toBe(true);
+  });
+
+  it('Dos detalles ven el sillón que se acaba de asignar', async () => {
+    const servidor = servidorCon(SESION_ADMIN);
+    servidor.responder('GET /sillones', () => json(200, [...SILLONES, SILLON_3]));
+    servidor.responder('PUT /profesionales/{id}/sillon-habitual', () => json(204));
+    servidor.responder('GET /profesionales/{id}/prestaciones', () => json(200, []));
+    const { raiz } = await abrirConfiguracion(servidor);
+    const panel = elegirPestana(raiz, 'Profesionales');
+    const ana = await filaCargada(panel, 'Ana Ejemplo');
+    boton(ana, 'Ver detalle').click();
+    const detalleAna = await vi.waitFor(() => {
+      const d = ana.querySelector<HTMLElement>('.detalle-profesional');
+      expect(d?.querySelector('input[type="radio"]')).not.toBeNull();
+      return d as HTMLElement;
+    });
+    opcionSillon(detalleAna, 'Sillón 3').click();
+    boton(detalleAna, 'Guardar sillón habitual').click();
+    await vi.waitFor(() => expect(servidor.a('PUT', '/profesionales/1/sillon-habitual')).toHaveLength(1));
+    await vi.waitFor(() => expect(texto(detalleAna)).toContain('Sillón habitual guardado: Sillón 3.'));
+
+    const bruno = fila(panel, 'Bruno Prueba');
+    boton(bruno, 'Ver detalle').click();
+    const detalleBruno = await vi.waitFor(() => {
+      const d = bruno.querySelector<HTMLElement>('.detalle-profesional');
+      expect(d?.querySelector('input[type="radio"]')).not.toBeNull();
+      return d as HTMLElement;
+    });
+
+    expect(estadoDeSillon(detalleBruno, 'Sillón 3')).toBe('Ocupado · Ana Ejemplo');
+    expect(estadoDeSillon(detalleBruno, 'Sillón 1')).toBe('Libre');
   });
 });
 

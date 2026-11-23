@@ -39,7 +39,8 @@ export const MENSAJES_POR_CODIGO: Readonly<Record<string, string>> = {
   HORARIO_INVALIDO: 'Revisá los días y las horas de las franjas.',
   FRANJAS_SUPERPUESTAS: 'Hay franjas del mismo día que se superponen.',
   PERIODO_INVALIDO: 'El fin tiene que ser posterior al inicio.',
-  TURNO_NO_AFECTADO: 'Ese turno ya no está afectado por la ausencia.',
+  TURNO_NO_AFECTADO: 'Ese turno ya no está afectado por ese período.',
+  SILLON_HABITUAL_OCUPADO: 'Ese sillón ya es el habitual de otro profesional.',
 };
 
 export const MENSAJE_SIN_PERMISO = 'No tenés permiso para esta acción.';
