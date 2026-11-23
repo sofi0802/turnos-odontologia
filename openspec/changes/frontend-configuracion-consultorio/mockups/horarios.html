@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Horarios · Configuración · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <header class="app-encabezado">
+    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisorio" /><span data-brand-name>Turnos odontología</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#">Agenda</a>
+      <a href="profesionales.html" aria-current="page">Configuración</a>
+    </nav>
+    <div class="usuario">
+      <span class="avatar" aria-hidden="true">AD</span>
+      <span class="usuario-nombre">admin</span>
+      <button class="btn btn-fantasma btn-chico" type="button">Salir</button>
+    </div>
+  </header>
+
+  <main class="pagina pagina-config">
+    <h1>Configuración</h1>
+    <div class="pestanas-config" role="tablist" aria-label="Secciones de configuración">
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Profesionales</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Sillones</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Prestaciones</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Margen</button>
+      <button class="pestana" role="tab" type="button" aria-selected="true">Horarios</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Ausencias</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Bloqueos</button>
+    </div>
+    <section role="tabpanel" aria-label="Horarios">
+      <div class="cabecera-seccion"><h2>Horarios de trabajo</h2></div>
+      <div class="campo selector-profesional"><label for="pr">Profesional</label>
+        <select class="control" id="pr"><option selected>Ana Ejemplo</option><option>Bruno Prueba</option></select></div>
+      <div class="aviso aviso-error" role="alert" style="margin-bottom:var(--ds-espacio-2)"><div><strong>No se guardó el horario.</strong>Hay franjas del mismo día que se superponen.</div></div>
+      <ul class="franjas">
+        <li><span class="dia">Lunes</span><div><div class="franja"><span class="franja-horas">08:00 a 13:00</span><button class="btn btn-chico" type="button">Quitar</button></div><div class="franja franja-nueva"><span class="franja-horas">12:00 a 15:00</span><button class="btn btn-chico" type="button">Quitar</button></div></div></li>
+        <li><span class="dia">Martes</span><div><div class="franja"><span class="franja-horas">08:00 a 13:00</span><button class="btn btn-chico" type="button">Quitar</button></div></div></li>
+        <li><span class="dia">Miércoles</span><div><div class="franja"><span class="franja-horas">08:00 a 13:00</span><button class="btn btn-chico" type="button">Quitar</button></div></div></li>
+        <li><span class="dia">Jueves</span><div><div class="franja"><span class="franja-horas">08:00 a 13:00</span><button class="btn btn-chico" type="button">Quitar</button></div></div></li>
+        <li><span class="dia">Viernes</span><div><div class="franja"><span class="franja-horas">08:00 a 13:00</span><button class="btn btn-chico" type="button">Quitar</button></div></div></li>
+        <li><span class="dia">Sábado</span><span class="no-atiende">No atiende</span></li>
+        <li><span class="dia">Domingo</span><span class="no-atiende">No atiende</span></li>
+      </ul>
+      <form class="agregar-franja" aria-label="Agregar franja">
+        <div class="campo"><label for="fd">Día</label><select class="control" id="fd"><option>Lunes</option><option>Martes</option><option>Sábado</option></select></div>
+        <div class="campo"><label for="fh">Desde</label><input class="control" id="fh" type="time" value="09:00" /></div>
+        <div class="campo"><label for="fa">Hasta</label><input class="control" id="fa" type="time" value="12:00" /></div>
+        <button class="btn" type="button">Agregar franja</button>
+      </form>
+      <div class="acciones">
+        <button class="btn" type="button">Descartar cambios</button>
+        <button class="btn btn-principal" type="button">Guardar horario</button>
+      </div>
+    </section>
+  </main>
+  <script>document.querySelector('.pestana[aria-selected="true"]').scrollIntoView({ block: 'nearest', inline: 'center' });</script>
+</body>
+</html>
