@@ -101,7 +101,7 @@ El formulario SHALL aceptar el número de reserva escrito en minúsculas, con es
 - **AND** el formulario sigue abierto con el horario elegido
 
 ### Requirement: Mensajes de rechazo de la reprogramación
-Cada código de rechazo que la reprogramación puede devolver MUST tener un texto en español propio, y un código sin texto MUST mostrar un mensaje genérico, nunca vacío ni el código interno.
+Cada código de rechazo que la reprogramación puede devolver MUST tener un texto en español propio, y un código sin texto MUST mostrar el detalle del servidor o un mensaje genérico, nunca vacío ni el código interno.
 
 #### Scenario: Profesional no habilitado
 - **GIVEN** el formulario completo con otro profesional elegido
@@ -117,7 +117,8 @@ Cada código de rechazo que la reprogramación puede devolver MUST tener un text
 #### Scenario: Código desconocido
 - **GIVEN** el formulario completo
 - **WHEN** la API responde `409` con un código que el frontend no conoce
-- **THEN** se ve el mensaje genérico de error y no el código
+- **THEN** se ve el detalle que informó el servidor o, si no trae detalle, el mensaje genérico de error
+- **AND** nunca se ve el código ni un mensaje vacío
 
 ### Requirement: Un horario ofrecido se puede reprogramar
 Un horario que la disponibilidad ofrece al profesional elegido MUST poder reprogramarse sin que el formulario lo estorbe: el pedido lleva exactamente lo que el personal eligió, y los rechazos del backend llegan al personal con su motivo.
