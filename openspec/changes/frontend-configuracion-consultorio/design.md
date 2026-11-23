@@ -29,7 +29,7 @@
 | Bloqueos | `GET/POST /profesionales/{id}/bloqueos`, `DELETE /{bloqueoId}` (todo el controlador es `ADMIN` u `ODONTOLOGO`) | `ADMIN`, `ODONTOLOGO` propio |
 
 - Los `GET` de horarios, ausencias y bloqueos pasan por `Solicitante.exigirPropioSiEsOdontologo`: un odontólogo que pide otro profesional recibe `403`.
-- `SesionResponse` es `(autenticado, username, rol)`. `UsuarioAutenticado` ya tiene `profesionalId()`, pero no se expone.
+- Desde C-35, `SesionResponse` incluye `profesionalId` para un `ODONTOLOGO`, y el frontend lo lee en `Sesion.profesionalId?: number`. C-35 también hace que `GET /turnos` devuelva al odontólogo solo los turnos de su profesional.
 
 **Respuestas y errores**
 - `POST` de ausencias y de bloqueos responde `PeriodoRegistradoRespuesta {periodo, turnosAfectados:[{turnoId, inicio, fin, prestacionId}]}`.
@@ -86,17 +86,12 @@ Una función `permisos(sesion)` devuelve qué puede hacer el rol:
 - Cada panel dibuja los botones según esos permisos.
 - Si la API igual responde `403` (por ejemplo, porque cambió el rol en otra pestaña), se muestra `MENSAJE_SIN_PERMISO`. Un `401` sigue la sesión vencida de C-09.
 
-### D4. `profesionalId` en la sesión (backend, cambio mínimo)
-- `SesionResponse` suma `Long profesionalId`.
-- `SesionResponse.de(...)` recibe el `UsuarioAutenticado` (o el `Usuario`) y completa el campo solo si `rol == ODONTOLOGO`. Con `@JsonInclude(NON_NULL)`, no aparece para los demás.
-- Lo usan el login y `GET /public/sesion`.
-- En el frontend, `Sesion` suma `profesionalId: number | null` y `leerSesion` lo valida como número.
+### D4. El profesional del odontólogo sale de la sesión de C-35
+- Para un `ODONTOLOGO`, las pestañas Horarios, Ausencias y Bloqueos usan `sesion.profesionalId`, que C-35 ya agrega en el login y en `GET /public/sesion`.
+- Si falta, como en un usuario `ODONTOLOGO` sin profesional vinculado, se muestra el aviso del spec y no se pide nada.
+- C-34 no cambia el backend ni `sesion.ts`.
 
-**Alternativas descartadas:**
-- Que el odontólogo elija el profesional en un selector y reciba `403` con los ajenos: es confuso y muestra a todo el equipo.
-- Esperar a C-35: dejaría al odontólogo sin bloqueos en el MVP.
-
-**Coordinación:** `usuarios/` es de Juan Sebastián (se le avisa en el PR), y C-35 puede reutilizar el campo.
+**Alternativa descartada:** que el odontólogo elija el profesional en un selector y reciba `403` con los ajenos. Es confuso y muestra a todo el equipo.
 
 ### D5. Horarios: edición local y `PUT` del conjunto completo
 - La API reemplaza todas las franjas de un profesional con un único `PUT`, así que la pestaña edita una copia local. "Agregar franja" y "Quitar" solo la cambian; "Guardar horario" la envía entera.
@@ -158,24 +153,21 @@ Se agregan a `MENSAJES_POR_CODIGO`:
   - **Riesgo:** los botones se derivan del rol en memoria.
   - **Mitigación:** la API sigue rechazando con `403` y se muestra el mensaje.
 - **[`GET /turnos` filtrado en C-35]**
-  - **Riesgo:** C-35 va a restringir la agenda del odontólogo.
+  - **Riesgo:** desde C-35, la agenda del odontólogo está restringida a su profesional.
   - **Mitigación:** "Ver turnos afectados" solo lo usan `ADMIN` y `RECEPCIONISTA`, así que no se ve afectado.
 - **[N pedidos en "Reasignar"]**
   - **Riesgo:** se piden las especialidades de cada profesional.
   - **Mitigación:** un consultorio chico tiene pocos profesionales, y se cachean mientras la pestaña está abierta.
-- **[Cambio de backend en un módulo ajeno]**
-  - **Riesgo:** toca `usuarios/api`, que no es de Emanuel.
-  - **Mitigación:** el cambio es aditivo, con su test, y se avisa a Juan Sebastián en el PR.
 
 ## Migration Plan
 
-No hay migraciones de base de datos. El campo nuevo de la sesión es opcional, así que el frontend viejo lo ignora y el nuevo tolera su ausencia.
+No hay migraciones de base de datos ni cambios de backend.
 
 ## UI Mockups
 
 - Design system revision: 1 (`design-system/README.md`, aprobado el 2026-11-22).
 - Decision: yes, 2026-11-23. El modo es `system-and-mockups` en `.active-orchestrator-state.json` y en `design-system/README.md`.
 - Mockups: `openspec/changes/frontend-configuracion-consultorio/mockups/` (ver su `README.md`). Fuente de referencia: `design-system/components.html`.
-- Approval: pending.
+- Approval: approved (2026-11-23, by Sofia Indovino). La aprobó al mergear el PR #51, que la pedía.
 - Preview: rendered (2026-11-23). Las capturas están en `mockups/previews/`, a 390 × 844 y 1440 × 900, sin desplazamiento horizontal ni errores en la consola.
 - Visual verify: pendiente.

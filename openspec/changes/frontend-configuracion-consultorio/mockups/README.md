@@ -1,7 +1,7 @@
 # Mockups de C-34 `frontend-configuracion-consultorio`
 
 - Design system revision: 1 (`design-system/README.md`, aprobado el 2026-11-22)
-- Approval: pending
+- Approval: approved (2026-11-23, by Sofia Indovino al mergear el PR #51, que pedía la aprobación)
 - Preview: rendered (2026-11-23). Las capturas están en `previews/`, a 390 × 844 y 1440 × 900. Son de página completa, salvo las de los diálogos, que muestran lo que se ve en pantalla. Ninguna pantalla tiene desplazamiento horizontal, errores en la consola ni recursos que no carguen.
 
 Los aprueba la líder antes del apply (`design-system/README.md`). Una vez aprobados, son el criterio de aceptación visual de las tareas de `tasks.md`.
