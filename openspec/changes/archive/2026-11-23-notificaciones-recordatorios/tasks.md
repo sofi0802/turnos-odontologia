@@ -5,7 +5,7 @@
 ## 0. Puntos de partida y avisos
 
 - [x] 0.1 Correr `./gradlew build` y, por separado, `./gradlew integrationTest` sobre la rama (cargando `DB_*` desde `.env`) y registrar la línea base de tests; verificar que todo pasa antes de tocar código
-- [ ] 0.2 Dejar escrito en la descripción del PR: el orden de merge (C-08 antes que C-11), los archivos de `agenda/` que se tocan (aprobación de Sofía), que `shared/security` no cambia (aviso a Juan Sebastián) y el desvío de la KB (`tipo = REASIGNACION`, sin links de cancelar ni reprogramar hasta C-10); verificar que la lista coincide con `git diff --stat`
+- [x] 0.2 Dejar escrito en la descripción del PR: el orden de merge (C-08 antes que C-11), los archivos de `agenda/` que se tocan (aprobación de Sofía), que `shared/security` no cambia (aviso a Juan Sebastián) y el desvío de la KB (`tipo = REASIGNACION`, sin links de cancelar ni reprogramar hasta C-10); verificar que la lista coincide con `git diff --stat`
 
 ## 1. Migración V7
 

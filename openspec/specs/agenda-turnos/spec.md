@@ -533,3 +533,17 @@ El sistema MUST rechazar con `PROFESIONAL_NO_HABILITADO` un turno nuevo, un sobr
 - **GIVEN** que la Dra. A está inactiva y no está habilitada para "Tratamiento de conducto"
 - **WHEN** se crea un turno de "Tratamiento de conducto" con la Dra. A en el Sillón 1 a las 10:00
 - **THEN** el turno se rechaza con `RECURSO_INACTIVO`
+
+### Requirement: Confirmación de un turno reservado
+El sistema SHALL permitir que un turno `RESERVADO` pase a `CONFIRMADO` sin cambiar su horario, su sillón, su profesional ni su número de reserva. Un turno en cualquier otro estado MUST NOT poder confirmarse.
+
+#### Scenario: Confirmar un turno reservado
+- **GIVEN** un turno `RESERVADO` de "Paciente Uno" de 10:00 a 10:30 con la Dra. A en el Sillón 1
+- **WHEN** se lo confirma
+- **THEN** el turno queda `CONFIRMADO` con el mismo horario, sillón, profesional y número de reserva
+- **AND** sigue ocupando la agenda con el mismo margen
+
+#### Scenario: Confirmar un turno que no está reservado
+- **GIVEN** un turno `CANCELADO`, `ATENDIDO` o `AUSENTE`
+- **WHEN** se intenta confirmarlo
+- **THEN** la operación se rechaza y el turno queda sin cambios
