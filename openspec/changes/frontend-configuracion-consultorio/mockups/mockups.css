@@ -240,3 +240,13 @@ p { margin: 0; }
 }
 .velo { overflow-y: auto; }
 .velo .dialogo { margin: auto; }
+
+/* --- Sillón habitual con tarjetas de opción (revisión 2b) --- */
+.opciones-sillon { grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr)); width: 100%; }
+fieldset.campo { border: 0; padding: 0; margin: 0; min-width: 0; width: 100%; }
+fieldset.campo > legend { padding: 0; margin-bottom: var(--ds-espacio-1); font-weight: var(--ds-peso-medio); }
+.opcion-ocupada { color: var(--ds-texto-deshabilitado); background: var(--ds-superficie); border-color: var(--ds-borde); border-style: dashed; cursor: not-allowed; }
+.opcion-ocupada small { color: var(--ds-texto-deshabilitado); }
+.grupo-config:has(.opciones-sillon) { justify-items: stretch; }
+.grupo-config:has(.opciones-sillon) > .btn { justify-self: start; }
+.grupo-config fieldset.campo:has(.opciones-sillon) { max-width: none; }

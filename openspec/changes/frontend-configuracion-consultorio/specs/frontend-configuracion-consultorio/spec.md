@@ -168,13 +168,13 @@ Para `ADMIN`, el detalle de un profesional SHALL permitir:
 - **THEN** se envía `PUT /api/v1/profesionales/1/sillon-habitual` con `{"sillonId":null}`
 
 ### Requirement: Sillones habituales ocupados
-En el detalle y en el alta de un profesional, un sillón que ya es el habitual de otro profesional (RN-RO-09) SHALL aparecer deshabilitado y con el nombre de quien lo tiene, por ejemplo "Sillón 2 (de Bruno Prueba)". Si igual la API responde `SILLON_HABITUAL_OCUPADO`, se muestra "Ese sillón ya es el habitual de otro profesional." y el sillón anterior sigue elegido.
+Un sillón que ya es el habitual de otro profesional (RN-RO-09) SHALL aparecer deshabilitado y con el nombre de quien lo tiene. En el detalle, los sillones se eligen con tarjetas de opción (radio), y la ocupada dice "Ocupado · Bruno Prueba". En el selector del alta, la opción dice "Sillón 2 (de Bruno Prueba)". Si igual la API responde `SILLON_HABITUAL_OCUPADO`, se muestra "Ese sillón ya es el habitual de otro profesional." y el sillón anterior sigue elegido.
 
 #### Scenario: El sillón de otro profesional no se puede elegir
 - **GIVEN** una sesión de `admin` en el detalle de la Dra. Ana Ejemplo
-- **WHEN** abre el selector de sillón habitual
-- **THEN** "Sillón 2 (de Bruno Prueba)" está deshabilitado
-- **AND** "Sillón 1" está habilitado y elegido
+- **WHEN** mira las opciones de sillón habitual
+- **THEN** la opción "Sillón 2" está deshabilitada y dice "Ocupado · Bruno Prueba"
+- **AND** "Sillón 1" está elegido y "Sin sillón habitual" es una opción más
 
 #### Scenario: El sillón lo tomó otro profesional mientras tanto
 - **GIVEN** una sesión de `admin` en el detalle de la Dra. Ana Ejemplo

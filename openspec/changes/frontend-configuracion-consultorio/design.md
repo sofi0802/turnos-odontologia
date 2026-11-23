@@ -156,6 +156,7 @@ Textos fijos nuevos: "Elegí al menos un día.", "Avisale a la recepción para r
   - `.franjas` (grilla de días).
 - Los botones de acción respetan `--ds-alto-control` (44 px).
 - **Espaciado (segunda prueba):** en el detalle del profesional, cada bloque (prestaciones y sillón habitual) es un `.grupo-config` con `gap: var(--ds-espacio-1)` (8 px) entre el campo y su botón, y `--ds-espacio-3` (24 px) entre bloques. Antes, el botón "Guardar sillón habitual" quedaba pegado al selector.
+- **Sillón habitual en el detalle (revisión 2b, pedido de Emanuel):** en vez de un `<select>`, tarjetas `.opcion` con radio (las de la reserva en `components.html`), en una grilla `.opciones-sillon` de `minmax(12rem, 1fr)`. Cada tarjeta muestra el sillón y un estado: "Elegido", "Libre" u "Ocupado · <profesional>" (deshabilitada y punteada). "Sin sillón habitual" es la última tarjeta. El alta conserva el `<select>`.
 - Se agregan `.dias-semana` (casillas de días en fila, que se apilan en 390 px) y `.hora-5` (dos selectores, hora y minutos, en línea).
 
 ### D12. "Todos los profesionales": un pedido por profesional

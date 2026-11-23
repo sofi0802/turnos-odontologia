@@ -60,11 +60,16 @@
               <button class="btn btn-principal" type="button">Guardar prestaciones</button>
             </div>
             <div class="grupo-config">
-              <div class="campo">
-                <label for="sh">Sillón habitual</label>
-                <select class="control" id="sh" size="4"><option>Sin sillón habitual</option><option selected>Sillón 1</option><option disabled>Sillón 2 (de Bruno Prueba)</option><option>Sillón 3</option></select>
-                <span class="ayuda">Un sillón que ya es el habitual de otro profesional no se puede elegir.</span>
-              </div>
+              <fieldset class="campo">
+                <legend>Sillón habitual</legend>
+                <div class="opciones opciones-sillon">
+                  <label class="opcion"><input type="radio" name="sh" checked /><span>Sillón 1<small>Elegido</small></span></label>
+                  <label class="opcion opcion-ocupada"><input type="radio" name="sh" disabled /><span>Sillón 2<small>Ocupado · Bruno Prueba</small></span></label>
+                  <label class="opcion"><input type="radio" name="sh" /><span>Sillón 3<small>Libre</small></span></label>
+                  <label class="opcion"><input type="radio" name="sh" /><span>Sin sillón habitual<small>Lo asigna la reserva</small></span></label>
+                </div>
+                <span class="ayuda">Un sillón ocupado es el habitual de otro profesional. Para pasarlo, quitáselo primero.</span>
+              </fieldset>
               <button class="btn" type="button">Guardar sillón habitual</button>
             </div>
             <div class="aviso aviso-ok" role="status" style="margin-top:var(--ds-espacio-3)"><div>Prestaciones guardadas.</div></div>
