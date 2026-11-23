@@ -1,6 +1,5 @@
-import { fechaLarga } from '../shared/fecha/zona.ts';
 import { crearBoton, crearCampo, crearSelector } from '../shared/ui/campos.ts';
-import { cargarPrestaciones, nombreCompleto, type Profesional } from './api.ts';
+import { nombreCompleto, type Profesional } from './api.ts';
 import {
   cargarPeriodosDeTodos,
   crearCamposPeriodo,
@@ -8,12 +7,10 @@ import {
   leerPeriodoRegistrado,
   leerPeriodos,
   textoDePeriodo,
-  textoDeTurno,
   type Periodo,
-  type TurnoAfectado,
 } from './periodos.ts';
 import { crearCampoProfesional, leerCampoProfesional, montarProfesionalElegido } from './profesional-elegido.ts';
-import { abrirReasignacion, crearRecursosReasignacion } from './reasignacion.ts';
+import { crearTurnosAfectados } from './turnos-afectados.ts';
 import {
   abrirDialogo,
   botonChico,
@@ -32,36 +29,8 @@ const TIPOS = [
   { valor: 'LICENCIA', texto: 'Licencia' },
 ] as const;
 
-/** Estados de turno que siguen ocupando la agenda (design D7). */
-const ESTADOS_DADOS: ReadonlySet<string> = new Set(['RESERVADO', 'CONFIRMADO']);
-
 function textoDeTipo(tipo: string): string {
   return tipo === 'LICENCIA' ? 'Licencia' : 'Ausencia';
-}
-
-/**
- * Turno de `GET /turnos` como turno afectado. Se leen solo fecha, hora y prestación: el nombre del
- * paciente que trae la agenda no se usa (design D7, RN-NO-01).
- */
-function leerTurnoDado(valor: unknown): TurnoAfectado | null {
-  if (typeof valor !== 'object' || valor === null) {
-    return null;
-  }
-  const id: unknown = Reflect.get(valor, 'id');
-  const inicio: unknown = Reflect.get(valor, 'inicio');
-  const fin: unknown = Reflect.get(valor, 'fin');
-  const prestacionId: unknown = Reflect.get(valor, 'prestacionId');
-  const estado: unknown = Reflect.get(valor, 'estado');
-  if (
-    typeof id !== 'number' ||
-    typeof inicio !== 'string' ||
-    typeof prestacionId !== 'number' ||
-    typeof estado !== 'string' ||
-    !ESTADOS_DADOS.has(estado)
-  ) {
-    return null;
-  }
-  return { turnoId: id, inicio, fin: typeof fin === 'string' ? fin : inicio, prestacionId };
 }
 
 /**
@@ -77,29 +46,12 @@ export function montarAusencias(panel: HTMLElement, contexto: ContextoSeccion): 
   let profesionalId: number | null = null;
   let profesionales: readonly Profesional[] = [];
   let recargar: () => void = () => undefined;
-  const recursos = crearRecursosReasignacion(api);
-
-  let nombresPrestaciones: Promise<ReadonlyMap<number, string>> | null = null;
-  const prestaciones = (): Promise<ReadonlyMap<number, string>> => {
-    if (nombresPrestaciones === null) {
-      nombresPrestaciones = cargarPrestaciones(api).then(
-        (lista) => new Map(lista.map((p) => [p.id, p.nombre])),
-        () => {
-          nombresPrestaciones = null;
-          return new Map<number, string>();
-        },
-      );
-    }
-    return nombresPrestaciones;
-  };
 
   const registrar = crearBoton('Registrar ausencia');
   panel.append(crearCabecera('Ausencias y licencias', gestiona ? registrar : undefined));
 
   const lista = document.createElement('div');
-  const afectados = document.createElement('div');
-  /** Ausencia cuyos turnos afectados se muestran, para limpiarlos si se borra. */
-  let ausenciaMostrada: number | null = null;
+  const afectados = crearTurnosAfectados(contexto, 'ausencias', () => profesionales);
 
   montarProfesionalElegido(
     panel,
@@ -118,7 +70,7 @@ export function montarAusencias(panel: HTMLElement, contexto: ContextoSeccion): 
       cargarLista(null);
     },
   );
-  panel.append(lista, afectados);
+  panel.append(lista, afectados.contenedor);
   if (!gestiona && contexto.permisos.profesionalFijoId !== null) {
     const ayuda = document.createElement('p');
     ayuda.className = 'ayuda';
@@ -127,8 +79,7 @@ export function montarAusencias(panel: HTMLElement, contexto: ContextoSeccion): 
   }
 
   function limpiarAfectados(): void {
-    ausenciaMostrada = null;
-    afectados.replaceChildren();
+    afectados.limpiar();
   }
 
   function nombreDe(id: number): string {
@@ -168,7 +119,7 @@ export function montarAusencias(panel: HTMLElement, contexto: ContextoSeccion): 
       const acciones: HTMLButtonElement[] = [];
       if (gestiona) {
         const ver = botonChico('Ver turnos afectados');
-        ver.addEventListener('click', () => verAfectados(ausencia.profesionalId, ausencia));
+        ver.addEventListener('click', () => afectados.ver(ausencia));
         const borrar = botonChico('Borrar', 'peligro');
         borrar.addEventListener('click', () => borrarAusencia(ausencia.profesionalId, ausencia));
         acciones.push(ver, borrar);
@@ -193,99 +144,12 @@ export function montarAusencias(panel: HTMLElement, contexto: ContextoSeccion): 
       contexto,
       () => api.borrar(`/profesionales/${id}/ausencias/${ausencia.id}`),
       () => {
-        if (ausenciaMostrada === ausencia.id) {
+        if (afectados.periodoMostrado() === ausencia.id) {
           limpiarAfectados();
         }
         recargar();
       },
     );
-  }
-
-  /** "Ver turnos afectados": los turnos dados del profesional dentro del período exacto (design D7). */
-  function verAfectados(id: number, ausencia: Periodo): void {
-    ausenciaMostrada = ausencia.id;
-    const contenedor = document.createElement('div');
-    afectados.replaceChildren(contenedor);
-    const query = new URLSearchParams({ desde: ausencia.inicio, hasta: ausencia.fin, profesionalId: String(id) });
-    cargarEn(
-      contenedor,
-      contexto,
-      async () => {
-        const cuerpo = await api.obtener<unknown>(`/turnos?${query.toString()}`);
-        if (!Array.isArray(cuerpo)) {
-          throw new Error('Respuesta inesperada de /turnos');
-        }
-        return cuerpo.map(leerTurnoDado).filter((t): t is TurnoAfectado => t !== null);
-      },
-      (turnos, destino) => mostrarAfectados(destino, id, ausencia, turnos),
-    );
-  }
-
-  /** Lista de turnos afectados con fecha, hora y prestación, sin datos de salud (RN-NO-01). */
-  function mostrarAfectados(
-    destino: HTMLElement,
-    id: number,
-    ausencia: Periodo,
-    turnos: readonly TurnoAfectado[],
-  ): void {
-    ausenciaMostrada = ausencia.id;
-    const caja = document.createElement('div');
-    caja.className = 'afectados';
-    caja.setAttribute('role', 'status');
-    destino.replaceChildren(caja);
-    void prestaciones().then((nombres) => {
-      let restantes = turnos.length;
-      const titulo = document.createElement('h3');
-      const tituloDe = (n: number): string => `Turnos afectados: ${n}`;
-      titulo.textContent = tituloDe(restantes);
-      const ayuda = document.createElement('p');
-      ayuda.className = 'ayuda';
-      const periodo = `${ausencia.tipo === 'LICENCIA' ? 'La licencia' : 'La ausencia'} del ${fechaLarga(ausencia.inicio)}`;
-      ayuda.textContent =
-        turnos.length === 0
-          ? `${periodo} no se cruza con turnos dados.`
-          : `${periodo} se cruza con estos turnos. Reasignalos a otro profesional o reprogramalos desde la agenda.`;
-      const aviso = document.createElement('p');
-      aviso.className = 'aviso aviso-ok';
-      aviso.hidden = true;
-      caja.append(titulo, ayuda, aviso);
-      if (turnos.length === 0) {
-        return;
-      }
-      const ul = crearLista();
-      for (const turno of turnos) {
-        const prestacion = nombres.get(turno.prestacionId) ?? 'Prestación';
-        const fila = crearFila(textoDeTurno(turno.inicio), [prestacion]);
-        if (gestiona) {
-          const reasignar = botonChico('Reasignar', 'principal');
-          reasignar.addEventListener('click', () =>
-            abrirReasignacion({
-              contexto,
-              recursos,
-              ausenteId: id,
-              ausenciaId: ausencia.id,
-              turno,
-              prestacion,
-              profesionales,
-              alReasignar: () => {
-                fila.remove();
-                restantes -= 1;
-                titulo.textContent = tituloDe(restantes);
-                aviso.textContent = 'Turno reasignado.';
-                aviso.hidden = false;
-              },
-            }),
-          );
-          // El botón se agrega aparte porque `alReasignar` necesita la fila ya creada.
-          const cajaAcciones = document.createElement('div');
-          cajaAcciones.className = 'item-acciones';
-          cajaAcciones.append(reasignar);
-          fila.append(cajaAcciones);
-        }
-        ul.append(fila);
-      }
-      caja.append(ul);
-    });
   }
 
   registrar.addEventListener('click', () => abrirRegistro());
@@ -323,9 +187,7 @@ export function montarAusencias(panel: HTMLElement, contexto: ContextoSeccion): 
           recargar();
           const registrada = leerPeriodoRegistrado(respuesta);
           if (registrada !== null) {
-            const contenedor = document.createElement('div');
-            afectados.replaceChildren(contenedor);
-            mostrarAfectados(contenedor, id, { ...registrada.periodo, profesionalId: id }, registrada.turnosAfectados);
+            afectados.mostrar({ ...registrada.periodo, profesionalId: id }, registrada.turnosAfectados);
           }
         },
         (causa: unknown) => {

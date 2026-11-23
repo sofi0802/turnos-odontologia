@@ -32,7 +32,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
     ['Horarios', montarHorarios],
     ['Ausencias', montarAusencias],
   ];
-  // Recepción no gestiona bloqueos y el backend le niega el recurso (RBAC).
+  // Los tres roles ven los bloqueos; registrar y borrar es solo de ADMIN y ODONTOLOGO (design D3).
   if (permisosDelRol.veBloqueos) {
     definiciones.push(['Bloqueos', montarBloqueos]);
   }

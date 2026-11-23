@@ -106,7 +106,7 @@ Antes de empezar, `./gradlew test` y `./gradlew integrationTest` pasan. Los test
 - [x] 11.4 Alta completa del profesional (D14). Escribir "Alta con prestaciones y sillón", "Alta sin prestaciones ni sillón" y "Falla el sillón después del alta".
 - [x] 11.5 "Todos los profesionales" en Ausencias y Bloqueos (D12).
   - Escribir "Ausencias de todos los profesionales", "Bloqueos de todos los profesionales", "Registrar con todos los profesionales elegidos", "El odontólogo no ve la opción de todos" y "Falla la carga de un profesional en la vista de todos".
-- [ ] 11.6 Bloqueos para recepción y la reasignación por bloqueo (D3, D7 y D8).
+- [x] 11.6 Bloqueos para recepción y la reasignación por bloqueo (D3, D7 y D8).
   - Actualizar `permisos.ts` y su test.
   - Reemplazar "Recepción no ve los bloqueos" por "Recepción ve los bloqueos sin poder registrarlos".
   - Escribir "Bloqueo que se cruza con turnos" (actualizado), "El administrador reasigna desde un bloqueo nuevo", "Recepción ve los turnos afectados de un bloqueo" y "Reasignar un turno afectado por un bloqueo".

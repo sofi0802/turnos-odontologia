@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { permisos } from '../src/configuracion/permisos.ts';
 import { crearPestanas } from '../src/configuracion/pestanas.ts';
-import { abrirApp, json, ServidorFalso } from './apoyo.ts';
+import { abrirApp, campo, escribir, json, ServidorFalso } from './apoyo.ts';
 import {
   abrirConfiguracion,
   elegirPestana,
@@ -29,10 +29,21 @@ describe('Secciones según el rol', () => {
     expect(panel?.getAttribute('aria-labelledby')).toBe(pestana(raiz, 'Profesionales').id);
   });
 
-  it('Recepción no ve los bloqueos', async () => {
-    const { raiz } = await abrirConfiguracion(servidorCon(SESION_RECEPCION_CONFIG));
+  it('Recepción ve los bloqueos sin poder registrarlos', async () => {
+    const servidor = servidorCon(SESION_RECEPCION_CONFIG);
+    servidor.responder('GET /profesionales/{id}/bloqueos', () => json(200, []));
+    const { raiz } = await abrirConfiguracion(servidor);
+    expect(pestanas(raiz).map((p) => p.textContent)).toEqual(TODAS);
 
-    expect(pestanas(raiz).map((p) => p.textContent)).toEqual(TODAS.filter((t) => t !== 'Bloqueos'));
+    const panel = elegirPestana(raiz, 'Bloqueos');
+    await vi.waitFor(() => expect(servidor.a('GET', '/profesionales/1/bloqueos')).toHaveLength(1));
+    escribir(campo<HTMLSelectElement>(panel, 'Profesional'), '1');
+
+    await vi.waitFor(() => expect(servidor.a('GET', '/profesionales/1/bloqueos')).toHaveLength(2));
+    await vi.waitFor(() => expect(panel.textContent).toContain('No hay bloqueos registrados.'));
+    const botones = [...panel.querySelectorAll('button')].map((b) => b.textContent);
+    expect(botones).not.toContain('Bloquear horario');
+    expect(botones).not.toContain('Borrar');
   });
 
   it('El odontólogo ve las siete pestañas', async () => {
@@ -109,6 +120,7 @@ describe('Permisos por rol (design D3)', () => {
       editaMargen: true,
       editaHorarios: true,
       gestionaAusencias: true,
+      reasigna: true,
       veBloqueos: true,
       gestionaBloqueos: true,
       veTodos: true,
@@ -117,13 +129,14 @@ describe('Permisos por rol (design D3)', () => {
     });
   });
 
-  it('RECEPCIONISTA solo gestiona ausencias y no ve bloqueos', () => {
+  it('RECEPCIONISTA gestiona ausencias y reasigna, y ve los bloqueos sin gestionarlos', () => {
     expect(permisos({ autenticado: true, username: 'recepcion', rol: 'RECEPCIONISTA' })).toEqual({
       editaCatalogos: false,
       editaMargen: false,
       editaHorarios: false,
       gestionaAusencias: true,
-      veBloqueos: false,
+      reasigna: true,
+      veBloqueos: true,
       gestionaBloqueos: false,
       veTodos: true,
       profesionalFijo: false,
@@ -137,6 +150,7 @@ describe('Permisos por rol (design D3)', () => {
       editaMargen: false,
       editaHorarios: false,
       gestionaAusencias: false,
+      reasigna: false,
       veBloqueos: true,
       gestionaBloqueos: true,
       veTodos: false,

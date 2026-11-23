@@ -402,6 +402,23 @@ describe('Todos los profesionales en ausencias y bloqueos', () => {
     await vi.waitFor(() => expect(servidor.a('GET', '/profesionales/2/ausencias')).toHaveLength(2));
   });
 
+  it('En la vista de todos, "Ver turnos afectados" usa el profesional de cada fila', async () => {
+    const servidor = servidorConAusenciasDeTodos(SESION_ADMIN);
+    const { raiz } = await abrirConfiguracion(servidor);
+    const panel = elegirPestana(raiz, 'Ausencias');
+    await vi.waitFor(() => expect(texto(panel)).toContain('Curso'));
+    const filaBruno = [...panel.querySelectorAll<HTMLLIElement>('.lista-config.con-columna > li')].find((f) =>
+      texto(f).includes('Bruno Prueba'),
+    ) as HTMLLIElement;
+
+    boton(filaBruno, 'Ver turnos afectados').click();
+
+    await vi.waitFor(() => expect(texto(panel)).toContain('Turnos afectados: 0'));
+    const pedido = servidor.ultimo('GET', '/turnos');
+    expect(pedido.query.get('profesionalId')).toBe('2');
+    expect(pedido.query.get('desde')).toBe('2026-12-03T14:00:00-03:00');
+  });
+
   it('El odontólogo no ve la opción de todos', async () => {
     const servidor = servidorConAusenciasDeTodos(SESION_ODONTOLOGA);
     const { raiz } = await abrirConfiguracion(servidor);

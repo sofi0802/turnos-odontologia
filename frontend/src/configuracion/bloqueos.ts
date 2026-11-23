@@ -10,6 +10,7 @@ import {
   type Periodo,
 } from './periodos.ts';
 import { crearCampoProfesional, leerCampoProfesional, montarProfesionalElegido } from './profesional-elegido.ts';
+import { crearTurnosAfectados } from './turnos-afectados.ts';
 import {
   abrirDialogo,
   botonChico,
@@ -33,7 +34,7 @@ export function textoDeCruce(cantidad: number): string {
 /**
  * Pestaña "Bloqueos" (requisito "Bloqueos de agenda"): lista, registro y borrado con confirmación.
  * `ADMIN` elige el profesional; `ODONTOLOGO` opera sobre el suyo. Si el bloqueo se cruza con turnos
- * dados, solo se informa cuántos son: no se reasignan.
+ * dados, se informa cuántos son y se listan; `ADMIN` y `RECEPCIONISTA` los reasignan (design D8).
  */
 export function montarBloqueos(panel: HTMLElement, contexto: ContextoSeccion): void {
   const { api, permisos } = contexto;
@@ -49,6 +50,7 @@ export function montarBloqueos(panel: HTMLElement, contexto: ContextoSeccion): v
 
   const aviso = document.createElement('div');
   const lista = document.createElement('div');
+  const afectados = crearTurnosAfectados(contexto, 'bloqueos', () => profesionales);
 
   montarProfesionalElegido(
     panel,
@@ -58,16 +60,25 @@ export function montarBloqueos(panel: HTMLElement, contexto: ContextoSeccion): v
       profesionalId = id;
       profesionales = cargados;
       aviso.replaceChildren();
+      afectados.limpiar();
       cargarLista(id);
     },
     (cargados) => {
       profesionalId = null;
       profesionales = cargados;
       aviso.replaceChildren();
+      afectados.limpiar();
       cargarLista(null);
     },
   );
-  panel.append(aviso, lista);
+  panel.append(aviso, lista, afectados.contenedor);
+  if (!gestiona && permisos.reasigna) {
+    const ayuda = document.createElement('p');
+    ayuda.className = 'ayuda';
+    ayuda.textContent =
+      'Los bloqueos los registra cada odontólogo o el administrador. Desde acá podés ver los turnos que afectan y reasignarlos.';
+    panel.append(ayuda);
+  }
 
   /** `id` es el profesional elegido, o `null` con "Todos los profesionales" (design D12). */
   function cargarLista(id: number | null): void {
@@ -104,6 +115,11 @@ export function montarBloqueos(panel: HTMLElement, contexto: ContextoSeccion): v
     const ul = crearLista(conProfesional);
     for (const bloqueo of bloqueos) {
       const acciones: HTMLButtonElement[] = [];
+      if (permisos.reasigna) {
+        const ver = botonChico('Ver turnos afectados');
+        ver.addEventListener('click', () => afectados.ver(bloqueo));
+        acciones.push(ver);
+      }
       if (gestiona) {
         const borrar = botonChico('Borrar', 'peligro');
         borrar.addEventListener('click', () => borrarBloqueo(bloqueo.profesionalId, bloqueo));
@@ -130,6 +146,9 @@ export function montarBloqueos(panel: HTMLElement, contexto: ContextoSeccion): v
       () => api.borrar(`/profesionales/${id}/bloqueos/${bloqueo.id}`),
       () => {
         aviso.replaceChildren();
+        if (afectados.periodoMostrado() === bloqueo.id) {
+          afectados.limpiar();
+        }
         recargar();
       },
     );
@@ -145,7 +164,8 @@ export function montarBloqueos(panel: HTMLElement, contexto: ContextoSeccion): v
     titulo.textContent = 'Bloqueo registrado.';
     contenido.append(titulo);
     if (cruces > 0) {
-      contenido.append(` ${textoDeCruce(cruces)} Avisale a recepción para reprogramarlos.`);
+      // Quien no puede reasignar (el odontólogo) avisa a la recepción, que sí puede.
+      contenido.append(` ${textoDeCruce(cruces)}${permisos.reasigna ? '' : ' Avisale a la recepción para reasignarlos.'}`);
     }
     caja.append(contenido);
     aviso.replaceChildren(caja);
@@ -182,7 +202,12 @@ export function montarBloqueos(panel: HTMLElement, contexto: ContextoSeccion): v
           if (profesionalId !== null && profesionalId !== id) {
             return;
           }
-          mostrarRegistrado(leerPeriodoRegistrado(respuesta)?.turnosAfectados.length ?? 0);
+          const registrado = leerPeriodoRegistrado(respuesta);
+          mostrarRegistrado(registrado?.turnosAfectados.length ?? 0);
+          afectados.limpiar();
+          if (registrado !== null && registrado.turnosAfectados.length > 0) {
+            afectados.mostrar({ ...registrado.periodo, profesionalId: id }, registrado.turnosAfectados);
+          }
           recargar();
         },
         (causa: unknown) => {
