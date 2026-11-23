@@ -2,6 +2,7 @@ import { borrarReservaPendiente } from './paciente/reserva.ts';
 import { paginaAgenda } from './pages/agenda.ts';
 import { paginaConfiguracion } from './pages/configuracion.ts';
 import { paginaConfirmar } from './pages/confirmar.ts';
+import { NOMBRE_APLICACION, paginaInicio } from './pages/inicio.ts';
 import { paginaMiCuenta } from './pages/mi-cuenta.ts';
 import { paginaMisTurnos } from './pages/mis-turnos.ts';
 import { crearTitulo, type ContextoPagina, type Pagina } from './pages/pagina.ts';
@@ -20,6 +21,7 @@ import { crearLayout } from './shared/ui/layout.ts';
 import { crearRouter, type Router } from './shared/ui/router.ts';
 
 export const PAGINAS: readonly Pagina[] = [
+  paginaInicio,
   paginaAgenda,
   paginaConfiguracion,
   paginaReserva,
@@ -53,7 +55,7 @@ export function iniciarApp(raiz: HTMLElement, api: ClienteApi = apiPorDefecto): 
       }
       void cerrarSesion(api).then(() => {
         mostrarSesion(null);
-        irA(eraPaciente ? paginaReserva.ruta : paginaMiCuenta.ruta);
+        irA(paginaInicio.ruta);
       });
     },
   });
@@ -86,7 +88,7 @@ export function iniciarApp(raiz: HTMLElement, api: ClienteApi = apiPorDefecto): 
   function dibujar(pagina: Pagina, sesion: Sesion, sesionLista: Promise<Sesion> = Promise.resolve(sesion)): void {
     pagina.render(layout.contenido, contexto(sesion, sesionLista));
     layout.mostrar(pagina);
-    document.title = `${pagina.titulo} · Turnos odontología`;
+    document.title = pagina === paginaInicio ? NOMBRE_APLICACION : `${pagina.titulo} · ${NOMBRE_APLICACION}`;
   }
 
   function mostrarAviso(pagina: Pagina, mensaje: string): void {
@@ -153,7 +155,7 @@ export function iniciarApp(raiz: HTMLElement, api: ClienteApi = apiPorDefecto): 
 
   const router = crearRouter(
     PAGINAS,
-    paginaAgenda,
+    paginaInicio,
     (pagina) => {
       void mostrar(pagina);
     },

@@ -1,7 +1,7 @@
 # Mockups de C-37 `frontend-portada-y-acceso`
 
 - Design system revision: 1 (`design-system/README.md`, aprobado el 2026-11-22)
-- Approval: pending
+- Approval: approved (2026-11-23, by leader: PR #64 mergeado)
 - Preview: rendered (2026-11-23), capturas en `previews/` a 390 × 844 y 1440 × 900 (página completa), y a 320 px para la portada sin sesión y para Mi cuenta. Ninguna pantalla tiene desplazamiento horizontal ni errores en la consola.
 
 Los aprueba la líder antes del apply (`design-system/README.md`, modo `system-and-mockups`). Una vez aprobados, son el criterio de aceptación visual de las tareas de `tasks.md`.

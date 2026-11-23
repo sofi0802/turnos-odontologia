@@ -257,3 +257,38 @@ describe('Configuración usable en el celular (C-34)', () => {
     expect(reglas).toMatch(/var\(--ds-/);
   });
 });
+
+describe('Portada usable en el celular (C-37)', () => {
+  /** Estilos de la portada: del comentario de C-37 hasta el final. */
+  function estilosDePortada(): string {
+    return estilos.slice(estilos.indexOf('/* Portada (C-37'));
+  }
+
+  function reglasMobileFirstDePortada(): string {
+    const css = estilosDePortada();
+    return css.slice(0, css.indexOf('@media'));
+  }
+
+  it('La portada en el celular', () => {
+    const celular = reglasMobileFirstDePortada();
+    const alto = /min-height:\s*var\(--ds-alto-control\)/;
+    expect(regla(celular, '.btn-acceso')).toMatch(alto);
+    expect(regla(celular, '.hero-acciones .btn')).toMatch(alto);
+    expect(regla(celular, '.hero')).toMatch(/grid-template-columns:\s*minmax\(0,\s*1fr\)/);
+    expect(regla(celular, '.tarjetas-pasos')).toMatch(/grid-template-columns:\s*minmax\(0,\s*1fr\)/);
+    // Sin ancho fijo mayor a 320 px: en el celular nada fuerza un desplazamiento horizontal.
+    for (const [, ancho] of estilosDePortada().matchAll(/(?<!min-)(?<!max-)width:\s*(\d+)px/g)) {
+      expect(Number(ancho)).toBeLessThanOrEqual(320);
+    }
+    // En la computadora los tres pasos pasan a columnas.
+    const escritorio = estilosDePortada().slice(estilosDePortada().indexOf('@media (min-width: 768px)'));
+    expect(escritorio).toMatch(/\.tarjetas-pasos\s*\{[^}]*repeat\(3/);
+  });
+
+  it('los estilos de la portada usan solo variables del sistema de diseño', () => {
+    const portada = estilosDePortada();
+    expect(portada.length).toBeGreaterThan(100);
+    expect(portada).not.toMatch(/#[0-9a-fA-F]{3,8}/);
+    expect(portada).not.toMatch(/var\(--(?!ds-)/);
+  });
+});

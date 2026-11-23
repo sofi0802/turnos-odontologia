@@ -63,6 +63,10 @@ function enlaceIngresar(): HTMLAnchorElement | undefined {
   );
 }
 
+function enlaceDelContenido(texto: string): HTMLAnchorElement | undefined {
+  return [...raiz.querySelectorAll<HTMLAnchorElement>('main a')].find((a) => a.textContent === texto);
+}
+
 function enlacesActivos(): string[] {
   return [...raiz.querySelectorAll('nav a[aria-current="page"]')].map((a) => a.textContent ?? '');
 }
@@ -105,6 +109,14 @@ describe('Páginas disponibles', () => {
     expect(titulo()).toBe('Reservar turno');
   });
 
+  it('Abrir la portada por su dirección', async () => {
+    abrirEn('#/inicio', sinSesion());
+    await vi.waitFor(() => expect(document.title).toBe('Turnos odontología'));
+    const textos = [...raiz.querySelectorAll('nav a')].map((a) => a.textContent);
+    expect(textos).not.toContain('Inicio');
+    expect(textos).not.toContain('Turnos odontología');
+  });
+
   it('Abrir la página de ingreso por su dirección', async () => {
     abrirEn('#/ingreso', sinSesion());
     await esperarTitulo('Mi cuenta');
@@ -121,15 +133,22 @@ describe('Páginas disponibles', () => {
 
 describe('Página inicial y direcciones desconocidas', () => {
   it('Abrir la aplicación sin dirección', async () => {
-    abrirEn('');
-    await esperarTitulo('Agenda');
-    expect(window.location.hash).toBe('#/agenda');
+    abrirEn('', sinSesion());
+    await vi.waitFor(() => expect(document.title).toBe('Turnos odontología'));
+    expect(window.location.hash).toBe('#/inicio');
   });
 
   it('Dirección desconocida', async () => {
-    abrirEn('#/no-existe');
-    await esperarTitulo('Agenda');
-    expect(window.location.hash).toBe('#/agenda');
+    abrirEn('#/no-existe', sinSesion());
+    await vi.waitFor(() => expect(document.title).toBe('Turnos odontología'));
+    expect(window.location.hash).toBe('#/inicio');
+  });
+
+  it('Abrir la aplicación sin dirección con sesión del personal', async () => {
+    abrirEn('');
+    await vi.waitFor(() => expect(document.title).toBe('Turnos odontología'));
+    expect(window.location.hash).toBe('#/inicio');
+    await vi.waitFor(() => expect(enlaceDelContenido('Ir a la agenda')?.getAttribute('href')).toBe('#/agenda'));
   });
 });
 

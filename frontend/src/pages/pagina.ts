@@ -30,6 +30,11 @@ export interface Pagina {
   readonly acceso?: Acceso;
   /** Sin `menu`, la página no figura en el menú (por ejemplo, Mi cuenta). */
   readonly menu?: GrupoMenu;
+  /**
+   * Texto que el encabezado usa, sin sesión, en lugar de "Ingresar" (la portada pide "Acceso personal", C-37).
+   * Con este texto el encabezado queda sin menú: la portada trae sus propios botones.
+   */
+  readonly textoIngreso?: string;
   render(contenedor: HTMLElement, contexto: ContextoPagina): void;
 }
 

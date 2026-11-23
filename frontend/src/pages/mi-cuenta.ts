@@ -6,6 +6,7 @@ import { mensajeDeError } from '../shared/ui/mensajes.ts';
 import { crearTitulo, type ContextoPagina, type Pagina } from './pagina.ts';
 
 export const MENSAJE_CREDENCIALES_PACIENTE = 'Email o contraseña incorrectos.';
+export const INDICACION_PERSONAL = '¿Sos del personal del consultorio? Ingresá con tu usuario en este mismo formulario.';
 export const MENSAJE_CUENTA_CREADA = 'Tu cuenta se creó. Ingresá con tu email y tu contraseña.';
 
 type Seccion = 'ingresar' | 'registro';
@@ -40,7 +41,10 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   formIngreso.className = 'formulario';
   formIngreso.noValidate = true;
   formIngreso.setAttribute('aria-label', 'Ingresar');
-  formIngreso.append(avisoIngreso, email.contenedor, clave.contenedor, errorIngreso, enviarIngreso);
+  const indicacionPersonal = document.createElement('p');
+  indicacionPersonal.className = 'nota-personal';
+  indicacionPersonal.textContent = INDICACION_PERSONAL;
+  formIngreso.append(avisoIngreso, email.contenedor, clave.contenedor, errorIngreso, enviarIngreso, indicacionPersonal);
 
   // --- Crear cuenta ---
   const nombre = campoDeTexto('Nombre', 'nombre');
@@ -233,10 +237,15 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   mostrarSeccion('ingresar');
   contenedor.replaceChildren(pagina);
 
-  // Con una sesión de paciente, la cuenta lleva directo a sus turnos.
+  // Con una sesión ya iniciada, la cuenta lleva al espacio del rol: Mis turnos o la Agenda.
   void contexto.sesionLista.then((sesion) => {
-    if (contenedor.contains(pagina) && sesion.autenticado && esPaciente(sesion.rol)) {
+    if (!contenedor.contains(pagina) || !sesion.autenticado) {
+      return;
+    }
+    if (esPaciente(sesion.rol)) {
       contexto.irA('mis-turnos');
+    } else if (esPersonal(sesion.rol)) {
+      contexto.irA('agenda');
     }
   });
 }

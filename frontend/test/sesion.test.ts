@@ -99,6 +99,7 @@ describe('Sesión vencida', () => {
     boton(app.raiz, 'Semana').click();
     await vi.waitFor(() => expect(servidor.a('GET', '/turnos')).toHaveLength(2));
     servidor.responder('GET /turnos', () => json(401, { status: 401, codigo: 'NO_AUTENTICADO' }));
+    servidor.sinSesion();
 
     boton(app.raiz, 'Siguiente').click();
 
@@ -136,20 +137,20 @@ describe('Cierre de sesión', () => {
 
     boton(app.raiz, 'Salir').click();
 
-    await vi.waitFor(() => expect(titulo()).toBe('Mi cuenta'));
-    expect(window.location.hash).toBe('#/mi-cuenta');
+    await vi.waitFor(() => expect(document.title).toBe('Turnos odontología'));
+    expect(window.location.hash).toBe('#/inicio');
     expect(servidor.ultimo('POST', '/logout').encabezados.get('X-XSRF-TOKEN')).toBe('token-ficticio-123');
     expect(texto(app.raiz.querySelector('header') ?? app.raiz)).not.toContain('recepcion');
   });
 
-  it('sale aunque el servidor falle', async () => {
+  it('El cierre falla en el servidor', async () => {
     servidor.responder('POST /logout', () => json(500));
     app = await abrirAgendaConSesion();
 
     boton(app.raiz, 'Salir').click();
 
-    await vi.waitFor(() => expect(titulo()).toBe('Mi cuenta'));
-    expect(window.location.hash).toBe('#/mi-cuenta');
+    await vi.waitFor(() => expect(document.title).toBe('Turnos odontología'));
+    expect(window.location.hash).toBe('#/inicio');
   });
 });
 

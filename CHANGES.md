@@ -559,7 +559,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/06_funcionalidades.md` §US-010
 
 ### [C-37] `frontend-portada-y-acceso`
-- **Estado**: `[ ]` propuesta lista (proposal, specs, design y tasks en `openspec/changes/frontend-portada-y-acceso/`, 2026-11-23); faltan los mockups y su aprobación antes del apply
+- **Estado**: `[ ]` implementado y verificado en la rama `change/C-37-frontend-portada-y-acceso` (2026-11-23; 345 tests, mockups aprobados); falta el PR y el merge, y el archive después del de `ingreso-unico-mi-cuenta`
 - **Responsable**: Juan Cruz (avisa a Enzo, dueño de `frontend/`)
 - **Scope**:
   - **Portada pública** en su propia dirección, `#/inicio`, que pasa a ser la página inicial: la dirección vacía (`http://localhost:5173/`) y las direcciones desconocidas la muestran en lugar de llevar a `#/reserva`, y el logo del encabezado lleva a ella. Pantalla descriptiva del consultorio y de la aplicación (qué hace y cómo se usa en tres pasos), atractiva, con ilustraciones SVG propias (sin recursos remotos ni fotos de personas). Dos botones principales: "Reservar turno" (`#/reserva`, sin registrarse antes) e "Ingresar a mi cuenta" (`#/mi-cuenta`). Arriba a la derecha, el botón "Acceso personal" para empleados (`#/mi-cuenta`).
