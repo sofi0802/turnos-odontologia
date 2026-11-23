@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import estilos from '../src/styles.css?raw';
-import { abrirApp, boton, json, ServidorFalso, turno, type AppDePrueba } from './apoyo.ts';
+import { abrirApp, boton, campo, escribir, json, ServidorFalso, turno, type AppDePrueba } from './apoyo.ts';
 
 // jsdom no aplica media queries ni calcula el diseño: estos tests comprueban la
 // estructura y las reglas de estilos.css; lo visual se verifica con capturas reales
@@ -32,6 +32,9 @@ beforeEach(() => {
 
 afterEach(() => {
   app?.router.detener();
+  for (const abierto of document.querySelectorAll('dialog')) {
+    abierto.remove();
+  }
   app = undefined;
   vi.useRealTimers();
 });
@@ -64,6 +67,40 @@ describe('Agenda usable en el celular', () => {
     expect(regla(reglasDeEscritorio(), '.agenda-filtros')).toMatch(/flex-direction:\s*row/);
     expect(regla(reglasDeEscritorio(), '.agenda-lista')).toMatch(/grid-template-columns:\s*repeat\(auto-fill, minmax\(/);
     expect(regla(estilos, '.contenido')).toMatch(/max-width:\s*var\(--ancho-maximo\)/);
+  });
+});
+
+describe('Buscador usable en el celular (C-36)', () => {
+  it('Buscador en el celular', async () => {
+    const servidor = new ServidorFalso();
+    app = abrirApp(servidor, '#/agenda');
+    await vi.waitFor(() => expect(servidor.a('GET', '/turnos')).toHaveLength(1));
+    await vi.waitFor(() => expect(campo<HTMLSelectElement>(app?.raiz ?? document.body, 'Profesional').options.length).toBeGreaterThan(1));
+    boton(app.raiz, 'Nuevo turno').click();
+    const dialogo = document.querySelector<HTMLDialogElement>('dialog[open]') ?? document.body;
+
+    escribir(campo(dialogo, 'Paciente'), 'paciente');
+    await vi.waitFor(() => expect(dialogo.querySelectorAll('[role="option"]')).toHaveLength(2));
+
+    // jsdom no calcula el diseño: se comprueba la estructura y la regla de estilos.css.
+    for (const opcion of dialogo.querySelectorAll('[role="option"]')) {
+      expect(opcion.classList.contains('buscador-opcion')).toBe(true);
+    }
+    const celular = reglasDeCelular();
+    const altoOpcion = Number(/min-height:\s*(\d+)px/.exec(regla(celular, '.buscador-opcion'))?.[1]);
+    expect(altoOpcion).toBeGreaterThanOrEqual(44);
+    expect(regla(celular, '.buscador-lista')).not.toMatch(/position:\s*absolute/);
+    expect(regla(celular, '.buscador-lista')).not.toMatch(/(?<!-)width:\s*\d+px/);
+    expect(regla(celular, '.buscador-elegido button')).toMatch(/min-height:\s*44px/);
+    document.querySelector('dialog')?.remove();
+  });
+
+  it('los estilos del buscador usan solo variables del sistema de diseño', () => {
+    const reglasDelBuscador = estilos.slice(estilos.indexOf('/* Buscador de pacientes (C-36)'));
+    expect(reglasDelBuscador.length).toBeGreaterThan(0);
+    expect(reglasDelBuscador).not.toMatch(/#[0-9a-fA-F]{3,8}/);
+    expect(reglasDelBuscador).not.toMatch(/rgba?\(/);
+    expect(reglasDelBuscador).toMatch(/var\(--ds-/);
   });
 });
 
@@ -125,5 +162,55 @@ describe('Páginas del paciente en el celular (C-12)', () => {
     expect(regla(reglasDeCelular(), '.lista-turnos')).not.toMatch(/grid-template-columns/);
     expect(regla(reglasDeCelular(), '.turno-paciente .turno-acciones')).toMatch(/flex-direction:\s*column/);
     expect(regla(reglasDeEscritorio(), '.turno-paciente .turno-acciones')).toMatch(/flex-direction:\s*row/);
+  });
+});
+
+describe('Reprogramar turno en el celular (C-33)', () => {
+  it('Horarios en el celular', async () => {
+    const servidor = new ServidorFalso();
+    servidor.responder('GET /turnos', () => json(200, [turno()]));
+    servidor.responder('GET /public/profesionales', () => json(200, [{ id: 1, nombre: 'Ana Ejemplo' }]));
+    servidor.responder('GET /public/disponibilidad', () =>
+      json(200, [
+        { inicio: '2026-12-01T11:00:00-03:00', fin: '2026-12-01T11:30:00-03:00' },
+        { inicio: '2026-12-01T11:30:00-03:00', fin: '2026-12-01T12:00:00-03:00' },
+      ]),
+    );
+    app = abrirApp(servidor, '#/agenda');
+    await vi.waitFor(() => expect(app?.raiz.querySelectorAll('.turno')).toHaveLength(1));
+    boton(app.raiz.querySelector('.turno') ?? app.raiz, 'Reprogramar').click();
+    await vi.waitFor(() => expect(document.querySelectorAll('dialog[open] .chip')).toHaveLength(2));
+
+    // Los horarios son los botones .chip de C-12, dentro de una grilla que se ajusta al ancho.
+    const grilla = document.querySelector('dialog[open] .chips');
+    expect(grilla?.getAttribute('role')).toBe('group');
+    expect(document.querySelector('dialog[open] .chip')?.tagName).toBe('BUTTON');
+    expect(regla(reglasDeCelular(), 'button')).toMatch(/min-height:\s*44px/);
+    expect(regla(reglasDeCelular(), '.chip')).toMatch(/min-height:\s*var\(--ds-alto-control\)/);
+    expect(regla(reglasDeCelular(), '.chips')).toMatch(/grid-template-columns:\s*repeat\(auto-fill, minmax\(5\.5rem, 1fr\)\)/);
+    // Con 320 px de ancho caben tres columnas de 5,5 rem: la grilla no fuerza desplazamiento horizontal.
+    expect(regla(reglasDeCelular(), '.dialogo fieldset')).toMatch(/min-width:\s*0/);
+    // El diálogo cabe en la pantalla y se desplaza por dentro, sin ancho fijo.
+    expect(regla(reglasDeCelular(), '.dialogo')).toMatch(/max-height:\s*calc\(100dvh - 2 \* var\(--espacio-2\)\)/);
+    expect(regla(reglasDeCelular(), '.dialogo')).toMatch(/overflow-y:\s*auto/);
+    expect(regla(reglasDeCelular(), '.dialogo')).toMatch(/width:\s*calc\(100% - /);
+    // DNI y número de reserva uno debajo del otro en el celular, lado a lado desde 768 px.
+    expect(regla(reglasDeCelular(), '.dos-campos')).not.toMatch(/grid-template-columns/);
+    expect(regla(reglasDeEscritorio(), '.dos-campos')).toMatch(/grid-template-columns:\s*1fr 1fr/);
+    // Estados de la zona de horarios (mockups de C-33).
+    expect(regla(reglasDeCelular(), '.sin-horarios')).toMatch(/border:\s*1px dashed/);
+    expect(regla(reglasDeCelular(), '.buscando')).toMatch(/color:\s*var\(--ds-texto-suave\)/);
+    // Ningún ancho fijo en píxeles mayor a 320.
+    const anchosFijos = [...estilos.matchAll(/(?<!-)width:\s*(\d+)px/g)].map((m) => Number(m[1]));
+    expect(anchosFijos.filter((ancho) => ancho > 320)).toEqual([]);
+  });
+
+  it('Los botones de horario entran en el diálogo en la computadora', () => {
+    // Verificación visual de C-33 (1440 × 900): con 6 columnas fijas de 1fr los botones no entraban en los 32 rem del
+    // diálogo y aparecía una barra de desplazamiento horizontal. El diálogo con horarios mide 34 rem, como en los
+    // mockups aprobados, y la grilla del diálogo se ajusta al ancho en lugar de fijar las columnas.
+    expect(regla(reglasDeEscritorio(), '.dialogo:has(.chips)')).toMatch(/max-width:\s*34rem/);
+    expect(regla(reglasDeEscritorio(), '.dialogo .chips')).toMatch(/grid-template-columns:\s*repeat\(auto-fill, minmax\(4\.5rem, 1fr\)\)/);
+    expect(regla(reglasDeEscritorio(), '.dialogo .chips')).not.toMatch(/repeat\(6/);
   });
 });

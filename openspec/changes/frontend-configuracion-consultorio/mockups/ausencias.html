@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ausencias · Configuración · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <header class="app-encabezado">
+    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisorio" /><span data-brand-name>Turnos odontología</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#">Agenda</a>
+      <a href="profesionales.html" aria-current="page">Configuración</a>
+    </nav>
+    <div class="usuario">
+      <span class="avatar" aria-hidden="true">RE</span>
+      <span class="usuario-nombre">recepcion</span>
+      <button class="btn btn-fantasma btn-chico" type="button">Salir</button>
+    </div>
+  </header>
+
+  <main class="pagina pagina-config">
+    <h1>Configuración</h1>
+    <div class="pestanas-config" role="tablist" aria-label="Secciones de configuración">
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Profesionales</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Sillones</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Prestaciones</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Margen</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Horarios</button>
+      <button class="pestana" role="tab" type="button" aria-selected="true">Ausencias</button>
+    </div>
+    <section role="tabpanel" aria-label="Ausencias">
+      <div class="cabecera-seccion"><h2>Ausencias y licencias</h2><button class="btn btn-principal" type="button">Registrar ausencia</button></div>
+      <div class="campo selector-profesional"><label for="pr">Profesional</label>
+        <select class="control" id="pr"><option selected>Ana Ejemplo</option><option>Bruno Prueba</option></select></div>
+      <ul class="lista-config">
+        <li>
+          <div><div class="item-nombre">Ausencia</div><div class="item-datos"><span>Lunes 7 de diciembre, 08:00 a 13:00</span><span>Trámite personal</span></div></div>
+          <div class="item-acciones"><button class="btn btn-chico" type="button">Ver turnos afectados</button><button class="btn btn-chico btn-peligro" type="button">Borrar</button></div>
+        </li>
+        <li>
+          <div><div class="item-nombre">Licencia</div><div class="item-datos"><span>Lunes 14 de diciembre 08:00 al viernes 18 de diciembre 13:00</span><span>Congreso</span></div></div>
+          <div class="item-acciones"><button class="btn btn-chico" type="button">Ver turnos afectados</button><button class="btn btn-chico btn-peligro" type="button">Borrar</button></div>
+        </li>
+      </ul>
+      <div class="afectados" role="status">
+        <h3>Turnos afectados: 2</h3>
+        <p class="ayuda">La ausencia del lunes 7 de diciembre se cruza con estos turnos. Reasignalos a otro profesional o reprogramalos desde la agenda.</p>
+        <ul class="lista-config">
+          <li><div><div class="item-nombre">Lunes 7 de diciembre · 09:00</div><div class="item-datos"><span>Consulta o control</span></div></div>
+            <div class="item-acciones"><button class="btn btn-chico btn-principal" type="button">Reasignar</button></div></li>
+          <li><div><div class="item-nombre">Lunes 7 de diciembre · 11:00</div><div class="item-datos"><span>Limpieza (profilaxis)</span></div></div>
+            <div class="item-acciones"><button class="btn btn-chico btn-principal" type="button">Reasignar</button></div></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+  <script>document.querySelector('.pestana[aria-selected="true"]').scrollIntoView({ block: 'nearest', inline: 'center' });</script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buscador de pacientes: estados · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <header class="app-encabezado">
+    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisorio" /><span data-brand-name>Turnos odontología</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#" aria-current="page">Agenda</a>
+      <a href="#">Reserva</a>
+      <a href="#">Configuración</a>
+    </nav>
+    <div class="usuario"><span class="usuario-nombre">recepcion</span><button class="btn btn-chico" type="button">Salir</button></div>
+  </header>
+
+  <main class="pagina">
+    <h1>Buscador de pacientes: estados</h1>
+    <div class="pila">
+      <section class="panel" aria-labelledby="e1">
+        <p class="paso-numero">Al abrir "Nuevo turno": el campo está vacío y tiene el foco</p>
+        <h2 id="e1">Vacío</h2>
+        <div class="campo buscador">
+          <label for="e1-pac">Paciente</label>
+          <div class="buscador-entrada">
+            <svg class="lupa" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m13 13 4.5 4.5"/></svg>
+            <input class="control" id="e1-pac" type="text" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-describedby="e1-pac-estado" />
+          </div>
+          <p class="buscador-estado" id="e1-pac-estado" role="status">Buscá por DNI o por nombre y apellido.</p>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="e2">
+        <p class="paso-numero">Texto demasiado corto ("f" o "99"): no se pide nada a la API</p>
+        <h2 id="e2">Texto corto</h2>
+        <div class="campo buscador">
+          <label for="e2-pac">Paciente</label>
+          <div class="buscador-entrada">
+            <svg class="lupa" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m13 13 4.5 4.5"/></svg>
+            <input class="control" id="e2-pac" type="text" value="f" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-describedby="e2-pac-estado" />
+          </div>
+          <p class="buscador-estado" id="e2-pac-estado" role="status">Escribí al menos 2 letras o 3 números del DNI.</p>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="e3">
+        <p class="paso-numero">Buscando: pasaron 300 ms sin escribir y la API todavía no respondió</p>
+        <h2 id="e3">Buscando</h2>
+        <div class="campo buscador">
+          <label for="e3-pac">Paciente</label>
+          <div class="buscador-entrada">
+            <svg class="lupa" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m13 13 4.5 4.5"/></svg>
+            <input class="control" id="e3-pac" type="text" value="fict" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-busy="true" aria-describedby="e3-pac-estado" />
+          </div>
+          <p class="buscador-estado" id="e3-pac-estado" role="status"><span class="girador" aria-hidden="true"></span>Buscando…</p>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="e4">
+        <p class="paso-numero">La API responde 200 con una lista vacía</p>
+        <h2 id="e4">Sin resultados</h2>
+        <div class="campo buscador">
+          <label for="e4-pac">Paciente</label>
+          <div class="buscador-entrada">
+            <svg class="lupa" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m13 13 4.5 4.5"/></svg>
+            <input class="control" id="e4-pac" type="text" value="zzz" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-describedby="e4-pac-estado" />
+          </div>
+          <p class="buscador-vacio" id="e4-pac-estado" role="status">No encontramos pacientes con ese DNI o nombre.</p>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="e5">
+        <p class="paso-numero">Límite de 10 resultados (el mockup muestra 3 de las 10 opciones)</p>
+        <h2 id="e5">Muchas coincidencias</h2>
+        <div class="campo buscador">
+          <label for="e5-pac">Paciente</label>
+          <div class="buscador-entrada">
+            <svg class="lupa" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m13 13 4.5 4.5"/></svg>
+            <input class="control" id="e5-pac" type="text" value="prueba" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="e5-lista" aria-describedby="e5-pac-estado" />
+          </div>
+          <ul class="buscador-lista" id="e5-lista" role="listbox" aria-label="Pacientes encontrados">
+            <li role="option" aria-selected="false"><span class="nombre">Prueba, Paciente Uno</span><span class="dni">· DNI 99000101</span></li>
+            <li role="option" aria-selected="false"><span class="nombre">Prueba, Paciente Dos</span><span class="dni">· DNI 99000102</span></li>
+            <li role="option" aria-selected="false"><span class="nombre">Prueba, Paciente Tres</span><span class="dni">· DNI 99000103</span></li>
+          </ul>
+          <p class="buscador-nota">Se muestran las primeras 10 coincidencias. Escribí más para acotar.</p>
+          <p class="buscador-estado" id="e5-pac-estado" role="status">10 pacientes encontrados.</p>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="e6">
+        <p class="paso-numero">Error del servidor o sin conexión: el formulario sigue abierto con lo cargado</p>
+        <h2 id="e6">Error de la búsqueda</h2>
+        <div class="campo buscador">
+          <label for="e6-pac">Paciente</label>
+          <div class="buscador-entrada">
+            <svg class="lupa" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m13 13 4.5 4.5"/></svg>
+            <input class="control" id="e6-pac" type="text" value="fict" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-invalid="true" aria-describedby="e6-pac-error" />
+          </div>
+          <p class="error-campo" id="e6-pac-error" role="alert">No pudimos buscar pacientes. Probá de nuevo.</p>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="e7">
+        <p class="paso-numero">La API responde 403 ACCESO_DENEGADO</p>
+        <h2 id="e7">Sin permiso</h2>
+        <div class="campo buscador">
+          <label for="e7-pac">Paciente</label>
+          <div class="buscador-entrada">
+            <svg class="lupa" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m13 13 4.5 4.5"/></svg>
+            <input class="control" id="e7-pac" type="text" value="fict" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-invalid="true" aria-describedby="e7-pac-error" />
+          </div>
+          <p class="error-campo" id="e7-pac-error" role="alert">No tenés permiso para esta acción.</p>
+        </div>
+      </section>
+
+      <section class="panel" aria-labelledby="e8">
+        <p class="paso-numero">Se usó "Crear turno" con texto escrito pero sin elegir un paciente</p>
+        <h2 id="e8">Paciente sin elegir</h2>
+        <div class="campo buscador">
+          <label for="e8-pac">Paciente</label>
+          <div class="buscador-entrada">
+            <svg class="lupa" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="m13 13 4.5 4.5"/></svg>
+            <input class="control" id="e8-pac" type="text" value="fict" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-invalid="true" aria-describedby="e8-pac-error" />
+          </div>
+          <p class="error-campo" id="e8-pac-error">Elegí un paciente de la lista.</p>
+        </div>
+      </section>
+    </div>
+  </main>
+  <p class="nota-mockup"><b>Mockup</b> · Estados del campo "Paciente" agrupados en una sola página para revisarlos juntos. En la aplicación aparecen dentro del diálogo "Nuevo turno". Ante un 401 se sigue la regla de sesión vencida de la agenda (página de ingreso), sin estado propio. <a href="nuevo-turno-resultados.html">Ver las coincidencias</a> · <a href="nuevo-turno-seleccionado.html">Ver el paciente elegido</a>.</p>
+</body>
+</html>

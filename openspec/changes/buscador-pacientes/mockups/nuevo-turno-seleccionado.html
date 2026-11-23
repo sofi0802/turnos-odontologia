@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nuevo turno: paciente elegido · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <header class="app-encabezado">
+    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisorio" /><span data-brand-name>Turnos odontología</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#" aria-current="page">Agenda</a>
+      <a href="#">Reserva</a>
+      <a href="#">Configuración</a>
+    </nav>
+    <div class="usuario"><span class="usuario-nombre">recepcion</span><button class="btn btn-chico" type="button">Salir</button></div>
+  </header>
+
+  <div class="velo">
+    <div class="dialogo" role="dialog" aria-modal="true" aria-labelledby="dlg-t">
+      <h2 id="dlg-t">Nuevo turno</h2>
+      <form class="formulario" onsubmit="return false">
+        <div class="campo buscador">
+          <span id="f-pac-etiqueta" style="font-weight: var(--ds-peso-medio)">Paciente</span>
+          <div class="buscador-elegido" role="group" aria-labelledby="f-pac-etiqueta">
+            <span><span class="nombre">Ficticia, Carla</span> <span class="dni">· DNI 99000003</span></span>
+            <button class="btn btn-fantasma" type="button">Cambiar paciente</button>
+          </div>
+        </div>
+        <div class="campo"><label for="f-prof">Profesional</label><select class="control" id="f-prof"><option>Ana Ejemplo</option><option>Bruno Prueba</option></select></div>
+        <div class="campo"><label for="f-sil">Sillón</label><select class="control" id="f-sil"><option>Sillón 1</option><option>Sillón 2</option></select></div>
+        <div class="campo"><label for="f-pre">Prestación</label><select class="control" id="f-pre"><option>Consulta</option></select></div>
+        <div class="campo"><label for="f-fecha">Fecha</label><input class="control" id="f-fecha" type="date" value="2026-12-01" /></div>
+        <div class="campo"><label for="f-hora">Hora</label><input class="control" id="f-hora" type="time" value="10:00" /></div>
+        <div class="dialogo-acciones">
+          <button class="btn btn-principal" type="submit">Crear turno</button>
+          <button class="btn" type="button">Cerrar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <p class="nota-mockup"><b>Mockup</b> · Paciente elegido: se guarda el id 3. "Cambiar paciente" vuelve al campo vacío con el foco. Al enviar se pide <code>POST /api/v1/turnos</code> con <code>pacienteId</code> 3. Specs <code>frontend-buscador-pacientes</code> (Elegir un paciente) y <code>frontend-agenda-personal</code> (Crear un turno). <a href="nuevo-turno-resultados.html">Ver las coincidencias</a> · <a href="estados-buscador.html">Ver los demás estados</a>.</p>
+</body>
+</html>

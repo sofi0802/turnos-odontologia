@@ -38,7 +38,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `frontend/` | Enzo | — |
 | **Ajustes del MVP (C-33 a C-36)** | | |
 | `frontend/` agenda: reprogramación (C-33) | Juan Cruz (avisa a Enzo) | — |
-| `frontend/` página Configuración (C-34) | Emanuel (avisa a Enzo) | — |
+| `frontend/` página Configuración y `profesionalId` en la sesión de `usuarios/api` (C-34) | Emanuel (avisa a Enzo y a Juan Sebastián) | — |
 | `backend/.../agenda/api` y `frontend/` agenda propia del odontólogo (C-35) | Sofia (avisa a Juan Sebastián y a Enzo) | — |
 | `backend/.../usuarios/` búsqueda de pacientes y `frontend/` buscador (C-36) | Juan Sebastián (avisa a Enzo) | V20 |
 | **Post-MVP** | | |
@@ -487,13 +487,14 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `openspec/changes/frontend-agenda-personal/` (reprogramación en la agenda)
 
 ### [C-34] `frontend-configuracion-consultorio`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[ ]` en propuesta: proposal, specs, design, tasks y mockups listos en `openspec/changes/frontend-configuracion-consultorio/`. El apply espera la aprobación de los mockups por la líder.
 - **Responsable**: Emanuel
 - **Scope**:
   - Completar la página "Configuración" (hoy solo muestra el título) sobre los endpoints que ya existen de C-04 y C-07: profesionales, sillones y prestaciones (alta, edición, activar y desactivar), especialidades por profesional, sillón habitual, margen entre turnos, horarios de trabajo, ausencias y bloqueos.
   - Permisos según la matriz RBAC: `ADMIN` edita; `RECEPCIONISTA` y `ODONTOLOGO` solo leen, salvo las ausencias (recepción) y los bloqueos propios (odontólogo).
   - Cambio visual: mockups en `openspec/changes/<change>/mockups/` aprobados por la líder antes del apply (design system Revision 1).
-  - Sin cambios de backend. Tests: un escenario por cada sección y por cada permiso.
+  - Backend: solo se suma `profesionalId` a la respuesta de la sesión y del login de un `ODONTOLOGO`, para que la página sepa cuál es su profesional (decisión del 2026-11-23; toca `usuarios/api`, se avisa a Juan Sebastián). El resto usa los endpoints existentes.
+  - Tests: un escenario por cada sección y por cada permiso.
 - **Dependencias**: `C-04, C-07, C-09` (y el archive de C-09)
 - **Governance**: MEDIO (configuración que afecta la agenda)
 - **Leer antes**:

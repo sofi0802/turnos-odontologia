@@ -1,5 +1,6 @@
 package ar.turnos.odontologia.usuarios.api;
 
+import ar.turnos.odontologia.usuarios.domain.BusquedaInvalidaException;
 import ar.turnos.odontologia.usuarios.domain.CodigoRegistro;
 import ar.turnos.odontologia.usuarios.domain.RegistroRechazadoException;
 import org.hibernate.exception.ConstraintViolationException;
@@ -47,6 +48,17 @@ class UsuariosExceptionHandler {
         problema.setTitle("Datos inválidos");
         problema.setProperty("codigo", "DATOS_INVALIDOS");
         problema.setProperty("errores", errores);
+        return problema;
+    }
+
+    /** El mensaje es fijo: nunca repite el término buscado, que es un dato personal. */
+    @ExceptionHandler(BusquedaInvalidaException.class)
+    ProblemDetail busquedaInvalida(BusquedaInvalidaException e) {
+        ProblemDetail problema = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY,
+                "Hay datos inválidos en el pedido");
+        problema.setTitle("Datos inválidos");
+        problema.setProperty("codigo", "DATOS_INVALIDOS");
+        problema.setProperty("errores", List.of(Map.of("campo", "q", "mensaje", e.getMessage())));
         return problema;
     }
 

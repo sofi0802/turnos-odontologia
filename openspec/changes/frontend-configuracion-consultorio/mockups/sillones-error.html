@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sillones · Configuración · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <header class="app-encabezado">
+    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisorio" /><span data-brand-name>Turnos odontología</span></a>
+    <nav class="nav" aria-label="Principal">
+      <a href="#">Agenda</a>
+      <a href="profesionales.html" aria-current="page">Configuración</a>
+    </nav>
+    <div class="usuario">
+      <span class="avatar" aria-hidden="true">AD</span>
+      <span class="usuario-nombre">admin</span>
+      <button class="btn btn-fantasma btn-chico" type="button">Salir</button>
+    </div>
+  </header>
+
+  <main class="pagina pagina-config">
+    <h1>Configuración</h1>
+    <div class="pestanas-config" role="tablist" aria-label="Secciones de configuración">
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Profesionales</button>
+      <button class="pestana" role="tab" type="button" aria-selected="true">Sillones</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Prestaciones</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Margen</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Horarios</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Ausencias</button>
+      <button class="pestana" role="tab" type="button" aria-selected="false" tabindex="-1">Bloqueos</button>
+    </div>
+    <section role="tabpanel" aria-label="Sillones">
+      <div class="cabecera-seccion"><h2>Sillones</h2></div>
+      <div class="aviso aviso-error" role="alert"><div><strong>No se pudo cargar la lista de sillones.</strong>Probá de nuevo en unos segundos.</div></div>
+      <p style="margin-top:var(--ds-espacio-2)"><button class="btn" type="button">Reintentar</button></p>
+    </section>
+  </main>
+  <script>document.querySelector('.pestana[aria-selected="true"]').scrollIntoView({ block: 'nearest', inline: 'center' });</script>
+</body>
+</html>
