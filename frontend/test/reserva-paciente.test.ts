@@ -7,7 +7,8 @@ const SESION_PACIENTE = { autenticado: true, username: 'paciente.uno@example.com
 const SESION_RECEPCION = { autenticado: true, username: 'recepcion', rol: 'RECEPCIONISTA' };
 const PRESTACIONES_PUBLICAS = [
   { id: 1, nombre: 'Consulta', duracionMinutos: 30 },
-  { id: 2, nombre: 'Limpieza', duracionMinutos: 45 },
+  { id: 2, nombre: 'Limpieza dental', duracionMinutos: 45 },
+  { id: 3, nombre: 'Extracción', duracionMinutos: 30 },
 ];
 const PROFESIONALES_PUBLICOS = [
   { id: 1, nombre: 'Ana Ejemplo' },
@@ -82,6 +83,20 @@ function elegirProfesional(nombre: string): void {
   entrada.click();
 }
 
+function selectorDePrestacion(): HTMLInputElement {
+  return campo(panel(), 'Prestación');
+}
+
+/** Abre el selector "Prestación" y toca la opción con ese texto (por ejemplo, "Consulta · 30 minutos"). */
+function elegirPrestacion(opcion: string): void {
+  selectorDePrestacion().focus();
+  const encontrada = [...panel().querySelectorAll<HTMLElement>('[role="option"]')].find((o) => o.textContent === opcion);
+  if (encontrada === undefined) {
+    throw new Error(`No está la prestación ${opcion}`);
+  }
+  encontrada.click();
+}
+
 function resumen(): string {
   return texto(panel().querySelector('dl') ?? panel());
 }
@@ -94,7 +109,7 @@ async function abrirReserva(): Promise<void> {
 /** Del paso 1 al 2 con "Consulta" y espera los horarios. */
 async function irAlPaso2(): Promise<void> {
   await abrirReserva();
-  campo(panel(), 'Consulta · 30 minutos').click();
+  elegirPrestacion('Consulta · 30 minutos');
   boton(panel(), 'Continuar').click();
   await vi.waitFor(() => expect(pasoActual()).toBe('Elegí día y horario'));
   await vi.waitFor(() => expect(panel().querySelector('[aria-busy]')).toBeNull());
@@ -142,7 +157,7 @@ describe('Reserva en tres pasos', () => {
     await abrirReserva();
     expect(texto(panel())).toContain('Paso 1 de 3');
 
-    campo(panel(), 'Consulta · 30 minutos').click();
+    elegirPrestacion('Consulta · 30 minutos');
     boton(panel(), 'Continuar').click();
 
     expect(pasoActual()).toBe('Elegí día y horario');
@@ -164,7 +179,7 @@ describe('Reserva en tres pasos', () => {
     elegirProfesional('Bruno Prueba');
 
     boton(panel(), 'Volver').click();
-    expect(campo(panel(), 'Consulta · 30 minutos').checked).toBe(true);
+    expect(selectorDePrestacion().value).toBe('Consulta');
     boton(panel(), 'Continuar').click();
 
     expect(pasoActual()).toBe('Elegí día y horario');
@@ -176,7 +191,51 @@ describe('Elección de la prestación', () => {
   it('Prestaciones a elegir', async () => {
     await abrirReserva();
 
-    expect(campo(panel(), 'Consulta · 30 minutos').type).toBe('radio');
+    selectorDePrestacion().focus();
+
+    const ofrecidas = [...panel().querySelectorAll('[role="option"]')].map((o) => o.textContent);
+    expect(ofrecidas).toContain('Consulta · 30 minutos');
+    expect(panel().querySelector('input[type="radio"][name="prestacion"]')).toBeNull();
+  });
+
+  it('el paso 1 explica cómo elegir', async () => {
+    await abrirReserva();
+
+    expect(texto(panel())).toContain('Buscá la prestación o elegila de la lista. Después elegís el día y el horario.');
+  });
+
+  it('Elegir con el toque', async () => {
+    await abrirReserva();
+    selectorDePrestacion().focus();
+
+    panel().querySelector<HTMLElement>('[role="option"]')?.click();
+
+    expect(selectorDePrestacion().value).toBe('Consulta');
+    boton(panel(), 'Continuar').click();
+    expect(pasoActual()).toBe('Elegí día y horario');
+    expect(texto(panel())).toContain('Consulta · 30 minutos');
+  });
+
+  it('Cambiar el texto quita la elección', async () => {
+    await abrirReserva();
+    elegirPrestacion('Consulta · 30 minutos');
+
+    escribir(selectorDePrestacion(), 'Consultas');
+    boton(panel(), 'Continuar').click();
+
+    expect(pasoActual()).toBe('¿Qué necesitás?');
+    expect(alerta()).toContain('Elegí una prestación.');
+  });
+
+  it('Lo que se pide en el paso 2 no cambia', async () => {
+    await abrirReserva();
+    elegirPrestacion('Limpieza dental · 45 minutos');
+
+    boton(panel(), 'Continuar').click();
+
+    await vi.waitFor(() => expect(pasoActual()).toBe('Elegí día y horario'));
+    expect(servidor.ultimo('GET', '/public/profesionales').query.get('prestacionId')).toBe('2');
+    expect(texto(panel())).toContain('Limpieza dental · 45 minutos');
   });
 
   it('sin prestaciones avisa y no ofrece Continuar', async () => {

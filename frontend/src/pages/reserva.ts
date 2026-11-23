@@ -18,10 +18,12 @@ import { aIsoConZona, fechaDeInstante, fechaLarga, formatearHora, hoy, type Fech
 import { esPaciente, esPersonal } from '../shared/sesion/sesion.ts';
 import { crearAviso, crearBoton, crearCampo, crearEntrada } from '../shared/ui/campos.ts';
 import { mensajeDeError } from '../shared/ui/mensajes.ts';
+import { crearSelectorBuscable } from '../shared/ui/selector-buscable.ts';
 import { crearTitulo, type ContextoPagina, type Pagina } from './pagina.ts';
 
 export const MENSAJE_RESERVA_PERSONAL = 'La reserva online es para pacientes. Para dar un turno, usá la Agenda.';
 export const MENSAJE_SIN_PRESTACIONES = 'No pudimos cargar las prestaciones. Probá de nuevo en unos minutos.';
+export const AYUDA_PASO_1 = 'Buscá la prestación o elegila de la lista. Después elegís el día y el horario.';
 export const MENSAJE_ELEGI_PRESTACION = 'Elegí una prestación.';
 export const MENSAJE_DIA_SIN_HORARIOS = 'No hay horarios libres para ese día. Probá con otra fecha o con otro profesional.';
 export const MENSAJE_HORARIO_OCUPADO = 'Ese horario se ocupó recién. Elegí otro.';
@@ -76,7 +78,7 @@ function crearOpcion(
   if (detalle !== null) {
     const chico = document.createElement('small');
     chico.textContent = detalle;
-    textos.append(grupo === 'prestacion' ? textoSoloLectores(' · ') : textoSoloLectores('. '), chico);
+    textos.append(textoSoloLectores('. '), chico);
   }
   etiqueta.append(entrada, textos);
   return etiqueta;
@@ -175,12 +177,18 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
       panel.replaceChildren(...encabezadoDePaso(1), error);
       return;
     }
-    const opciones = prestaciones.map((p) =>
-      crearOpcion('prestacion', String(p.id), p.nombre, `${p.duracionMinutos} minutos`, p.id === eleccion.prestacionId, () => {
-        eleccion.prestacionId = p.id;
+    // Selector con buscador (C-38): la elección queda en `eleccion.prestacionId`; cambiar el texto la quita.
+    const selector = crearSelectorBuscable({
+      etiqueta: 'Prestación',
+      marcador: 'Buscá una prestación',
+      opciones: prestaciones.map((p) => ({ id: String(p.id), nombre: p.nombre, detalle: `${p.duracionMinutos} minutos` })),
+      elegida: eleccion.prestacionId === null ? null : String(eleccion.prestacionId),
+      sinCoincidencias: (texto) => `No hay prestaciones que coincidan con «${texto}».`,
+      alCambiar(id) {
+        eleccion.prestacionId = id === null ? null : Number(id);
         error.textContent = '';
-      }),
-    );
+      },
+    });
     const continuar = boton('Continuar', true);
     continuar.addEventListener('click', () => {
       if (eleccion.prestacionId === null) {
@@ -195,9 +203,13 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
       }
       paso2();
     });
+    const ayuda = document.createElement('p');
+    ayuda.className = 'subtitulo';
+    ayuda.textContent = AYUDA_PASO_1;
     panel.replaceChildren(
       ...encabezadoDePaso(1),
-      crearFieldset('Prestación', opciones),
+      ayuda,
+      selector.contenedor,
       error,
       acciones(continuar),
     );

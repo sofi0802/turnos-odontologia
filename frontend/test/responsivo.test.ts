@@ -114,8 +114,9 @@ describe('Páginas del paciente en el celular (C-12)', () => {
       json(200, [{ inicio: '2026-12-01T10:00:00-03:00', fin: '2026-12-01T10:30:00-03:00' }]),
     );
     app = abrirApp(servidor, '#/reserva');
-    await vi.waitFor(() => expect(app?.raiz.querySelector('input[name="prestacion"]')).not.toBeNull());
-    app.raiz.querySelector<HTMLInputElement>('input[name="prestacion"]')?.click();
+    await vi.waitFor(() => expect(app?.raiz.querySelector('input[role="combobox"]')).not.toBeNull());
+    app.raiz.querySelector<HTMLInputElement>('input[role="combobox"]')?.focus();
+    app.raiz.querySelector<HTMLElement>('[role="option"]')?.click();
     boton(app.raiz, 'Continuar').click();
     await vi.waitFor(() => expect(app?.raiz.querySelectorAll('.chip')).toHaveLength(1));
 
@@ -358,5 +359,33 @@ describe('Nuevo turno guiado en el celular y en la computadora (C-40)', () => {
     expect(seccion()).not.toMatch(/#[0-9a-fA-F]{3,8}\b/);
     expect(seccion()).not.toMatch(/rgba?\(/);
     expect(seccion()).toMatch(/var\(--ds-/);
+  });
+});
+
+describe('Selector de prestaciones usable en el celular (C-38)', () => {
+  /** Estilos del selector: del comentario de C-38 hasta la regla `.chips`. */
+  function estilosDelSelector(): string {
+    const inicio = estilos.indexOf('/* Selector de prestaciones con buscador (C-38');
+    return estilos.slice(inicio, estilos.indexOf('\n.chips {', inicio));
+  }
+
+  it('Selector en el celular', () => {
+    const css = estilosDelSelector();
+    expect(regla(css, '.selector-opcion')).toMatch(/min-height:\s*48px/);
+    expect(regla(css, '.selector-lista')).toMatch(/max-height:\s*16rem/);
+    expect(regla(css, '.selector-lista')).toMatch(/overflow-y:\s*auto/);
+    expect(regla(css, '.selector-flecha')).toMatch(/width:\s*var\(--ds-alto-control\)/);
+    expect(regla(css, '.selector')).toMatch(/max-width:\s*100%/);
+    expect(css).not.toMatch(/@media/);
+    const anchosFijos = [...css.matchAll(/(?<!-)width:\s*(\d+)px/g)].map((m) => Number(m[1]));
+    expect(anchosFijos.filter((ancho) => ancho > 320)).toEqual([]);
+  });
+
+  it('los estilos del selector usan solo variables del sistema de diseño', () => {
+    const css = estilosDelSelector();
+    expect(css.length).toBeGreaterThan(200);
+    expect(css).not.toMatch(/#[0-9a-fA-F]{3,8}/);
+    expect(css).not.toMatch(/rgba?\(/);
+    expect(css).not.toMatch(/var\(--(?!ds-)/);
   });
 });
