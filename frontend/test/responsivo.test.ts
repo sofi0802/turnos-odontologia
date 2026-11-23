@@ -214,3 +214,46 @@ describe('Reprogramar turno en el celular (C-33)', () => {
     expect(regla(reglasDeEscritorio(), '.dialogo .chips')).not.toMatch(/repeat\(6/);
   });
 });
+
+describe('Configuración usable en el celular (C-34)', () => {
+  it('Las pestañas se desplazan dentro de su barra en el celular', async () => {
+    const servidor = new ServidorFalso();
+    servidor.responder('GET /public/sesion', () => json(200, { autenticado: true, username: 'admin', rol: 'ADMIN' }));
+    const desplazar = vi.fn();
+    Element.prototype.scrollIntoView = desplazar;
+    try {
+      app = abrirApp(servidor, '#/configuracion');
+      const raiz = app.raiz;
+      const barra = await vi.waitFor(() => {
+        const encontrada = raiz.querySelector<HTMLElement>('[role="tablist"]');
+        expect(encontrada).not.toBeNull();
+        return encontrada as HTMLElement;
+      });
+
+      expect(barra.classList.contains('pestanas-config')).toBe(true);
+      expect(regla(estilos, '.pestanas-config')).toMatch(/overflow-x:\s*auto/);
+      expect(regla(estilos, '.pestana')).toMatch(/white-space:\s*nowrap/);
+      expect(regla(estilos, '.pestana')).toMatch(/min-height:\s*var\(--ds-alto-control\)/);
+
+      boton(raiz, 'Bloqueos').click();
+      expect(desplazar).toHaveBeenLastCalledWith({ block: 'nearest', inline: 'center' });
+    } finally {
+      Reflect.deleteProperty(Element.prototype, 'scrollIntoView');
+    }
+  });
+
+  it('Las listas de Configuración se apilan en el celular y van en columnas en la computadora', () => {
+    expect(regla(estilos, '.lista-config > li')).toMatch(/display:\s*grid/);
+    expect(regla(estilos, '.lista-config > li')).not.toMatch(/grid-template-columns/);
+    const escritorio = estilos.slice(estilos.lastIndexOf('@media (min-width: 768px)'));
+    expect(regla(escritorio, '.lista-config > li')).toMatch(/grid-template-columns:\s*1fr auto/);
+  });
+
+  it('los estilos de Configuración usan solo variables del sistema de diseño', () => {
+    const reglas = estilos.slice(estilos.indexOf('/* --- Configuración del consultorio (C-34'));
+    expect(reglas.length).toBeGreaterThan(0);
+    expect(reglas).not.toMatch(/#[0-9a-fA-F]{3,8}/);
+    expect(reglas).not.toMatch(/rgba?\(/);
+    expect(reglas).toMatch(/var\(--ds-/);
+  });
+});

@@ -1,3 +1,55 @@
-import { paginaConTitulo } from './pagina.ts';
+import { montarAusencias } from '../configuracion/ausencias.ts';
+import { montarBloqueos } from '../configuracion/bloqueos.ts';
+import { montarPrestaciones, montarProfesionales, montarSillones } from '../configuracion/catalogo.ts';
+import { montarHorarios } from '../configuracion/horarios.ts';
+import { montarMargen } from '../configuracion/margen.ts';
+import { permisos } from '../configuracion/permisos.ts';
+import { crearPestanas, type Pestana } from '../configuracion/pestanas.ts';
+import { esErrorDeSesion, type ContextoSeccion, type MontarSeccion } from '../configuracion/ui.ts';
+import { MENSAJE_SESION_TERMINADA } from './agenda.ts';
+import { crearTitulo, type ContextoPagina, type Pagina } from './pagina.ts';
 
-export const paginaConfiguracion = paginaConTitulo('configuracion', 'Configuración', 'personal');
+function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
+  const permisosDelRol = permisos(contexto.sesion);
+  const seccion: ContextoSeccion = {
+    api: contexto.api,
+    sesion: contexto.sesion,
+    permisos: permisosDelRol,
+    sesionVencida(causa) {
+      if (esErrorDeSesion(causa)) {
+        contexto.irAlIngreso(MENSAJE_SESION_TERMINADA);
+        return true;
+      }
+      return false;
+    },
+  };
+
+  const definiciones: Array<readonly [string, MontarSeccion]> = [
+    ['Profesionales', montarProfesionales],
+    ['Sillones', montarSillones],
+    ['Prestaciones', montarPrestaciones],
+    ['Margen', montarMargen],
+    ['Horarios', montarHorarios],
+    ['Ausencias', montarAusencias],
+  ];
+  // Recepción no gestiona bloqueos y el backend le niega el recurso (RBAC).
+  if (permisosDelRol.veBloqueos) {
+    definiciones.push(['Bloqueos', montarBloqueos]);
+  }
+  const pestanas: Pestana[] = definiciones.map(([titulo, montar]) => ({
+    titulo,
+    montar: (panel) => montar(panel, seccion),
+  }));
+
+  contenedor.classList.add('pagina-config');
+  contenedor.append(crearTitulo('Configuración'), crearPestanas(pestanas, 'Secciones de configuración'));
+}
+
+/** Configuración del consultorio para el personal (C-34). */
+export const paginaConfiguracion: Pagina = {
+  ruta: 'configuracion',
+  titulo: 'Configuración',
+  acceso: 'personal',
+  menu: 'personal',
+  render: dibujar,
+};

@@ -39,15 +39,3 @@ export function crearTitulo(texto: string): HTMLHeadingElement {
   encabezado.tabIndex = -1;
   return encabezado;
 }
-
-/** Página que por ahora muestra solo su título (Configuración, otro change). */
-export function paginaConTitulo(ruta: string, titulo: string, menu?: GrupoMenu): Pagina {
-  return {
-    ruta,
-    titulo,
-    ...(menu === undefined ? {} : { menu }),
-    render(contenedor) {
-      contenedor.replaceChildren(crearTitulo(titulo));
-    },
-  };
-}

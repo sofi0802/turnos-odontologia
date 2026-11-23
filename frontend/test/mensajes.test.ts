@@ -107,3 +107,22 @@ describe('Mensajes de rechazo de la reprogramación', () => {
     },
   );
 });
+
+describe('Mensajes de configuración del consultorio (C-34)', () => {
+  it.each([
+    ['MATRICULA_DUPLICADA', 'Ya existe un profesional con esa matrícula.'],
+    ['NOMBRE_DUPLICADO', 'Ya existe otro con ese nombre.'],
+    ['DURACION_INVALIDA', 'La duración tiene que ser mayor que 0 y múltiplo de 5.'],
+    ['PRESTACION_INACTIVA', 'Hay una prestación inactiva entre las elegidas.'],
+    ['SILLON_INACTIVO', 'El sillón elegido está inactivo.'],
+    ['MARGEN_INVALIDO', 'El margen tiene que ser de 10 minutos o más.'],
+    ['HORARIO_INVALIDO', 'Revisá los días y las horas de las franjas.'],
+    ['FRANJAS_SUPERPUESTAS', 'Hay franjas del mismo día que se superponen.'],
+    ['PERIODO_INVALIDO', 'El fin tiene que ser posterior al inicio.'],
+    ['TURNO_NO_AFECTADO', 'Ese turno ya no está afectado por la ausencia.'],
+  ])('%s tiene su mensaje propio', (codigo, mensaje) => {
+    expect(MENSAJES_POR_CODIGO[codigo]).toBe(mensaje);
+    expect(mensajeDeError(new ErrorValidacion('detalle', codigo))).toBe(mensaje);
+    expect(mensajeDeError(new ErrorNegocio(codigo, 'detalle'))).toBe(mensaje);
+  });
+});

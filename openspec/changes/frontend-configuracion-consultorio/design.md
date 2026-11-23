@@ -4,7 +4,7 @@
 
 **Frontend**
 - `frontend/src/pages/configuracion.ts` es hoy `paginaConTitulo('configuracion', 'Configuración', 'personal')`.
-- La página ya está en el menú del personal, y el guard de `app.ts` exige una sesión del personal para entrar.
+- La página ya está en el menú del personal, pero hoy no exige sesión (no tiene `acceso`). C-34 la marca con `acceso: 'personal'`, como Agenda, porque necesita el rol.
 
 **Lo que ya existe y se reutiliza**
 - C-09:
@@ -170,4 +170,4 @@ No hay migraciones de base de datos ni cambios de backend.
 - Mockups: `openspec/changes/frontend-configuracion-consultorio/mockups/` (ver su `README.md`). Fuente de referencia: `design-system/components.html`.
 - Approval: approved (2026-11-23, by Sofia Indovino). La aprobó al mergear el PR #51, que la pedía.
 - Preview: rendered (2026-11-23). Las capturas están en `mockups/previews/`, a 390 × 844 y 1440 × 900, sin desplazamiento horizontal ni errores en la consola.
-- Visual verify: pendiente.
+- Visual verify: differences (2026-11-23). Solo hay diferencias minor (el encabezado de C-09, los botones de los diálogos y el tono del recuadro de turnos afectados cuando no hay ninguno); no hay blockers ni majors. Detalle y capturas en `mockups/verify/README.md`.
