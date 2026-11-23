@@ -1,3 +1,6 @@
+# Texto con LF en el repositorio, sin importar el core.autocrlf de cada integrante; Git detecta los binarios solo.
+* text=auto
+
 # Scripts de shell con LF para que corran en Mac y Linux; los .bat con CRLF para Windows.
 gradlew text eol=lf
 *.sh text eol=lf
