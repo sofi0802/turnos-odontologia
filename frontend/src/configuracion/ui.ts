@@ -1,7 +1,7 @@
 import type { ClienteApi } from '../shared/api/cliente.ts';
 import { ErrorSesion, ErrorValidacion } from '../shared/api/errores.ts';
 import type { Sesion } from '../shared/sesion/sesion.ts';
-import { crearAviso, crearBoton, type Campo } from '../shared/ui/campos.ts';
+import { crearAviso, crearBoton, crearSelector, type Campo } from '../shared/ui/campos.ts';
 import { mensajeDeError } from '../shared/ui/mensajes.ts';
 import type { Permisos } from './permisos.ts';
 
@@ -191,6 +191,111 @@ export function mostrarErrorEnFormulario(
   }
   general.textContent = mensajeDeError(causa);
   return false;
+}
+
+/**
+ * Hora elegida con dos selectores (design D13): `control` es el de horas y `minutos` el de minutos.
+ * Sirve como `Campo` para `mostrarErrorEnFormulario`, y su `name` es el del campo de la API.
+ */
+export interface SelectorHora extends Campo<HTMLSelectElement> {
+  readonly hora: HTMLSelectElement;
+  readonly minutos: HTMLSelectElement;
+  /** `"HH:MM"`, o `""` si es opcional y no se eligió la hora. */
+  valor(): string;
+}
+
+export interface OpcionesSelectorHora {
+  /** Hora inicial `"HH:MM"`. Si sus minutos no son múltiplo de 5, se suman a las opciones tal cual. */
+  readonly valor?: string;
+  /** Suma "--" a las horas, y mientras esté elegida no hay valor. */
+  readonly opcional?: boolean;
+  /** Texto visible de la etiqueta; por defecto, el mismo nombre accesible. */
+  readonly textoVisible?: string;
+  readonly ariaHora?: string;
+  readonly ariaMinutos?: string;
+}
+
+const HORAS_DEL_DIA = Array.from({ length: 24 }, (_, h) => String(h).padStart(2, '0'));
+const MINUTOS_DE_CINCO = Array.from({ length: 12 }, (_, i) => String(i * 5).padStart(2, '0'));
+const HORA_HHMM = /^(\d{2}):(\d{2})/;
+let contadorHoras = 0;
+
+/**
+ * Dos selectores, hora (00 a 23) y minutos (00 a 55 de 5 en 5), dentro de un `role="group"` llamado
+ * `etiqueta` (design D13). Devuelve `"HH:MM"`. `nombre` es el `name` del selector de horas y
+ * `${nombre}Minutos` el del de minutos.
+ */
+export function crearSelectorHora(nombre: string, etiqueta: string, opciones: OpcionesSelectorHora = {}): SelectorHora {
+  contadorHoras += 1;
+  const id = `hora-${contadorHoras}`;
+  const partes = opciones.valor === undefined ? null : HORA_HHMM.exec(opciones.valor);
+  const horaInicial = partes?.[1] ?? '';
+  const minutosInicial = partes?.[2] ?? '00';
+
+  const horas = opciones.opcional === true ? ['--', ...HORAS_DEL_DIA] : HORAS_DEL_DIA;
+  const hora = crearSelector(
+    nombre,
+    horas.map((h) => ({ valor: h === '--' ? '' : h, texto: h })),
+  );
+  const listaMinutos = MINUTOS_DE_CINCO.includes(minutosInicial)
+    ? MINUTOS_DE_CINCO
+    : [...MINUTOS_DE_CINCO, minutosInicial].sort();
+  const minutos = crearSelector(
+    `${nombre}Minutos`,
+    listaMinutos.map((m) => ({ valor: m, texto: m })),
+  );
+  hora.classList.add('control');
+  minutos.classList.add('control');
+  hora.setAttribute('aria-label', opciones.ariaHora ?? `Hora (${etiqueta})`);
+  minutos.setAttribute('aria-label', opciones.ariaMinutos ?? `Minutos (${etiqueta})`);
+  if (horaInicial !== '') {
+    hora.value = horaInicial;
+  } else if (opciones.opcional !== true) {
+    hora.value = '00';
+  }
+  minutos.value = minutosInicial;
+
+  const error = document.createElement('p');
+  error.id = `${id}-error`;
+  error.className = 'campo-error';
+  hora.setAttribute('aria-describedby', error.id);
+
+  const separador = document.createElement('span');
+  separador.className = 'separador';
+  separador.setAttribute('aria-hidden', 'true');
+  separador.textContent = ':';
+  const fila = document.createElement('div');
+  fila.className = 'hora-5';
+  fila.append(hora, separador, minutos);
+
+  const rotulo = document.createElement('span');
+  rotulo.className = 'etiqueta-hora';
+  rotulo.setAttribute('aria-hidden', 'true');
+  rotulo.textContent = opciones.textoVisible ?? etiqueta;
+
+  const contenedor = document.createElement('div');
+  contenedor.className = 'campo';
+  contenedor.setAttribute('role', 'group');
+  contenedor.setAttribute('aria-label', etiqueta);
+  contenedor.append(rotulo, fila, error);
+
+  return {
+    contenedor,
+    control: hora,
+    hora,
+    minutos,
+    valor() {
+      return hora.value === '' ? '' : `${hora.value}:${minutos.value}`;
+    },
+    mostrarError(mensaje) {
+      error.textContent = mensaje;
+      if (mensaje === '') {
+        hora.removeAttribute('aria-invalid');
+      } else {
+        hora.setAttribute('aria-invalid', 'true');
+      }
+    },
+  };
 }
 
 export interface Dialogo {

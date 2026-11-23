@@ -3,6 +3,8 @@ import { boton, campo, escribir, json, texto, type Pedido, type ServidorFalso } 
 import {
   abrirConfiguracion,
   elegirPestana,
+  ponerHora,
+  selectoresDeHora,
   SESION_ADMIN,
   SESION_ODONTOLOGA,
   SESION_ODONTOLOGO_SIN_PROFESIONAL,
@@ -56,8 +58,8 @@ function agregarFranja(panel: HTMLElement, nombreDia: string, desde: string, has
   const selector = campo<HTMLSelectElement>(panel, 'Día');
   const opcion = [...selector.options].find((o) => o.textContent === nombreDia);
   escribir(selector, opcion?.value ?? '');
-  escribir(campo(panel, 'Desde'), desde);
-  escribir(campo(panel, 'Hasta'), hasta);
+  ponerHora(panel, 'Desde', desde);
+  ponerHora(panel, 'Hasta', hasta);
   boton(panel, 'Agregar franja').click();
 }
 
@@ -189,7 +191,7 @@ describe('Edición de horarios por el administrador', () => {
     agregarFranja(panel, 'Sábado', '12:00', '09:00');
 
     expect(dia(panel, 'Sábado').querySelector('.no-atiende')).not.toBeNull();
-    const hasta = campo(panel, 'Hasta');
+    const hasta = selectoresDeHora(panel, 'Hasta').hora;
     expect(hasta.getAttribute('aria-invalid')).toBe('true');
     expect(document.getElementById(hasta.getAttribute('aria-describedby') ?? '')?.textContent).not.toBe('');
   });

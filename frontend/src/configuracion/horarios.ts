@@ -1,8 +1,8 @@
 import type { ClienteApi } from '../shared/api/cliente.ts';
-import { crearAviso, crearBoton, crearCampo, crearEntrada, crearSelector } from '../shared/ui/campos.ts';
+import { crearAviso, crearBoton, crearCampo, crearSelector } from '../shared/ui/campos.ts';
 import { mensajeDeError } from '../shared/ui/mensajes.ts';
 import { montarProfesionalElegido } from './profesional-elegido.ts';
-import { botonChico, cargarEn, crearCabecera, guardando, type ContextoSeccion } from './ui.ts';
+import { botonChico, cargarEn, crearCabecera, crearSelectorHora, guardando, type ContextoSeccion } from './ui.ts';
 
 /** Franja de trabajo tal como la usa la API: `dia` 1 (lunes) a 7 (domingo), horas "HH:mm". */
 export interface Franja {
@@ -167,8 +167,8 @@ function dibujarHorario(
       DIAS.map((nombre, indice) => ({ valor: String(indice + 1), texto: nombre })),
     ),
   );
-  const desde = crearCampo('Desde', crearEntrada('time', 'desde'));
-  const hasta = crearCampo('Hasta', crearEntrada('time', 'hasta'));
+  const desde = crearSelectorHora('desde', 'Desde', { valor: '09:00' });
+  const hasta = crearSelectorHora('hasta', 'Hasta', { valor: '12:00' });
   const agregar = crearBoton('Agregar franja', 'submit');
   agregar.className = 'btn';
   formulario.append(dia.contenedor, desde.contenedor, hasta.contenedor, agregar);
@@ -176,17 +176,8 @@ function dibujarHorario(
     evento.preventDefault();
     desde.mostrarError('');
     hasta.mostrarError('');
-    const inicio = leerHora(desde.control.value);
-    const fin = leerHora(hasta.control.value);
-    if (inicio === null) {
-      desde.mostrarError('Indicá la hora de inicio.');
-    }
-    if (fin === null) {
-      hasta.mostrarError('Indicá la hora de fin.');
-    }
-    if (inicio === null || fin === null) {
-      return;
-    }
+    const inicio = desde.valor();
+    const fin = hasta.valor();
     if (inicio >= fin) {
       hasta.mostrarError('"Hasta" tiene que ser posterior a "Desde".');
       return;

@@ -1,5 +1,5 @@
 import { expect, vi } from 'vitest';
-import { abrirApp, json, ServidorFalso, type AppDePrueba } from './apoyo.ts';
+import { abrirApp, escribir, json, ServidorFalso, type AppDePrueba } from './apoyo.ts';
 
 /** Sesiones ficticias de los escenarios de C-34. */
 export const SESION_ADMIN = { autenticado: true, username: 'admin', rol: 'ADMIN' };
@@ -73,4 +73,37 @@ export function enviar(dialogo: HTMLDialogElement): void {
     throw new Error('El diálogo no tiene formulario');
   }
   formulario.requestSubmit();
+}
+
+/** Grupo de los dos selectores de hora (`role="group"`) por su nombre accesible. */
+export function grupoHora(raiz: ParentNode, nombre: string): HTMLElement {
+  const grupo = [...raiz.querySelectorAll<HTMLElement>('[role="group"]')].find(
+    (g) => g.getAttribute('aria-label') === nombre,
+  );
+  if (grupo === undefined) {
+    throw new Error(`No existe el selector de hora ${nombre}`);
+  }
+  return grupo;
+}
+
+/** Selector de horas (primero) y de minutos (segundo) de un grupo de hora. */
+export function selectoresDeHora(raiz: ParentNode, nombre: string): { hora: HTMLSelectElement; minutos: HTMLSelectElement } {
+  const [hora, minutos] = grupoHora(raiz, nombre).querySelectorAll('select');
+  if (hora === undefined || minutos === undefined) {
+    throw new Error(`El selector de hora ${nombre} no tiene sus dos selectores`);
+  }
+  return { hora, minutos };
+}
+
+/** Elige una hora "HH:MM" en sus dos selectores, como lo hace una persona. */
+export function ponerHora(raiz: ParentNode, nombre: string, valor: string): void {
+  const [hh, mm] = valor.split(':');
+  const { hora, minutos } = selectoresDeHora(raiz, nombre);
+  escribir(hora, hh ?? '');
+  escribir(minutos, mm ?? '');
+}
+
+/** Textos de las opciones de un selector. */
+export function opcionesDe(selector: HTMLSelectElement): string[] {
+  return [...selector.options].map((o) => o.textContent ?? '');
 }

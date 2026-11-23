@@ -73,4 +73,13 @@ describe('Margen entre turnos', () => {
     expect(leerMargen({ minutos: '10' })).toBeNull();
     expect(leerMargen(null)).toBeNull();
   });
+
+  it('El campo del margen avanza de 5 en 5 y no baja de 10', async () => {
+    const panel = await abrirMargen(conMargen(SESION_ADMIN));
+
+    const entrada = campo(panel, 'Nuevo margen');
+
+    expect(entrada.getAttribute('step')).toBe('5');
+    expect(entrada.getAttribute('min')).toBe('10');
+  });
 });

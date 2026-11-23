@@ -8,6 +8,7 @@ import {
   PRESTACIONES_SEED,
   SESION_ADMIN,
   SESION_ODONTOLOGA,
+  ponerHora,
   SESION_RECEPCION_CONFIG,
   servidorCon,
 } from './apoyo-configuracion.ts';
@@ -61,9 +62,9 @@ function entrada(dialogo: HTMLElement, nombre: string): HTMLInputElement {
 
 function completarPeriodo(dialogo: HTMLElement, desde: string, horaDesde: string, hasta: string, horaHasta: string): void {
   escribir(entrada(dialogo, 'inicio'), desde);
-  escribir(entrada(dialogo, 'horaInicio'), horaDesde);
+  ponerHora(dialogo, 'Hora de inicio', horaDesde);
   escribir(entrada(dialogo, 'fin'), hasta);
-  escribir(entrada(dialogo, 'horaFin'), horaHasta);
+  ponerHora(dialogo, 'Hora de fin', horaHasta);
 }
 
 /** Abre la pestaña "Ausencias" y espera la lista de la Dra. Ana Ejemplo. */
@@ -298,7 +299,7 @@ describe('Reasignación de un turno afectado', () => {
     boton(panel, 'Reasignar').click();
     const dialogo = await dialogoAbierto();
     await vi.waitFor(() => expect(boton(dialogo, 'Reasignar').disabled).toBe(false));
-    escribir(entrada(dialogo, 'horaInicio'), '11:00');
+    ponerHora(dialogo, 'Otra hora (opcional)', '11:00');
     enviar(dialogo);
 
     await vi.waitFor(() =>

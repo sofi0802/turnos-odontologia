@@ -1,5 +1,6 @@
 import { aIsoConZona, fechaDeInstante, fechaLarga, formatearHora } from '../shared/fecha/zona.ts';
 import { crearCampo, crearEntrada, type Campo } from '../shared/ui/campos.ts';
+import { crearSelectorHora, type SelectorHora } from './ui.ts';
 
 /** Ausencia, licencia o bloqueo tal como lo devuelve la API de C-07 (`PeriodoRespuesta`). */
 export interface Periodo {
@@ -107,21 +108,29 @@ export function textoDeTurno(inicio: string): string {
 /** Campos de un período (design D6): fecha y hora de inicio y de fin, y motivo opcional. */
 export interface CamposPeriodo {
   readonly fechaInicio: Campo<HTMLInputElement>;
-  readonly horaInicio: Campo<HTMLInputElement>;
+  readonly horaInicio: SelectorHora;
   readonly fechaFin: Campo<HTMLInputElement>;
-  readonly horaFin: Campo<HTMLInputElement>;
+  readonly horaFin: SelectorHora;
   readonly motivo: Campo<HTMLInputElement>;
   /** Todos los campos, para `mostrarErrorEnFormulario`. Los `name` son `inicio`, `fin` y `motivo` donde aplica. */
-  readonly todos: readonly Campo<HTMLInputElement>[];
+  readonly todos: readonly (Campo<HTMLInputElement> | SelectorHora)[];
   /** Los nodos a insertar en el formulario, ya agrupados de a dos. */
   readonly nodos: readonly HTMLElement[];
 }
 
 export function crearCamposPeriodo(): CamposPeriodo {
   const fechaInicio = crearCampo('Desde el día', crearEntrada('date', 'inicio'));
-  const horaInicio = crearCampo('a las', crearEntrada('time', 'horaInicio'));
+  const horaInicio = crearSelectorHora('horaInicio', 'Hora de inicio', {
+    valor: '08:00',
+    textoVisible: 'a las',
+    ariaMinutos: 'Minutos del inicio',
+  });
   const fechaFin = crearCampo('Hasta el día', crearEntrada('date', 'fin'));
-  const horaFin = crearCampo('a las', crearEntrada('time', 'horaFin'));
+  const horaFin = crearSelectorHora('horaFin', 'Hora de fin', {
+    valor: '13:00',
+    textoVisible: 'a las',
+    ariaMinutos: 'Minutos del fin',
+  });
   const motivo = crearCampo('Motivo (opcional)', crearEntrada('text', 'motivo'));
   motivo.control.maxLength = 255;
   const ayuda = document.createElement('p');
@@ -137,7 +146,7 @@ export function crearCamposPeriodo(): CamposPeriodo {
 /** Lo que se envía a la API; `null` si falta un dato obligatorio (los marca en los campos). */
 export function leerCamposPeriodo(campos: CamposPeriodo): { inicio: string; fin: string; motivo: string | null } | null {
   let completo = true;
-  for (const campo of [campos.fechaInicio, campos.horaInicio, campos.fechaFin, campos.horaFin]) {
+  for (const campo of [campos.fechaInicio, campos.fechaFin]) {
     const vacio = campo.control.value === '';
     campo.mostrarError(vacio ? 'Completá este dato.' : '');
     completo &&= !vacio;
@@ -147,8 +156,8 @@ export function leerCamposPeriodo(campos: CamposPeriodo): { inicio: string; fin:
   }
   const motivo = campos.motivo.control.value.trim();
   return {
-    inicio: aIsoConZona(campos.fechaInicio.control.value, campos.horaInicio.control.value),
-    fin: aIsoConZona(campos.fechaFin.control.value, campos.horaFin.control.value),
+    inicio: aIsoConZona(campos.fechaInicio.control.value, campos.horaInicio.valor()),
+    fin: aIsoConZona(campos.fechaFin.control.value, campos.horaFin.valor()),
     motivo: motivo === '' ? null : motivo,
   };
 }

@@ -5,6 +5,7 @@ import {
   dialogoAbierto,
   elegirPestana,
   enviar,
+  ponerHora,
   SESION_ADMIN,
   SESION_ODONTOLOGA,
   SESION_ODONTOLOGO_SIN_PROFESIONAL,
@@ -49,9 +50,9 @@ async function registrarBloqueo(panel: HTMLElement): Promise<HTMLDialogElement> 
   boton(panel, 'Bloquear horario').click();
   const dialogo = await dialogoAbierto();
   escribir(entrada(dialogo, 'inicio'), '2026-12-09');
-  escribir(entrada(dialogo, 'horaInicio'), '11:00');
+  ponerHora(dialogo, 'Hora de inicio', '11:00');
   escribir(entrada(dialogo, 'fin'), '2026-12-09');
-  escribir(entrada(dialogo, 'horaFin'), '12:00');
+  ponerHora(dialogo, 'Hora de fin', '12:00');
   escribir(campo(dialogo, 'Motivo (opcional)'), 'Trámite');
   enviar(dialogo);
   return dialogo;

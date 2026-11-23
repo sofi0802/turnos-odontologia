@@ -11,7 +11,7 @@ import {
   type Sillon,
 } from './api.ts';
 import { textoDeTurno, type TurnoAfectado } from './periodos.ts';
-import { abrirDialogo, guardando, mostrarErrorEnFormulario, type ContextoSeccion } from './ui.ts';
+import { abrirDialogo, crearSelectorHora, guardando, mostrarErrorEnFormulario, type ContextoSeccion } from './ui.ts';
 
 /**
  * Datos que el diálogo "Reasignar" consulta y que quedan en memoria mientras la pestaña está
@@ -93,7 +93,11 @@ export function abrirReasignacion(opciones: OpcionesReasignacion): void {
   nuevo.contenedor.append(ayudaProfesional);
 
   const fecha = crearCampo('Otra fecha (opcional)', crearEntrada('date', 'inicio'));
-  const hora = crearCampo('Otra hora (opcional)', crearEntrada('time', 'horaInicio'));
+  const hora = crearSelectorHora('horaInicio', 'Otra hora (opcional)', {
+    opcional: true,
+    ariaHora: 'Hora de inicio',
+    ariaMinutos: 'Minutos del inicio',
+  });
   const grupoHorario = document.createElement('div');
   grupoHorario.className = 'dos-campos';
   grupoHorario.append(fecha.contenedor, hora.contenedor);
@@ -156,7 +160,7 @@ export function abrirReasignacion(opciones: OpcionesReasignacion): void {
     const profesionalId = Number(nuevo.control.value);
     // Si se elige solo la fecha o solo la hora, el otro dato se conserva del turno.
     const otraFecha = fecha.control.value;
-    const otraHora = hora.control.value;
+    const otraHora = hora.valor();
     const inicio =
       otraFecha === '' && otraHora === ''
         ? null

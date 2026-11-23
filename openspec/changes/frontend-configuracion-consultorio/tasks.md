@@ -96,7 +96,7 @@ Antes de empezar, `./gradlew test` y `./gradlew integrationTest` pasan. Los test
 
 ## 11. Frontend de los ajustes (desde `frontend/`)
 
-- [ ] 11.1 `crearSelectorHora` en `src/configuracion/ui.ts` (D13), usado en horarios, ausencias, bloqueos y reasignación; el margen con `step="5"`.
+- [x] 11.1 `crearSelectorHora` en `src/configuracion/ui.ts` (D13), usado en horarios, ausencias, bloqueos y reasignación; el margen con `step="5"`.
   - Escribir "Los minutos avanzan de 5 en 5" y "Minutos del inicio de una ausencia".
   - Adaptar a la hora en dos selectores los tests existentes que completan horas.
 - [ ] 11.2 "Agregar franja" con casillas de días. Escribir "Una franja para varios días" y "Agregar franja sin días".
