@@ -71,14 +71,14 @@ Los comandos se corren desde `frontend/`. Antes de empezar, `npm test` pasa con 
 
 Antes de empezar, `./gradlew test` y `./gradlew integrationTest` pasan. Los tests de integración usan PostgreSQL real y llevan `@Tag("integration")`. Cada escenario de los deltas `catalogo-consultorio` y `disponibilidad-profesional` tiene un test con su nombre en `@DisplayName`.
 
-- [ ] 9.1 Sillón habitual exclusivo (D15): agregar `existsBySillonHabitualIdAndIdNot` al repositorio y la validación en `ProfesionalService.asignarSillonHabitual`, con el error `SILLON_HABITUAL_OCUPADO` (`409`, `ProblemDetail`).
+- [x] 9.1 Sillón habitual exclusivo (D15): agregar `existsBySillonHabitualIdAndIdNot` al repositorio y la validación en `ProfesionalService.asignarSillonHabitual`, con el error `SILLON_HABITUAL_OCUPADO` (`409`, `ProblemDetail`).
   - Escribir primero los tests y verlos fallar: "Sillón habitual de otro profesional", "Sillón habitual de un profesional inactivo", "Volver a asignar el mismo sillón" y "Liberar un sillón y asignarlo a otro profesional", en `EspecialidadesYSillonHabitualIntegrationTest` y en un test unitario del servicio.
   - Los escenarios anteriores del requisito siguen pasando.
-- [ ] 9.2 `ServicioReasignacion.reasignar` recibe la `Clase` del período (D16). `AusenciasController` pasa `Clase.AUSENCIA`, y los tests de `ReasignacionIntegrationTest` siguen pasando sin cambios.
-- [ ] 9.3 `BloqueosController` con un `@PreAuthorize` por método y el endpoint `POST /{bloqueoId}/turnos/{turnoId}/reasignar` (D16).
+- [x] 9.2 `ServicioReasignacion.reasignar` recibe la `Clase` del período (D16). `AusenciasController` pasa `Clase.AUSENCIA`, y los tests de `ReasignacionIntegrationTest` siguen pasando sin cambios.
+- [x] 9.3 `BloqueosController` con un `@PreAuthorize` por método y el endpoint `POST /{bloqueoId}/turnos/{turnoId}/reasignar` (D16).
   - Escribir "La recepción consulta los bloqueos", "La recepción registra un bloqueo" y "La recepción borra un bloqueo" en `AusenciasYBloqueosIntegrationTest`, reemplazando el test anterior que esperaba `403` en la consulta.
   - Escribir "Reasignar a otro profesional el turno de un bloqueo", "Turno que no está afectado por el bloqueo", "El nuevo horario también cae en el bloqueo", "Bloqueo inexistente" y "El odontólogo intenta reasignar el turno de su bloqueo" en `ReasignacionIntegrationTest`.
-- [ ] 9.4 Correr `./gradlew build` y `./gradlew integrationTest`, todo en verde.
+- [x] 9.4 Correr `./gradlew build` y `./gradlew integrationTest`, todo en verde.
 
 ## 10. Mockups revisión 2 (gate de diseño)
 
@@ -113,6 +113,6 @@ Antes de empezar, `./gradlew test` y `./gradlew integrationTest` pasan. Los test
 
 ## 12. Cierre de los ajustes
 
-- [ ] 12.1 Correr `npm test`, `npm run build` y `npm run lint` (si existe) en `frontend/`, y `./gradlew build` e `integrationTest` en `backend/`, todo en verde.
+- [x] 12.1 Correr `npm test`, `npm run build` y `npm run lint` (si existe) en `frontend/`, y `./gradlew build` e `integrationTest` en `backend/`, todo en verde.
 - [ ] 12.2 Hacer la prueba manual como `admin`, `recepcion` y `ana.ejemplo` y la verificación visual contra la revisión 2 de los mockups, con capturas en `mockups/verify/`. Registrar Visual verify en `design.md`.
 - [ ] 12.3 Actualizar el PR #60. La descripción tiene que señalar a Sofia el cambio de autorización de bloqueos (D16) y avisarle a Enzo por `frontend/`. Marcar C-34 en `CHANGES.md`.
