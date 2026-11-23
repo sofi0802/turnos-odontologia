@@ -36,7 +36,8 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 - [ ] CA-4 (borde): con un turno existente de 10:00 a 10:30 que comparte sillón o profesional, un turno a las 10:30 se rechaza (`MARGEN_INSUFICIENTE`) y uno a las 10:40 se acepta.
 - [ ] CA-5 (borde): un turno a las 10:30 con otro profesional y otro sillón se acepta.
 - [ ] CA-6: los turnos `CANCELADO` no generan conflicto.
-**Reglas relacionadas**: RN-AG-01 a RN-AG-05, RN-AG-09, RN-AG-11, RN-AG-12
+- [ ] CA-7 (pantalla del personal) [2026-11-23]: el turno se carga en orden: prestación → profesional habilitado para ella (RN-AG-15) → día en un calendario, desde hoy en adelante → horario libre del profesional ese día. El sillón no se elige: se muestra y se usa el sillón habitual del profesional.
+**Reglas relacionadas**: RN-AG-01 a RN-AG-05, RN-AG-09, RN-AG-11, RN-AG-12, RN-AG-15
 
 ### US-011: Cancelar un turno y liberar el horario
 **Como** recepcionista **quiero** cancelar un turno **para** que el horario quede disponible.
