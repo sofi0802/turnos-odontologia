@@ -342,7 +342,7 @@ describe('Falla de la búsqueda', () => {
     escribir(campo(dialogo, 'Paciente'), 'fict');
 
     await vi.waitFor(() => expect(texto(document.body)).toContain('Tu sesión terminó. Ingresá de nuevo.'));
-    expect(window.location.hash).toBe('#/ingreso');
+    expect(window.location.hash).toBe('#/mi-cuenta');
     expect(document.querySelector('dialog[open]')).toBeNull();
   });
 

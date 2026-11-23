@@ -122,7 +122,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
     },
     sesionVencida(causa) {
       if (causa instanceof ErrorSesion) {
-        contexto.irAlIngreso(MENSAJE_SESION_TERMINADA);
+        contexto.irAMiCuenta(MENSAJE_SESION_TERMINADA);
         return true;
       }
       return false;

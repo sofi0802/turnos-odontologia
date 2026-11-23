@@ -105,11 +105,10 @@ describe('Páginas disponibles', () => {
     expect(titulo()).toBe('Reservar turno');
   });
 
-  it('Abrir la página de ingreso por su dirección', () => {
-    abrirEn('#/ingreso');
-    expect(titulo()).toBe('Ingresar');
-    const textos = [...raiz.querySelectorAll('nav a')].map((a) => a.textContent);
-    expect(textos).not.toContain('Ingresar');
+  it('Abrir la página de ingreso por su dirección', async () => {
+    abrirEn('#/ingreso', sinSesion());
+    await esperarTitulo('Mi cuenta');
+    expect(window.location.hash).toBe('#/mi-cuenta');
   });
 
   it('Abrir la cuenta del paciente por su dirección', async () => {

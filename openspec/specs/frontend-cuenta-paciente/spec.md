@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Definir cómo el paciente crea su cuenta, entra y sale de la aplicación web, separado del ingreso del personal, y cómo sus páginas verifican que la sesión sea de un paciente antes de mostrar datos. En los escenarios, con datos ficticios, "Paciente Uno" (DNI `99000001`, email `paciente.uno@example.com`) es un paciente y `recepcion` es un usuario `RECEPCIONISTA`.
+Definir cómo el paciente crea su cuenta, entra y sale de la aplicación web en `#/mi-cuenta`, que es también el ingreso del personal, y cómo sus páginas verifican que la sesión sea de un paciente antes de mostrar datos. En los escenarios, con datos ficticios, "Paciente Uno" (DNI `99000001`, email `paciente.uno@example.com`) es un paciente y `recepcion` es un usuario `RECEPCIONISTA`.
 
 ## Requirements
 

@@ -28,7 +28,7 @@ export interface ControlAgenda {
   recargar(): void;
   mostrarExito(mensaje: string): void;
   mostrarError(mensaje: string): void;
-  /** Si el error es de sesión vencida, lleva al ingreso y devuelve `true`. */
+  /** Si el error es de sesión vencida, lleva a Mi cuenta y devuelve `true`. */
   sesionVencida(causa: unknown): boolean;
 }
 
@@ -174,7 +174,7 @@ function resumenDe(turno: TurnoAgenda): string {
 
 export function abrirNuevoTurno(control: ControlAgenda): void {
   const catalogos = control.catalogos();
-  // La sesión vencida cierra también el diálogo, que es modal y taparía la página de ingreso.
+  // La sesión vencida cierra también el diálogo, que es modal y taparía Mi cuenta.
   let dialogo: Dialogo | undefined;
   const paciente = crearBuscadorPacientes(control.api, {
     sesionVencida: (causa) => {
