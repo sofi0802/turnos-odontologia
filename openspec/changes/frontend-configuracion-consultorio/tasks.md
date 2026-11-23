@@ -82,7 +82,7 @@ Antes de empezar, `./gradlew test` y `./gradlew integrationTest` pasan. Los test
 
 ## 10. Mockups revisión 2 (gate de diseño)
 
-- [ ] 10.1 Actualizar los mockups:
+- [x] 10.1 Actualizar los mockups:
   - `profesionales.html`: el detalle espaciado, con el sillón ocupado deshabilitado y "(de X)".
   - `profesional-formulario.html`: el alta con prestaciones y sillón, y el aviso de falla parcial.
   - `horarios.html`: "Agregar franja" con casillas de días y la hora en dos selectores.
@@ -91,8 +91,8 @@ Antes de empezar, `./gradlew test` y `./gradlew integrationTest` pasan. Los test
   - `reasignar.html`: el inicio de 5 en 5.
   - Agregar `bloqueos.html`, con la vista de recepción y de "Todos" y los turnos afectados con "Reasignar".
   - Actualizar `mockups/README.md` con `Revision: 2` y `Approval: pending`.
-- [ ] 10.2 Renderizar los mockups a 390 × 844 y 1440 × 900 en `mockups/previews/`, revisarlos y mostrárselos a Emanuel.
-- [ ] 10.3 Esperar la aprobación explícita y registrar `Approval: approved` de la revisión 2 en `mockups/README.md` y en `design.md`. Las tareas 11.x no empiezan antes.
+- [x] 10.2 Renderizar los mockups a 390 × 844 y 1440 × 900 en `mockups/previews/`, revisarlos y mostrárselos a Emanuel.
+- [x] 10.3 Esperar la aprobación explícita y registrar `Approval: approved` de la revisión 2 en `mockups/README.md` y en `design.md`. Las tareas 11.x no empiezan antes.
 
 ## 11. Frontend de los ajustes (desde `frontend/`)
 

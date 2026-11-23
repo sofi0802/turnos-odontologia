@@ -2,7 +2,7 @@
 
 - Design system revision: 1 (`design-system/README.md`, aprobado el 2026-11-22)
 - Revision: 2 (segunda prueba, 2026-11-23). La revisión 1 la aprobó Sofia Indovino el 2026-11-23 al mergear el PR #51; la revisión 2 reemplaza a las pantallas de la tabla marcadas con (r2).
-- Approval: pending (revisión 2, la aprueba Emanuel antes de las tareas 11.x)
+- Approval: approved (2026-11-23, by Emanuel) para la revisión 2, con el ajuste 2b del sillón habitual en tarjetas
 - Preview: rendered (2026-11-23, Chrome headless con emulación de 390 × 844 y 1440 × 900). Las capturas de la revisión 2 están en `previews/` con el sufijo `-r2-390.png` y `-r2-1440.png`; las de la revisión 1 (sin sufijo) quedan como referencia de lo que no cambió. Son de página completa, salvo las de los diálogos, que muestran el diálogo entero. Ninguna pantalla tiene desplazamiento horizontal ni errores en la consola.
 
 Los aprueba la líder antes del apply (`design-system/README.md`). Una vez aprobados, son el criterio de aceptación visual de las tareas de `tasks.md`.
