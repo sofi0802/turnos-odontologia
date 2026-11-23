@@ -487,13 +487,21 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `openspec/changes/frontend-agenda-personal/` (reprogramación en la agenda)
 
 ### [C-34] `frontend-configuracion-consultorio`
-- **Estado**: `[x]` completo (2026-11-23; el archive va en un PR aparte). La página Configuración tiene siete pestañas con permisos por rol, más los tests `frontend/test/configuracion-*.test.ts`. La verificación visual está en `openspec/changes/frontend-configuracion-consultorio/mockups/verify/`. Mockups aprobados por la líder al mergear el PR #51.
+- **Estado**: `[ ]` en curso (PR #60). La primera versión está aplicada: la página Configuración con siete pestañas y permisos por rol, con mockups aprobados por la líder en el PR #51. Faltan los ajustes de la segunda prueba del 2026-11-23 (tareas 9 a 12 del change).
 - **Responsable**: Emanuel
 - **Scope**:
   - Completar la página "Configuración" (hoy solo muestra el título) sobre los endpoints que ya existen de C-04 y C-07: profesionales, sillones y prestaciones (alta, edición, activar y desactivar), especialidades por profesional, sillón habitual, margen entre turnos, horarios de trabajo, ausencias y bloqueos.
   - Permisos según la matriz RBAC: `ADMIN` edita; `RECEPCIONISTA` y `ODONTOLOGO` solo leen, salvo las ausencias (recepción) y los bloqueos propios (odontólogo).
   - Cambio visual: mockups en `openspec/changes/<change>/mockups/` aprobados por la líder antes del apply (design system Revision 1).
-  - Sin cambios de backend. Para el odontólogo usa el `profesionalId` de la sesión que agregó C-35.
+  - Para el odontólogo usa el `profesionalId` de la sesión que agregó C-35.
+  - **Ajustes de la segunda prueba (2026-11-23):**
+    - sillón habitual exclusivo (RN-RO-09, backend en `configuracion/`);
+    - alta del profesional con prestaciones y sillón;
+    - franjas para varios días;
+    - horas de 5 en 5;
+    - "Todos los profesionales" en ausencias y bloqueos;
+    - reasignación de turnos afectados por un bloqueo (RN-AG-19, backend en `agenda/disponibilidad/`, con lectura de bloqueos para la recepción).
+  - Sin migraciones. Los módulos de backend que se tocan son de Emanuel (C-04 y C-07).
   - Tests: un escenario por cada sección y por cada permiso.
 - **Dependencias**: `C-04, C-07, C-09, C-35` (y el archive de C-09)
 - **Governance**: MEDIO (configuración que afecta la agenda)

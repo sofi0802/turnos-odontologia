@@ -24,7 +24,7 @@ C = crear, R = leer, U = modificar, D = eliminar o desactivar. "Propio" = solo s
 | Turno (sobreturno) | C | C | C | **—** (RN-AG-06) |
 | Turno (cancelar o reprogramar) | U | U (siempre) | U (siempre) | U propio, **hasta 24 h antes** (RN-AG-07) |
 | Agenda (ver) | R | R | R (**solo la propia**: sus turnos del día y de la semana, RN-AG-18) [2026-11-23] | **Solo disponibilidad**: horarios libres, sin datos de otros pacientes |
-| Bloqueo de agenda | CRUD | — | CRUD propio | — |
+| Bloqueo de agenda | CRUD | R, y reasigna los turnos afectados (RN-AG-19) [2026-11-23] | CRUD propio | — |
 | Horarios de trabajo | CRUD | R | R (propios) | R indirecta (solo ve los huecos libres resultantes) |
 | Especialidades (profesional-prestación) y sillón habitual | CRUD | R | R | R (solo qué profesionales hacen cada prestación) |
 | Ausencias y licencias del profesional | CRUD | CRUD | R (propias) | — |
