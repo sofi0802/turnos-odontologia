@@ -10,6 +10,7 @@ import {
   type Profesional,
   type Sillon,
 } from './api.ts';
+import { AVISO_FALLA_PARCIAL, crearExtrasAlta, type ExtrasAlta } from './profesional-alta.ts';
 import { crearDetalleProfesional } from './profesional-detalle.ts';
 import {
   abrirDialogo,
@@ -53,6 +54,8 @@ interface DefinicionCatalogo<T extends ElementoCatalogo> {
   /** Contenido extra de la fila (el detalle del profesional). Devuelve los botones que agrega. */
   /** `items` es la lista vigente de la pestaña (se actualiza al recargar), por si el detalle la necesita. */
   extra?(fila: HTMLLIElement, item: T, contexto: ContextoSeccion, items: T[]): HTMLButtonElement[];
+  /** Campos que suma el formulario de alta (el alta completa del profesional, design D14). */
+  extrasAlta?(contexto: ContextoSeccion, items: T[]): ExtrasAlta;
 }
 
 function texto(valores: ReadonlyMap<string, string>, nombre: string): string {
@@ -155,9 +158,10 @@ function montarCatalogo<T extends ElementoCatalogo>(
       return crearCampo(c.etiqueta, entrada);
     });
     const titulo = item === null ? `Agregar ${definicion.singular}` : `Editar ${definicion.singular}`;
+    const extras = item === null ? definicion.extrasAlta?.(contexto, vigentes) : undefined;
     const dialogo = abrirDialogo(
       titulo,
-      campos.map((c) => c.contenedor),
+      [...campos.map((c) => c.contenedor), ...(extras?.nodos ?? [])],
       'Guardar',
       item === null ? {} : { resumen: definicion.nombre(item) },
     );
@@ -165,15 +169,34 @@ function montarCatalogo<T extends ElementoCatalogo>(
       evento.preventDefault();
       const valores = new Map(campos.map((c) => [c.control.name, c.control.value]));
       const cuerpo = definicion.cuerpo(valores);
-      void guardando(dialogo.enviar, () =>
-        item === null
-          ? contexto.api.crear(definicion.recurso, cuerpo)
-          : contexto.api.actualizar(`${definicion.recurso}/${item.id}`, cuerpo),
-      ).then(
+      // Falla de un pedido posterior al alta: el elemento ya existe (design D14).
+      let fallaParcial: unknown = null;
+      void guardando(dialogo.enviar, async () => {
+        if (item !== null) {
+          await contexto.api.actualizar(`${definicion.recurso}/${item.id}`, cuerpo);
+          return;
+        }
+        const creado = await contexto.api.crear<unknown>(definicion.recurso, cuerpo);
+        if (extras === undefined) {
+          return;
+        }
+        try {
+          const id = creado !== null && typeof creado === 'object' ? Reflect.get(creado, 'id') : undefined;
+          if (typeof id !== 'number') {
+            throw new Error(`Respuesta inesperada de ${definicion.recurso}`);
+          }
+          await extras.completar(id);
+        } catch (causa) {
+          fallaParcial = causa;
+        }
+      }).then(
         (ok) => {
           if (ok) {
             dialogo.cerrar();
             recargar();
+            if (fallaParcial !== null && !contexto.sesionVencida(fallaParcial)) {
+              errorAccion.textContent = `${AVISO_FALLA_PARCIAL} ${mensajeDeError(fallaParcial)}`;
+            }
           }
         },
         (causa: unknown) => {
@@ -237,6 +260,7 @@ const PROFESIONALES: DefinicionCatalogo<Profesional> = {
   valorInicial: (p, campo) => (campo === 'nombre' ? p.nombre : campo === 'apellido' ? p.apellido : p.matricula),
   cuerpo: (v) => ({ nombre: texto(v, 'nombre'), apellido: texto(v, 'apellido'), matricula: texto(v, 'matricula') }),
   extra: detalleDeProfesional,
+  extrasAlta: crearExtrasAlta,
 };
 
 const SILLONES: DefinicionCatalogo<Sillon> = {

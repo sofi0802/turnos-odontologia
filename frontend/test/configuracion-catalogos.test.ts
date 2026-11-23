@@ -6,6 +6,7 @@ import {
   dialogoAbierto,
   elegirPestana,
   enviar,
+  opcionesDe,
   PRESTACIONES_SEED,
   SESION_ADMIN,
   SESION_ODONTOLOGA,
@@ -421,6 +422,176 @@ describe('Sillones habituales ocupados', () => {
 
     expect(estadoDeSillon(detalleBruno, 'Sillón 3')).toBe('Ocupado · Ana Ejemplo');
     expect(estadoDeSillon(detalleBruno, 'Sillón 1')).toBe('Libre');
+  });
+});
+
+/** Servidor del alta: el `POST /profesionales` devuelve a Carla Muestra con el id 3 y la agrega a la lista. */
+function servidorDeAlta(): { servidor: ServidorFalso; profesionales: object[] } {
+  const servidor = servidorCon(SESION_ADMIN);
+  const profesionales: object[] = [...PROFESIONALES];
+  servidor.responder('GET /profesionales', () => json(200, profesionales));
+  servidor.responder('GET /sillones', () => json(200, [...SILLONES, SILLON_3]));
+  servidor.responder('POST /profesionales', () => {
+    const nuevo = { id: 3, nombre: 'Carla', apellido: 'Muestra', matricula: 'MP-0003', activo: true, sillonHabitualId: null };
+    profesionales.push(nuevo);
+    return json(201, nuevo);
+  });
+  servidor.responder('PUT /profesionales/{id}/prestaciones', () => json(204));
+  servidor.responder('PUT /profesionales/{id}/sillon-habitual', () => json(204));
+  return { servidor, profesionales };
+}
+
+/** Abre "Agregar profesional" y completa a Carla Muestra, esperando a que carguen las prestaciones y los sillones. */
+async function abrirAlta(servidor: ServidorFalso): Promise<{ panel: HTMLElement; dialogo: HTMLDialogElement }> {
+  const { raiz } = await abrirConfiguracion(servidor);
+  const panel = elegirPestana(raiz, 'Profesionales');
+  await filaCargada(panel, 'Ana Ejemplo');
+  boton(panel, 'Agregar profesional').click();
+  const dialogo = await dialogoAbierto();
+  await vi.waitFor(() => expect(dialogo.querySelectorAll('label.casilla').length).toBeGreaterThan(0));
+  escribir(campo(dialogo, 'Nombre'), 'Carla');
+  escribir(campo(dialogo, 'Apellido'), 'Muestra');
+  escribir(campo(dialogo, 'Matrícula'), 'MP-0003');
+  return { panel, dialogo };
+}
+
+const AVISO_FALLA_PARCIAL = 'El profesional se creó, pero no se pudieron guardar sus prestaciones o su sillón.';
+
+/** Pedidos que cambian datos, en orden. */
+function escrituras(servidor: ServidorFalso): string[] {
+  return servidor.pedidos.filter((p) => p.metodo !== 'GET').map((p) => `${p.metodo} ${p.ruta}`);
+}
+
+describe('Alta completa de un profesional', () => {
+  it('Alta con prestaciones y sillón', async () => {
+    const { servidor } = servidorDeAlta();
+    const { panel, dialogo } = await abrirAlta(servidor);
+    // Los sillones de otros profesionales no se pueden elegir.
+    const selector = campo<HTMLSelectElement>(dialogo, 'Sillón habitual (opcional)');
+    expect(opcionesDe(selector)).toEqual([
+      'Sin sillón habitual',
+      'Sillón 1 (de Ana Ejemplo)',
+      'Sillón 2 (de Bruno Prueba)',
+      'Sillón 3',
+    ]);
+    expect([...selector.options].map((o) => o.disabled)).toEqual([false, true, true, false]);
+    expect(opcionesDe(campo<HTMLSelectElement>(dialogo, 'Sillón habitual (opcional)'))).not.toContain('Sillón 4');
+
+    casilla(dialogo, 'Consulta o control').click();
+    escribir(selector, '3');
+    enviar(dialogo);
+
+    await filaCargada(panel, 'Carla Muestra');
+    expect(escrituras(servidor)).toEqual([
+      'POST /profesionales',
+      'PUT /profesionales/3/prestaciones',
+      'PUT /profesionales/3/sillon-habitual',
+    ]);
+    expect(servidor.ultimo('POST', '/profesionales').cuerpo).toEqual({
+      nombre: 'Carla',
+      apellido: 'Muestra',
+      matricula: 'MP-0003',
+    });
+    expect(servidor.ultimo('PUT', '/profesionales/3/prestaciones').cuerpo).toEqual({ prestacionIds: [1] });
+    expect(servidor.ultimo('PUT', '/profesionales/3/sillon-habitual').cuerpo).toEqual({ sillonId: 3 });
+    expect(dialogo.open).toBe(false);
+    expect(texto(panel)).not.toContain(AVISO_FALLA_PARCIAL);
+  });
+
+  it('Alta sin prestaciones ni sillón', async () => {
+    const { servidor } = servidorDeAlta();
+    const { panel, dialogo } = await abrirAlta(servidor);
+    expect(campo<HTMLSelectElement>(dialogo, 'Sillón habitual (opcional)').value).toBe('');
+
+    enviar(dialogo);
+
+    await filaCargada(panel, 'Carla Muestra');
+    expect(escrituras(servidor)).toEqual(['POST /profesionales']);
+  });
+
+  it('El alta con varias prestaciones y sin sillón solo envía las prestaciones', async () => {
+    const { servidor } = servidorDeAlta();
+    const { panel, dialogo } = await abrirAlta(servidor);
+
+    casilla(dialogo, 'Consulta o control').click();
+    casilla(dialogo, 'Tratamiento de conducto').click();
+    enviar(dialogo);
+
+    await filaCargada(panel, 'Carla Muestra');
+    expect(escrituras(servidor)).toEqual(['POST /profesionales', 'PUT /profesionales/3/prestaciones']);
+    expect(servidor.ultimo('PUT', '/profesionales/3/prestaciones').cuerpo).toEqual({ prestacionIds: [1, 3] });
+  });
+
+  it('Si falla el alta, el formulario sigue abierto y no se envían prestaciones ni sillón', async () => {
+    const { servidor } = servidorDeAlta();
+    servidor.responder('POST /profesionales', () =>
+      json(409, { status: 409, codigo: 'MATRICULA_DUPLICADA', detail: 'Matrícula duplicada' }),
+    );
+    const { dialogo } = await abrirAlta(servidor);
+    casilla(dialogo, 'Consulta o control').click();
+    escribir(campo<HTMLSelectElement>(dialogo, 'Sillón habitual (opcional)'), '3');
+
+    enviar(dialogo);
+
+    await vi.waitFor(() => expect(texto(dialogo)).toContain('Ya existe un profesional con esa matrícula.'));
+    expect(dialogo.open).toBe(true);
+    expect(escrituras(servidor)).toEqual(['POST /profesionales']);
+    expect(casilla(dialogo, 'Consulta o control').checked).toBe(true);
+  });
+
+  it('El formulario de edición no pide prestaciones ni sillón', async () => {
+    const { servidor } = servidorDeAlta();
+    const { raiz } = await abrirConfiguracion(servidor);
+    const panel = elegirPestana(raiz, 'Profesionales');
+
+    boton(await filaCargada(panel, 'Ana Ejemplo'), 'Editar').click();
+    const dialogo = await dialogoAbierto();
+
+    expect(dialogo.querySelectorAll('label.casilla')).toHaveLength(0);
+    expect(dialogo.querySelectorAll('select')).toHaveLength(0);
+  });
+});
+
+describe('Falla parcial del alta de un profesional', () => {
+  it('Falla el sillón después del alta', async () => {
+    const { servidor } = servidorDeAlta();
+    servidor.responder('PUT /profesionales/{id}/sillon-habitual', () =>
+      json(409, { status: 409, codigo: 'SILLON_HABITUAL_OCUPADO', detail: 'Sillón ocupado' }),
+    );
+    const { panel, dialogo } = await abrirAlta(servidor);
+    casilla(dialogo, 'Consulta o control').click();
+    escribir(campo<HTMLSelectElement>(dialogo, 'Sillón habitual (opcional)'), '3');
+
+    enviar(dialogo);
+
+    await filaCargada(panel, 'Carla Muestra');
+    await vi.waitFor(() => expect(texto(panel)).toContain(AVISO_FALLA_PARCIAL));
+    expect(texto(panel)).toContain('Ese sillón ya es el habitual de otro profesional.');
+    expect(panel.querySelector('[role="alert"]')?.textContent).toContain(AVISO_FALLA_PARCIAL);
+    expect(dialogo.open).toBe(false);
+    // Las prestaciones ya se habían guardado.
+    expect(escrituras(servidor)).toEqual([
+      'POST /profesionales',
+      'PUT /profesionales/3/prestaciones',
+      'PUT /profesionales/3/sillon-habitual',
+    ]);
+  });
+
+  it('Si fallan las prestaciones, no se intenta el sillón y se avisa igual', async () => {
+    const { servidor } = servidorDeAlta();
+    servidor.responder('PUT /profesionales/{id}/prestaciones', () =>
+      json(422, { status: 422, codigo: 'PRESTACION_INACTIVA', detail: 'Prestación inactiva' }),
+    );
+    const { panel, dialogo } = await abrirAlta(servidor);
+    casilla(dialogo, 'Consulta o control').click();
+    escribir(campo<HTMLSelectElement>(dialogo, 'Sillón habitual (opcional)'), '3');
+
+    enviar(dialogo);
+
+    await filaCargada(panel, 'Carla Muestra');
+    await vi.waitFor(() => expect(texto(panel)).toContain(AVISO_FALLA_PARCIAL));
+    expect(texto(panel)).toContain('Hay una prestación inactiva entre las elegidas.');
+    expect(escrituras(servidor)).toEqual(['POST /profesionales', 'PUT /profesionales/3/prestaciones']);
   });
 });
 
