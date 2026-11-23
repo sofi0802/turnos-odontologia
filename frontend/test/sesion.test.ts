@@ -1,5 +1,18 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { abrirApp, boton, campo, elegirPaciente, errorDeCampo, escribir, json, ServidorFalso, texto, type AppDePrueba } from './apoyo.ts';
+import {
+  abrirApp,
+  boton,
+  campo,
+  completarPasosDelNuevoTurno,
+  elegirPaciente,
+  errorDeCampo,
+  escribir,
+  json,
+  responderPasosDelNuevoTurno,
+  ServidorFalso,
+  texto,
+  type AppDePrueba,
+} from './apoyo.ts';
 
 let servidor: ServidorFalso;
 let app: AppDePrueba | undefined;
@@ -110,15 +123,13 @@ describe('Sesión vencida', () => {
 
   it('Acción sin permiso', async () => {
     servidor.responder('POST /turnos', () => json(403, { status: 403, codigo: 'ACCESO_DENEGADO' }));
+    responderPasosDelNuevoTurno(servidor);
     app = await abrirAgendaConSesion();
     await vi.waitFor(() => expect(campo<HTMLSelectElement>(app?.raiz ?? document.body, 'Profesional').options.length).toBe(3));
     boton(app.raiz, 'Nuevo turno').click();
     const dialogo = document.querySelector<HTMLDialogElement>('dialog[open]') ?? document.body;
     await elegirPaciente(dialogo, '99000001', 'Uno, Paciente · DNI 99000001');
-    escribir(campo<HTMLSelectElement>(dialogo, 'Profesional'), '1');
-    escribir(campo<HTMLSelectElement>(dialogo, 'Sillón'), '1');
-    escribir(campo<HTMLSelectElement>(dialogo, 'Prestación'), '1');
-    escribir(campo(dialogo, 'Hora'), '10:00');
+    await completarPasosDelNuevoTurno(dialogo);
 
     boton(dialogo, 'Crear turno').click();
 

@@ -85,8 +85,26 @@ function parrafo(clase: string, rol: 'status' | 'alert' | null, texto: string): 
   return elemento;
 }
 
-/** Arma la zona de horarios del diálogo "Reprogramar turno" (mockups de C-33). */
-export function crearZonaHorarios(): ZonaHorarios {
+/** Textos de la zona de horarios; por defecto, los de la reprogramación (C-33). */
+export interface TextosZonaHorarios {
+  /** Ayuda fija bajo la grilla; `null` no la muestra. */
+  readonly ayuda: string | null;
+  /** Lo que se ve antes de la primera consulta; vacío no muestra nada. */
+  readonly sinConsulta: string;
+  readonly sinHorarios: string;
+  readonly error: string;
+}
+
+const TEXTOS_REPROGRAMACION: TextosZonaHorarios = {
+  ayuda: TEXTO_PISAN_EL_TURNO,
+  sinConsulta: '',
+  sinHorarios: 'No hay horarios libres ese día.',
+  error: 'No pudimos cargar los horarios. Cambiá la fecha para volver a intentar.',
+};
+
+/** Arma la zona de horarios de un diálogo (mockups de C-33; C-40 la reusa con sus textos). */
+export function crearZonaHorarios(textos: Partial<TextosZonaHorarios> = {}): ZonaHorarios {
+  const { ayuda, sinConsulta, sinHorarios, error: textoError } = { ...TEXTOS_REPROGRAMACION, ...textos };
   const contenedor = document.createElement('fieldset');
   contenedor.className = 'campo';
   const leyenda = document.createElement('legend');
@@ -95,27 +113,28 @@ export function crearZonaHorarios(): ZonaHorarios {
   const error = document.createElement('p');
   error.className = 'campo-error';
   error.setAttribute('role', 'alert');
-  contenedor.append(leyenda, cuerpo, error, parrafo('ayuda', null, TEXTO_PISAN_EL_TURNO));
+  contenedor.append(leyenda, cuerpo, error);
+  if (ayuda !== null) {
+    contenedor.append(parrafo('ayuda', null, ayuda));
+  }
 
   return {
     contenedor,
     mostrar(estado, elegido, alElegir) {
       switch (estado.fase) {
         case 'sin-consulta':
-          cuerpo.replaceChildren();
+          cuerpo.replaceChildren(...(sinConsulta === '' ? [] : [parrafo('ayuda', null, sinConsulta)]));
           break;
         case 'cargando':
           cuerpo.replaceChildren(parrafo('buscando', 'status', 'Buscando horarios…'));
           break;
         case 'error':
-          cuerpo.replaceChildren(
-            parrafo('aviso aviso-error', 'alert', 'No pudimos cargar los horarios. Cambiá la fecha para volver a intentar.'),
-          );
+          cuerpo.replaceChildren(parrafo('aviso aviso-error', 'alert', textoError));
           break;
         case 'listo':
           cuerpo.replaceChildren(
             estado.horarios.length === 0
-              ? parrafo('sin-horarios', 'status', 'No hay horarios libres ese día.')
+              ? parrafo('sin-horarios', 'status', sinHorarios)
               : crearGrillaHorarios(estado.horarios, elegido?.inicio ?? null, alElegir),
           );
           break;

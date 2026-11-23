@@ -10,30 +10,39 @@ Cada escenario de la spec tiene un test con el mismo nombre. Comandos desde `fro
 
 ## 1. Piezas reutilizables
 
-- [ ] 1.1 RED: tests de `catalogos.ts` que lean `sillonHabitualId` (número, `null` y ausente) y fallen; GREEN: sumarlo a `ItemCatalogo` de los profesionales sin romper sillones y prestaciones; verificar con `npm test -- agenda catalogos`
-- [ ] 1.2 RED: tests unitarios de `horariosSinChoqueDeSillon` (D4) con los bordes de RN-AG-04: contiguo sin margen se oculta, a 10 minutos se muestra, turno cancelado no cuenta, lista vacía de turnos; GREEN: implementar la función pura en `frontend/src/agenda/`; verificar con `npm test -- nuevo-turno`
-- [ ] 1.3 RED: tests del calendario (D3) para "Los días pasados no se pueden elegir", "Ir al mes siguiente" y "Elegir un día" con `vi.setSystemTime` en 2026-12-01, más un mes que empieza en domingo y el paso de diciembre a enero; GREEN: crear `frontend/src/shared/ui/calendario.ts`; verificar también con `TZ=UTC npm test -- calendario`
-- [ ] 1.4 Parametrizar `crearZonaHorarios` (D5) con la ayuda y los textos de "sin horarios" y "error", con los de C-33 por defecto; verificar que los tests de C-33 (`formularios`, `reprogramacion`) siguen pasando sin cambios
+- [x] 1.1 RED: tests de `catalogos.ts` que lean `sillonHabitualId` (número, `null` y ausente) y fallen; GREEN: sumarlo a `ItemCatalogo` de los profesionales sin romper sillones y prestaciones; verificar con `npm test -- agenda catalogos`
+- [x] 1.2 RED: tests unitarios de `horariosSinChoqueDeSillon` (D4) con los bordes de RN-AG-04: contiguo sin margen se oculta, a 10 minutos se muestra, turno cancelado no cuenta, lista vacía de turnos; GREEN: implementar la función pura en `frontend/src/agenda/`; verificar con `npm test -- nuevo-turno`
+- [x] 1.3 RED: tests del calendario (D3) para "Los días pasados no se pueden elegir", "Ir al mes siguiente" y "Elegir un día" con `vi.setSystemTime` en 2026-12-01, más un mes que empieza en domingo y el paso de diciembre a enero; GREEN: crear `frontend/src/shared/ui/calendario.ts`; verificar también con `TZ=UTC npm test -- calendario`
+- [x] 1.4 Parametrizar `crearZonaHorarios` (D5) con la ayuda y los textos de "sin horarios" y "error", con los de C-33 por defecto; verificar que los tests de C-33 (`formularios`, `reprogramacion`) siguen pasando sin cambios
 
 ## 2. Formulario guiado
 
-- [ ] 2.1 RED: escribir en `test/nuevo-turno.test.ts` "Al abrir solo se elige la prestación", "Solo los habilitados para la prestación" y "No se pueden cargar los profesionales"; GREEN: rehacer `abrirNuevoTurno` con el paciente primero, prestación del catálogo y profesionales de `GET /public/profesionales?prestacionId=` (D1, D2); verificar que pasan
-- [ ] 2.2 RED: "Se muestra el sillón habitual sin poder cambiarlo" y "Profesional sin sillón habitual"; GREEN: el párrafo del sillón (D6) y el bloqueo del calendario; verificar que pasan
-- [ ] 2.3 RED: "Horarios del día como botones", "Se ocultan los horarios que pisan el sillón habitual", "Día sin horarios" y "No se pueden cargar los horarios", más el caso en que falla la consulta de turnos (se muestran sin filtrar); GREEN: calendario y zona de horarios con el filtro (D4); verificar que pasan
-- [ ] 2.4 RED: "Cambiar la prestación vacía los pasos siguientes" y "Cambiar el día vacía el horario"; GREEN: `habilitarPasos()` (D1); verificar que pasan
-- [ ] 2.5 RED: "Recepción crea un turno" y "Faltan datos en el formulario" con los pasos nuevos; GREEN: el envío con `sillonId` del habitual y el `inicio` del horario elegido, y el mapa de errores de campo (D7); verificar que pasan
+- [x] 2.1 RED: escribir en `test/nuevo-turno.test.ts` "Al abrir solo se elige la prestación", "Solo los habilitados para la prestación" y "No se pueden cargar los profesionales"; GREEN: rehacer `abrirNuevoTurno` con el paciente primero, prestación del catálogo y profesionales de `GET /public/profesionales?prestacionId=` (D1, D2); verificar que pasan
+- [x] 2.2 RED: "Se muestra el sillón habitual sin poder cambiarlo" y "Profesional sin sillón habitual"; GREEN: el párrafo del sillón (D6) y el bloqueo del calendario; verificar que pasan
+- [x] 2.3 RED: "Horarios del día como botones", "Se ocultan los horarios que pisan el sillón habitual", "Día sin horarios" y "No se pueden cargar los horarios", más el caso en que falla la consulta de turnos (se muestran sin filtrar); GREEN: calendario y zona de horarios con el filtro (D4); verificar que pasan
+- [x] 2.4 RED: "Cambiar la prestación vacía los pasos siguientes" y "Cambiar el día vacía el horario"; GREEN: `habilitarPasos()` (D1); verificar que pasan
+- [x] 2.5 RED: "Recepción crea un turno" y "Faltan datos en el formulario" con los pasos nuevos; GREEN: el envío con `sillonId` del habitual y el `inicio` del horario elegido, y el mapa de errores de campo (D7); verificar que pasan
 
 ## 3. Tests existentes y responsivo
 
-- [ ] 3.1 Reescribir los tests de C-09 y C-36 que llenan el formulario viejo ("Recepción crea un turno", los de "Mensajes por código de rechazo", "Profesional inexistente", "Paciente escrito pero no elegido", "Ya no se pide el id del paciente", "Error de la API en el paciente") para que recorran los pasos nuevos, sin cambiar su nombre ni lo que comprueban; verificar con `npm test` que todos pasan
-- [ ] 3.2 Estilos del calendario y del sillón en `styles.css` con tokens `--ds-*`: días de al menos 44 px, grilla de 7 columnas que entra en 320 px, foco visible y estado elegido que no depende solo del color; sumar el test en `responsivo.test.ts`; verificar que pasa
+- [x] 3.1 Reescribir los tests de C-09 y C-36 que llenan el formulario viejo ("Recepción crea un turno", los de "Mensajes por código de rechazo", "Profesional inexistente", "Paciente escrito pero no elegido", "Ya no se pide el id del paciente", "Error de la API en el paciente") para que recorran los pasos nuevos, sin cambiar su nombre ni lo que comprueban; verificar con `npm test` que todos pasan
+- [x] 3.2 Estilos del calendario y del sillón en `styles.css` con tokens `--ds-*`: días de al menos 44 px, grilla de 7 columnas que entra en 320 px, foco visible y estado elegido que no depende solo del color; sumar el test en `responsivo.test.ts`; verificar que pasa
 
 ## 4. Verificación integral
 
-- [ ] 4.1 Correr `npm run build` y `npm test` con captura de evidencia y verificar que pasan todos, con un test por escenario de la spec (19) con su mismo nombre
-- [ ] 4.2 Probar contra el backend y la base de desarrollo (seed ficticio): crear un turno guiado de punta a punta, un día sin horarios, un profesional sin sillón habitual y un horario que el filtro oculta; capturar a 390 × 844 y 1440 × 900 en `mockups/verify/`, comparar con los mockups aprobados y anotar las diferencias por prioridad
-- [ ] 4.3 Verificar que `grep -rnE ":\s*any\b|as any" frontend/src frontend/test` no devuelve resultados, que no hay frameworks en `package.json` y que tests y capturas usan solo datos ficticios
-- [ ] 4.4 Correr `openspec validate frontend-nuevo-turno-guiado --strict` y verificar que es válido
+- [x] 4.1 Correr `npm run build` y `npm test` con captura de evidencia y verificar que pasan todos, con un test por escenario de la spec (19) con su mismo nombre
+- [x] 4.2 Probar contra el backend y la base de desarrollo (seed ficticio): crear un turno guiado de punta a punta, un día sin horarios, un profesional sin sillón habitual y un horario que el filtro oculta; capturar a 390 × 844 y 1440 × 900 en `mockups/verify/`, comparar con los mockups aprobados y anotar las diferencias por prioridad
+- [x] 4.3 Verificar que `grep -rnE ":\s*any\b|as any" frontend/src frontend/test` no devuelve resultados, que no hay frameworks en `package.json` y que tests y capturas usan solo datos ficticios
+- [x] 4.4 Correr `openspec validate frontend-nuevo-turno-guiado --strict` y verificar que es válido
+
+## Notas de implementación
+
+- **Escenario corregido en la spec** ("Se ocultan los horarios que pisan el sillón habitual"): decía que con un turno de 11:00 a 11:30 y un margen de 10 minutos se veía el horario de las 11:30. Empezar justo cuando termina el otro turno no deja margen (RN-AG-04), así que se cambió por un horario a las 11:45.
+- **Orden de TDD**: los tests de C-09, C-33 y C-36 de la tarea 3.1 se adaptaron después de escribir el formulario (recorren los pasos nuevos con los helpers `responderPasosDelNuevoTurno` y `completarPasosDelNuevoTurno` de `test/apoyo.ts`, sin cambiar su nombre ni lo que comprueban). Para comprobar que no son triviales se rompió a propósito el filtro por sillón y el sillón enviado: fallaron "Se ocultan los horarios que pisan el sillón habitual", "sin el margen de la configuración…" y "Recepción crea un turno", y se restauró el código.
+- **Test reemplazado**: "el formulario solo ofrece profesionales activos y propone el día mostrado" (de C-09, sin escenario en la spec) pasó a "el formulario solo ofrece prestaciones activas y el calendario empieza en el mes de hoy", porque la spec de C-40 cambia ese comportamiento.
+- **Estilos**: la sección de C-40 va antes de la de C-34 y termina con `/* Fin del nuevo turno guiado (C-40) */`, porque un test de C-34 lee el último `@media` del archivo.
+- **Sillón**: el detalle usa la clase `sillon-detalle` y no `ayuda`, porque `.campo .ayuda::first-letter` (de C-12) lo ponía en mayúscula; se vio en la verificación contra el backend.
+- **Verificación**: contra el backend de desarrollo con datos ficticios (`mockups/verify/README.md`). Quedan sin probar contra el backend el profesional sin sillón habitual y la sesión de odontólogo (cubiertos por tests o documentados como riesgo).
 
 ## Workflow follow-up
 

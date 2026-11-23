@@ -102,10 +102,10 @@ Al elegir un día SHALL mostrarse como botones los horarios libres del profesion
 - **THEN** se ven los botones "10:00", "10:30" y "11:00"
 
 #### Scenario: Se ocultan los horarios que pisan el sillón habitual
-- **GIVEN** la Dra. Ana Ejemplo con el Sillón 1 como habitual, un margen de 10 minutos, la disponibilidad del 2026-12-01 con 10:00, 10:30, 11:00 y 11:30 para "Consulta" de 30 minutos, y un turno activo del Dr. Bruno Prueba en el Sillón 1 de 11:00 a 11:30
+- **GIVEN** la Dra. Ana Ejemplo con el Sillón 1 como habitual, un margen de 10 minutos, la disponibilidad del 2026-12-01 con 10:00, 10:30, 11:00, 11:30 y 11:45 para "Consulta" de 30 minutos, y un turno activo del Dr. Bruno Prueba en el Sillón 1 de 11:00 a 11:30
 - **WHEN** se elige el 2026-12-01 en el calendario
 - **THEN** se pide `GET /api/v1/turnos` del 2026-12-01 con `sillonId=1`
-- **AND** se ven los botones "10:00" y "11:30" (con el margen, 10:30 y 11:00 chocan con el turno de las 11:00)
+- **AND** se ven solo los botones "10:00" y "11:45" (con el margen de 10 minutos, 10:30 termina justo cuando empieza el otro turno, 11:00 se superpone y 11:30 empieza justo cuando termina)
 
 #### Scenario: Día sin horarios
 - **GIVEN** que la disponibilidad del 2026-12-05 responde una lista vacía

@@ -1,7 +1,7 @@
 import { cargarProfesionales } from '../paciente/catalogo.ts';
 import type { ClienteApi } from '../shared/api/cliente.ts';
 import { ErrorNegocio, ErrorNoEncontrado, ErrorValidacion } from '../shared/api/errores.ts';
-import { aIsoConZona, fechaDeInstante, formatearHora, type Fecha } from '../shared/fecha/zona.ts';
+import { fechaDeInstante, formatearHora, type Fecha } from '../shared/fecha/zona.ts';
 import {
   cambiarOpciones,
   crearAviso,
@@ -13,8 +13,10 @@ import {
   type Opcion,
 } from '../shared/ui/campos.ts';
 import { mensajeDeError, mensajeDeReprogramacion } from '../shared/ui/mensajes.ts';
+import { crearCalendario } from '../shared/ui/calendario.ts';
 import { crearBuscadorPacientes, MENSAJE_PACIENTE_OBLIGATORIO } from './buscador-pacientes.ts';
-import type { Catalogos, ItemCatalogo } from './catalogos.ts';
+import { nombreDe, type Catalogos, type ItemCatalogo } from './catalogos.ts';
+import { crearBuscadorHorariosNuevoTurno } from './nuevo-turno.ts';
 import type { TurnoAgenda } from './consulta.ts';
 import { normalizarNumeroReserva } from './numero-reserva.ts';
 import { crearBuscadorHorarios, crearZonaHorarios } from './reprogramacion.ts';
@@ -123,7 +125,7 @@ function leerNumeroReserva(cuerpo: unknown): string {
 function manejarEnvio(
   control: ControlAgenda,
   dialogo: Dialogo,
-  porCampo: Readonly<Record<string, CampoFormulario>>,
+  porCampo: Readonly<Record<string, { mostrarError(mensaje: string): void }>>,
   pedido: () => Promise<unknown>,
   alTerminar: (cuerpo: unknown) => string,
   mensaje: (causa: unknown) => string = mensajeDeError,
@@ -172,50 +174,205 @@ function resumenDe(turno: TurnoAgenda): string {
   return `${paciente}, ${fechaDeInstante(turno.inicio)} de ${formatearHora(turno.inicio)} a ${formatearHora(turno.fin)}.`;
 }
 
+export const MENSAJE_PROFESIONALES_NO_CARGADOS = 'No pudimos cargar los profesionales. Probá elegir la prestación de nuevo.';
+export const AYUDA_SIN_PROFESIONAL = 'Elegí primero un profesional.';
+export const AYUDA_SIN_SILLON = 'Sin sillón asignado no se pueden elegir días.';
+
+function mensajeSinSillon(profesional: string): string {
+  return `${profesional} no tiene un sillón asignado. Pedile al administrador que lo asigne en Configuración.`;
+}
+
+/** Sillón del profesional elegido, como texto y sin poder cambiarlo (design D6). */
+function crearSillonFijo(): { contenedor: HTMLDivElement; mostrar(sillon: string | null, profesional: string | null): void } {
+  const contenedor = document.createElement('div');
+  contenedor.className = 'campo sillon-nuevo-turno';
+  contenedor.hidden = true;
+  const etiqueta = document.createElement('span');
+  etiqueta.className = 'etiqueta-campo';
+  etiqueta.textContent = 'Sillón';
+  const valor = document.createElement('p');
+  valor.className = 'sillon-fijo';
+  valor.setAttribute('aria-live', 'polite');
+  contenedor.append(etiqueta, valor);
+  return {
+    contenedor,
+    mostrar(sillon, profesional) {
+      contenedor.hidden = profesional === null;
+      if (profesional === null) {
+        valor.replaceChildren();
+        return;
+      }
+      if (sillon === null) {
+        valor.className = 'aviso aviso-alerta';
+        valor.setAttribute('role', 'alert');
+        valor.textContent = mensajeSinSillon(profesional);
+        return;
+      }
+      valor.className = 'sillon-fijo';
+      valor.removeAttribute('role');
+      const nombre = document.createElement('span');
+      nombre.className = 'sillon-nombre';
+      nombre.textContent = `Sillón: ${sillon}`;
+      // No usa `.ayuda`: dentro de `.campo` esa clase pone en mayúscula la primera letra (C-12).
+      const ayuda = document.createElement('span');
+      ayuda.className = 'sillon-detalle';
+      ayuda.textContent = ` · sillón habitual de ${profesional}`;
+      valor.replaceChildren(nombre, ayuda);
+    },
+  };
+}
+
+/**
+ * "Nuevo turno" guiado (C-40, design D1): paciente; después prestación → profesional habilitado →
+ * día del calendario → horario libre, con el sillón habitual del profesional a la vista.
+ */
 export function abrirNuevoTurno(control: ControlAgenda): void {
   const catalogos = control.catalogos();
   // La sesión vencida cierra también el diálogo, que es modal y taparía Mi cuenta.
   let dialogo: Dialogo | undefined;
-  const paciente = crearBuscadorPacientes(control.api, {
-    sesionVencida: (causa) => {
-      const vencida = control.sesionVencida(causa);
-      if (vencida) {
-        dialogo?.cerrar();
+  const sesionVencida = (causa: unknown): boolean => {
+    const vencida = control.sesionVencida(causa);
+    if (vencida) {
+      dialogo?.cerrar();
+    }
+    return vencida;
+  };
+  const paciente = crearBuscadorPacientes(control.api, { sesionVencida });
+  const prestacion = selector('Prestación', 'prestacionId', opcionesActivas(catalogos.prestaciones, 'Elegí una prestación'));
+  const profesional = selector('Profesional', 'profesionalId', [{ valor: '', texto: 'Elegí un profesional' }]);
+  profesional.control.disabled = true;
+  const avisoProfesionales = crearAviso('status');
+  avisoProfesionales.className = 'aviso aviso-alerta';
+  profesional.contenedor.append(avisoProfesionales);
+  const sillon = crearSillonFijo();
+
+  const zona = crearZonaHorarios({
+    ayuda: null,
+    sinConsulta: 'Elegí un día para ver los horarios libres.',
+    sinHorarios: 'No hay horarios libres ese día. Probá con otro día.',
+    error: 'No pudimos cargar los horarios. Elegí el día de nuevo para volver a intentar.',
+  });
+  const mostrarHorarios = (): void => {
+    zona.mostrar(buscador.estado(), buscador.elegido(), (horario) => {
+      buscador.elegir(horario);
+      zona.mostrarError('');
+    });
+  };
+  const buscador = crearBuscadorHorariosNuevoTurno(control.api, mostrarHorarios);
+
+  let sillonId: number | null = null;
+  const calendario = crearCalendario({
+    leyenda: 'Fecha',
+    alElegir(fecha) {
+      if (sillonId === null) {
+        return;
       }
-      return vencida;
+      zona.mostrarError('');
+      buscador.buscar({
+        prestacionId: Number(prestacion.control.value),
+        profesionalId: Number(profesional.control.value),
+        sillonId,
+        fecha,
+      });
     },
   });
-  const profesional = selector('Profesional', 'profesionalId', opcionesActivas(catalogos.profesionales, 'Elegí un profesional'));
-  const sillon = selector('Sillón', 'sillonId', opcionesActivas(catalogos.sillones, 'Elegí un sillón'));
-  const prestacion = selector('Prestación', 'prestacionId', opcionesActivas(catalogos.prestaciones, 'Elegí una prestación'));
-  const fecha = entrada('Fecha', 'date', 'fecha', control.fechaInicial());
-  const hora = entrada('Hora', 'time', 'hora');
+  calendario.habilitar(false, AYUDA_SIN_PROFESIONAL);
 
-  dialogo = abrirDialogo('Nuevo turno', null, [paciente, profesional, sillon, prestacion, fecha, hora], 'Crear turno');
+  dialogo = abrirDialogo('Nuevo turno', null, [paciente, prestacion, profesional], 'Crear turno');
   const dialogoAbierto = dialogo;
-  const porCampo = { pacienteId: paciente, profesionalId: profesional, sillonId: sillon, prestacionId: prestacion, inicio: hora };
+  dialogoAbierto.formulario.closest('dialog')?.classList.add('dialogo-ancho');
+  const columnas = document.createElement('div');
+  columnas.className = 'dos-columnas';
+  prestacion.contenedor.before(columnas);
+  columnas.append(prestacion.contenedor, profesional.contenedor);
+  const fechaYHorario = document.createElement('div');
+  fechaYHorario.className = 'fecha-y-horario';
+  fechaYHorario.append(calendario.contenedor, zona.contenedor);
+  columnas.after(sillon.contenedor, fechaYHorario);
+  mostrarHorarios();
+
+  /** Vacía el día y el horario (al cambiar el profesional o la prestación). */
+  function vaciarDiaYHorario(): void {
+    calendario.limpiar();
+    buscador.limpiar();
+    zona.mostrarError('');
+  }
+
+  let consultaProfesionales = 0;
+  prestacion.control.addEventListener('change', () => {
+    consultaProfesionales += 1;
+    const esta = consultaProfesionales;
+    prestacion.mostrarError('');
+    profesional.mostrarError('');
+    avisoProfesionales.textContent = '';
+    cambiarOpciones(profesional.control, [{ valor: '', texto: 'Elegí un profesional' }]);
+    profesional.control.value = '';
+    profesional.control.disabled = true;
+    sillonId = null;
+    sillon.mostrar(null, null);
+    vaciarDiaYHorario();
+    calendario.habilitar(false, AYUDA_SIN_PROFESIONAL);
+    if (prestacion.control.value === '') {
+      return;
+    }
+    cargarProfesionales(control.api, Number(prestacion.control.value))
+      .then((habilitados) => {
+        if (esta !== consultaProfesionales) {
+          return;
+        }
+        cambiarOpciones(profesional.control, [
+          { valor: '', texto: 'Elegí un profesional' },
+          ...habilitados.map((p) => ({ valor: String(p.id), texto: p.nombre })),
+        ]);
+        profesional.control.disabled = false;
+      })
+      .catch((causa: unknown) => {
+        if (esta !== consultaProfesionales || sesionVencida(causa)) {
+          return;
+        }
+        avisoProfesionales.textContent = MENSAJE_PROFESIONALES_NO_CARGADOS;
+      });
+  });
+
+  profesional.control.addEventListener('change', () => {
+    profesional.mostrarError('');
+    vaciarDiaYHorario();
+    if (profesional.control.value === '') {
+      sillonId = null;
+      sillon.mostrar(null, null);
+      calendario.habilitar(false, AYUDA_SIN_PROFESIONAL);
+      return;
+    }
+    const id = Number(profesional.control.value);
+    const nombre = profesional.control.selectedOptions[0]?.textContent ?? nombreDe(catalogos, 'profesionales', id);
+    sillonId = catalogos.profesionales.find((p) => p.id === id)?.sillonHabitualId ?? null;
+    sillon.mostrar(sillonId === null ? null : nombreDe(catalogos, 'sillones', sillonId), nombre);
+    calendario.habilitar(sillonId !== null, sillonId === null ? AYUDA_SIN_SILLON : undefined);
+  });
+
+  const porCampo = { pacienteId: paciente, prestacionId: prestacion, profesionalId: profesional, inicio: zona };
 
   dialogoAbierto.formulario.addEventListener('submit', (evento) => {
     evento.preventDefault();
-    const completos = validarObligatorios([
-      [profesional, 'Elegí un profesional.'],
-      [sillon, 'Elegí un sillón.'],
-      [prestacion, 'Elegí una prestación.'],
-      [fecha, 'Elegí la fecha.'],
-      [hora, 'Elegí la hora.'],
-    ]);
     // El paciente cuenta solo si se eligió de la lista: el texto escrito no alcanza.
     const pacienteId = paciente.pacienteId();
     paciente.mostrarError(pacienteId === null ? MENSAJE_PACIENTE_OBLIGATORIO : '');
-    if (!completos || pacienteId === null) {
+    const sinPrestacion = prestacion.control.value === '';
+    prestacion.mostrarError(sinPrestacion ? 'Elegí una prestación.' : '');
+    const sinProfesional = !sinPrestacion && profesional.control.value === '';
+    profesional.mostrarError(sinProfesional ? 'Elegí un profesional.' : '');
+    const horario = buscador.elegido();
+    const puedeElegirHorario = !sinPrestacion && !sinProfesional && sillonId !== null;
+    zona.mostrarError(puedeElegirHorario && horario === null ? 'Elegí un horario.' : '');
+    if (pacienteId === null || horario === null || sillonId === null || sinPrestacion || sinProfesional) {
       return;
     }
     const cuerpo = {
       pacienteId,
-      profesionalId: Number(profesional.control.value),
-      sillonId: Number(sillon.control.value),
       prestacionId: Number(prestacion.control.value),
-      inicio: aIsoConZona(fecha.control.value, hora.control.value),
+      profesionalId: Number(profesional.control.value),
+      sillonId,
+      inicio: horario.inicio,
     };
     manejarEnvio(
       control,

@@ -1,6 +1,7 @@
 import { expect, vi } from 'vitest';
 import { iniciarApp } from '../src/app.ts';
 import { crearClienteApi, type ClienteApi } from '../src/shared/api/cliente.ts';
+import { hoy } from '../src/shared/fecha/zona.ts';
 import type { Router } from '../src/shared/ui/router.ts';
 
 /** Datos ficticios, iguales al seed de la KB. */
@@ -174,6 +175,65 @@ export function errorDeCampo(raiz: ParentNode, etiqueta: string): string {
 
 export function texto(raiz: HTMLElement): string {
   return raiz.textContent?.replace(/\s+/g, ' ') ?? '';
+}
+
+function finDeHorario(hora: string, minutos = 30): string {
+  const [h, m] = hora.split(':').map(Number);
+  const total = (h ?? 0) * 60 + (m ?? 0) + minutos;
+  return `${String(Math.floor(total / 60)).padStart(2, '0')}:${String(total % 60).padStart(2, '0')}`;
+}
+
+/**
+ * Respuestas que necesita el "Nuevo turno" guiado de C-40: profesionales habilitados, horarios libres
+ * de cualquier día y los turnos del sillón (vacíos). `agenda` es lo que devuelve la agenda sin `sillonId`.
+ */
+export function responderPasosDelNuevoTurno(
+  servidor: ServidorFalso,
+  opciones: { agenda?: unknown[]; horarios?: string[] } = {},
+): void {
+  const agenda = opciones.agenda ?? [];
+  const horarios = opciones.horarios ?? ['10:00', '10:30', '11:00', '15:00'];
+  servidor.responder('GET /public/profesionales', () =>
+    json(200, [
+      { id: 1, nombre: 'Ana Ejemplo' },
+      { id: 2, nombre: 'Bruno Prueba' },
+    ]),
+  );
+  servidor.responder('GET /public/disponibilidad', (pedido) => {
+    const fecha = pedido.query.get('fecha') ?? '';
+    return json(
+      200,
+      horarios.map((h) => ({ inicio: `${fecha}T${h}:00-03:00`, fin: `${fecha}T${finDeHorario(h)}:00-03:00` })),
+    );
+  });
+  servidor.responder('GET /turnos', (pedido) => json(200, pedido.query.has('sillonId') ? [] : agenda));
+}
+
+/** Recorre el "Nuevo turno" guiado: prestación, profesional, día del calendario (hoy si no se indica) y horario. */
+export async function completarPasosDelNuevoTurno(
+  dialogo: ParentNode,
+  { prestacion = '1', profesional = '1', fecha = hoy(), hora = '10:00' } = {},
+): Promise<void> {
+  escribir(campo<HTMLSelectElement>(dialogo, 'Prestación'), prestacion);
+  await vi.waitFor(() => expect(campo<HTMLSelectElement>(dialogo, 'Profesional').disabled).toBe(false));
+  escribir(campo<HTMLSelectElement>(dialogo, 'Profesional'), profesional);
+  const dia = await vi.waitFor(() => {
+    const boton = dialogo.querySelector<HTMLButtonElement>(`.cal-dia[data-fecha="${fecha}"]`);
+    expect(boton?.disabled).toBe(false);
+    return boton;
+  });
+  dia?.click();
+  const horario = await vi.waitFor(() => {
+    const boton = [...dialogo.querySelectorAll<HTMLButtonElement>('.chips button')].find((b) => b.textContent === hora);
+    expect(boton).toBeDefined();
+    return boton;
+  });
+  horario?.click();
+}
+
+/** Horario elegido en la grilla del nuevo turno, o `null`. */
+export function horarioElegido(dialogo: ParentNode): string | null {
+  return dialogo.querySelector('.chips button[aria-pressed="true"]')?.textContent ?? null;
 }
 
 /** Busca en el campo "Paciente" y elige la opción con ese texto, como lo hace la recepción. */
