@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import estilos from '../src/styles.css?raw';
-import { abrirApp, boton, json, ServidorFalso, turno, type AppDePrueba } from './apoyo.ts';
+import { abrirApp, boton, campo, escribir, json, ServidorFalso, turno, type AppDePrueba } from './apoyo.ts';
 
 // jsdom no aplica media queries ni calcula el diseño: estos tests comprueban la
 // estructura y las reglas de estilos.css; lo visual se verifica con capturas reales
@@ -64,6 +64,40 @@ describe('Agenda usable en el celular', () => {
     expect(regla(reglasDeEscritorio(), '.agenda-filtros')).toMatch(/flex-direction:\s*row/);
     expect(regla(reglasDeEscritorio(), '.agenda-lista')).toMatch(/grid-template-columns:\s*repeat\(auto-fill, minmax\(/);
     expect(regla(estilos, '.contenido')).toMatch(/max-width:\s*var\(--ancho-maximo\)/);
+  });
+});
+
+describe('Buscador usable en el celular (C-36)', () => {
+  it('Buscador en el celular', async () => {
+    const servidor = new ServidorFalso();
+    app = abrirApp(servidor, '#/agenda');
+    await vi.waitFor(() => expect(servidor.a('GET', '/turnos')).toHaveLength(1));
+    await vi.waitFor(() => expect(campo<HTMLSelectElement>(app?.raiz ?? document.body, 'Profesional').options.length).toBeGreaterThan(1));
+    boton(app.raiz, 'Nuevo turno').click();
+    const dialogo = document.querySelector<HTMLDialogElement>('dialog[open]') ?? document.body;
+
+    escribir(campo(dialogo, 'Paciente'), 'paciente');
+    await vi.waitFor(() => expect(dialogo.querySelectorAll('[role="option"]')).toHaveLength(2));
+
+    // jsdom no calcula el diseño: se comprueba la estructura y la regla de estilos.css.
+    for (const opcion of dialogo.querySelectorAll('[role="option"]')) {
+      expect(opcion.classList.contains('buscador-opcion')).toBe(true);
+    }
+    const celular = reglasDeCelular();
+    const altoOpcion = Number(/min-height:\s*(\d+)px/.exec(regla(celular, '.buscador-opcion'))?.[1]);
+    expect(altoOpcion).toBeGreaterThanOrEqual(44);
+    expect(regla(celular, '.buscador-lista')).not.toMatch(/position:\s*absolute/);
+    expect(regla(celular, '.buscador-lista')).not.toMatch(/(?<!-)width:\s*\d+px/);
+    expect(regla(celular, '.buscador-elegido button')).toMatch(/min-height:\s*44px/);
+    document.querySelector('dialog')?.remove();
+  });
+
+  it('los estilos del buscador usan solo variables del sistema de diseño', () => {
+    const reglasDelBuscador = estilos.slice(estilos.indexOf('/* Buscador de pacientes (C-36)'));
+    expect(reglasDelBuscador.length).toBeGreaterThan(0);
+    expect(reglasDelBuscador).not.toMatch(/#[0-9a-fA-F]{3,8}/);
+    expect(reglasDelBuscador).not.toMatch(/rgba?\(/);
+    expect(reglasDelBuscador).toMatch(/var\(--ds-/);
   });
 });
 

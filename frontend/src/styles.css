@@ -797,6 +797,145 @@ select[aria-invalid='true'] {
   border-top: var(--ds-borde-ancho) solid var(--ds-borde);
 }
 
+/* Buscador de pacientes (C-36): solo variables --ds-*. La lista va en el flujo del diálogo, no flota. */
+.buscador-entrada {
+  position: relative;
+}
+
+.buscador-entrada input {
+  padding-left: 2.5rem;
+}
+
+.buscador-entrada input[aria-expanded='true'] {
+  border-color: var(--ds-acento-500);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.buscador-lupa {
+  position: absolute;
+  top: 50%;
+  left: var(--ds-espacio-1);
+  width: 20px;
+  height: 20px;
+  color: var(--ds-texto-suave);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.buscador-estado {
+  min-height: 1.25rem;
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.buscador-estado .girador {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 6px;
+  vertical-align: -1px;
+  border: 2px solid var(--ds-borde-fuerte);
+  border-top-color: var(--ds-acento-500);
+  border-radius: 50%;
+  animation: buscador-girar 0.8s linear infinite;
+}
+
+.buscador-estado.buscador-vacio {
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  border: 1px dashed var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio);
+}
+
+.buscador-lista {
+  margin: calc(-1 * var(--ds-espacio-0)) 0 0;
+  padding: 0;
+  list-style: none;
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-acento-500);
+  border-top: 0;
+  border-radius: 0 0 var(--ds-radio) var(--ds-radio);
+  box-shadow: var(--ds-sombra-2);
+  overflow: hidden;
+}
+
+.buscador-lista[hidden],
+.buscador-nota[hidden],
+.buscador-elegido[hidden],
+.buscador-entrada[hidden],
+.buscador-estado[hidden] {
+  display: none;
+}
+
+.buscador-opcion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--ds-espacio-1);
+  min-height: 48px;
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  cursor: pointer;
+}
+
+.buscador-opcion + .buscador-opcion {
+  border-top: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.buscador-opcion[aria-selected='true'] {
+  background: var(--ds-acento-50);
+  box-shadow: inset 4px 0 0 var(--ds-acento-500);
+}
+
+.buscador-opcion .nombre,
+.buscador-elegido .nombre {
+  font-weight: var(--ds-peso-medio);
+}
+
+.buscador-opcion .dni,
+.buscador-elegido .dni {
+  font-family: var(--ds-fuente-mono);
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.buscador-nota {
+  margin: 0;
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+  background: var(--ds-superficie);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio);
+}
+
+.buscador-elegido {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1);
+  min-height: var(--ds-alto-control);
+  padding: var(--ds-espacio-0) var(--ds-espacio-0) var(--ds-espacio-0) var(--ds-espacio-2);
+  background: var(--ds-acento-50);
+  border: var(--ds-borde-ancho) solid var(--ds-acento-500);
+  border-radius: var(--ds-radio);
+}
+
+.buscador-elegido .nombre {
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.buscador-elegido button {
+  min-height: 44px;
+}
+
+@keyframes buscador-girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 @media (min-width: 768px) {
   .panel {
     padding: var(--ds-espacio-4);

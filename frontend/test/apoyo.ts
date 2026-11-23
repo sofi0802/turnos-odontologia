@@ -1,4 +1,4 @@
-import { vi } from 'vitest';
+import { expect, vi } from 'vitest';
 import { iniciarApp } from '../src/app.ts';
 import { crearClienteApi, type ClienteApi } from '../src/shared/api/cliente.ts';
 import type { Router } from '../src/shared/ui/router.ts';
@@ -13,6 +13,13 @@ export const SILLONES = [
   { id: 2, nombre: 'Sillón 2', activo: true },
 ];
 export const PRESTACIONES = [{ id: 1, nombre: 'Consulta', duracionMinutos: 30, activo: true }];
+
+/** Pacientes ficticios del seed; los usa el `GET /pacientes` del servidor falso. */
+export const PACIENTES = [
+  { id: 1, nombre: 'Paciente', apellido: 'Uno', dni: '99000001' },
+  { id: 2, nombre: 'Paciente', apellido: 'Dos', dni: '99000002' },
+  { id: 3, nombre: 'Carla', apellido: 'Ficticia', dni: '99000003' },
+];
 
 export const SESION_RECEPCION = { autenticado: true, username: 'recepcion', rol: 'RECEPCIONISTA' };
 
@@ -61,6 +68,13 @@ export class ServidorFalso {
     this.responder('GET /profesionales', () => json(200, PROFESIONALES));
     this.responder('GET /sillones', () => json(200, SILLONES));
     this.responder('GET /prestaciones', () => json(200, PRESTACIONES));
+    this.responder('GET /pacientes', (pedido) => {
+      const q = (pedido.query.get('q') ?? '').toLowerCase();
+      return json(
+        200,
+        PACIENTES.filter((p) => `${p.nombre} ${p.apellido} ${p.dni}`.toLowerCase().includes(q)),
+      );
+    });
     this.responder('POST /logout', () => json(204));
     const fetchFalso = vi.fn<typeof fetch>(async (entrada, opciones) => {
       const url = new URL(String(entrada));
@@ -157,4 +171,17 @@ export function errorDeCampo(raiz: ParentNode, etiqueta: string): string {
 
 export function texto(raiz: HTMLElement): string {
   return raiz.textContent?.replace(/\s+/g, ' ') ?? '';
+}
+
+/** Busca en el campo "Paciente" y elige la opción con ese texto, como lo hace la recepción. */
+export async function elegirPaciente(raiz: ParentNode, busqueda: string, opcion: string): Promise<void> {
+  escribir(campo(raiz, 'Paciente'), busqueda);
+  const elegida = await vi.waitFor(() => {
+    const encontrada = [...raiz.querySelectorAll<HTMLElement>('[role="option"]')].find(
+      (o) => texto(o).trim() === opcion,
+    );
+    expect(encontrada).toBeDefined();
+    return encontrada;
+  });
+  elegida?.click();
 }

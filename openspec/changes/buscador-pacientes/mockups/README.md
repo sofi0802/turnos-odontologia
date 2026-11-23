@@ -1,14 +1,14 @@
 # Mockups de C-36 `buscador-pacientes`
 
 - Design system revision: 1 (`design-system/README.md`, aprobado el 2026-11-22)
-- Approval: pending (los aprueba la líder antes del apply; una vez aprobados son el criterio de aceptación visual de `tasks.md`)
+- Approval: approved (2026-11-23, by user — Sofia vía Juan Sebastián). Son el criterio de aceptación visual de `tasks.md`.
 - Preview: rendered (2026-11-23), capturas en `previews/` a 390 × 844 y 1440 × 900 (página completa). Ninguna pantalla tiene desplazamiento horizontal ni mensajes en la consola.
 
 ## Brief
 
 - **Para quién**: recepción, odontólogos y administración, en la computadora del consultorio y a veces en el celular. Saben el DNI o el nombre del paciente, no su id.
 - **Qué tienen que poder hacer**: encontrar al paciente escribiendo parte del DNI o del nombre, elegirlo con el mouse o con el teclado, y dar el turno sin salir del diálogo "Nuevo turno".
-- **Pantallas afectadas**: solo el diálogo "Nuevo turno" de la agenda del personal (C-09). El formulario "Sobreturno" no existe todavía (design D11, a confirmar).
+- **Pantallas afectadas**: solo el diálogo "Nuevo turno" de la agenda del personal (C-09). El formulario "Sobreturno" no existe todavía (design D11: fuera de C-36, confirmado).
 - **Tamaños**: 390 × 844, con el diálogo a todo el ancho, y 1440 × 900, con el diálogo de 30rem como en C-09.
 - **Sistema**:
   - Solo variables de `design-system/tokens.css`.

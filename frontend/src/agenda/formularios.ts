@@ -11,6 +11,7 @@ import {
   type Opcion,
 } from '../shared/ui/campos.ts';
 import { mensajeDeError } from '../shared/ui/mensajes.ts';
+import { crearBuscadorPacientes, MENSAJE_PACIENTE_OBLIGATORIO } from './buscador-pacientes.ts';
 import type { Catalogos, ItemCatalogo } from './catalogos.ts';
 import type { TurnoAgenda } from './consulta.ts';
 
@@ -168,34 +169,40 @@ function resumenDe(turno: TurnoAgenda): string {
 
 export function abrirNuevoTurno(control: ControlAgenda): void {
   const catalogos = control.catalogos();
-  const paciente = entrada('Id del paciente', 'number', 'pacienteId');
-  paciente.control.min = '1';
-  paciente.control.inputMode = 'numeric';
+  // La sesión vencida cierra también el diálogo, que es modal y taparía la página de ingreso.
+  let dialogo: Dialogo | undefined;
+  const paciente = crearBuscadorPacientes(control.api, {
+    sesionVencida: (causa) => {
+      const vencida = control.sesionVencida(causa);
+      if (vencida) {
+        dialogo?.cerrar();
+      }
+      return vencida;
+    },
+  });
   const profesional = selector('Profesional', 'profesionalId', opcionesActivas(catalogos.profesionales, 'Elegí un profesional'));
   const sillon = selector('Sillón', 'sillonId', opcionesActivas(catalogos.sillones, 'Elegí un sillón'));
   const prestacion = selector('Prestación', 'prestacionId', opcionesActivas(catalogos.prestaciones, 'Elegí una prestación'));
   const fecha = entrada('Fecha', 'date', 'fecha', control.fechaInicial());
   const hora = entrada('Hora', 'time', 'hora');
 
-  const dialogo = abrirDialogo('Nuevo turno', null, [paciente, profesional, sillon, prestacion, fecha, hora], 'Crear turno');
+  dialogo = abrirDialogo('Nuevo turno', null, [paciente, profesional, sillon, prestacion, fecha, hora], 'Crear turno');
+  const dialogoAbierto = dialogo;
   const porCampo = { pacienteId: paciente, profesionalId: profesional, sillonId: sillon, prestacionId: prestacion, inicio: hora };
 
-  dialogo.formulario.addEventListener('submit', (evento) => {
+  dialogoAbierto.formulario.addEventListener('submit', (evento) => {
     evento.preventDefault();
     const completos = validarObligatorios([
-      [paciente, 'Ingresá el id del paciente.'],
       [profesional, 'Elegí un profesional.'],
       [sillon, 'Elegí un sillón.'],
       [prestacion, 'Elegí una prestación.'],
       [fecha, 'Elegí la fecha.'],
       [hora, 'Elegí la hora.'],
     ]);
-    const pacienteId = Number(paciente.control.value);
-    if (completos && !(Number.isInteger(pacienteId) && pacienteId > 0)) {
-      paciente.mostrarError('Ingresá un id válido.');
-      return;
-    }
-    if (!completos) {
+    // El paciente cuenta solo si se eligió de la lista: el texto escrito no alcanza.
+    const pacienteId = paciente.pacienteId();
+    paciente.mostrarError(pacienteId === null ? MENSAJE_PACIENTE_OBLIGATORIO : '');
+    if (!completos || pacienteId === null) {
       return;
     }
     const cuerpo = {
@@ -207,7 +214,7 @@ export function abrirNuevoTurno(control: ControlAgenda): void {
     };
     manejarEnvio(
       control,
-      dialogo,
+      dialogoAbierto,
       porCampo,
       () => control.api.crear<unknown>('/turnos', cuerpo),
       (respuesta) => `Turno creado. Número de reserva: ${leerNumeroReserva(respuesta)}.`,

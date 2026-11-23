@@ -13,8 +13,8 @@ En la prueba de la aplicación del 2026-11-23, el formulario "Nuevo turno" de la
   - El término buscado no se escribe en logs ni se repite en las respuestas de error.
 - **Frontend, buscador de pacientes**: un componente reutilizable en `frontend/src/agenda/` con estos estados: vacío, buscando, resultados, sin resultados, error y paciente elegido. Espera 300 ms después de la última tecla, se maneja con el teclado (patrón combobox de ARIA) y guarda el id del paciente elegido.
 - **Frontend, "Nuevo turno"**: el campo "Id del paciente" se reemplaza por el buscador. El pedido `POST /api/v1/turnos` sigue enviando `pacienteId`; la API de turnos no cambia.
-- **"Sobreturno" (a confirmar)**: el scope de CHANGES.md nombra el formulario "Sobreturno", pero **ese formulario no existe en `frontend/`**. C-09 dejó fuera de scope la creación de sobreturnos y C-08 solo hizo el backend. La propuesta deja el buscador listo para reutilizar y no crea el formulario de sobreturno. La líder decide si se suma a C-36 (ver design D11).
-- **Migración V20**: no se propone. Con el volumen de un consultorio chico, la búsqueda no necesita un índice nuevo (design D7, a confirmar). El número queda reservado por si la líder pide el índice.
+- **"Sobreturno" (resuelto: fuera de C-36)**: el scope de CHANGES.md nombra el formulario "Sobreturno", pero **ese formulario no existe en `frontend/`**. C-09 dejó fuera de scope la creación de sobreturnos y C-08 solo hizo el backend. La propuesta deja el buscador listo para reutilizar y no crea el formulario de sobreturno. La líder decidió el 2026-11-23 que queda fuera de C-36 y tendrá su propia ficha (design D11).
+- **Migración V20**: no se propone. Con el volumen de un consultorio chico, la búsqueda no necesita un índice nuevo (design D7, confirmado). El número queda reservado por si la líder pide el índice.
 - Sin cambios en `SecurityConfig`, en `PacienteEntity` ni en la API de turnos.
 
 ## Capabilities
@@ -24,7 +24,7 @@ En la prueba de la aplicación del 2026-11-23, el formulario "Nuevo turno" de la
 - `frontend-buscador-pacientes`: componente de búsqueda y elección de un paciente en los formularios del personal. Cubre la espera antes de buscar, los estados, el teclado y la accesibilidad, y los errores.
 
 ### Modified Capabilities
-- `frontend-agenda-personal`: el requisito "Crear un turno" cambia el campo "paciente (id)" por el buscador de pacientes y exige un paciente elegido para enviar. **Dependencia**: esta capacidad la define el change C-09 `frontend-agenda-personal`, que todavía **no está archivado**, así que hoy no existe en `openspec/specs/`. El delta modifica el requisito tal como lo define `openspec/changes/frontend-agenda-personal/specs/frontend-agenda-personal/spec.md`. C-09 tiene que archivarse antes que C-36, como pide el gate 5b de CHANGES.md.
+- `frontend-agenda-personal`: el requisito "Crear un turno" cambia el campo "paciente (id)" por el buscador de pacientes y exige un paciente elegido para enviar. **Dependencia**: la capacidad la definió C-09, que ya está archivado, y el delta modifica el requisito de `openspec/specs/frontend-agenda-personal/spec.md`.
 
 ## Impact
 
