@@ -201,14 +201,15 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 
 ## Épica 7: Coberturas (post-MVP)
 
-### US-046: Registrar obras sociales y la cobertura del paciente [2026-11-24, C-18, en revisión]
+### US-046: Registrar obras sociales y la cobertura del paciente [2026-11-24, C-18]
 **Como** administrador o recepcionista **quiero** cargar las obras sociales y prepagas con sus planes, y asociar cada paciente a su plan con su número de afiliado, **para** saber con qué cobertura se atiende y preparar los presupuestos (C-19) y las liquidaciones (C-20).
 **Criterios de aceptación**:
 - [ ] CA-1: como `ADMIN` doy de alta, edito y activo o desactivo obras sociales, planes y códigos del nomenclador. No se pueden borrar.
-- [ ] CA-2: como `ADMIN` o `RECEPCIONISTA` asocio un paciente a un plan activo con su número de afiliado y su vigencia. El odontólogo la ve y el paciente no.
+- [ ] CA-2: como `ADMIN` o `RECEPCIONISTA` asocio un paciente a un plan activo con su número de afiliado y su vigencia. El odontólogo la ve.
 - [ ] CA-3: un paciente con una afiliación vigente muestra su obra social, su plan y su número. Uno sin afiliación vigente figura como particular.
 - [ ] CA-4: se rechazan con un error claro una vigencia que se superpone con otra del mismo paciente, un número de afiliado repetido en la misma obra social y un plan inactivo.
 - [ ] CA-5: la cobertura no aparece en recordatorios, mensajes ni logs.
+- [ ] CA-6: como paciente veo en "Mi cuenta" mi obra social, mi plan, mi número de afiliado y la vigencia, o que me atiendo como particular. No puedo cambiarla ni ver la de otro paciente (PA-21).
 **Reglas relacionadas**: RN-OS-01 a RN-OS-07
 
 ## Backlog: v1.x y posteriores (fuera del MVP)

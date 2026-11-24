@@ -96,16 +96,16 @@ Como el margen es configurable (con mínimo 10), se guarda la columna `fin_con_m
 **Trade-offs aceptados**: es una simplificación por pieza; no calcula el estadio ni el grado del paciente, que dependen también de radiografías, de las piezas perdidas y de la historia clínica. Por eso el estado es orientativo y no reemplaza el diagnóstico.
 **Impacto**: RN-CL-04 a RN-CL-06, US-045, la fila del periodontograma en la matriz de 03 y las entidades `PeriodontogramaVersion`, `PeriodontogramaPieza` y `PeriodontogramaSitio` (migración V16).
 
-### DD-14: Una afiliación vigente por paciente, con vigencias que no se superponen [2026-11-24, C-18, en revisión]
+### DD-14: Una afiliación vigente por paciente, con vigencias que no se superponen [2026-11-24, C-18]
 **Decisión**: C-18 modela la cobertura como una `AfiliacionPaciente` (paciente, plan, número de afiliado y vigencia). Un paciente tiene como máximo una afiliación vigente en cada fecha (RN-OS-02). La garantía va en el dominio y en PostgreSQL con `EXCLUDE USING gist` sobre la vigencia, igual que DD-03 para los turnos.
-**Contexto**: la KB solo nombraba las obras sociales en el backlog (US-200). El relevamiento muestra que los sistemas del mercado cargan obras sociales con sus planes y su nomenclador (Dentalink, DentalCore y DentalTec; `docs/discovery/sources/relevamiento-fuentes.md`), pero no publica sus reglas. Las reglas RN-OS son una propuesta del responsable de C-18 para que la revise la líder.
+**Contexto**: la KB solo nombraba las obras sociales en el backlog (US-200). El relevamiento muestra que los sistemas del mercado cargan obras sociales con sus planes y su nomenclador (Dentalink, DentalCore y DentalTec; `docs/discovery/sources/relevamiento-fuentes.md`), pero no publica sus reglas. Las reglas RN-OS las propuso el responsable de C-18 y las aprobó la líder el 2026-11-24 (PR #103 y PA-20 a PA-22).
 **Alternativas consideradas**:
 1. Varias coberturas vigentes a la vez (por ejemplo, una obra social y una prepaga complementaria), con una marcada como principal.
 2. Guardar la obra social y el número directamente en `Paciente`, sin historial.
 **Justificación**:
 - Una sola vigente alcanza para el consultorio chico del MVP, y C-19 calcula el copago sin tener que elegir entre coberturas.
 - La vigencia con historial permite cambiar de plan sin perder con qué cobertura se atendió antes, que es lo que necesita la liquidación de C-20.
-**Trade-offs aceptados**: un paciente con doble cobertura se carga solo con la principal. Si hace falta, se agrega después como PA-20.
+**Trade-offs aceptados**: un paciente con doble cobertura se carga solo con la principal. La líder lo confirmó el 2026-11-24 (PA-20).
 **Impacto**: RN-OS-01 a RN-OS-07, US-046, dos filas de la matriz de 03 y las entidades `ObraSocial`, `Plan`, `Nomenclador` y `AfiliacionPaciente` (migración V12).
 
 ## Supuestos inferidos
