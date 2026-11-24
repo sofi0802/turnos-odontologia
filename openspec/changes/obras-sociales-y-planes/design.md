@@ -170,8 +170,15 @@ Enum `CodigoCobertura` y `CoberturasExceptionHandler` con `basePackages = "ar.tu
 ### D8. Seed de desarrollo `db/seed/V12_1__seed_coberturas_dev.sql`
 
 - Obras sociales, planes y nomenclador del seed de la KB. `N-0101` se vincula a "Consulta o control" y `N-0201` a "Limpieza (profilaxis)" buscando la prestación por nombre (`INSERT ... SELECT`); `N-0301` queda sin vínculo, como lo enumera la KB.
-- Como el seed dev no crea pacientes, se insertan "Paciente Uno" (`99000001`) y "Paciente Dos" (`99000002`) con `ON CONFLICT (dni) DO NOTHING`, y una afiliación de `99000001` a "Plan Base" con `OSE-000001` desde 2026-01-01; `99000002` queda particular. **(a confirmar)** — ver Open Questions.
+- Como el seed dev no crea pacientes, se insertan "Paciente Uno" (`99000001`) y "Paciente Dos" (`99000002`) con `ON CONFLICT (dni) DO NOTHING`, y una afiliación de `99000001` a "Plan Base" con `OSE-000001` desde 2026-01-01; `99000002` queda particular. — ver Open Questions.
 - Se aplica con out-of-order después de V22 en las bases que ya existen.
+
+### Hallazgos del apply (2026-11-24)
+
+- **Las dos `EXCLUDE` de D2 y D3 funcionan tal cual en PostgreSQL 16 con `btree_gist`**, incluidas `upper(numero_afiliado) WITH =` y `paciente_id WITH <>`: no hubo que cambiar ningún operador. `V12MigrationIntegrationTest` las ejercita (mismo paciente sí, otro paciente no).
+- **Desviación de D4: reintento ante `deadlock detected`.** Cuando dos pedidos insertan a la vez filas que chocan en una `EXCLUDE`, PostgreSQL no siempre da la violación (`23P01`): cada inserción espera a la otra y la base aborta una con `40P01`. Se vio con el test de carrera (un `500` en 1 de 5 repeticiones). Solución: `ServicioAfiliaciones` (sin transacción) delega en `OperacionesAfiliaciones` (transaccional) y reintenta hasta 3 veces si salta `PessimisticLockingFailureException`; al reintentar, la verificación del dominio ya ve la fila ganadora y responde el `409` preciso. La `EXCLUDE` sigue siendo la garantía; el reintento solo traduce el cruce. Sin la `EXCLUDE`, 10 de 15 repeticiones de los tests de carrera fallan (probado quitándola a mano de la base de tests).
+- **Desviación de D6/D7: logs.** Ante una violación de restricción Hibernate escribe en el log el `Detail` de PostgreSQL, que incluye los valores de la fila (el número de afiliado). Para cumplir RN-OS-07 se apagó el logger `org.hibernate.engine.jdbc.spi.SqlExceptionHelper` en `application.yml`; los tests de carrera capturan la salida y comprueban que no aparece el número.
+- Un número de 31 caracteres lo frena el `VARCHAR(30)` antes que el `CHECK afiliacion_numero_valido` (la API responde `422` por el dominio en ambos casos).
 
 ## Risks / Trade-offs
 
@@ -190,14 +197,27 @@ Enum `CodigoCobertura` y `CoberturasExceptionHandler` con `basePackages = "ar.tu
 
 ## Open Questions
 
-Las decisiones marcadas **(a confirmar)** no cambian las specs ni las tareas; tienen recomendación y se confirman con la líder en la revisión del propose:
+Estas decisiones no cambian las specs ni las tareas. Quedaron resueltas el 2026-11-24 (ver "Resolución de decisiones" más abajo):
 
-1. **(a confirmar)** Seed: insertar "Paciente Uno" y "Paciente Dos" con `ON CONFLICT DO NOTHING` en `V12_1`. *Recomendación*: sí, para tener en dev un paciente con cobertura y otro particular como pide el seed de la KB.
-2. **(a confirmar)** `PLAN_INACTIVO` y `OBRA_SOCIAL_INACTIVA` con `409` (como pide el change) o `422` (como `PRESTACION_INACTIVA` de C-04). *Recomendación*: `409`, que es un conflicto con el estado del catálogo.
-3. **(a confirmar)** `GET /api/v1/paciente/cobertura` devuelve solo la vigente hoy, sin historial. *Recomendación*: solo la vigente, que es lo que pide US-046 CA-6; el historial queda para el personal.
-4. **(a confirmar)** Unicidad sin distinguir mayúsculas para el número de afiliado y el código del nomenclador (`upper(...)`), guardándolos como se escribieron. *Recomendación*: sí, evita `OSE-000001` y `ose-000001` como afiliados distintos.
-5. **(a confirmar)** Una misma prestación puede tener varios códigos del nomenclador (la KB lo permite: `Nomenclador *—0..1 Prestacion`). *Recomendación*: dejarlo así en C-18 y que C-19 decida si necesita uno solo activo por prestación (sería una migración V13).
-6. **(a confirmar)** `PUT` de afiliación permite corregir el plan (no solo el número). *Recomendación*: sí, solo como corrección de carga y con las mismas validaciones.
+1. Seed: insertar "Paciente Uno" y "Paciente Dos" con `ON CONFLICT DO NOTHING` en `V12_1`. *Recomendación*: sí, para tener en dev un paciente con cobertura y otro particular como pide el seed de la KB.
+2. `PLAN_INACTIVO` y `OBRA_SOCIAL_INACTIVA` con `409` (como pide el change) o `422` (como `PRESTACION_INACTIVA` de C-04). *Recomendación*: `409`, que es un conflicto con el estado del catálogo.
+3. `GET /api/v1/paciente/cobertura` devuelve solo la vigente hoy, sin historial. *Recomendación*: solo la vigente, que es lo que pide US-046 CA-6; el historial queda para el personal.
+4. Unicidad sin distinguir mayúsculas para el número de afiliado y el código del nomenclador (`upper(...)`), guardándolos como se escribieron. *Recomendación*: sí, evita `OSE-000001` y `ose-000001` como afiliados distintos.
+5. Una misma prestación puede tener varios códigos del nomenclador (la KB lo permite: `Nomenclador *—0..1 Prestacion`). *Recomendación*: dejarlo así en C-18 y que C-19 decida si necesita uno solo activo por prestación (sería una migración V13).
+6. `PUT` de afiliación permite corregir el plan (no solo el número). *Recomendación*: sí, solo como corrección de carga y con las mismas validaciones.
+
+## Resolución de decisiones (2026-11-24)
+
+La líder (Sofia Indovino) aprobó el propose al mergear el PR #105 y aceptó las 6 decisiones de Open Questions tal como se recomendaban (aprobación relayada por Juan Sebastián el 2026-11-24):
+
+1. Seed dev `V12_1`: inserta "Paciente Uno" (`99000001`) con "Plan Base" y `OSE-000001`, y "Paciente Dos" (`99000002`) particular, con `ON CONFLICT (dni) DO NOTHING`.
+2. `PLAN_INACTIVO` y `OBRA_SOCIAL_INACTIVA` responden `409`.
+3. `GET /api/v1/paciente/cobertura` devuelve solo la afiliación vigente hoy, sin historial.
+4. El número de afiliado y el código del nomenclador son únicos sin distinguir mayúsculas (`upper(...)`) y se guardan como se escribieron.
+5. Una prestación puede tener varios códigos del nomenclador.
+6. `PUT` de afiliación corrige solo errores de carga (plan, número y `vigenteDesde`); el cambio real de cobertura es cerrar y crear.
+
+Ninguna respuesta difiere de la recomendación, por lo que no se modificaron specs ni tareas.
 
 ## UI Mockups
 
