@@ -49,7 +49,7 @@
 | PA-18 | ¿La reserva exige cuenta? *(2026-11-21)* | **Sí**, el paciente se registra solo la primera vez | RN-RO-08 |
 | PA-19 | ¿Ausencia del paciente? *(2026-11-21; ampliada el 2026-11-24)* | La marcan el odontólogo **desde la ficha clínica** o la recepción **desde la agenda**, a partir de los 15 minutos del inicio, y el turno queda **liberado**. Solo la recepción la deshace, si el horario sigue libre. La recepción registra la **llegada** y al terminar el turno pasa a `ATENDIDO` | RN-AG-17, RN-AG-20 |
 | PA-13 | ¿Verificaciones de Bilog y DentalSoft? *(2026-11-21)* | **Bilog coincide** (Emanuel). **DentalSoft**: el plan gratis dura 3 meses y el precio suma $10.000 por profesional extra (Juan Sebastián). Se corrigieron el informe y la matriz; **no afecta reglas ni MVP** | Informe, verificación de fuentes |
-| PA-20 | ¿Dos coberturas vigentes a la vez? *(2026-11-24, C-18)* | **No**: una sola afiliación vigente por paciente en cada fecha | RN-OS-02, DD-14 |
+| PA-20 | ¿Dos coberturas vigentes a la vez? *(2026-11-24, C-18)* | **No**: una sola afiliación vigente por paciente en cada fecha. Sí puede **cambiar de cobertura** (por ejemplo, deja la obra social y pasa a una prepaga): se cierra la afiliación anterior y se abre otra, y queda el historial | RN-OS-02, DD-14 |
 | PA-21 | ¿El paciente ve su propia cobertura? *(2026-11-24, C-18)* | **Sí**, en "Mi cuenta", solo la suya y sin poder cambiarla | RN-OS-07, matriz de 03, US-046 CA-6 |
 | PA-22 | ¿El nomenclador se carga a mano o se importa? *(2026-11-24, C-18)* | **A mano**, por el `ADMIN`, con el seed ficticio | RN-OS-01, RN-OS-05 |
 
