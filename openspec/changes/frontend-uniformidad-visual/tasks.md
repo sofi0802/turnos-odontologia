@@ -42,9 +42,16 @@
 - [x] D.3 Aplicar los componentes y estilos de B a las pantallas del personal sin cambiar su comportamiento: los tests de C-09, C-33, C-34, C-35, C-36 y C-40 siguen pasando. Verificar con `npm test`
 - [x] D.4 Verificación visual contra los mockups de D (capturas en `mockups/D/verify/`, diferencias por prioridad, consola, red y teclado), `npm test`, `npm run build` y PR de la etapa D
 
+## E. Agenda semanal en grilla horaria (pedido del equipo, 2026-11-24)
+
+- [x] E.1 Registrar la decisión de aplicar sin mockups previos, por pedido explícito del usuario, y traer `master`
+- [x] E.2 Tests en `agenda-semana.test.ts` (ubicación de los turnos, siete columnas, escala, simultáneos, tarjeta compacta, detalle con acciones, grupo de muchos turnos, encabezados y escala fijos, vista del día igual) y adaptar los de la semana por filas de `agenda.test.ts`, `agenda-visual.test.ts` y `responsivo.test.ts`
+- [x] E.3 `agenda/semana.ts` (grilla y detalle) y estilos de la grilla en `03-agenda.css`, sin cambiar las acciones, los permisos ni la API
+- [x] E.4 Verificación en el navegador (semana con muchos turnos, simultáneos, filtros, pantalla chica; capturas en `mockups/E/verify/`), `npm test`, `npm run build` y PR de la etapa E
+
 ## 7. Cierre
 
-- [ ] 7.1 Recorrer los deltas y verificar que los 28 escenarios tienen un test con el nombre del escenario, sin duplicados. Verificar con un `grep` de los nombres
+- [ ] 7.1 Recorrer los deltas y verificar que los 34 escenarios tienen un test con el nombre del escenario, sin duplicados. Verificar con un `grep` de los nombres
 - [ ] 7.2 Completar `Preview` y `Visual verify` de cada etapa en `design.md`; correr `openspec validate frontend-uniformidad-visual --strict` y verificar que el change es válido
 
 ## Workflow follow-up

@@ -116,14 +116,14 @@ describe('Agenda de la semana', () => {
     await esperarConsultas(2);
 
     expect(ultimaConsulta()).toEqual({ desde: '2026-11-30T00:00:00-03:00', hasta: '2026-12-07T00:00:00-03:00' });
-    const dias = [...raiz().querySelectorAll('.agenda-dia h2')].map((h) => h.textContent);
+    const dias = [...raiz().querySelectorAll('.semana-encabezado')].map((h) => h.textContent);
     expect(dias).toHaveLength(7);
     expect(dias[0]).toContain('lunes');
     expect(dias[6]).toContain('domingo');
     const martes = raiz().querySelectorAll('.agenda-dia')[1];
     const jueves = raiz().querySelectorAll('.agenda-dia')[3];
-    expect(martes?.querySelectorAll('.turno')).toHaveLength(1);
-    expect(jueves?.querySelectorAll('.turno')).toHaveLength(1);
+    expect(martes?.querySelectorAll('.turno-celda')).toHaveLength(1);
+    expect(jueves?.querySelectorAll('.turno-celda')).toHaveLength(1);
     expect(boton(raiz(), 'Semana').getAttribute('aria-pressed')).toBe('true');
   });
 

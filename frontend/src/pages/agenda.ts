@@ -64,6 +64,8 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   let errorDeCarga = false;
   // RN-AG-18: el odontólogo ve solo su agenda; el backend aplica la misma regla.
   const profesionalFijo = contexto.sesion.profesionalId;
+  // El odontólogo ve solo sus turnos: la tarjeta lleva al paciente; recepción y administración ven al profesional.
+  const nombreEnTarjeta = profesionalFijo === undefined ? 'profesional' : 'paciente';
 
   const exito = crearAviso('status');
   const error = crearAviso('alert');
@@ -194,7 +196,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
         error.textContent = '';
         errorDeCarga = false;
       }
-      dibujarAgenda(lista, periodo, turnos, catalogos, acciones);
+      dibujarAgenda(lista, periodo, turnos, catalogos, acciones, nombreEnTarjeta);
     } catch (causa) {
       if (esta !== consulta || control.sesionVencida(causa)) {
         return;
@@ -249,7 +251,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
       }),
     );
     if (lista.getAttribute('aria-busy') !== 'true') {
-      dibujarAgenda(lista, periodo, turnos, catalogos, acciones);
+      dibujarAgenda(lista, periodo, turnos, catalogos, acciones, nombreEnTarjeta);
     }
   });
   void cargarTurnos();

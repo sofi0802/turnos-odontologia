@@ -130,6 +130,43 @@ Los campos de fecha SHALL usar el calendario de la aplicación en un desplegable
 - **WHEN** se toca "Borrar" en el calendario
 - **THEN** el campo queda vacío y el botón muestra "Elegí un día"
 
+### Requirement: Agenda semanal en grilla horaria
+La vista semanal SHALL ser una grilla de siete columnas fijas con una escala horaria compartida, y cada turno MUST ubicarse según su inicio y su duración. Dos o más turnos a la misma hora MUST agruparse en un bloque que los lista. Cada turno MUST ser una tarjeta compacta con el mismo contenido siempre (el horario y un nombre), cuyo detalle, con sus acciones y los mismos permisos de la lista del día, se abre en un diálogo.
+
+#### Scenario: Siete columnas fijas con encabezados
+- **GIVEN** la agenda de una semana con turnos en días distintos
+- **WHEN** se abre la vista semanal
+- **THEN** hay siete columnas, de lunes a domingo, cada una con su encabezado
+- **AND** un día sin turnos queda en blanco, sin carteles
+
+#### Scenario: Escala horaria compartida y posición según la hora y la duración
+- **GIVEN** un turno de 10:00 a 10:45
+- **WHEN** se dibuja la semana
+- **THEN** la escala va de 08:00 a 18:00 y el turno se ubica a 120 minutos del comienzo con 45 minutos de alto
+- **AND** la escala se extiende si algún turno queda fuera de ese horario
+
+#### Scenario: Dos turnos a la misma hora se agrupan en un bloque
+- **GIVEN** dos turnos del mismo día que se superponen, de profesionales y sillones distintos
+- **WHEN** se dibuja la semana
+- **THEN** se ve un solo bloque "2 turnos" que cubre desde el primer inicio hasta el último fin, y al abrirlo se listan con sus acciones
+
+#### Scenario: Todas las tarjetas muestran lo mismo
+- **GIVEN** turnos de 15, 30 y 120 minutos
+- **WHEN** se dibuja la semana
+- **THEN** todas las tarjetas tienen el mismo contenido: el horario y un nombre
+
+#### Scenario: Nombre de la tarjeta según quién mira
+- **GIVEN** un turno en la agenda de la recepción o la administración, y el mismo turno en la agenda de un odontólogo
+- **WHEN** se dibuja la semana
+- **THEN** la tarjeta de la recepción muestra el horario y el profesional, y la del odontólogo, el horario y el paciente
+- **AND** en los dos casos el nombre accesible lleva el detalle completo y el estado por escrito
+
+#### Scenario: El detalle del turno ofrece las acciones y cierra antes de ejecutarlas
+- **GIVEN** un turno que se puede cancelar y reprogramar
+- **WHEN** se toca su tarjeta y después "Cancelar turno"
+- **THEN** el detalle se cierra y se ejecuta la acción de cancelar
+- **AND** un turno atendido no ofrece cancelar ni reprogramar
+
 ### Requirement: Estados vacíos y de carga
 Las listas sin elementos y las pantallas que están cargando datos SHALL mostrar un estado propio con una ilustración o un indicador SVG propio, un texto breve y, si corresponde, la acción siguiente; las ilustraciones decorativas MUST estar ocultas para los lectores de pantalla y la carga MUST anunciarse con `aria-busy`.
 
