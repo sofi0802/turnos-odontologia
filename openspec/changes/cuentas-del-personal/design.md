@@ -90,7 +90,8 @@ Desactivar lo hace siempre un `ADMIN` activo, y nunca sobre su propia cuenta, as
 - `app.ts`: el guard lleva a `#/cambiar-contrasena` cuando la sesión trae `debeCambiarContrasena`.
 - `pages/mi-cuenta.ts`: después del login lleva ahí en ese mismo caso.
 - `shared/api/errores.ts`: un `403` con `CAMBIO_DE_CONTRASENA_PENDIENTE` también lleva ahí.
-- El usuario del encabezado pasa a ser un enlace a `#/cambiar-contrasena`.
+- El menú lateral del personal suma "Mi contraseña", separado de las páginas, que lleva a `#/cambiar-contrasena`. En el celular la etapa B de C-39 oculta el usuario del encabezado, así que el menú es el camino que siempre está. Donde se ve, el usuario del encabezado también es un enlace a esa página.
+- En la pantalla obligatoria no hay menú: solo el formulario y "Salir".
 
 ## Risks / Trade-offs
 
@@ -116,11 +117,13 @@ Desactivar lo hace siempre un `ADMIN` activo, y nunca sobre su propia cuenta, as
 
 - Design system revision: 3 (`design-system/README.md`; la aprobación de las revisiones 2 y 3 todavía está pendiente con la líder, y no cambian ningún valor de los tokens).
 - Decision: yes, 2026-11-24 (cambio visual en modo `system-and-mockups`).
-- Mockups: pendientes, en `openspec/changes/cuentas-del-personal/mockups/`. Pantallas:
-  - pestaña "Usuarios", con la lista y sus estados (vacío, error y cuenta propia);
-  - "Agregar usuario" con cada rol;
-  - diálogo de la contraseña temporal;
-  - detalle del profesional con "Dar acceso" y con "Acceso: <usuario>";
-  - `#/cambiar-contrasena` obligatoria y voluntaria.
+- Mockups: `openspec/changes/cuentas-del-personal/mockups/`, con 11 pantallas listadas en su `README.md`:
+  - la pestaña "Usuarios" y sus estados;
+  - el alta con cada rol y sus errores;
+  - el diálogo de la contraseña temporal;
+  - las confirmaciones;
+  - el detalle del profesional con "Dar acceso";
+  - `#/cambiar-contrasena`, obligatoria, voluntaria y con errores;
+  - "Mi contraseña" en el menú del celular.
 - Approval: pending.
-- Preview: pending.
+- Preview: rendered (2026-11-24): capturas en `mockups/previews/` a 390 × 844 y 1440 × 900, sin desplazamiento horizontal ni errores de consola.
