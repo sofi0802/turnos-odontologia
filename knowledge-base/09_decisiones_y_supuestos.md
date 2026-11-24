@@ -108,6 +108,18 @@ Como el margen es configurable (con mínimo 10), se guarda la columna `fin_con_m
 **Trade-offs aceptados**: un paciente con doble cobertura se carga solo con la principal. La líder lo confirmó el 2026-11-24 (PA-20).
 **Impacto**: RN-OS-01 a RN-OS-07, US-046, dos filas de la matriz de 03 y las entidades `ObraSocial`, `Plan`, `Nomenclador` y `AfiliacionPaciente` (migración V12).
 
+### DD-15: El presupuesto guarda una foto del cálculo [2026-11-24, C-19, en revisión]
+**Decisión**: C-19 guarda en cada ítem del presupuesto el precio, el porcentaje de cobertura y los importes calculados en el momento de emitirlo, además de la afiliación usada (RN-PR-04). El presupuesto no se recalcula después.
+**Contexto**: el relevamiento muestra que los sistemas del mercado tienen presupuestos con convenios, planes y aranceles, y una "simulación de presupuesto" (Dentalink, verificación de Juan Cruz; DentalSoft, DentalCore y AgendaPro afirman presupuestos). No publica cómo calculan la cobertura. Las reglas RN-PR son una propuesta del responsable de C-19 para que la revise la líder.
+**Alternativas consideradas**:
+1. Calcular el presupuesto en el momento de mostrarlo, con los precios y la cobertura actuales.
+2. Llevar un historial de aranceles con vigencias y recalcular con el precio de la fecha del presupuesto.
+**Justificación**:
+- Lo que se le informa al paciente no puede cambiar solo porque después se actualizó un precio.
+- La foto es más simple que un historial de aranceles y alcanza para la liquidación de C-20, que necesita los importes de cada ítem.
+**Trade-offs aceptados**: hay datos copiados en cada ítem. Para actualizar un presupuesto con precios nuevos se rechaza y se emite otro.
+**Impacto**: RN-PR-01 a RN-PR-07, US-047, dos filas de la matriz de 03 y las entidades `Arancel`, `CoberturaPlan`, `Presupuesto` y `PresupuestoItem` (migración V13).
+
 ## Supuestos inferidos
 
 ### ~~SU-07: Todos los profesionales pueden hacer todas las prestaciones~~ (refutado)

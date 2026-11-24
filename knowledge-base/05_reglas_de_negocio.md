@@ -109,6 +109,33 @@ Cada regla tiene un código `RN-{DOMINIO}-{NN}`. Entre paréntesis va el código
   - No se incluyen en recordatorios, mensajes ni logs (RN-NO-01).
   - La ve el personal, según la matriz de `03_actores_y_roles.md`, y el propio paciente en "Mi cuenta" (PA-21). Un paciente nunca ve la cobertura de otro.
 
+## Dominio: Presupuestos (RN-PR) [2026-11-24, C-19, en revisión]
+
+- **RN-PR-01**: **aranceles**. Cada prestación puede tener un **precio particular** en pesos, mayor que cero y con dos decimales.
+  - Solo el `ADMIN` lo carga y lo cambia.
+  - Una prestación sin arancel no se puede presupuestar: se rechaza con un error claro.
+- **RN-PR-02**: **cobertura por plan**. Para cada plan y cada código del nomenclador, el `ADMIN` carga el **porcentaje** del precio particular que cubre el plan, un entero de 0 a 100.
+  - Si no hay porcentaje cargado, el plan no cubre ese código (0 %).
+  - Los topes, las autorizaciones y la validación con la obra social no son parte de C-19 (C-21).
+- **RN-PR-03**: **cálculo de cada ítem**.
+  - Importe = precio particular × cantidad.
+  - Cobertura = importe × porcentaje / 100, redondeado a centavos hacia arriba desde 0,5 (*half up*). El porcentaje sale de la afiliación vigente del paciente en la fecha del presupuesto y del código del nomenclador del ítem.
+  - Copago = importe − cobertura. Es lo que paga el paciente.
+  - Si la prestación tiene un solo código activo, se usa ese. Si tiene varios (RN-OS-05), el ítem indica cuál. Si no tiene ninguno, el ítem es particular (0 %).
+  - Un paciente **particular** (sin afiliación vigente) paga todo: la cobertura es 0 y el copago es el importe.
+- **RN-PR-04**: **el presupuesto es una foto**. Al emitirlo se guardan en cada ítem el precio, el porcentaje y los importes calculados, y la afiliación usada. Si después cambian los aranceles, la cobertura del plan o la afiliación del paciente, el presupuesto emitido no cambia. Para tener los valores nuevos se emite otro presupuesto.
+- **RN-PR-05**: **estados y vencimiento**.
+  - Un presupuesto nace `PENDIENTE` y pasa a `ACEPTADO` o `RECHAZADO`. Un presupuesto aceptado o rechazado no cambia de estado.
+  - **Vence a los 30 días** de su fecha (PA-26). Un presupuesto `PENDIENTE` cuya fecha de vencimiento ya pasó se muestra como **vencido** y no se puede aceptar; sí se puede rechazar.
+  - Los presupuestos no se borran ni se editan. Para corregir uno, o para renovar uno vencido, se emite otro.
+- **RN-PR-06**: **a partir del odontograma**. Lo arma el **odontólogo** (PA-23).
+  - Cada ítem es una prestación con una pieza y una cara opcionales, en notación FDI (RN-CL-03).
+  - Al armarlo, el sistema **sugiere** las piezas y caras cuyo último estado en el odontograma es `A_TRATAR` o `CARIES`. Es solo una sugerencia: el odontólogo elige la prestación de cada una y puede sumar o quitar ítems.
+  - Un presupuesto tiene al menos un ítem.
+- **RN-PR-07**: **privacidad del presupuesto**. Las piezas y caras son datos de salud (Ley 26.529) y los importes y la cobertura, datos personales (Ley 25.326).
+  - No se incluyen en recordatorios, mensajes ni logs (RN-NO-01).
+  - Solo los ven los roles de la matriz de `03_actores_y_roles.md`.
+
 ## Dominio: Excepciones globales
 
 - **RN-GL-01**: **solo datos ficticios** en el repositorio, los seeds, los tests, los ejemplos y las capturas.

@@ -52,6 +52,12 @@
 | PA-20 | ¿Dos coberturas vigentes a la vez? *(2026-11-24, C-18)* | **No**: una sola afiliación vigente por paciente en cada fecha. Sí puede **cambiar de cobertura** (por ejemplo, deja la obra social y pasa a una prepaga): se cierra la afiliación anterior y se abre otra, y queda el historial | RN-OS-02, DD-14 |
 | PA-21 | ¿El paciente ve su propia cobertura? *(2026-11-24, C-18)* | **Sí**, en "Mi cuenta", solo la suya y sin poder cambiarla | RN-OS-07, matriz de 03, US-046 CA-6 |
 | PA-22 | ¿El nomenclador se carga a mano o se importa? *(2026-11-24, C-18)* | **A mano**, por el `ADMIN`, con el seed ficticio | RN-OS-01, RN-OS-05 |
+| PA-23 | ¿Quién arma el presupuesto? *(2026-11-24, C-19)* | El **odontólogo**; el `ADMIN` lo ve | RN-PR-06, matriz de 03 |
+| PA-24 | ¿La recepción ve los presupuestos? *(2026-11-24, C-19)* | **Sí**, con prestaciones e importes, sin pieza ni cara (datos de salud, RN-CL-01) | RN-PR-07, matriz de 03 |
+| PA-25 | ¿Cobertura por porcentaje o también monto fijo? *(2026-11-24, C-19)* | **Solo porcentaje**, entero de 0 a 100 | RN-PR-02 |
+| PA-26 | ¿El presupuesto vence? *(2026-11-24, C-19)* | **Sí**: vence a los **30 días** de su fecha; un presupuesto pendiente vencido ya no se puede aceptar | RN-PR-05 |
+| PA-27 | ¿El paciente ve sus presupuestos? *(2026-11-24, C-19)* | **Sí**, en "Mi cuenta", solo los suyos y sin poder cambiarlos | Matriz de 03 |
+| PA-28 | ¿El precio particular tiene historial? *(2026-11-24, C-19)* | **No**: un solo precio vigente; el presupuesto guarda una copia | RN-PR-01, DD-15 |
 
 ## Puntos "No evidenciado" del Discovery
 
