@@ -154,4 +154,4 @@ Sin migraciones ni cambios de backend. Rollback: revertir el PR deja la ficha si
   - D3: un 413 sin cuerpo da `ErrorValidacion` sin código, como pide el spec; `ErrorValidacion.estado` permite que el diálogo diga igual "El archivo supera los 10 MB.".
   - D8: `DATOS_INVALIDOS` no tiene mensaje propio en `MENSAJES_POR_CODIGO` (C-44 no lo sumó); se muestra el `detail` de la API.
   - D4: el cliente no admite `AbortController`; las respuestas viejas se descartan con un contador de pedidos.
-  - Los filtros solo aparecen si el paciente tiene alguna imagen vigente: un paciente cuya única imagen está anulada ve "Todavía no hay imágenes" y no puede mostrarla.
+  - Filtros con solo anuladas (corregido el 2026-11-24, a pedido de Emanuel): el listado sin filtros pide solo las vigentes; si viene vacío, la sección pregunta una vez por las anuladas (`incluirAnuladas=true`). Si hay, muestra los filtros y "No hay imágenes vigentes. Para ver las anuladas, marcá "Mostrar anuladas"."; si no hay o la pregunta falla, queda como sin imágenes. Es un pedido extra solo para los pacientes sin imágenes vigentes. Escenario nuevo en el spec: "Paciente con solo imágenes anuladas".

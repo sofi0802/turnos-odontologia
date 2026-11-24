@@ -45,7 +45,7 @@ La sección SHALL listar las imágenes vigentes del paciente en el orden de la A
 - **THEN** no se pide el archivo de ninguna imagen hasta que se abre o se descarga
 
 ### Requirement: Filtrar por pieza y mostrar anuladas
-La sección SHALL ofrecer un filtro por pieza (todas o una pieza FDI) y la opción "Mostrar anuladas". Al cambiar cualquiera de los dos, MUST volver a pedir el listado con ese filtro. Una imagen anulada SHALL mostrarse marcada como "Anulada", con quién la anuló, cuándo y el motivo, y sin la opción de anularla.
+La sección SHALL ofrecer un filtro por pieza (todas o una pieza FDI) y la opción "Mostrar anuladas". Al cambiar cualquiera de los dos, MUST volver a pedir el listado con ese filtro. Si el paciente no tiene imágenes vigentes, la sección MUST preguntar una vez si tiene anuladas y, si las tiene, ofrecer los filtros para mostrarlas. Una imagen anulada SHALL mostrarse marcada como "Anulada", con quién la anuló, cuándo y el motivo, y sin la opción de anularla.
 
 #### Scenario: Filtrar por una pieza
 - **GIVEN** "Paciente Uno" con imágenes de las piezas 36 y 11
@@ -57,6 +57,12 @@ La sección SHALL ofrecer un filtro por pieza (todas o una pieza FDI) y la opci�
 - **WHEN** `ana.ejemplo` marca "Mostrar anuladas"
 - **THEN** la imagen aparece marcada "Anulada" con "Bruno Prueba", "30/11/2026" y "Duplicada"
 - **AND** no tiene la opción "Anular"
+
+#### Scenario: Paciente con solo imágenes anuladas
+- **GIVEN** "Paciente Uno" sin imágenes vigentes y con una imagen anulada
+- **WHEN** `ana.ejemplo` abre su ficha
+- **THEN** la sección dice "No hay imágenes vigentes. Para ver las anuladas, marcá "Mostrar anuladas"." y ofrece los filtros
+- **AND** al marcar "Mostrar anuladas" aparece la imagen marcada "Anulada"
 
 ### Requirement: Ver una imagen
 Para una imagen JPEG o PNG, la opción "Ver" SHALL pedir el archivo y mostrarlo en un visor dentro de la página, con un texto alternativo que dice la categoría, la pieza y la fecha, y la opción de descargarlo. Al cerrar el visor, la imagen MUST dejar de estar en la página. Si el pedido falla, el visor muestra el error.

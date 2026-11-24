@@ -79,6 +79,8 @@ describe('Cargar una imagen', () => {
     escribir(campo<HTMLSelectElement>(dialogo(), 'Categoría'), 'RADIOGRAFIA');
     escribir(campo(dialogo(), 'Fecha de la toma'), '2026-11-30');
     escribir(campo(dialogo(), 'Pieza (opcional)'), '36');
+    // El listado vacío del principio ya hizo sus pedidos (el de las vigentes y el de las anuladas).
+    const listadosAntes = entorno.servidor.a('GET', '/pacientes/1/imagenes').length;
 
     cargar();
 
@@ -89,7 +91,7 @@ describe('Cargar una imagen', () => {
     expect(enviado?.get('pieza')).toBe('36');
     expect(enviado?.has('descripcion')).toBe(false);
     expect(entorno.seccion().querySelector('[role="status"].aviso')?.textContent).toBe('Imagen cargada.');
-    await vi.waitFor(() => expect(entorno.servidor.a('GET', '/pacientes/1/imagenes')).toHaveLength(2));
+    await vi.waitFor(() => expect(entorno.servidor.a('GET', '/pacientes/1/imagenes')).toHaveLength(listadosAntes + 1));
     await vi.waitFor(() => expect(entorno.seccion().querySelectorAll('.img-fila')).toHaveLength(1));
   });
 

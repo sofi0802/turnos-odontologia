@@ -52,7 +52,8 @@ describe('Sección de imágenes en la ficha', () => {
 
     expect(texto(entorno.seccion())).toContain('Cargando imágenes…');
     expect(entorno.seccion().querySelector('.cargando')?.getAttribute('role')).toBe('status');
-    terminar(json(200, []));
+    // Con una vigente, para no sumar el pedido de las anuladas que hace un listado vacío.
+    terminar(json(200, [RX36]));
     await entorno.seccionLista();
     expect(texto(entorno.seccion())).not.toContain('Cargando imágenes…');
   });
@@ -220,6 +221,43 @@ describe('Filtrar por pieza y mostrar anuladas', () => {
     expect(t).toContain('Anulada por Bruno Prueba el 30/11/2026 a las 17:20: Duplicada');
     expect([...anulada.querySelectorAll('button')].map((b) => b.textContent?.trim())).not.toContain('Anular');
     expect(texto(entorno.seccion())).toContain('1 vigente · 1 anulada');
+  });
+
+  it('Paciente con solo imágenes anuladas', async () => {
+    entorno.imagenes = [ANULADA];
+    await entorno.abrirFicha();
+    await entorno.seccionLista();
+
+    await vi.waitFor(() => expect(entorno.seccion().querySelector('.img-filtros')).not.toBeNull());
+    expect(texto(entorno.seccion())).toContain('No hay imágenes vigentes. Para ver las anuladas, marcá "Mostrar anuladas".');
+    expect(texto(entorno.seccion())).not.toContain('Todavía no hay imágenes ni estudios cargados.');
+    expect(filas()).toHaveLength(0);
+    const casilla = [...entorno.seccion().querySelectorAll<HTMLLabelElement>('label')].find((l) => l.textContent?.trim() === 'Mostrar anuladas')?.control as HTMLInputElement;
+    casilla.click();
+
+    await vi.waitFor(() => expect(filas()).toHaveLength(1));
+    expect((filas()[0] as HTMLElement).classList.contains('img-fila-anulada')).toBe(true);
+    expect(texto(entorno.seccion())).toContain('0 vigentes · 1 anulada');
+  });
+
+  it('un paciente con imágenes vigentes no hace el pedido extra de las anuladas', async () => {
+    entorno.imagenes = [RX36, ANULADA];
+    await entorno.abrirFicha();
+    await entorno.seccionLista();
+
+    expect(entorno.servidor.a('GET', '/pacientes/1/imagenes')).toHaveLength(1);
+    expect(entorno.servidor.ultimo('GET', '/pacientes/1/imagenes').query.get('incluirAnuladas')).not.toBe('true');
+  });
+
+  it('un paciente sin ninguna imagen tampoco muestra los filtros después de preguntar por las anuladas', async () => {
+    entorno.imagenes = [];
+    await entorno.abrirFicha();
+    await entorno.seccionLista();
+
+    await vi.waitFor(() => expect(entorno.servidor.a('GET', '/pacientes/1/imagenes')).toHaveLength(2));
+    expect(entorno.servidor.ultimo('GET', '/pacientes/1/imagenes').query.get('incluirAnuladas')).toBe('true');
+    expect(texto(entorno.seccion())).toContain('Todavía no hay imágenes ni estudios cargados.');
+    expect(entorno.seccion().querySelector('.img-filtros')).toBeNull();
   });
 });
 

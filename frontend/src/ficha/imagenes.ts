@@ -35,6 +35,7 @@ import {
  */
 
 export const MENSAJE_SIN_IMAGENES = 'Todavía no hay imágenes ni estudios cargados.';
+export const MENSAJE_SOLO_ANULADAS = 'No hay imágenes vigentes. Para ver las anuladas, marcá "Mostrar anuladas".';
 export const MENSAJE_REVISAR_DATOS = 'Revisá los datos marcados.';
 export const MENSAJE_DESCARTAR_IMAGEN = 'Hay una imagen sin cargar. ¿Descartarla?';
 export const MENSAJE_IMAGEN_ANULADA = 'Imagen anulada.';
@@ -192,6 +193,8 @@ export function crearImagenes(opciones: OpcionesImagenes): SeccionImagenes {
   let incluirAnuladas = false;
   let piezasConocidas: number[] = [];
   let conImagenes = false;
+  /** El paciente no tiene imágenes vigentes pero sí anuladas: los filtros siguen a mano para poder verlas. */
+  let soloAnuladas = false;
 
   const selector = document.createElement('select');
   selector.id = `${id}-pieza`;
@@ -755,6 +758,26 @@ export function crearImagenes(opciones: OpcionesImagenes): SeccionImagenes {
     return fila;
   }
 
+  function mensajeSinResultados(): string {
+    if (pieza !== undefined) {
+      return `No hay imágenes de la pieza ${pieza}.`;
+    }
+    return soloAnuladas && !incluirAnuladas ? MENSAJE_SOLO_ANULADAS : MENSAJE_SIN_IMAGENES;
+  }
+
+  /**
+   * Sin imágenes vigentes, pregunta una sola vez si hay anuladas: si las hay, los filtros quedan a la vista para
+   * poder mostrarlas. Si la pregunta falla, la sección sigue como sin imágenes.
+   */
+  async function hayAnuladas(este: number): Promise<readonly ImagenClinica[] | null> {
+    try {
+      const anuladas = await opciones.listar({ incluirAnuladas: true });
+      return este === pedido && opciones.vigente() ? anuladas : null;
+    } catch {
+      return este === pedido && opciones.vigente() ? [] : null;
+    }
+  }
+
   function dibujar(lista: readonly ImagenClinica[]): void {
     mostrarFiltros(conImagenes || pieza !== undefined || incluirAnuladas);
     dibujarOpcionesDePieza();
@@ -762,7 +785,7 @@ export function crearImagenes(opciones: OpcionesImagenes): SeccionImagenes {
       resumen.hidden = true;
       resultados.replaceChildren(
         crearEstadoVacio({
-          texto: pieza === undefined ? MENSAJE_SIN_IMAGENES : `No hay imágenes de la pieza ${pieza}.`,
+          texto: mensajeSinResultados(),
           chico: true,
         }),
       );
@@ -787,8 +810,19 @@ export function crearImagenes(opciones: OpcionesImagenes): SeccionImagenes {
         return;
       }
       if (pieza === undefined) {
-        piezasConocidas = [...new Set(lista.flatMap((i) => (i.pieza === null ? [] : [i.pieza])))];
-        conImagenes = lista.length > 0;
+        let conocidas = lista;
+        if (lista.length === 0 && !incluirAnuladas) {
+          const anuladas = await hayAnuladas(este);
+          if (anuladas === null) {
+            return;
+          }
+          conocidas = anuladas;
+          soloAnuladas = anuladas.length > 0;
+        } else if (lista.some((i) => i.anulacion === null)) {
+          soloAnuladas = false;
+        }
+        piezasConocidas = [...new Set(conocidas.flatMap((i) => (i.pieza === null ? [] : [i.pieza])))];
+        conImagenes = conocidas.length > 0;
       }
       dibujar(lista);
     } catch (causa) {
