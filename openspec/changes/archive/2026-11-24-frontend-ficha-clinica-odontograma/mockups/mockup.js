@@ -2,7 +2,7 @@
    y dibuja el odontograma en SVG con la geometría que propone design D4. Datos 100 % ficticios. */
 (function () {
   const NS = 'http://www.w3.org/2000/svg';
-  const LOGO = '../../../../design-system/assets/logo.svg?v=5';
+  const LOGO = '../../../../../design-system/assets/logo.svg?v=5';
 
   const ICONOS = {
     menu: '<path d="M4 6h16M4 12h16M4 18h16"/>',
