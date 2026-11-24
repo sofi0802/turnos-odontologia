@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pacientes · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="ficha.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="ana.ejemplo" data-rol="ODONTOLOGO" data-activa="pacientes">
+  <div class="pagina-ficha">
+    <h1 tabindex="-1">Pacientes</h1>
+
+    <p class="rotulo-estado">1 · Antes de la tolerancia y piezas temporales</p>
+    <section class="panel ficha-paciente" aria-labelledby="p2">
+      <div class="ficha-paciente-datos">
+        <div><h2 class="ficha-paciente-nombre" id="p2">Paciente Dos</h2><p class="ficha-paciente-dni">DNI 99000002</p></div>
+        <button type="button" class="btn">Cambiar de paciente</button>
+      </div>
+      <div class="ficha-turno">
+        <p data-icono="reloj">Turno del martes 01/12 · 10:45 – 11:15 · Sillón 1 · Extracción simple</p>
+        <div><button type="button" class="btn btn-peligro" disabled aria-describedby="desde">Marcar ausente</button><span class="ayuda-boton" id="desde">Desde las 11:00</span></div>
+      </div>
+    </section>
+    <section class="panel ficha-seccion" aria-labelledby="t-temp">
+      <div class="ficha-seccion-cabecera">
+        <h2 id="t-temp">Odontograma</h2>
+        <div class="grupo-botones" role="group" aria-label="Dentición"><button type="button" aria-pressed="false">Permanentes</button><button type="button" aria-pressed="true">Temporales</button></div>
+      </div>
+      <div class="odontograma" data-denticion="temporal" data-vigente='{"54":{"O":"CARIES"},"74":{"O":"OBTURADO","D":"A_TRATAR"},"61":{"completa":"AUSENTE"}}'>
+        <ul class="leyenda" aria-label="Estados"></ul>
+      </div>
+    </section>
+
+    <p class="rotulo-estado">2 · Paciente sin ficha y sin odontograma</p>
+    <div class="ficha-columnas">
+      <section class="panel ficha-seccion" aria-labelledby="t-vacia">
+        <h2 id="t-vacia">Ficha básica</h2>
+        <p class="aviso aviso-info">Todavía no se cargó la ficha.</p>
+        <div class="campo"><label for="a2">Antecedentes</label><textarea id="a2" maxlength="4000"></textarea><p class="contador">0 / 4000</p></div>
+        <div class="acciones-odontograma"><button type="button" class="btn btn-principal">Guardar ficha</button></div>
+      </section>
+      <section class="panel ficha-seccion" aria-labelledby="t-aus2">
+        <h2 id="t-aus2">Ausencias</h2>
+        <p class="firma">Sin ausencias registradas.</p>
+        <p class="firma">El odontograma muestra "Sin registros en el odontograma." y todas las piezas sin estado.</p>
+      </section>
+    </div>
+
+    <p class="rotulo-estado">3 · Error de campo y rechazo del servidor</p>
+    <section class="panel ficha-seccion" aria-label="Errores">
+      <div class="campo"><label for="a3">Antecedentes</label><textarea id="a3" aria-invalid="true" aria-describedby="a3-error">Texto de prueba muy largo…</textarea><p class="campo-error" id="a3-error">Máximo 4000 caracteres.</p><p class="contador">4001 / 4000</p></div>
+      <p role="alert" class="aviso aviso-error">Hay una cara que no corresponde a esa pieza.</p>
+      <p role="alert" class="aviso aviso-error">El paciente ya tiene la llegada registrada.</p>
+      <p role="alert" class="aviso aviso-error">Guardá los cambios antes de sumar más (máximo 32).</p>
+    </section>
+
+    <p class="rotulo-estado">4 · Falla la carga</p>
+    <section class="panel ficha-seccion" aria-label="Falla la carga">
+      <p role="alert" class="aviso aviso-error">No pudimos cargar la ficha. Revisá la conexión e intentá de nuevo.</p>
+      <div><button type="button" class="btn btn-principal">Reintentar</button></div>
+    </section>
+
+    <p class="rotulo-estado">5 · Cambiar de paciente con cambios sin guardar</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="d-titulo">
+      <h2 id="d-titulo">¿Descartar los cambios?</h2>
+      <p class="dialogo-resumen">Hay cambios sin guardar en el odontograma. ¿Descartarlos?</p>
+      <div class="dialogo-acciones"><button type="button" class="btn">Seguir editando</button><button type="button" class="btn btn-peligro">Descartar</button></div>
+    </dialog>
+
+    <p class="rotulo-estado">6 · La recepción abre #/pacientes</p>
+    <section class="panel ficha-seccion" aria-label="Recepción">
+      <p role="alert" class="aviso aviso-error">Esta sección es solo para odontólogos y administradores.</p>
+      <p class="firma">No se pide ningún dato y la barra lateral de la recepción no tiene "Pacientes".</p>
+    </section>
+
+    <p class="nota-mockup"><b>Mockup C-44.</b> Estados de la ficha en una sola página para revisarlos juntos. En la aplicación cada uno se ve por separado. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

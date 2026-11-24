@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pacientes · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="ficha.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="ana.ejemplo" data-rol="ODONTOLOGO" data-activa="pacientes">
+  <div class="pagina-ficha">
+    <h1 tabindex="-1">Pacientes</h1>
+
+    <section class="panel ficha-seccion" aria-labelledby="t-buscar">
+      <h2 id="t-buscar">Buscar paciente</h2>
+      <div class="campo buscador">
+        <label for="buscar">Paciente</label>
+        <div class="buscador-entrada">
+          <svg class="buscador-lupa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"></circle><path d="M20 20l-3.5-3.5"></path></svg>
+          <input id="buscar" type="text" role="combobox" aria-expanded="true" aria-controls="lista" autocomplete="off" value="9900" />
+        </div>
+        <p class="buscador-nota">Escribí el DNI o el nombre y apellido.</p>
+        <ul id="lista" class="buscador-lista" role="listbox">
+          <li class="buscador-opcion" role="option" aria-selected="true"><span class="nombre">Paciente Uno</span><span class="dni">99000001</span></li>
+          <li class="buscador-opcion" role="option" aria-selected="false"><span class="nombre">Paciente Dos</span><span class="dni">99000002</span></li>
+        </ul>
+        <p class="buscador-estado" role="status">2 pacientes encontrados.</p>
+      </div>
+    </section>
+
+    <div class="estado-vacio">
+      <p class="estado-vacio-titulo">Todavía no elegiste un paciente</p>
+      <p class="estado-vacio-texto">Buscá un paciente para ver su ficha.</p>
+    </div>
+
+    <p class="nota-mockup"><b>Mockup C-44.</b> "Pacientes" sin paciente elegido: solo el buscador de C-36 (DNI o nombre y apellido) y el texto vacío. No se pide ninguna ficha hasta elegir uno. "Pacientes" figura en la barra lateral entre Agenda y Configuración, solo para el odontólogo y el administrador. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

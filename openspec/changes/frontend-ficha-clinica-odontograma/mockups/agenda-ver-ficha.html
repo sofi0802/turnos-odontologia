@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agenda · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="ficha.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="ana.ejemplo" data-rol="ODONTOLOGO" data-activa="agenda">
+<h1 tabindex="-1">Mi agenda <span class="agenda-titulo-profesional">Ana Ejemplo</span></h1><p role="status" class="aviso aviso-ok"></p><p role="alert" class="aviso aviso-error"></p><div class="agenda-barra"><div class="grupo-botones" role="group" aria-label="Vista"><button type="button" aria-pressed="true">Día</button><button type="button" aria-pressed="false">Semana</button></div><div class="grupo-botones" role="group" aria-label="Período"><button type="button" class="boton-icono" aria-label="Anterior" title="Anterior"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg></button><button type="button">Hoy</button><button type="button" class="boton-icono" aria-label="Siguiente" title="Siguiente"><svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg></button></div><p class="agenda-periodo" aria-live="polite">martes 1/12</p></div><div class="agenda-filtros"><div class="campo"><label for="campo-2">Sillón</label><select name="sillonId" id="campo-2" aria-describedby="campo-2-error"><option value="">Todos</option><option value="1">Sillón 1</option><option value="2">Sillón 2</option></select><p id="campo-2-error" class="campo-error"></p></div><button type="button" class="boton-principal">Nuevo turno</button></div><div class="agenda-avisos"></div><div class="agenda-lista"><ul class="turnos"><li class="turno turno-atendido" data-id="1"><p class="turno-horario">09:00 – 09:30 <span class="etiqueta etiqueta-atendido">Atendido</span></p><p class="turno-persona">Paciente Uno</p><p class="turno-detalle">Ana Ejemplo · Sillón 1 · Consulta o control</p><div class="turno-acciones"><button type="button" class="btn">Ver ficha</button></div></li><li class="turno turno-llego" data-id="3"><p class="turno-horario">10:00 – 10:30 <span class="etiqueta etiqueta-confirmado">Confirmado</span> <span class="etiqueta etiqueta-llegada">Llegó 10:05</span></p><p class="turno-persona">Paciente Dos</p><p class="turno-detalle">Ana Ejemplo · Sillón 1 · Limpieza (profilaxis)</p><div class="turno-acciones"><button type="button" class="btn">Ver ficha</button><button type="button" class="btn btn-peligro">Cancelar turno</button><button type="button" class="btn">Reprogramar</button></div></li><li class="turno turno-reservado" data-id="5"><p class="turno-horario">10:45 – 11:15</p><p class="turno-persona">Elena Ejemplo</p><p class="turno-detalle">Ana Ejemplo · Sillón 1 · Extracción simple</p><div class="turno-acciones"><button type="button" class="btn">Ver ficha</button><button type="button" class="btn btn-peligro">Cancelar turno</button><button type="button" class="btn">Reprogramar</button></div></li></ul></div><p class="nota-mockup"><b>Mockup C-44.</b> La agenda de la odontóloga Ana Ejemplo (la misma de C-43) con "Ver ficha" en cada turno, también en los atendidos. Lleva a "Pacientes" con la ficha del paciente del turno. El administrador ve el mismo botón; la recepción no. Datos ficticios.</p>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

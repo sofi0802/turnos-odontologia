@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{marca} · Componentes (Revision 3)</title>
+  <title>{marca} · Componentes (Revision 4)</title>
   <link rel="icon" href="data:," />
   <link rel="stylesheet" href="tokens.css" />
   <script src="brand.js"></script>
@@ -268,7 +268,7 @@
 <body>
 <main class="ref">
   <h1><span data-brand-name>Turnos odontología</span> · Design system</h1>
-  <p class="ref-intro">Revision 3 · Revision 1 aprobada el 2026-11-22; las revisiones 2 y 3 (sin alias y logo provisorio) esperan la renovación de la aprobación. Componentes de referencia para la agenda del personal y la reserva del paciente. Todos los datos son ficticios.
+  <p class="ref-intro">Revision 4 · Revision 1 aprobada el 2026-11-22; las revisiones 2, 3 y 4 (sin alias, logo provisorio y colores del odontograma) esperan la renovación de la aprobación. Componentes de referencia para la agenda del personal y la reserva del paciente. Todos los datos son ficticios.
     <span class="provisorio">Nombre y logo (TBD)</span></p>
 
   <!-- 1. Fundamentos -->
@@ -530,6 +530,12 @@
     <p class="ref-sub">Estado vacío y carga</p>
     <div class="vacio chico"><p>No hay turnos para este día.</p></div>
     <div aria-busy="true" style="margin-top:var(--ds-espacio-2)"><div class="cargando" role="status"><span class="rueda" aria-hidden="true"></span><span>Cargando…</span></div></div>
+  </section>
+  <section class="ref-seccion" aria-labelledby="s-odo">
+    <h2 id="s-odo">Odontograma (Revision 4, C-44)</h2>
+    <p class="ref-sub">Estados de las caras</p>
+    <p style="max-width:48rem;color:var(--ds-texto-suave)">Relleno de cada cara según su estado vigente. El color nunca va solo: la pantalla muestra además la letra, el nombre y una leyenda. Ausente, corona y endodoncia se marcan sobre la pieza completa (cruz, contorno y línea). Mockups en <code>openspec/changes/frontend-ficha-clinica-odontograma/mockups/</code>.</p>
+    <ul style="display:grid;grid-template-columns:repeat(auto-fill,minmax(14rem,1fr));gap:var(--ds-espacio-1);margin:0;padding:0;list-style:none"><li style="display:flex;align-items:center;gap:var(--ds-espacio-1)"><span style="display:inline-grid;place-items:center;min-width:2rem;height:2rem;border-radius:var(--ds-radio-sm);background:var(--ds-odonto-sano);color:var(--ds-acento-texto);font-weight:var(--ds-peso-fuerte)">S</span>Sano <code>--ds-odonto-sano</code></li><li style="display:flex;align-items:center;gap:var(--ds-espacio-1)"><span style="display:inline-grid;place-items:center;min-width:2rem;height:2rem;border-radius:var(--ds-radio-sm);background:var(--ds-odonto-caries);color:var(--ds-acento-texto);font-weight:var(--ds-peso-fuerte)">C</span>Caries <code>--ds-odonto-caries</code></li><li style="display:flex;align-items:center;gap:var(--ds-espacio-1)"><span style="display:inline-grid;place-items:center;min-width:2rem;height:2rem;border-radius:var(--ds-radio-sm);background:var(--ds-odonto-obturado);color:var(--ds-acento-texto);font-weight:var(--ds-peso-fuerte)">O</span>Obturado <code>--ds-odonto-obturado</code></li><li style="display:flex;align-items:center;gap:var(--ds-espacio-1)"><span style="display:inline-grid;place-items:center;min-width:2rem;height:2rem;border-radius:var(--ds-radio-sm);background:var(--ds-odonto-a-tratar);color:var(--ds-acento-texto);font-weight:var(--ds-peso-fuerte)">T</span>A tratar <code>--ds-odonto-a-tratar</code></li><li style="display:flex;align-items:center;gap:var(--ds-espacio-1)"><span style="display:inline-grid;place-items:center;min-width:2rem;height:2rem;border-radius:var(--ds-radio-sm);background:var(--ds-odonto-ausente);color:var(--ds-acento-texto);font-weight:var(--ds-peso-fuerte)">A</span>Ausente <code>--ds-odonto-ausente</code></li><li style="display:flex;align-items:center;gap:var(--ds-espacio-1)"><span style="display:inline-grid;place-items:center;min-width:2rem;height:2rem;border-radius:var(--ds-radio-sm);background:var(--ds-odonto-corona);color:var(--ds-acento-texto);font-weight:var(--ds-peso-fuerte)">Co</span>Corona <code>--ds-odonto-corona</code></li><li style="display:flex;align-items:center;gap:var(--ds-espacio-1)"><span style="display:inline-grid;place-items:center;min-width:2rem;height:2rem;border-radius:var(--ds-radio-sm);background:var(--ds-odonto-endodoncia);color:var(--ds-acento-texto);font-weight:var(--ds-peso-fuerte)">E</span>Endodoncia <code>--ds-odonto-endodoncia</code></li></ul>
   </section>
 </main>
 </body>

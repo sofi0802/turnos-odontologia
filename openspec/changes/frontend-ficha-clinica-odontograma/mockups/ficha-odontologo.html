@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pacientes · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="ficha.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="ana.ejemplo" data-rol="ODONTOLOGO" data-activa="pacientes">
+  <div class="pagina-ficha">
+    <h1 tabindex="-1">Pacientes</h1>
+    <p role="status" class="aviso aviso-ok">Ficha guardada.</p>
+
+    <section class="panel ficha-paciente" aria-labelledby="paciente-nombre">
+      <div class="ficha-paciente-datos">
+        <div>
+          <h2 class="ficha-paciente-nombre" id="paciente-nombre">Paciente Uno</h2>
+          <p class="ficha-paciente-dni">DNI 99000001</p>
+        </div>
+        <button type="button" class="btn">Cambiar de paciente</button>
+      </div>
+      <div class="ficha-turno">
+        <p data-icono="reloj">Turno del martes 01/12 · 10:00 – 10:30 · Sillón 1 · Consulta o control</p>
+        <div><button type="button" class="btn btn-peligro">Marcar ausente</button></div>
+      </div>
+    </section>
+
+    <section class="panel ficha-seccion" aria-labelledby="t-odonto">
+      <div class="ficha-seccion-cabecera">
+        <h2 id="t-odonto">Odontograma</h2>
+        <div class="grupo-botones" role="group" aria-label="Dentición"><button type="button" aria-pressed="true">Permanentes</button><button type="button" aria-pressed="false">Temporales</button></div>
+      </div>
+      <div class="odontograma" data-denticion="permanente"
+           data-vigente='{"16":{"O":"OBTURADO","M":"CARIES"},"26":{"M":"A_TRATAR"},"36":{"completa":"AUSENTE"},"46":{"completa":"CORONA"},"11":{"V":"OBTURADO"},"24":{"completa":"ENDODONCIA"},"47":{"O":"SANO"}}'
+           data-pendientes='{"17":{"O":"CARIES"},"25":{"D":"A_TRATAR"}}'
+           data-elegida="17:O">
+        <ul class="leyenda" aria-label="Estados"></ul>
+      </div>
+
+      <div class="editor-pieza" aria-labelledby="t-editor">
+        <h3 id="t-editor">Pieza 17 · superior derecha</h3>
+        <div class="editor-fila">
+          <fieldset class="opciones">
+            <legend>Cara</legend>
+            <div class="opciones-caras">
+              <label class="opcion"><input type="radio" name="cara" checked />Oclusal</label>
+              <label class="opcion"><input type="radio" name="cara" />Mesial</label>
+              <label class="opcion"><input type="radio" name="cara" />Distal</label>
+              <label class="opcion"><input type="radio" name="cara" />Vestibular</label>
+              <label class="opcion"><input type="radio" name="cara" />Palatina</label>
+              <label class="opcion"><input type="radio" name="cara" />Pieza completa</label>
+            </div>
+          </fieldset>
+          <fieldset class="opciones">
+            <legend>Estado</legend>
+            <div class="opciones-estados">
+              <label class="opcion"><input type="radio" name="estado" /><span class="muestra" data-estado="SANO" aria-hidden="true">S</span>Sano</label>
+              <label class="opcion"><input type="radio" name="estado" checked /><span class="muestra" data-estado="CARIES" aria-hidden="true">C</span>Caries</label>
+              <label class="opcion"><input type="radio" name="estado" /><span class="muestra" data-estado="OBTURADO" aria-hidden="true">O</span>Obturado</label>
+              <label class="opcion"><input type="radio" name="estado" /><span class="muestra" data-estado="A_TRATAR" aria-hidden="true">T</span>A tratar</label>
+              <label class="opcion"><input type="radio" name="estado" /><span class="muestra" data-estado="AUSENTE" aria-hidden="true">A</span>Ausente</label>
+              <label class="opcion"><input type="radio" name="estado" /><span class="muestra" data-estado="CORONA" aria-hidden="true">Co</span>Corona</label>
+              <label class="opcion"><input type="radio" name="estado" /><span class="muestra" data-estado="ENDODONCIA" aria-hidden="true">E</span>Endodoncia</label>
+            </div>
+          </fieldset>
+        </div>
+        <div class="acciones-odontograma"><button type="button" class="btn">Sumar cambio</button></div>
+
+        <h3>Cambios sin guardar (2)</h3>
+        <ul class="pendientes">
+          <li><span><span class="muestra" data-estado="CARIES" aria-hidden="true">C</span>Pieza 17 · oclusal → Caries</span><button type="button" class="btn btn-fantasma btn-chico">Quitar</button></li>
+          <li><span><span class="muestra" data-estado="A_TRATAR" aria-hidden="true">T</span>Pieza 25 · distal → A tratar</span><button type="button" class="btn btn-fantasma btn-chico">Quitar</button></li>
+        </ul>
+        <div class="acciones-odontograma"><button type="button" class="btn">Descartar</button><button type="button" class="btn btn-principal">Guardar cambios (2)</button></div>
+      </div>
+
+      <details class="ficha-desplegable">
+        <summary>Estado vigente en texto (7 piezas con registros)</summary>
+        <ul class="lista-ficha">
+          <li><span>Pieza 11 · vestibular</span><span>Obturado</span></li>
+          <li><span>Pieza 16 · oclusal</span><span>Obturado</span></li>
+          <li><span>Pieza 16 · mesial</span><span>Caries</span></li>
+        </ul>
+      </details>
+    </section>
+
+    <div class="ficha-columnas">
+      <section class="panel ficha-seccion" aria-labelledby="t-ficha">
+        <h2 id="t-ficha">Ficha básica</h2>
+        <p class="firma">Actualizada por ana.ejemplo el 01/12/2026 a las 10:18</p>
+        <div class="campo"><label for="antecedentes">Antecedentes</label><textarea id="antecedentes" maxlength="4000">Hipertensión controlada.</textarea><p class="contador">24 / 4000</p></div>
+        <div class="campo"><label for="alergias">Alergias</label><textarea id="alergias" maxlength="4000">Penicilina.</textarea><p class="contador">11 / 4000</p></div>
+        <div class="campo"><label for="medicacion">Medicación</label><textarea id="medicacion" maxlength="4000">Enalapril 10 mg por día.</textarea><p class="contador">24 / 4000</p></div>
+        <div class="acciones-odontograma"><button type="button" class="btn btn-principal">Guardar ficha</button></div>
+      </section>
+
+      <div class="ficha-seccion">
+        <section class="panel ficha-seccion" aria-labelledby="t-ausencias">
+          <h2 id="t-ausencias">Ausencias</h2>
+          <ul class="lista-ficha">
+            <li><span>05/11/2026 · 11:00<br /><span class="detalle">Dr. Bruno Prueba</span></span><span class="etiqueta etiqueta-ausente">Ausente</span></li>
+            <li class="deshecha"><span>20/10/2026 · 09:00<br /><span class="detalle">Dra. Ana Ejemplo</span></span><span class="detalle">Deshecha por recepcion el 20/10/2026 a las 09:22</span></li>
+          </ul>
+        </section>
+
+        <section class="panel ficha-seccion" aria-labelledby="t-historial">
+          <details class="ficha-desplegable" open>
+            <summary id="t-historial">Historial del odontograma</summary>
+            <table class="tabla-historial">
+              <thead><tr><th>Fecha</th><th>Pieza</th><th>Cara</th><th>Estado</th><th>Profesional</th></tr></thead>
+              <tbody>
+                <tr><td>01/12/2026 10:16</td><td>16</td><td>mesial</td><td>Caries</td><td>Dra. Ana Ejemplo</td></tr>
+                <tr><td>15/11/2026 16:40</td><td>16</td><td>oclusal</td><td>Obturado</td><td>Dr. Bruno Prueba</td></tr>
+                <tr><td>02/10/2026 09:12</td><td>16</td><td>oclusal</td><td>Caries</td><td>Dra. Ana Ejemplo</td></tr>
+                <tr><td>02/10/2026 09:10</td><td>36</td><td>Pieza completa</td><td>Ausente</td><td>Dra. Ana Ejemplo</td></tr>
+              </tbody>
+            </table>
+          </details>
+        </section>
+      </div>
+    </div>
+
+    <p class="nota-mockup"><b>Mockup C-44.</b> Ficha de "Paciente Uno" vista por la odontóloga Ana Ejemplo, abierta con "Ver ficha" desde su turno de las 10:00. Son las 10:20, así que "Marcar ausente" está habilitado (RN-AG-17). Eligió la cara oclusal de la pieza 17 y tiene dos cambios sin guardar, con borde punteado en el dibujo. El historial no se edita. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>
