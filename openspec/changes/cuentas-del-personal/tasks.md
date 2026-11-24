@@ -4,11 +4,11 @@ Cada escenario de la spec tiene un test con el mismo nombre. Los tests de integr
 
 ## 0. Aprobación, línea de base y mockups (antes de escribir código)
 
-- [ ] 0.1 Registrar en `design.md` la aprobación de la líder de proposal, specs, design y tasks (governance CRÍTICO). Verificar que figura con fecha; no empezar el grupo 1 sin esto
+- [x] 0.1 Registrar en `design.md` la aprobación de la líder de proposal, specs, design y tasks (governance CRÍTICO). Verificar que figura con fecha; no empezar el grupo 1 sin esto *(2026-11-24: aprobada por Sofia con el merge del PR #81, confirmado por Enzo)*
 - [x] 0.2 Avisar a Juan Sebastián (dueño de `usuarios/` y `shared/security/`) y acordar con Juan Cruz el orden respecto de la etapa D de C-39. Verificar dejando la constancia en el PR de la propuesta *(2026-11-24: Enzo habló con los dos)*
 - [ ] 0.3 Correr `./gradlew build` y, en `frontend/`, `npm test` y `npm run build` sobre la rama, y anotar acá la cantidad de tests. Verificar que todo pasa antes de tocar código
 - [x] 0.4 Crear `mockups/` con las pantallas de la sección UI Mockups de `design.md`, con HTML y CSS locales que importan `design-system/tokens.css` y `brand.js`. Renderizarlas a 390 × 844 y 1440 × 900, guardar las capturas en `mockups/previews/` y completar su `README.md`. Verificar abriendo las capturas y que no hay desplazamiento horizontal *(2026-11-24: 11 pantallas y 22 capturas, sin desplazamiento horizontal ni errores de consola; ver `mockups/README.md`)*
-- [ ] 0.5 Presentar los mockups y registrar la aprobación de la líder en `design.md` (`Approval: approved (<fecha>, by user)`, `Preview: rendered`). Verificar que la sección UI Mockups lo dice; no empezar el grupo 5 sin esto
+- [x] 0.5 Presentar los mockups y registrar la aprobación de la líder en `design.md` (`Approval: approved (<fecha>, by user)`, `Preview: rendered`). Verificar que la sección UI Mockups lo dice; no empezar el grupo 5 sin esto *(2026-11-24: aprobados por Sofia con el merge del PR #81)*
 
 ## 1. Modelo y migración
 

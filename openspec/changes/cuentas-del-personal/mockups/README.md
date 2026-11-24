@@ -1,7 +1,7 @@
 # Mockups de C-41 `cuentas-del-personal`
 
 - Design system revision: 3 (`design-system/README.md`; la aprobación de las revisiones 2 y 3 sigue pendiente con la líder y no cambian ningún valor de `tokens.css`).
-- Approval: pending.
+- Approval: approved (2026-11-24, by Sofia Indovino, la líder; PR #81).
 - Preview: rendered (2026-11-24). Las capturas están en `previews/` a 390 × 844 y 1440 × 900, con Playwright y `prefers-reduced-motion: reduce`:
   - Las pantallas sin diálogo, a página completa.
   - Las pantallas con diálogo, solo lo que entra en la pantalla.

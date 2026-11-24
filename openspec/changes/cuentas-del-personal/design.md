@@ -1,5 +1,7 @@
 # Design
 
+> **Aprobación (governance CRÍTICO)**: proposal, specs, design y tasks aprobados por Sofia Indovino, la líder, el 2026-11-24 con el merge del PR #81 (confirmado por Enzo).
+
 ## Context
 
 El motivo está en `proposal.md`, sección Why.
@@ -125,5 +127,5 @@ Desactivar lo hace siempre un `ADMIN` activo, y nunca sobre su propia cuenta, as
   - el detalle del profesional con "Dar acceso";
   - `#/cambiar-contrasena`, obligatoria, voluntaria y con errores;
   - "Mi contraseña" en el menú del celular.
-- Approval: pending.
+- Approval: approved (2026-11-24, by Sofia Indovino, la líder; PR #81, confirmado por Enzo).
 - Preview: rendered (2026-11-24): capturas en `mockups/previews/` a 390 × 844 y 1440 × 900, sin desplazamiento horizontal ni errores de consola.
