@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>{marca} · Componentes (Revision 1)</title>
+  <title>{marca} · Componentes (Revision 3)</title>
   <link rel="icon" href="data:," />
   <link rel="stylesheet" href="tokens.css" />
   <script src="brand.js"></script>
@@ -186,12 +186,89 @@
       .turno-fila .turno + .turno { margin-top: 0; }
       .dos-columnas { grid-template-columns: 1fr 1fr; align-items: start; }
     }
+    .cabecera { display: flex; flex-wrap: wrap; align-items: center; gap: var(--ds-espacio-0) var(--ds-espacio-1);
+  padding: var(--ds-espacio-1) var(--ds-espacio-2); color: var(--ds-acento-texto); background: var(--ds-acento-500); box-shadow: var(--ds-sombra-1); }
+    .cabecera .marca { color: inherit; font-size: var(--ds-texto-base); min-height: var(--ds-alto-control); }
+    .cabecera .marca img { height: 36px; }
+    .cabecera .acciones-cabecera { margin-left: auto; display: flex; align-items: center; gap: var(--ds-espacio-1); min-width: 0; }
+    .cabecera .usuario-nombre { color: var(--ds-acento-texto); max-width: 11rem; }
+    .cabecera .avatar { color: var(--ds-acento-700); background: var(--ds-acento-100); }
+    .btn-sobre-azul { display: inline-flex; align-items: center; justify-content: center; gap: var(--ds-espacio-1); min-height: var(--ds-alto-control);
+  padding: 0 var(--ds-espacio-2); font: inherit; font-weight: var(--ds-peso-medio); color: var(--ds-acento-texto); background: transparent;
+  border: var(--ds-borde-ancho) solid var(--ds-acento-texto); border-radius: var(--ds-radio); text-decoration: none; cursor: pointer;
+  transition: background var(--ds-duracion-rapida) var(--ds-curva); }
+    .btn-sobre-azul:hover, .btn-sobre-azul.es-hover { background: var(--ds-acento-600); }
+    .btn-sobre-azul:active, .btn-sobre-azul.es-activo { background: var(--ds-acento-700); }
+    .enlace-sobre-azul { display: inline-flex; align-items: center; min-height: var(--ds-alto-control); padding: 0 var(--ds-espacio-1); color: var(--ds-acento-texto);
+  font-weight: var(--ds-peso-medio); text-decoration: none; border-radius: var(--ds-radio); transition: background var(--ds-duracion-rapida) var(--ds-curva); }
+    .enlace-sobre-azul:hover { background: var(--ds-acento-600); }
+    .cabecera :focus-visible { outline-color: var(--ds-acento-texto); }
+    .menu-boton { padding: 0 var(--ds-espacio-1); }
+    .menu-boton svg, .lateral svg { width: 20px; height: 20px; flex: none; }
+    .lateral { position: fixed; z-index: 20; top: 0; bottom: 0; left: 0; width: min(18rem, 85vw); display: flex; flex-direction: column;
+  gap: var(--ds-espacio-0); padding: var(--ds-espacio-1); overflow-y: auto; background: var(--ds-fondo); box-shadow: var(--ds-sombra-3);
+  transform: translateX(-105%); visibility: hidden; transition: transform var(--ds-duracion) var(--ds-curva), visibility 0s linear var(--ds-duracion); }
+    .lateral .cajon-cabecera { display: flex; align-items: center; justify-content: space-between; min-height: var(--ds-alto-control);
+  padding: 0 var(--ds-espacio-1); font-weight: var(--ds-peso-fuerte); color: var(--ds-texto-suave); text-transform: uppercase; font-size: var(--ds-texto-sm); letter-spacing: .04em; }
+    .lateral .cerrar { display: grid; place-items: center; width: var(--ds-alto-control); height: var(--ds-alto-control); border: 0; background: transparent;
+  color: var(--ds-texto-suave); border-radius: var(--ds-radio); cursor: pointer; }
+    .lateral .cerrar:hover { background: var(--ds-superficie); color: var(--ds-texto); }
+    .lateral a { display: flex; align-items: center; gap: var(--ds-espacio-1); min-height: var(--ds-alto-control); padding: 0 var(--ds-espacio-1);
+  color: var(--ds-texto-suave); font-weight: var(--ds-peso-medio); text-decoration: none; border-radius: var(--ds-radio); border-left: 3px solid transparent;
+  transition: background var(--ds-duracion-rapida) var(--ds-curva), color var(--ds-duracion-rapida) var(--ds-curva); }
+    .lateral a:hover { background: var(--ds-superficie); color: var(--ds-texto); }
+    .lateral a[aria-current='page'] { color: var(--ds-acento-700); font-weight: var(--ds-peso-fuerte); background: var(--ds-acento-50); border-left-color: var(--ds-acento-500); }
+    .pie { padding: var(--ds-espacio-2); color: var(--ds-acento-texto); background: var(--ds-acento-500); text-align: center; font-size: var(--ds-texto-sm); }
+    .btn:hover, .btn.es-hover { background: var(--ds-superficie); }
+    .btn-principal:hover, .btn-principal.es-hover { background: var(--ds-acento-600); border-color: var(--ds-acento-600); }
+    .btn-principal:active, .btn-principal.es-activo { background: var(--ds-acento-700); border-color: var(--ds-acento-700); }
+    .btn-fantasma:hover, .btn-fantasma.es-hover { background: var(--ds-acento-50); }
+    .btn-peligro:hover, .btn-peligro.es-hover { background: var(--ds-error-fondo); }
+    .btn:active:not(.btn-principal), .btn.es-activo:not(.btn-principal) { background: var(--ds-superficie-2); }
+    .btn:focus-visible, .btn.es-foco, .chip.es-foco, .opcion.es-foco { outline: var(--ds-foco-ancho) solid var(--ds-foco-color); outline-offset: var(--ds-foco-separacion); }
+    .btn-peligro:focus-visible, .btn-peligro.es-foco { outline-color: var(--ds-error); }
+    .chip { transition: background var(--ds-duracion-rapida) var(--ds-curva), border-color var(--ds-duracion-rapida) var(--ds-curva); }
+    .chip:hover, .chip.es-hover { background: var(--ds-acento-50); border-color: var(--ds-acento-500); }
+    .chip:active, .chip.es-activo { background: var(--ds-acento-100); }
+    .opcion { transition: background var(--ds-duracion-rapida) var(--ds-curva), border-color var(--ds-duracion-rapida) var(--ds-curva); }
+    .opcion:hover, .opcion.es-hover { background: var(--ds-superficie); }
+    .rejilla-estados { display: grid; gap: var(--ds-espacio-2); grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr)); align-items: start; }
+    .rejilla-estados > div { display: grid; gap: var(--ds-espacio-1); justify-items: stretch; }
+    .rejilla-estados small { color: var(--ds-texto-suave); font-size: var(--ds-texto-xs); text-transform: uppercase; letter-spacing: .04em; }
+    .fondo-azul { padding: var(--ds-espacio-2); background: var(--ds-acento-500); border-radius: var(--ds-radio-lg); }
+    .iconos { display: grid; grid-template-columns: repeat(auto-fill, minmax(6rem, 1fr)); gap: var(--ds-espacio-1); }
+    .iconos > div { display: grid; justify-items: center; gap: var(--ds-espacio-0); padding: var(--ds-espacio-1); border: var(--ds-borde-ancho) solid var(--ds-borde); border-radius: var(--ds-radio); font-size: var(--ds-texto-xs); color: var(--ds-texto-suave); background: var(--ds-fondo); }
+    .iconos svg { width: 24px; height: 24px; color: var(--ds-acento-500); }
+    .vacio { display: grid; justify-items: center; gap: var(--ds-espacio-1); padding: var(--ds-espacio-4) var(--ds-espacio-2); text-align: center;
+  background: var(--ds-fondo); border: var(--ds-borde-ancho) dashed var(--ds-borde-fuerte); border-radius: var(--ds-radio-lg); }
+    .vacio svg { width: 8.5rem; height: auto; }
+    .vacio h2 { font-size: var(--ds-texto-lg); }
+    .vacio p { color: var(--ds-texto-suave); max-width: 24rem; }
+    .vacio.chico { padding: var(--ds-espacio-3) var(--ds-espacio-2); }
+    .vacio.chico svg { width: 5rem; }
+    .cargando { display: flex; align-items: center; gap: var(--ds-espacio-1); color: var(--ds-texto-suave); }
+    .cargando .rueda { width: 24px; height: 24px; border: 3px solid var(--ds-acento-100); border-top-color: var(--ds-acento-500); border-radius: 50%;
+  animation: girar 0.9s linear infinite; }
+    @keyframes girar { to { transform: rotate(360deg); } }
+    .cargando .rueda { animation: none; }
+    .esqueleto { display: grid; gap: var(--ds-espacio-1); margin-top: var(--ds-espacio-2); }
+    .esqueleto span { display: block; height: 56px; border-radius: var(--ds-radio); background: var(--ds-superficie-2); }
+    .esqueleto span:nth-child(2) { width: 85%; }
+    .esqueleto span:nth-child(3) { width: 70%; }
+    /* --- Revision 3 (C-39): encabezado y pie azules, barra lateral, estados, vacíos y carga --- */
+    .cabecera .marca { display: flex; align-items: center; min-height: var(--ds-alto-control); color: inherit; text-decoration: none; }
+    .cabecera .marca img { height: 36px; }
+    .lateral.estatica { position: static; width: 15rem; transform: none; visibility: visible; box-shadow: none; border: var(--ds-borde-ancho) solid var(--ds-borde); border-radius: var(--ds-radio-lg); }
+    .lateral.estatica .cajon-cabecera { display: none; }
+    .maqueta { display: flex; flex-wrap: wrap; gap: var(--ds-espacio-2); align-items: flex-start; }
+    .maqueta .contenido-demo { flex: 1; min-width: 14rem; padding: var(--ds-espacio-2); background: var(--ds-superficie); border-radius: var(--ds-radio-lg); }
+
   </style>
 </head>
 <body>
 <main class="ref">
   <h1><span data-brand-name>Turnos odontología</span> · Design system</h1>
-  <p class="ref-intro">Revision 1 · Aprobado el 2026-11-22. Componentes de referencia para la agenda del personal y la reserva del paciente. Todos los datos son ficticios.
+  <p class="ref-intro">Revision 3 · Revision 1 aprobada el 2026-11-22; las revisiones 2 y 3 (sin alias y logo provisorio) esperan la renovación de la aprobación. Componentes de referencia para la agenda del personal y la reserva del paciente. Todos los datos son ficticios.
     <span class="provisorio">Nombre y logo (TBD)</span></p>
 
   <!-- 1. Fundamentos -->
@@ -224,22 +301,27 @@
     <p class="ayuda">Ayudas y errores de campo — 14</p>
   </section>
 
-  <!-- 2. Encabezado -->
+  <!-- 2. Encabezado, barra lateral y pie (C-39) -->
   <section class="ref-seccion" aria-labelledby="s-enc">
-    <h2 id="s-enc">Encabezado y navegación</h2>
-    <header class="encabezado">
-      <a class="marca" href="#"><img src="assets/logo.svg" alt="Logo provisorio" /></a>
-      <nav class="nav" aria-label="Principal">
-        <a href="#" aria-current="page">Agenda</a>
-        <a href="#">Pacientes</a>
-        <a href="#">Reserva</a>
-        <a href="#">Configuración</a>
-      </nav>
-      <div class="usuario">
-        <span class="avatar" aria-hidden="true">RE</span>
-        <span><span style="display:block;font-weight:600;line-height:1.2">recepcion</span><span class="rol">Recepcionista</span></span>
-        <button class="btn btn-fantasma btn-chico" type="button">Salir</button>
-      </div>
+    <h2 id="s-enc">Encabezado, barra lateral y pie</h2>
+    <p class="ref-sub">Con sesión: encabezado azul con el logo, barra lateral por rol y pie</p>
+    <header class="cabecera">
+      <a class="marca" href="#"><img src="assets/logo.svg?v=4" alt="Turnos odontología" /></a>
+      <div class="acciones-cabecera"><span class="avatar" aria-hidden="true">RE</span><span class="usuario-nombre">recepcion</span><button class="btn-sobre-azul" type="button">Salir</button></div>
+    </header>
+    <div class="maqueta" style="margin-top:var(--ds-espacio-2)">
+      <aside class="lateral estatica" aria-label="Menú de ejemplo">
+        <nav aria-label="Principal"><ul style="list-style:none;margin:0;padding:0;display:grid;gap:var(--ds-espacio-0)">
+          <li><a href="#" aria-current="page">Agenda</a></li><li><a href="#">Configuración</a></li>
+        </ul></nav>
+      </aside>
+      <div class="contenido-demo">Contenido de la página. En el celular la barra lateral es un cajón que se abre con el botón "Menú"; desde 768 px se ve siempre.</div>
+    </div>
+    <footer class="pie" style="margin-top:var(--ds-espacio-2);border-radius:var(--ds-radio-lg)">Turnos odontología</footer>
+    <p class="ref-sub">Sin sesión: sin barra lateral, con "Reservar turno" e "Ingresar"</p>
+    <header class="cabecera">
+      <a class="marca" href="#"><img src="assets/logo.svg?v=4" alt="Turnos odontología" /></a>
+      <div class="acciones-cabecera"><a class="enlace-sobre-azul" href="#">Reservar turno</a><a class="btn-sobre-azul" href="#">Ingresar</a></div>
     </header>
   </section>
 
@@ -432,6 +514,22 @@
         </div>
       </div>
     </div>
+  </section>
+
+  <!-- 9. Estados de los botones, vacíos y carga (C-39) -->
+  <section class="ref-seccion" aria-labelledby="s-est">
+    <h2 id="s-est">Estados de los botones, vacíos y carga</h2>
+    <p class="ref-sub">Principal, secundario, peligro y fantasma: normal, hover, presionado, foco y deshabilitado</p>
+    <div class="rejilla-estados">
+      <div><small>normal</small><button class="btn btn-principal" type="button">Confirmar</button><button class="btn" type="button">Cancelar</button><button class="btn btn-peligro" type="button">Cancelar turno</button></div>
+      <div><small>hover</small><button class="btn btn-principal es-hover" type="button">Confirmar</button><button class="btn es-hover" type="button">Cancelar</button><button class="btn btn-peligro es-hover" type="button">Cancelar turno</button></div>
+      <div><small>presionado</small><button class="btn btn-principal es-activo" type="button">Confirmar</button><button class="btn es-activo" type="button">Cancelar</button><button class="btn btn-peligro es-activo" type="button">Cancelar turno</button></div>
+      <div><small>foco (el de peligro es rojo)</small><button class="btn btn-principal es-foco" type="button">Confirmar</button><button class="btn es-foco" type="button">Cancelar</button><button class="btn btn-peligro es-foco" type="button">Cancelar turno</button></div>
+      <div><small>deshabilitado</small><button class="btn btn-principal" type="button" disabled>Confirmar</button><button class="btn" type="button" disabled>Cancelar</button><button class="btn btn-peligro" type="button" disabled>Cancelar turno</button></div>
+    </div>
+    <p class="ref-sub">Estado vacío y carga</p>
+    <div class="vacio chico"><p>No hay turnos para este día.</p></div>
+    <div aria-busy="true" style="margin-top:var(--ds-espacio-2)"><div class="cargando" role="status"><span class="rueda" aria-hidden="true"></span><span>Cargando…</span></div></div>
   </section>
 </main>
 </body>

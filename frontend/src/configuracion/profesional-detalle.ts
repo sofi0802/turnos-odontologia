@@ -9,7 +9,9 @@ import {
   type Profesional,
   type Sillon,
 } from './api.ts';
-import { cargarEn, guardando, type ContextoSeccion } from './ui.ts';
+import { cargarCuentas, type CuentaPersonal } from './cuentas-api.ts';
+import { abrirAltaUsuario } from './usuario-alta.ts';
+import { botonChico, cargarEn, crearEstado, guardando, type ContextoSeccion } from './ui.ts';
 
 export const SIN_SILLON_HABITUAL = 'Sin sillón habitual';
 
@@ -60,7 +62,55 @@ export function crearDetalleProfesional(
       }
     },
   );
+  // El acceso a la aplicación solo lo ve y lo da el administrador (C-41).
+  if (contexto.permisos.gestionaUsuarios) {
+    const acceso = document.createElement('div');
+    acceso.className = 'acceso';
+    detalle.append(acceso);
+    const recargar = cargarEn(
+      acceso,
+      contexto,
+      () => cargarCuentas(contexto.api),
+      (cuentas, contenedor) => dibujarAcceso(contenedor, profesional, cuentas, todos, contexto, () => recargar()),
+    );
+  }
   return detalle;
+}
+
+/** "Acceso a la aplicación": la cuenta del profesional o, si no tiene, "Dar acceso" (spec frontend-cuentas-personal). */
+function dibujarAcceso(
+  contenedor: HTMLElement,
+  profesional: Profesional,
+  cuentas: readonly CuentaPersonal[],
+  todos: readonly Profesional[],
+  contexto: ContextoSeccion,
+  recargar: () => void,
+): void {
+  const texto = document.createElement('div');
+  const titulo = document.createElement('h4');
+  titulo.textContent = 'Acceso a la aplicación';
+  const estado = document.createElement('p');
+  texto.append(titulo, estado);
+  contenedor.append(texto);
+  const cuenta = cuentas.find((c) => c.profesionalId === profesional.id);
+  if (cuenta !== undefined) {
+    estado.append('Acceso: ');
+    const usuario = document.createElement('b');
+    usuario.textContent = cuenta.username;
+    estado.append(usuario);
+    contenedor.append(crearEstado(cuenta.activo));
+    return;
+  }
+  if (!profesional.activo) {
+    estado.textContent = 'No tiene cuenta. Activá el profesional para darle acceso.';
+    return;
+  }
+  estado.textContent = 'Todavía no tiene cuenta para ingresar.';
+  const dar = botonChico('Dar acceso', 'principal');
+  dar.addEventListener('click', () => {
+    abrirAltaUsuario(contexto, { profesionales: todos, cuentas, profesionalFijo: profesional }, recargar);
+  });
+  contenedor.append(dar);
 }
 
 function nombreSillon(sillones: readonly Sillon[], sillonId: number | null): string {

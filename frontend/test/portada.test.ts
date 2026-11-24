@@ -46,13 +46,13 @@ async function esperarTitulo(esperado: string): Promise<void> {
 /** Enlaces y botones de la portada (`main`) o del encabezado, por su texto. */
 function enlaceDe(zona: 'main' | 'header', texto: string): HTMLAnchorElement | undefined {
   return [...raiz.querySelectorAll<HTMLAnchorElement>(`${zona} a`)].find(
-    (a) => a.textContent === texto && a.closest('nav') === null && !a.hidden,
+    (a) => a.textContent === texto && a.closest('aside') === null && !a.hidden,
   );
 }
 
 function textosVisibles(zona: 'main' | 'header'): string[] {
   return [...raiz.querySelectorAll<HTMLAnchorElement>(`${zona} a`)]
-    .filter((a) => !a.hidden && a.closest('nav') === null)
+    .filter((a) => !a.hidden && a.closest('aside') === null)
     .map((a) => a.textContent ?? '');
 }
 
@@ -116,7 +116,7 @@ describe('Botones de la portada', () => {
 describe('Acceso del personal', () => {
   it('El personal entra desde la portada', async () => {
     abrirEn('#/inicio', sinSesion());
-    const boton = enlaceDe('header', 'Acceso personal');
+    const boton = enlaceDe('header', 'Ingresar');
     expect(boton?.getAttribute('href')).toBe('#/mi-cuenta');
 
     const cambio = esperarHashchange();
@@ -131,8 +131,8 @@ describe('Acceso del personal', () => {
     // junto al usuario) y que su regla de CSS da al menos 44 px, también en el celular.
     // El diseño real se verifica con capturas a 390 × 844 (tarea 7.3).
     abrirEn('#/inicio', sinSesion());
-    expect(enlaceDe('header', 'Acceso personal')?.closest('.usuario')).not.toBeNull();
-    const reglaBoton = /\n\.btn-acceso\s*\{([^}]*)\}/.exec(estilos)?.[1] ?? '';
+    expect(enlaceDe('header', 'Ingresar')?.closest('.acciones-cabecera')).not.toBeNull();
+    const reglaBoton = /\n\.btn-sobre-azul\s*\{([^}]*)\}/.exec(estilos)?.[1] ?? '';
     expect(reglaBoton).toMatch(/min-height:\s*var\(--ds-alto-control\)/);
   });
 });
@@ -144,7 +144,7 @@ describe('Portada con sesión iniciada', () => {
 
     expect(textosVisibles('main')).toEqual(['Reservar turno', 'Mis turnos']);
     expect(enlaceDe('main', 'Mis turnos')?.getAttribute('href')).toBe('#/mis-turnos');
-    expect(textosVisibles('header')).not.toContain('Acceso personal');
+    expect(textosVisibles('header')).not.toContain('Ingresar');
     expect(raiz.textContent).not.toContain('Ingresar a mi cuenta');
     expect(window.location.hash).toBe('#/inicio');
   });
@@ -155,7 +155,7 @@ describe('Portada con sesión iniciada', () => {
 
     expect(textosVisibles('main')).toEqual(['Ir a la agenda']);
     expect(enlaceDe('main', 'Ir a la agenda')?.getAttribute('href')).toBe('#/agenda');
-    expect(textosVisibles('header')).not.toContain('Acceso personal');
+    expect(textosVisibles('header')).not.toContain('Ingresar');
     expect(raiz.textContent).not.toContain('Ingresar a mi cuenta');
     expect(window.location.hash).toBe('#/inicio');
   });
@@ -166,7 +166,7 @@ describe('El logo lleva a la portada', () => {
     abrirEn('#/reserva', sinSesion());
     await vi.waitFor(() => expect(raiz.querySelector('main [aria-busy]')).toBeNull());
     const marca = raiz.querySelector<HTMLAnchorElement>('header a.marca');
-    expect(marca?.textContent).toBe('Turnos odontología');
+    expect(marca?.querySelector('img')?.getAttribute('alt')).toBe('Turnos odontología');
     expect(marca?.getAttribute('href')).toBe('#/inicio');
 
     const cambio = esperarHashchange();
@@ -183,7 +183,11 @@ describe('Solo recursos propios', () => {
     const servidor = abrirEn('#/inicio', sinSesion());
     await vi.waitFor(() => expect(servidor.a('GET', '/public/sesion')).toHaveLength(1));
 
-    expect(raiz.querySelectorAll('img, link, script, iframe, [src]')).toHaveLength(0);
+    expect(raiz.querySelectorAll('main img, main [src], link, script, iframe')).toHaveLength(0);
+    // El único recurso con `src` es el logo del encabezado, que sale del propio origen.
+    for (const recurso of raiz.querySelectorAll('[src]')) {
+      expect(recurso.getAttribute('src')).not.toMatch(/^(https?:)?\/\//);
+    }
     for (const enlace of raiz.querySelectorAll('a')) {
       expect(enlace.getAttribute('href')).toMatch(/^#\//);
     }

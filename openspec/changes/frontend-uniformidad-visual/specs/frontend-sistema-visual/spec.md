@@ -76,6 +76,60 @@ Todos los diálogos SHALL poner el mensaje de error o de aviso en el mismo lugar
 - **WHEN** se muestra el mensaje
 - **THEN** está debajo del título del diálogo y antes del primer campo, en todos los diálogos
 
+### Requirement: Agenda con el color de cada turno
+Cada turno de la agenda del personal SHALL tener un borde izquierdo de 4 px con el color de su estado (`--ds-turno-*`; un sobreturno lleva el suyo), y la vista semanal SHALL acomodar los días en columnas que se ajustan al ancho, sin huecos cuando unos días tienen más turnos que otros, y manteniendo los días en orden de lunes a domingo.
+
+#### Scenario: El borde del turno según su estado
+- **GIVEN** la agenda de un día con un turno reservado, uno confirmado y un sobreturno
+- **WHEN** se muestra
+- **THEN** cada turno tiene la clase de su estado, y el borde izquierdo usa el color del estado correspondiente
+
+#### Scenario: Semana con días de distinta cantidad de turnos
+- **GIVEN** la vista semanal con un día con tres turnos y otros con uno o ninguno
+- **WHEN** se muestra en una pantalla de 1440 px
+- **THEN** los siete días están en orden de lunes a domingo
+- **AND** cada día queda debajo del anterior de su columna, sin dejar un hueco del alto del día más largo
+
+### Requirement: Pantallas del paciente con fondo suave y jerarquía de títulos
+Las pantallas del paciente (portada, Reservar turno, Mi cuenta, Mis turnos y Confirmar asistencia) SHALL verse sobre un fondo suave (`--ds-superficie`) con tarjetas blancas, y sus títulos SHALL seguir una jerarquía común: `h1` en `--ds-texto-xl`, `h2` en `--ds-texto-lg` y `h3` en `--ds-texto-base`. Su columna de contenido SHALL medir como máximo 44 rem.
+
+#### Scenario: Fondo suave en las pantallas del paciente
+- **GIVEN** cada pantalla del paciente abierta
+- **WHEN** se mira el contenedor de la página
+- **THEN** lleva el fondo suave
+
+#### Scenario: Jerarquía de títulos
+- **WHEN** se leen las reglas de los títulos
+- **THEN** `h1`, `h2` y `h3` usan los tamaños `--ds-texto-xl`, `--ds-texto-lg` y `--ds-texto-base`, con el interlineado de títulos
+
+### Requirement: Pantallas del personal con fondo suave y tarjeta de turno uniforme
+Las pantallas del personal (agenda y Configuración) SHALL llevar el mismo fondo suave que las del paciente; en la agenda, cada turno MUST ser una tarjeta blanca con el nombre del paciente como texto propio (sin reutilizar la tarjeta de "Mis turnos"), y "Cancelar turno" MUST ser un botón de peligro y "Reprogramar" uno secundario.
+
+#### Scenario: Fondo suave en las pantallas del personal
+- **GIVEN** una persona del personal con la agenda o Configuración abiertas
+- **WHEN** se mira el contenedor de la página
+- **THEN** lleva el fondo suave
+
+#### Scenario: Tarjeta del turno y sus acciones
+- **GIVEN** la agenda con un turno
+- **WHEN** se mira su tarjeta
+- **THEN** el paciente está en `.turno-persona` y no en `.turno-paciente`
+- **AND** "Cancelar turno" tiene la clase de botón de peligro y "Reprogramar" la de botón secundario
+
+### Requirement: Selector de fecha de la aplicación
+Los campos de fecha SHALL usar el calendario de la aplicación en un desplegable, no el selector nativo del navegador; el valor MUST seguir en el campo `AAAA-MM-DD` y el campo opcional MUST poder borrarse.
+
+#### Scenario: Elegir un día con el calendario
+- **GIVEN** un campo de fecha con día mínimo
+- **WHEN** se abre el calendario y se toca un día
+- **THEN** el campo toma ese día, avisa el cambio y el calendario se cierra
+- **AND** los días anteriores al mínimo no se pueden elegir
+
+#### Scenario: Fecha opcional
+- **GIVEN** un campo de fecha opcional con un día elegido
+- **WHEN** se toca "Borrar" en el calendario
+- **THEN** el campo queda vacío y el botón muestra "Elegí un día"
+
 ### Requirement: Estados vacíos y de carga
 Las listas sin elementos y las pantallas que están cargando datos SHALL mostrar un estado propio con una ilustración o un indicador SVG propio, un texto breve y, si corresponde, la acción siguiente; las ilustraciones decorativas MUST estar ocultas para los lectores de pantalla y la carga MUST anunciarse con `aria-busy`.
 

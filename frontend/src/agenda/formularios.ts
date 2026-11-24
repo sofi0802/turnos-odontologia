@@ -5,15 +5,16 @@ import { fechaDeInstante, formatearHora, type Fecha } from '../shared/fecha/zona
 import {
   cambiarOpciones,
   crearAviso,
-  crearBoton,
   crearCampo,
   crearEntrada,
   crearSelector,
   type Campo,
   type Opcion,
 } from '../shared/ui/campos.ts';
+import { abrirDialogo as abrirDialogoUniforme } from '../shared/ui/dialogo.ts';
 import { mensajeDeError, mensajeDeReprogramacion } from '../shared/ui/mensajes.ts';
 import { crearCalendario } from '../shared/ui/calendario.ts';
+import { usarSelectorFecha } from '../shared/ui/selector-fecha.ts';
 import { crearBuscadorPacientes, MENSAJE_PACIENTE_OBLIGATORIO } from './buscador-pacientes.ts';
 import { nombreDe, type Catalogos, type ItemCatalogo } from './catalogos.ts';
 import { crearBuscadorHorariosNuevoTurno } from './nuevo-turno.ts';
@@ -43,48 +44,15 @@ interface Dialogo {
   cerrar(): void;
 }
 
-let contadorDialogos = 0;
-
-/** Arma un `<dialog>` modal con título, campos y botones (design D5). */
+/** Abre el diálogo uniforme de la agenda con título, resumen opcional, campos y "Cerrar" (design D5, C-39 D8). */
 function abrirDialogo(titulo: string, resumen: string | null, campos: readonly CampoFormulario[], textoEnviar: string): Dialogo {
-  contadorDialogos += 1;
-  const dialogo = document.createElement('dialog');
-  dialogo.className = 'dialogo';
-  const idTitulo = `dialogo-titulo-${contadorDialogos}`;
-  dialogo.setAttribute('aria-labelledby', idTitulo);
-
-  const encabezado = document.createElement('h2');
-  encabezado.id = idTitulo;
-  encabezado.textContent = titulo;
-
-  const formulario = document.createElement('form');
-  formulario.className = 'formulario';
-  formulario.noValidate = true;
-  const general = crearAviso('alert');
-  const enviar = crearBoton(textoEnviar, 'submit');
-  enviar.className = 'boton-principal';
-  const cerrarBoton = crearBoton('Cerrar');
-  cerrarBoton.className = 'boton-secundario';
-  const botones = document.createElement('div');
-  botones.className = 'dialogo-acciones';
-  botones.append(enviar, cerrarBoton);
-  formulario.append(...campos.map((c) => c.contenedor), general, botones);
-
-  dialogo.append(encabezado);
-  if (resumen !== null) {
-    const parrafo = document.createElement('p');
-    parrafo.className = 'dialogo-resumen';
-    parrafo.textContent = resumen;
-    dialogo.append(parrafo);
-  }
-  dialogo.append(formulario);
-
-  const cerrar = (): void => dialogo.close();
-  cerrarBoton.addEventListener('click', cerrar);
-  dialogo.addEventListener('close', () => dialogo.remove());
-  document.body.append(dialogo);
-  dialogo.showModal();
-  campos[0]?.control.focus();
+  const { formulario, general, enviar, cerrar } = abrirDialogoUniforme({
+    titulo,
+    ...(resumen === null ? {} : { resumen }),
+    contenido: campos.map((c) => c.contenedor),
+    textoDescartar: 'Cerrar',
+    textoPrincipal: textoEnviar,
+  });
   return { formulario, general, enviar, cerrar };
 }
 
@@ -418,6 +386,7 @@ export function abrirReprogramacion(control: ControlAgenda, turno: TurnoAgenda):
   const [dni, numero] = camposDeIdentidad();
   const profesional = selector('Profesional', 'profesionalId', [{ valor: '', texto: 'Sin cambios' }]);
   const fecha = entrada('Fecha', 'date', 'fecha', fechaDeInstante(turno.inicio));
+  usarSelectorFecha(fecha);
   const sillon = selector('Sillón', 'sillonId', opcionesActivas(catalogos.sillones, 'Sin cambios'));
   const dialogo = abrirDialogo(
     'Reprogramar turno',

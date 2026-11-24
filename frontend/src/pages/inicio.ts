@@ -5,13 +5,8 @@ import {
   crearIconoPrestacion,
   crearIlustracionPortada,
 } from './inicio-ilustraciones.ts';
+import { NOMBRE_APLICACION } from '../shared/ui/marca.ts';
 import type { ContextoPagina, Pagina } from './pagina.ts';
-
-/** Nombre del consultorio: es el título de la portada y el del encabezado. */
-export const NOMBRE_APLICACION = 'Turnos odontología';
-
-/** Texto del botón del personal, arriba a la derecha del encabezado de la portada (design D3). */
-export const TEXTO_ACCESO_PERSONAL = 'Acceso personal';
 
 const EYEBROW = 'Consultorio odontológico';
 const TITULAR = 'Tu turno odontológico, sin llamadas ni esperas';
@@ -156,7 +151,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
 /** Portada (`#/inicio`): página inicial, pública y fuera del menú. */
 export const paginaInicio: Pagina = {
   ruta: 'inicio',
+  fondoSuave: true,
   titulo: NOMBRE_APLICACION,
-  textoIngreso: TEXTO_ACCESO_PERSONAL,
   render: dibujar,
 };

@@ -36,33 +36,33 @@ La portada SHALL ofrecer, sin sesión, el botón "Reservar turno", que lleva a `
 - **THEN** se muestra la página "Mi cuenta" en `#/mi-cuenta`
 
 ### Requirement: Acceso del personal
-La portada SHALL mostrar arriba a la derecha el botón "Acceso personal", que lleva a `#/mi-cuenta`, también en pantallas de celular.
+La portada SHALL mostrar arriba a la derecha, en el encabezado, el botón "Ingresar" (el mismo de las demás páginas sin sesión), que lleva a `#/mi-cuenta`, por donde también ingresa el personal, también en pantallas de celular.
 
 #### Scenario: El personal entra desde la portada
 - **GIVEN** la portada abierta sin sesión
-- **WHEN** se elige "Acceso personal"
+- **WHEN** se elige "Ingresar"
 - **THEN** se muestra la página "Mi cuenta" en `#/mi-cuenta`
 
 #### Scenario: El botón del personal en el celular
 - **WHEN** se abre la portada en una pantalla de 390 × 844 px
-- **THEN** "Acceso personal" sigue visible en la parte superior derecha, con una altura de al menos 44 px
+- **THEN** "Ingresar" sigue visible en la parte superior derecha, con una altura de al menos 44 px
 - **AND** la portada no tiene desplazamiento horizontal
 
 ### Requirement: Portada con sesión iniciada
-Con una sesión iniciada, la portada MUST NOT redirigir sola y SHALL ofrecer ir al espacio del rol: "Reservar turno" y "Mis turnos" para el paciente, y "Ir a la agenda" para el personal. No MUST mostrar "Ingresar a mi cuenta" ni "Acceso personal".
+Con una sesión iniciada, la portada MUST NOT redirigir sola y SHALL ofrecer ir al espacio del rol: "Reservar turno" y "Mis turnos" para el paciente, y "Ir a la agenda" para el personal. No MUST mostrar "Ingresar a mi cuenta" ni "Ingresar" en el encabezado.
 
 #### Scenario: Paciente con sesión en la portada
 - **GIVEN** una sesión de `paciente.uno@example.com` con rol `PACIENTE`
 - **WHEN** se abre la aplicación en `#/inicio`
 - **THEN** se ven los botones "Reservar turno" y "Mis turnos"
-- **AND** no se ven "Ingresar a mi cuenta" ni "Acceso personal"
+- **AND** no se ven "Ingresar a mi cuenta" ni "Ingresar" en el encabezado
 - **AND** la dirección sigue siendo `#/inicio`
 
 #### Scenario: Personal con sesión en la portada
 - **GIVEN** una sesión de `recepcion` con rol `RECEPCIONISTA`
 - **WHEN** se abre la aplicación en `#/inicio`
 - **THEN** se ve el botón "Ir a la agenda", que lleva a `#/agenda`
-- **AND** no se ven "Reservar turno", "Ingresar a mi cuenta" ni "Acceso personal"
+- **AND** no se ven "Reservar turno", "Ingresar a mi cuenta" ni "Ingresar" en el encabezado
 
 ### Requirement: El logo lleva a la portada
 El nombre y el logo del encabezado SHALL ser un enlace a `#/inicio` en todas las páginas, con o sin sesión.

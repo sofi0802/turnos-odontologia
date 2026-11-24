@@ -2,6 +2,8 @@ import type { ClienteApi } from '../shared/api/cliente.ts';
 import { ErrorSesion, ErrorValidacion } from '../shared/api/errores.ts';
 import type { Sesion } from '../shared/sesion/sesion.ts';
 import { crearAviso, crearBoton, crearSelector, type Campo } from '../shared/ui/campos.ts';
+import { abrirDialogo as abrirDialogoUniforme } from '../shared/ui/dialogo.ts';
+import { crearCargando } from '../shared/ui/estado-vacio.ts';
 import { mensajeDeError } from '../shared/ui/mensajes.ts';
 import type { Permisos } from './permisos.ts';
 
@@ -137,13 +139,12 @@ export function cargarEn<T>(
   const ejecutar = (): void => {
     intento += 1;
     const este = intento;
-    const cargando = document.createElement('p');
-    cargando.className = 'ayuda';
-    cargando.textContent = 'Cargando…';
-    contenedor.replaceChildren(cargando);
+    contenedor.setAttribute('aria-busy', 'true');
+    contenedor.replaceChildren(crearCargando());
     cargar().then(
       (datos) => {
         if (este === intento) {
+          contenedor.removeAttribute('aria-busy');
           contenedor.replaceChildren();
           dibujar(datos, contenedor);
         }
@@ -152,6 +153,7 @@ export function cargarEn<T>(
         if (este !== intento || contexto.sesionVencida(causa)) {
           return;
         }
+        contenedor.removeAttribute('aria-busy');
         const aviso = crearAviso('alert');
         aviso.textContent = mensajeDeError(causa);
         const reintentar = crearBoton('Reintentar');
@@ -324,12 +326,9 @@ export interface Dialogo {
   cerrar(): void;
 }
 
-let contadorDialogos = 0;
-
 /**
- * Diálogo modal con título, resumen opcional, contenido y botones (design D9), con las clases de
- * `.dialogo` que ya usa la agenda. El botón de enviar es `submit`; la sección escucha `submit`
- * del formulario.
+ * Diálogo modal de Configuración con título, resumen opcional, contenido y botones (design D9), armado con el molde
+ * de `shared/ui/dialogo.ts`. El botón de enviar es `submit`; la sección escucha `submit` del formulario.
  */
 export function abrirDialogo(
   titulo: string,
@@ -337,44 +336,14 @@ export function abrirDialogo(
   textoEnviar: string,
   opciones: { resumen?: string; peligro?: boolean } = {},
 ): Dialogo {
-  contadorDialogos += 1;
-  const dialogo = document.createElement('dialog');
-  dialogo.className = 'dialogo';
-  const idTitulo = `config-dialogo-${contadorDialogos}`;
-  dialogo.setAttribute('aria-labelledby', idTitulo);
-
-  const encabezado = document.createElement('h2');
-  encabezado.id = idTitulo;
-  encabezado.textContent = titulo;
-  dialogo.append(encabezado);
-  if (opciones.resumen !== undefined) {
-    const resumen = document.createElement('p');
-    resumen.className = 'dialogo-resumen';
-    resumen.textContent = opciones.resumen;
-    dialogo.append(resumen);
-  }
-
-  const formulario = document.createElement('form');
-  formulario.className = 'formulario';
-  formulario.noValidate = true;
-  const general = crearAviso('alert');
-  const enviar = crearBoton(textoEnviar, 'submit');
-  enviar.className = opciones.peligro === true ? 'btn btn-peligro' : 'btn btn-principal';
-  const cancelar = crearBoton('Cancelar');
-  cancelar.className = 'btn';
-  const botones = document.createElement('div');
-  botones.className = 'dialogo-acciones';
-  botones.append(cancelar, enviar);
-  formulario.append(general, ...contenido, botones);
-  dialogo.append(formulario);
-
-  const cerrar = (): void => dialogo.close();
-  cancelar.addEventListener('click', cerrar);
-  dialogo.addEventListener('close', () => dialogo.remove());
-  document.body.append(dialogo);
-  dialogo.showModal();
-  const primero = formulario.querySelector<HTMLElement>('input, select');
-  (primero ?? enviar).focus();
+  const { dialogo, formulario, general, enviar, cerrar } = abrirDialogoUniforme({
+    titulo,
+    ...(opciones.resumen === undefined ? {} : { resumen: opciones.resumen }),
+    contenido,
+    textoDescartar: 'Cancelar',
+    textoPrincipal: textoEnviar,
+    ...(opciones.peligro === true ? { peligro: true } : {}),
+  });
   return { dialogo, formulario, general, enviar, cerrar };
 }
 

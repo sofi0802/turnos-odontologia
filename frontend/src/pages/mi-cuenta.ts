@@ -1,6 +1,13 @@
 import { leerReservaPendiente } from '../paciente/reserva.ts';
 import { ErrorNegocio, ErrorSesion, ErrorValidacion } from '../shared/api/errores.ts';
-import { esPaciente, esPersonal, iniciarSesion, registrarPaciente, type Sesion } from '../shared/sesion/sesion.ts';
+import {
+  debeCambiarContrasena,
+  esPaciente,
+  esPersonal,
+  iniciarSesion,
+  registrarPaciente,
+  type Sesion,
+} from '../shared/sesion/sesion.ts';
 import { crearAviso, crearBoton, crearCampo, crearEntrada, type Campo } from '../shared/ui/campos.ts';
 import { mensajeDeError } from '../shared/ui/mensajes.ts';
 import { crearTitulo, type ContextoPagina, type Pagina } from './pagina.ts';
@@ -22,7 +29,8 @@ function seguirConSesion(contexto: ContextoPagina, sesion: Sesion): void {
   if (esPaciente(sesion.rol)) {
     contexto.irA(leerReservaPendiente() === null ? 'mis-turnos' : 'reserva');
   } else if (esPersonal(sesion.rol)) {
-    contexto.irA('agenda');
+    // Con una contraseña temporal, primero hay que cambiarla (C-41).
+    contexto.irA(debeCambiarContrasena(sesion) ? 'cambiar-contrasena' : 'agenda');
   }
 }
 
@@ -253,6 +261,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
 /** Cuenta del paciente (`#/mi-cuenta`): ingresar o crear la cuenta. Fuera del menú. */
 export const paginaMiCuenta: Pagina = {
   ruta: 'mi-cuenta',
+  fondoSuave: true,
   titulo: 'Mi cuenta',
   render: dibujar,
 };

@@ -1,0 +1,64 @@
+/* Estados vacíos y de carga (C-39, etapa B; mockups aprobados). Solo --ds-*. */
+.estado-vacio {
+  display: grid;
+  justify-items: center;
+  gap: var(--ds-espacio-1);
+  padding: var(--ds-espacio-4) var(--ds-espacio-2);
+  text-align: center;
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) dashed var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio-lg);
+}
+
+.estado-vacio svg {
+  width: 8.5rem;
+  height: auto;
+}
+
+.estado-vacio.chico {
+  padding: var(--ds-espacio-3) var(--ds-espacio-2);
+}
+
+.estado-vacio.chico svg {
+  width: 5rem;
+}
+
+.estado-vacio-titulo {
+  margin: 0;
+  font-size: var(--ds-texto-lg);
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.estado-vacio-texto {
+  max-width: 24rem;
+  margin: 0;
+  color: var(--ds-texto-suave);
+}
+
+.cargando {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  color: var(--ds-texto-suave);
+}
+
+.rueda {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--ds-acento-100);
+  border-top-color: var(--ds-acento-500);
+  border-radius: 50%;
+  animation: girar calc(var(--ds-duracion) * 4.5) linear infinite;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rueda {
+    animation: none;
+  }
+}

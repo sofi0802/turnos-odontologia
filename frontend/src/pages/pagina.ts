@@ -1,5 +1,6 @@
 import type { ClienteApi } from '../shared/api/cliente.ts';
 import type { Sesion } from '../shared/sesion/sesion.ts';
+import type { NombreIcono } from '../shared/ui/iconos.ts';
 
 /** Lo que la aplicación le da a una página al dibujarla. */
 export interface ContextoPagina {
@@ -10,8 +11,8 @@ export interface ContextoPagina {
   readonly sesionLista: Promise<Sesion>;
   /** Aviso que dejó otra pantalla para esta (por ejemplo, "sesión terminada"). */
   readonly aviso: string | null;
-  /** Muestra otra página por su ruta. */
-  irA(ruta: string): void;
+  /** Muestra otra página por su ruta, con un aviso opcional para esa página (C-41). */
+  irA(ruta: string, aviso?: string): void;
   /** Lleva a Mi cuenta (`#/mi-cuenta`), el único ingreso de pacientes y personal, con un aviso opcional. */
   irAMiCuenta(aviso?: string): void;
 }
@@ -30,11 +31,12 @@ export interface Pagina {
   readonly acceso?: Acceso;
   /** Sin `menu`, la página no figura en el menú (por ejemplo, Mi cuenta). */
   readonly menu?: GrupoMenu;
-  /**
-   * Texto que el encabezado usa, sin sesión, en lugar de "Ingresar" (la portada pide "Acceso personal", C-37).
-   * Con este texto el encabezado queda sin menú: la portada trae sus propios botones.
-   */
-  readonly textoIngreso?: string;
+  /** La página se ve sobre el fondo suave de las pantallas del paciente, con tarjetas blancas (C-39, etapa C). */
+  readonly fondoSuave?: boolean;
+  /** Ícono de la opción en la barra lateral (C-39). */
+  readonly icono?: NombreIcono;
+  /** `'cuenta'`: la opción va en la barra lateral separada de las páginas, como "Mi contraseña" (C-41). */
+  readonly seccionMenu?: 'cuenta';
   render(contenedor: HTMLElement, contexto: ContextoPagina): void;
 }
 

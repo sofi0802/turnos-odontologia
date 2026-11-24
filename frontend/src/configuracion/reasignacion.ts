@@ -1,5 +1,6 @@
 import { aIsoConZona, fechaDeInstante, formatearHora } from '../shared/fecha/zona.ts';
 import { cambiarOpciones, crearCampo, crearEntrada, crearSelector } from '../shared/ui/campos.ts';
+import { usarSelectorFecha } from '../shared/ui/selector-fecha.ts';
 import { mensajeDeError } from '../shared/ui/mensajes.ts';
 import type { ClienteApi } from '../shared/api/cliente.ts';
 import {
@@ -95,6 +96,7 @@ export function abrirReasignacion(opciones: OpcionesReasignacion): void {
   nuevo.contenedor.append(ayudaProfesional);
 
   const fecha = crearCampo('Otra fecha (opcional)', crearEntrada('date', 'inicio'));
+  usarSelectorFecha(fecha, { opcional: true });
   const hora = crearSelectorHora('horaInicio', 'Otra hora (opcional)', {
     opcional: true,
     ariaHora: 'Hora de inicio',

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuración · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <div class="app">
+  <header class="cabecera">
+    <button class="btn-sobre-azul menu-boton" type="button" aria-controls="menu-principal" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"/></svg>Menú</button>
+    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg?v=3" alt="Turnos odontología" /></a>
+    <div class="acciones-cabecera"><a class="usuario-enlace" href="#/cambiar-contrasena" title="Cambiar mi contraseña"><span class="avatar" aria-hidden="true">A</span><span class="usuario-nombre">admin</span></a><button class="btn-sobre-azul" type="button">Salir</button></div>
+  </header>
+  <div class="cuerpo">
+    <aside class="lateral" id="menu-principal">
+      <div class="cajon-cabecera"><span>Menú</span><button class="cerrar" type="button" aria-label="Cerrar el menú"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+      <nav aria-label="Principal"><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01"/></svg>Agenda</a><a href="#" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>Configuración</a></nav>
+      <nav class="lateral-cuenta" aria-label="Tu cuenta"><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="8" cy="15" r="4"/><path d="M10.8 12.2L20 3M16 7l3 3M14 9l2 2"/></svg>Mi contraseña</a></nav>
+    </aside>
+    <div class="velo" aria-hidden="true"></div>
+    <main class="contenido-app">
+      <div class="pagina pagina-config">
+        <h1>Usuarios: confirmaciones y errores</h1>
+        <div class="laminas">
+          <section class="lamina"><h2>Confirmar desactivar</h2>
+    <div class="dialogo" role="alertdialog" aria-labelledby="t-c" aria-modal="true">
+      <h2 id="t-c">¿Desactivar la cuenta recepcion?</h2>
+      <p>No va a poder ingresar y se cierran sus sesiones abiertas. Podés volver a activarla cuando quieras.</p>
+      <div class="dialogo-acciones"><button class="btn" type="button">Cancelar</button><button class="btn btn-peligro" type="button">Desactivar</button></div>
+    </div>
+          </section>
+          <section class="lamina"><h2>Confirmar restablecer</h2>
+    <div class="dialogo" role="alertdialog" aria-labelledby="t-c" aria-modal="true">
+      <h2 id="t-c">¿Restablecer la contraseña de bruno.prueba?</h2>
+      <p>Su contraseña actual deja de servir y se cierran sus sesiones abiertas. Vas a ver una contraseña temporal nueva.</p>
+      <div class="dialogo-acciones"><button class="btn" type="button">Cancelar</button><button class="btn btn-principal" type="button">Restablecer</button></div>
+    </div>
+          </section>
+          <section class="lamina"><h2>Después de restablecer</h2>
+    <div class="dialogo" role="dialog" aria-labelledby="t-temp" aria-modal="true">
+      <h2 id="t-temp">Contraseña restablecida</h2>
+      <dl class="detalle-lista"><dt>Usuario</dt><dd>bruno.prueba</dd></dl>
+      <div class="contrasena-caja"><code aria-label="Contraseña temporal">Hq7tRm4zkW9pXa</code><button class="btn btn-chico" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>Copiar</button></div>
+      <div class="aviso aviso-alerta" role="note" style="margin-top:var(--ds-espacio-2)"><span><strong>Esta contraseña no se vuelve a mostrar.</strong> Pasásela a la persona por un medio seguro.</span></div>
+      <p>Las sesiones abiertas de esta cuenta se cerraron. La persona va a tener que elegir una contraseña nueva la primera vez que ingrese.</p>
+      <div class="dialogo-acciones"><button class="btn btn-principal" type="button">Listo</button></div>
+    </div>
+          </section>
+          <section class="lamina"><h2>No se pudo cargar la lista</h2>
+    <div class="panel" style="padding:var(--ds-espacio-3)">
+      <div class="cabecera-seccion"><h2>Usuarios</h2></div>
+      <div class="aviso aviso-error" role="alert"><span>No pudimos cargar los usuarios. Revisá la conexión y probá de nuevo.</span></div>
+      <div class="acciones"><button class="btn" type="button">Reintentar</button></div>
+    </div>
+          </section>
+        </div>
+        <p class="nota-mockup" style="padding:0;margin-top:var(--ds-espacio-3)"><b>Mockup C-41.</b> Desactivar y restablecer piden confirmación porque cierran las sesiones de esa cuenta.</p>
+      </div>
+    </main>
+  </div>
+  <footer class="pie"><span data-brand-name>Turnos odontología</span></footer>
+  </div>
+
+<script>/* Como en la app: la pestaña elegida queda a la vista en la barra que se desplaza. */
+document.querySelectorAll(".pestanas-config").forEach((b) => { const e = b.querySelector("[aria-selected=true]"); if (e) b.scrollLeft = e.offsetLeft + e.offsetWidth - b.clientWidth + 16; });</script>
+</body>
+</html>

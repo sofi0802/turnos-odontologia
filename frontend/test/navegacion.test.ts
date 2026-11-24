@@ -44,7 +44,7 @@ function titulo(): string | null {
 }
 
 function enlace(texto: string): HTMLAnchorElement {
-  const encontrado = [...raiz.querySelectorAll<HTMLAnchorElement>('nav a')].find((a) => a.textContent === texto);
+  const encontrado = [...raiz.querySelectorAll<HTMLAnchorElement>('aside nav a')].find((a) => a.textContent === texto);
   if (encontrado === undefined) {
     throw new Error(`No existe el enlace ${texto}`);
   }
@@ -52,14 +52,20 @@ function enlace(texto: string): HTMLAnchorElement {
 }
 
 /** Enlaces del menú que se ven: los del otro grupo quedan ocultos (design D3 de C-12). */
+/**
+ * Enlaces visibles del menú principal de la barra lateral. Desde C-41 el personal también tiene "Mi contraseña" en
+ * una navegación aparte ("Tu cuenta"), que prueba `cuentas-personal.test.ts`.
+ */
 function enlacesVisibles(): string[] {
-  return [...raiz.querySelectorAll<HTMLAnchorElement>('nav li:not([hidden]) a')].map((a) => a.textContent ?? '');
+  return [...raiz.querySelectorAll<HTMLAnchorElement>('aside nav[aria-label="Principal"] li:not([hidden]) a')].map(
+    (a) => a.textContent ?? '',
+  );
 }
 
 /** Enlace "Ingresar" del encabezado, fuera del menú. */
 function enlaceIngresar(): HTMLAnchorElement | undefined {
   return [...raiz.querySelectorAll<HTMLAnchorElement>('header a')].find(
-    (a) => a.textContent === 'Ingresar' && a.closest('nav') === null,
+    (a) => a.textContent === 'Ingresar' && a.closest('aside') === null,
   );
 }
 
@@ -68,7 +74,7 @@ function enlaceDelContenido(texto: string): HTMLAnchorElement | undefined {
 }
 
 function enlacesActivos(): string[] {
-  return [...raiz.querySelectorAll('nav a[aria-current="page"]')].map((a) => a.textContent ?? '');
+  return [...raiz.querySelectorAll('aside nav a[aria-current="page"]')].map((a) => a.textContent ?? '');
 }
 
 function botonMenu(): HTMLButtonElement {
@@ -191,35 +197,79 @@ describe('Navegación sin recargar', () => {
   });
 });
 
+/** Espera a que el encabezado muestre al usuario de la sesión (la barra lateral aparece con él). */
+async function esperarUsuario(): Promise<void> {
+  await vi.waitFor(() => expect(raiz.querySelector<HTMLElement>('.usuario-nombre')?.hidden).toBe(false));
+}
+
+function barraLateral(): HTMLElement {
+  const aside = raiz.querySelector<HTMLElement>('aside');
+  if (aside === null) {
+    throw new Error('No existe la barra lateral');
+  }
+  return aside;
+}
+
 describe('Menú adaptable a pantallas chicas', () => {
   it('Abrir el menú en el celular', async () => {
-    abrirEn('#/reserva', sinSesion());
+    abrirEn('#/reserva', conPaciente());
     await esperarCargaDeReserva();
+    await esperarUsuario();
     expect(botonMenu().getAttribute('aria-expanded')).toBe('false');
     expect(menu().classList.contains('abierto')).toBe(false);
 
     botonMenu().click();
 
     expect(menu().classList.contains('abierto')).toBe(true);
-    expect(enlacesVisibles()).toEqual(['Reservar turno']);
+    expect(enlacesVisibles()).toEqual(['Reservar turno', 'Mis turnos']);
     expect(botonMenu().getAttribute('aria-expanded')).toBe('true');
   });
 
   it('Elegir una página en el celular', async () => {
-    abrirEn('#/mi-cuenta', sinSesion());
-    await esperarTitulo('Mi cuenta');
+    abrirEn('#/reserva', conPaciente());
+    await esperarCargaDeReserva();
+    await esperarUsuario();
     botonMenu().click();
 
-    await elegir('Reservar turno');
+    await elegir('Mis turnos');
 
-    expect(titulo()).toBe('Reservar turno');
+    await esperarTitulo('Mis turnos');
     expect(menu().classList.contains('abierto')).toBe(false);
     expect(botonMenu().getAttribute('aria-expanded')).toBe('false');
   });
 
+  it('Cerrar el cajón con Escape o tocando fuera', async () => {
+    abrirEn('#/reserva', conPaciente());
+    await esperarCargaDeReserva();
+    await esperarUsuario();
+    botonMenu().click();
+    expect(menu().classList.contains('abierto')).toBe(true);
+
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+
+    expect(menu().classList.contains('abierto')).toBe(false);
+    expect(botonMenu().getAttribute('aria-expanded')).toBe('false');
+    expect(document.activeElement).toBe(botonMenu());
+
+    botonMenu().click();
+    expect(menu().classList.contains('abierto')).toBe(true);
+    raiz.querySelector<HTMLElement>('.velo')?.click();
+    expect(menu().classList.contains('abierto')).toBe(false);
+  });
+
+  it('el foco pasa al cajón al abrirlo', async () => {
+    abrirEn('#/reserva', conPaciente());
+    await esperarCargaDeReserva();
+    await esperarUsuario();
+
+    botonMenu().click();
+
+    expect(barraLateral().contains(document.activeElement)).toBe(true);
+  });
+
   it('Menú siempre visible en la computadora', async () => {
-    // jsdom no evalúa media queries: acá se comprueba que, con una sesión del personal,
-    // sus dos enlaces están en el menú sin tocar el botón. Lo visual se verifica con capturas.
+    // jsdom no evalúa media queries: acá se comprueba que, con una sesión del personal, la barra lateral
+    // está en el documento con sus dos enlaces sin tocar el botón. Lo visual se verifica con capturas.
     abrirEn('#/agenda');
     await esperarTitulo('Agenda');
     expect(enlacesVisibles()).toEqual(['Agenda', 'Configuración']);
@@ -232,7 +282,9 @@ describe('Menú según la sesión', () => {
     abrirEn('#/reserva', sinSesion());
     await esperarCargaDeReserva();
 
-    expect(enlacesVisibles()).toEqual(['Reservar turno']);
+    expect(barraLateral().hidden).toBe(true);
+    const reservar = [...raiz.querySelectorAll<HTMLAnchorElement>('header a')].find((a) => a.textContent === 'Reservar turno');
+    expect(reservar?.getAttribute('href')).toBe('#/reserva');
     const ingresar = enlaceIngresar();
     expect(ingresar?.hidden).toBe(false);
     expect(ingresar?.getAttribute('href')).toBe('#/mi-cuenta');
@@ -243,13 +295,15 @@ describe('Menú según la sesión', () => {
     await esperarTitulo('Agenda');
 
     expect(enlacesVisibles()).toEqual(['Agenda', 'Configuración']);
+    expect(enlacesActivos()).toEqual(['Agenda']);
+    expect(barraLateral().hidden).toBe(false);
   });
 
   it('El menú cambia al ingresar como paciente', async () => {
     document.cookie = 'XSRF-TOKEN=token-ficticio-123; path=/';
     const servidor = abrirEn('#/mi-cuenta', sinSesion());
     await esperarTitulo('Mi cuenta');
-    expect(enlacesVisibles()).toEqual(['Reservar turno']);
+    expect(barraLateral().hidden).toBe(true);
     servidor.responder('POST /public/login', () => json(200, SESION_PACIENTE));
     servidor.responder('GET /public/sesion', () => json(200, SESION_PACIENTE));
     servidor.responder('GET /paciente/turnos', () => json(200, []));
@@ -259,6 +313,7 @@ describe('Menú según la sesión', () => {
     raiz.querySelector<HTMLFormElement>('form[aria-label="Ingresar"]')?.requestSubmit();
 
     await esperarTitulo('Mis turnos');
+    expect(barraLateral().hidden).toBe(false);
     expect(enlacesVisibles()).toEqual(['Reservar turno', 'Mis turnos']);
     const usuario = raiz.querySelector<HTMLElement>('.usuario-nombre');
     expect(usuario?.hidden).toBe(false);

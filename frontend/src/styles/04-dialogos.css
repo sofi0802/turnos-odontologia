@@ -22,9 +22,16 @@
   color: var(--ds-texto-suave);
 }
 
+/* Botones uniformes (C-39): "descartar" y después "principal" en el documento; en el celular se apilan con el
+   principal arriba, y desde 768 px van en fila, el principal a la derecha. */
 .dialogo-acciones {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: column-reverse;
   gap: var(--ds-espacio-1);
+  margin-top: var(--ds-espacio-1);
+}
+
+.dialogo-acciones .btn {
+  width: 100%;
 }
 

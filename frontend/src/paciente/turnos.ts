@@ -12,6 +12,26 @@ export const ESTADOS: Readonly<Record<string, { readonly texto: string; readonly
   AUSENTE: { texto: 'Ausente', clase: 'e-ausente' },
 };
 
+export interface EstadoVisible {
+  readonly texto: string;
+  readonly clase: string;
+  /** El turno es activo, ya terminó y nadie registró la asistencia (C-42). */
+  readonly sinRegistrar: boolean;
+}
+
+/**
+ * C-42: estado que se muestra en Mis turnos. Un turno activo cuyo fin ya pasó se muestra "Sin registrar":
+ * es solo lo que se ve, el estado real del turno no cambia. Se compara con el fin y no con el inicio para que
+ * un turno en curso conserve su estado.
+ */
+export function estadoVisible(turno: TurnoPaciente, ahora: Date): EstadoVisible {
+  if (ESTADOS_ACTIVOS.has(turno.estado) && Date.parse(turno.fin) <= ahora.getTime()) {
+    return { texto: 'Sin registrar', clase: 'e-sin-registrar', sinRegistrar: true };
+  }
+  const datos = ESTADOS[turno.estado];
+  return { texto: datos?.texto ?? turno.estado, clase: datos?.clase ?? '', sinRegistrar: false };
+}
+
 export async function listarMisTurnos(api: ClienteApi): Promise<TurnoPaciente[]> {
   const cuerpo = await api.obtener<unknown>('/paciente/turnos');
   if (!Array.isArray(cuerpo)) {

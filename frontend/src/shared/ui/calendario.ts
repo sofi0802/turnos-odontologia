@@ -6,12 +6,18 @@ export interface Calendario {
   elegido(): Fecha | null;
   /** Quita el día elegido y vuelve al mes de hoy. */
   limpiar(): void;
+  /** Marca un día (o ninguno) y muestra su mes, sin avisar a `alElegir`. */
+  fijar(fecha: Fecha | null): void;
   /** Habilita o deshabilita la elección; `ayuda` reemplaza el texto bajo el calendario. */
   habilitar(si: boolean, ayuda?: string): void;
 }
 
 export interface OpcionesCalendario {
   readonly leyenda: string;
+  /** Primer día elegible; por defecto hoy, `null` si se puede elegir cualquier día. */
+  readonly minimo?: Fecha | null;
+  /** Sin el texto de ayuda bajo el calendario (cuando va dentro de un selector de fecha). */
+  readonly sinAyuda?: boolean;
   alElegir(fecha: Fecha): void;
 }
 
@@ -41,7 +47,8 @@ let contador = 0;
 export function crearCalendario(opciones: OpcionesCalendario): Calendario {
   contador += 1;
   const idMes = `calendario-mes-${contador}`;
-  let mes = primeroDelMes(hoy());
+  const minimoVigente = (): Fecha | null => (opciones.minimo === undefined ? hoy() : opciones.minimo);
+  let mes = primeroDelMes(minimoVigente() ?? hoy());
   let elegido: Fecha | null = null;
   let habilitado = true;
 
@@ -90,12 +97,16 @@ export function crearCalendario(opciones: OpcionesCalendario): Calendario {
   const ayuda = document.createElement('p');
   ayuda.className = 'ayuda cal-ayuda';
   ayuda.textContent = AYUDA_CALENDARIO;
-  contenedor.append(leyenda, marco, ayuda);
+  contenedor.append(leyenda, marco);
+  if (opciones.sinAyuda !== true) {
+    contenedor.append(ayuda);
+  }
 
   function dibujar(): void {
     const deHoy = hoy();
     titulo.textContent = MES.format(new Date(aIsoConZona(mes, '12:00')));
-    anterior.disabled = !habilitado || mes <= primeroDelMes(deHoy);
+    const minimo = minimoVigente();
+    anterior.disabled = !habilitado || (minimo !== null && mes <= primeroDelMes(minimo));
     siguiente.disabled = !habilitado;
     const finDelMes = mesSiguiente(mes);
     const botones: HTMLButtonElement[] = [];
@@ -115,7 +126,7 @@ export function crearCalendario(opciones: OpcionesCalendario): Calendario {
         boton.dataset['fecha'] = fecha;
         boton.setAttribute('aria-label', etiquetaDelDia(fecha, esHoy));
         boton.setAttribute('aria-pressed', String(fecha === elegido));
-        boton.disabled = !habilitado || fecha < deHoy;
+        boton.disabled = !habilitado || (minimo !== null && fecha < minimo);
         const esta = fecha;
         boton.addEventListener('click', () => {
           elegido = esta;
@@ -146,7 +157,12 @@ export function crearCalendario(opciones: OpcionesCalendario): Calendario {
     elegido: () => elegido,
     limpiar() {
       elegido = null;
-      mes = primeroDelMes(hoy());
+      mes = primeroDelMes(minimoVigente() ?? hoy());
+      dibujar();
+    },
+    fijar(fecha) {
+      elegido = fecha;
+      mes = primeroDelMes(fecha ?? minimoVigente() ?? hoy());
       dibujar();
     },
     habilitar(si, texto) {

@@ -36,7 +36,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `backend/.../notificaciones/` | Juan Cruz | V7 |
 | `backend/.../clinica/` | Emanuel | V8 |
 | `frontend/` | Enzo | — |
-| **Ajustes del MVP (C-33 a C-40)** | | |
+| **Ajustes del MVP (C-33 a C-42)** | | |
 | `frontend/` agenda: reprogramación (C-33) | Juan Cruz (avisa a Enzo) | — |
 | `frontend/` página Configuración (C-34) | Emanuel (avisa a Enzo) | — |
 | `backend/.../agenda/api` y `frontend/` agenda propia del odontólogo (C-35) | Sofia (avisa a Juan Sebastián y a Enzo) | — |
@@ -45,6 +45,8 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `frontend/` explorador de prestaciones en la reserva (C-38) | Juan Cruz (avisa a Enzo) | — |
 | `frontend/` barra lateral, colores y estilo uniforme (C-39) | Juan Cruz (avisa a Enzo) | — |
 | `frontend/` agenda: nuevo turno guiado por prestación (C-40) | Enzo (si la disponibilidad necesita filtrar por sillón, avisa a Juan Sebastián) | — |
+| `backend/.../usuarios/`, `shared/security/` y `frontend/` pestaña Usuarios: cuentas del personal (C-41) | Enzo (avisa a Juan Sebastián, dueño de `usuarios/` y `shared/security/`) | V21 |
+| `frontend/` Mis turnos: turnos sin registrar (C-42) | Sofia (avisa a Enzo) | — |
 | **Post-MVP** | | |
 | `backend/.../agenda/` lista de espera, `configuracion/` política de cancelación | Sofia (C-16 avisa a Emanuel) | V9, V10 |
 | `backend/.../notificaciones/` consentimiento | Juan Cruz | V11 |
@@ -84,6 +86,10 @@ C-01 crear-turno-sin-solapamientos  [Sofia · OPSX]      ← tarea 1 = scaffoldi
   │     C-12 + ingreso-unico-mi-cuenta ── C-37 frontend-portada-y-acceso [Juan Cruz]
   │     C-12 + C-37 ──────── C-38 frontend-reserva-explorador-prestaciones [Juan Cruz]
   │     C-33 a C-38 ──────── C-39 frontend-uniformidad-visual [Juan Cruz]
+  │
+  │  Ajustes del MVP, cuentas del personal (2026-11-24: la matriz RBAC lo promete y ningún change lo hacía)
+  │     C-05 + C-34 + C-35 ── C-41 cuentas-del-personal [Enzo]   ← avisa a Juan Sebastián (usuarios/ y security/)
+  │     C-12 + C-39 ──────── C-42 frontend-turnos-sin-registrar [Sofia]   ← detectado al revisar C-39
   │
 C-02 frontend-base-ts  [Enzo]                            ← independiente: carpeta frontend/
   │
@@ -167,7 +173,16 @@ GATE 5d: C-33 ✓ + C-35 ✓ + C-36 ✓ (2026-11-23)                ← en paral
   (rehace el formulario "Nuevo turno" que tocaron C-35 y C-36: sus tests tienen que seguir pasando.
    Va antes de la etapa D de C-39, que reestiliza las pantallas del personal: coordinar el orden con Juan Cruz)
 
-GATE 6: changes de la entrega ✓ (incluye C-33 a C-40)
+GATE 5e: C-05 ✓ + C-34 archivado ✓ + C-35 ✓ (2026-11-24)        ← en paralelo con C-39
+  → C-41 cuentas-del-personal                 [Agente C · Enzo]
+  (CRÍTICO: la líder aprueba proposal, specs, design y tasks antes del apply. Suma una pestaña a Configuración,
+   que la etapa D de C-39 reestiliza: coordinar el orden de los PR con Juan Cruz)
+
+GATE 5f: C-12 ✓ + etapa C de C-39 ✓ (2026-11-24)
+  → C-42 frontend-turnos-sin-registrar      [Agente A · Sofia]
+  (Mis turnos del paciente: mockups aprobados por la líder antes del apply)
+
+GATE 6: changes de la entrega ✓ (incluye C-33 a C-42)
   → C-14 entrega-readme-y-evidencia          [Agente A · Sofia]
 
 ──────────── POST-MVP ────────────
@@ -214,7 +229,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 | Bloque | Changes | Origen |
 |---|---|---|
 | **MVP v1.0** (fases 1 a 6) | C-01 a C-14 | Sección D.3 del informe, lista "imprescindible" |
-| **Ajustes del MVP** (fase 5b) | C-33 a C-40 | Prueba y revisión de la aplicación del 2026-11-23 |
+| **Ajustes del MVP** (fase 5b) | C-33 a C-42 | Prueba y revisión de la aplicación del 2026-11-23 (C-41 y C-42: 2026-11-24) |
 | **Post-MVP v1.x** (fase 7) | C-15 a C-17 | Sección D.3, lista "diferenciador" |
 | **Post-MVP: etapas posteriores** (fases 8 a 10) | C-18 a C-32 | Sección D.3, lista "etapas posteriores" |
 
@@ -245,11 +260,11 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 
 | Integrante | MVP | Post-MVP (sugerido, por afinidad con su módulo) |
 |---|---|---|
-| **Sofia Indovino** (líder) | **C-01** (OPSX), C-06, C-35, C-14 + revisión de todos los PR | C-15, C-16, C-29 |
+| **Sofia Indovino** (líder) | **C-01** (OPSX), C-06, C-35, C-42, C-14 + revisión de todos los PR | C-15, C-16, C-29 |
 | **Juan Cruz** | C-03, C-08, C-11, C-33, C-37, C-38, C-39 | C-17, C-30, C-31 |
 | **Emanuel** | C-04, C-07, C-13, C-12, C-34 | C-25, C-26, C-27, C-28 |
 | **Juan Sebastián** | C-05, C-10, C-36 | C-18, C-19, C-20, C-21 |
-| **Enzo** | C-02, C-09, C-40 | C-22, C-23, C-24, C-32 (backend y pantallas de administración) |
+| **Enzo** | C-02, C-09, C-40, C-41 | C-22, C-23, C-24, C-32 (backend y pantallas de administración) |
 
 ---
 
@@ -332,6 +347,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 
 ### [C-05] `auth-sesion-roles`
 - **Estado**: `[x]` completo (2026-11-21, PR #14). Specs: `openspec/specs/seguridad-autenticacion/`, `seguridad-autorizacion/`, `cuentas-pacientes/`; change archivado en `openspec/changes/archive/2026-11-21-auth-sesion-roles/`. Evidencia: `docs/evidencia/etapa-c05-auth.txt`
+- **Fix (2026-11-24)**: `errores-rutas-inexistentes`. Una ruta inexistente responde `404 RECURSO_INEXISTENTE` y un error no controlado `500 ERROR_INTERNO`, en lugar de un `403` disfrazado. Propuesta en el PR #56 y apply en el PR #84 (mergeado antes que C-41); change archivado en `openspec/changes/archive/2026-11-24-errores-rutas-inexistentes/` y spec `seguridad-autorizacion` actualizado
 - **Responsable**: Juan Sebastián
 - **Scope**:
   - Spring Security con **sesión y cookie** `HttpOnly`/`SameSite=Lax`, CSRF habilitado (DD-10). Contraseñas con BCrypt.
@@ -511,7 +527,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `openspec/changes/frontend-agenda-personal/` (reprogramación en la agenda)
 
 ### [C-34] `frontend-configuracion-consultorio`
-- **Estado**: `[x]` completo (2026-11-23, PR #60; el archive va en un PR aparte). La página Configuración tiene siete pestañas con permisos por rol. Incluye los ajustes de la segunda prueba: sillón habitual exclusivo (RN-RO-09), alta completa, franjas para varios días, horas de 5 en 5, "Todos los profesionales" y reasignación desde bloqueos (RN-AG-19). Mockups: revisión 1 aprobada por la líder (PR #51) y revisión 2 aprobada por Emanuel. Tests: 367 del frontend, 477 unitarios y 487 de integración del backend.
+- **Estado**: `[x]` completo (2026-11-23, PR #60 y PR #70). Specs: `openspec/specs/frontend-configuracion-consultorio/` (nuevo), `catalogo-consultorio/`, `disponibilidad-profesional/` y `frontend-navegacion/` (actualizados); change archivado en `openspec/changes/archive/2026-11-23-frontend-configuracion-consultorio/`. Incluye RN-RO-09 (sillón habitual exclusivo) y RN-AG-19 (reasignar turnos afectados por un bloqueo).
 - **Responsable**: Emanuel
 - **Scope**:
   - Completar la página "Configuración" (hoy solo muestra el título) sobre los endpoints que ya existen de C-04 y C-07: profesionales, sillones y prestaciones (alta, edición, activar y desactivar), especialidades por profesional, sillón habitual, margen entre turnos, horarios de trabajo, ausencias y bloqueos.
@@ -603,7 +619,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/components.html` (secciones "Reserva online" y "Formularios y avisos")
 
 ### [C-39] `frontend-uniformidad-visual`
-- **Estado**: `[ ]` en curso, en cuatro etapas, cada una con su PR: **A tokens y CSS modular (hecha, PR #74, 2026-11-23; mergeada, falta la renovación de la aprobación del design system, Revision 2)**, **B barra lateral y componentes (mockups creados el 2026-11-23, falta su aprobación)**, C pantallas del paciente, D pantallas del personal. Proposal, specs, design y tasks en `openspec/changes/frontend-uniformidad-visual/`
+- **Estado**: `[ ]` en curso, en cuatro etapas, cada una con su PR: **A tokens y CSS modular (hecha, PR #74, 2026-11-23; mergeada, falta la renovación de la aprobación del design system, Revision 2)**, **B barra lateral y componentes (hecha, PR #77, 2026-11-23; 471 tests, mockups aprobados)**, C pantallas del paciente (hecha en la rama `change/C-39-frontend-uniformidad-visual`, 2026-11-24; 474 tests, mockups aprobados; falta el PR), D pantallas del personal (hecha en la rama `change/C-39-frontend-uniformidad-visual`, 2026-11-24; 484 tests, mockups aprobados; falta el PR; después de ella queda el archive). Proposal, specs, design y tasks en `openspec/changes/frontend-uniformidad-visual/`
 - **Responsable**: Juan Cruz (avisa a Enzo)
 - **Scope**:
   - **Barra lateral desplegable** con los botones del menú ("Reservar turno", "Mis turnos", "Agenda", "Configuración"), que muestra solo las opciones del rol que ingresó. En el celular es un cajón con un botón de menú. Sin sesión se mantiene un encabezado simple con "Acceso personal" arriba a la derecha.
@@ -644,6 +660,43 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `openspec/specs/frontend-agenda-personal/spec.md`, `openspec/specs/disponibilidad-online/spec.md`
   - `openspec/changes/frontend-reprogramacion-agenda/`, `openspec/changes/buscador-pacientes/` y `openspec/changes/agenda-propia-odontologo/` (lo que se reusa o ya cambió en la agenda)
 
+### [C-41] `cuentas-del-personal`
+- **Estado**: `[x]` completo (2026-11-24; propuesta y mockups aprobados en el PR #81, apply en un PR aparte). Change `openspec/changes/cuentas-del-personal/`. Evidencia: `docs/evidencia/c41-backend.txt` (578 unitarios y 527 de integración), 512 tests del frontend y verificación visual en `mockups/verify/`. Migración V21. El PR del apply incluye el fix `fix/calendario-utf8` (el build del frontend fallaba en `master`) y ajusta un test de odontograma (avisar a Emanuel)
+- **Responsable**: Enzo (avisa a Juan Sebastián, dueño de `usuarios/` y `shared/security/`)
+- **Scope**:
+  - Hoy solo existe el admin inicial del `.env` (C-05): no hay forma de dar acceso a un odontólogo ni a una recepcionista sin tocar la base. La matriz RBAC de `03_actores_y_roles.md` ya dice que el `ADMIN` hace el CRUD de los usuarios del personal.
+  - El `ADMIN` crea cuentas `ADMIN`, `RECEPCIONISTA` y `ODONTOLOGO`. La de `ODONTOLOGO` queda vinculada a un profesional activo que todavía no tenga cuenta; un `ADMIN` puede vincularse a un profesional si el dueño también atiende.
+  - **Contraseña temporal** (decidido por Enzo el 2026-11-24): la genera el servidor y se muestra una sola vez al crear la cuenta o al restablecerla. Con contraseña temporal, la sesión solo puede cambiar su contraseña, consultar la sesión y salir; el resto de `/api/v1/**` se rechaza con un código estable hasta que la cambie. El servidor lo impone, no solo la pantalla.
+  - El `ADMIN` desactiva y reactiva cuentas (no se borran) y restablece contraseñas. Al desactivar una cuenta o restablecer su contraseña se cierran sus sesiones abiertas. El `ADMIN` no puede desactivarse a sí mismo ni dejar el consultorio sin ningún `ADMIN` activo.
+  - Cualquier usuario del personal puede cambiar su propia contraseña con la actual.
+  - Frontend: pestaña "Usuarios" en Configuración (solo `ADMIN`), acceso "Dar acceso" en el detalle del profesional sin cuenta y pantalla de cambio obligatorio de contraseña. Cambio visual: mockups aprobados por la líder antes del apply.
+  - **Migración V21**: la marca de contraseña temporal en `usuario`.
+  - Ninguna contraseña ni hash en logs ni en respuestas, salvo la temporal en la respuesta que la crea.
+  - Tests: un escenario por cada requisito, por rol (solo `ADMIN`), vínculo inválido con el profesional, último `ADMIN`, sesión con contraseña temporal y sesiones cerradas al desactivar; los de C-05, C-34 y C-35 siguen pasando.
+- **Dependencias**: `C-05, C-34, C-35`
+- **Governance**: CRÍTICO (autenticación y cuentas)
+- **Leer antes**:
+  - `knowledge-base/03_actores_y_roles.md` (matriz RBAC, usuarios del personal)
+  - `knowledge-base/09_decisiones_y_supuestos.md` §DD-10
+  - `knowledge-base/08_arquitectura_propuesta.md` §Seguridad
+  - `openspec/specs/seguridad-autenticacion/spec.md`, `seguridad-autorizacion/spec.md` y `frontend-configuracion-consultorio/spec.md`
+
+
+### [C-42] `frontend-turnos-sin-registrar`
+- **Estado**: `[x]` implementado (2026-11-24, PR pendiente de merge; mockups revisión 2 aprobados por la líder). Change `openspec/changes/frontend-turnos-sin-registrar/`. Evidencia: 495 tests y verificación contra el backend de desarrollo en `mockups/verify/`. Sin migración ni cambios de backend
+- **Responsable**: Sofia Indovino
+- **Scope**:
+  - En "Mis turnos" del paciente, un turno `RESERVADO` o `CONFIRMADO` cuyo horario ya terminó se muestra como **"Sin registrar"**, con el texto "El consultorio todavía no registró la asistencia.". Hoy queda como "Reservado" para siempre, porque nadie registra la asistencia.
+  - "Sin registrar" es solo una etiqueta del frontend, calculada con el fin del turno: no es un estado nuevo, no cambia la API ni la base, y no libera ningún horario. La agenda del personal sigue mostrando el estado real (decisiones de la líder, 2026-11-23). Se llamaba "Vencido" en la primera versión.
+  - Fuera de alcance: un estado `VENCIDO` en el backend y el paso automático a `AUSENTE` (contradice RN-AG-17). El registro de la asistencia por el personal es C-43.
+  - Cambio visual: mockups aprobados por la líder antes del apply.
+  - Tests: turno pasado sin registrar, turno en curso y turnos ya registrados; los de C-12 siguen pasando.
+- **Dependencias**: `C-12`, etapa C de `C-39`
+- **Governance**: MEDIO (lo que ve el paciente sobre sus turnos)
+- **Leer antes**:
+  - `knowledge-base/05_reglas_de_negocio.md` §Dominio: Agenda (RN-AG-17)
+  - `openspec/specs/frontend-turnos-paciente/spec.md`
+  - `openspec/changes/frontend-uniformidad-visual/` (etapa C: pantallas del paciente)
 ---
 
 ## FASE 6: Entrega
@@ -655,7 +708,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `README.md` reproducible: requisitos (Java 21, opcional Docker o PostgreSQL), cómo correr `./gradlew test` (tests de dominio sin base) y los tests de integración.
   - Verificación final: suite en verde, ningún secreto en el repo, `.env.example` completo.
   - Evidencias: informe de Discovery en PDF, estado del orquestador, consulta a Engram para el video.
-- **Dependencias**: `C-01` (mínimo); los demás changes que se hayan completado, incluidos los ajustes C-33 a C-40
+- **Dependencias**: `C-01` (mínimo); los demás changes que se hayan completado, incluidos los ajustes C-33 a C-42
 - **Governance**: BAJO
 - **Leer antes**:
   - `knowledge-base/README.md`

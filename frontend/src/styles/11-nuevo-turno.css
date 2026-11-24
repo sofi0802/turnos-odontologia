@@ -176,3 +176,64 @@
 }
 /* Fin del nuevo turno guiado (C-40) */
 
+
+/* Selector de fecha (C-39): el calendario en un desplegable, en lugar del selector nativo del navegador. */
+.selector-fecha {
+  position: relative;
+}
+
+.fecha-nativa {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.selector-fecha-boton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-2);
+  font-weight: var(--ds-peso-normal);
+  color: var(--ds-texto);
+  text-align: left;
+  background: var(--ds-fondo);
+}
+
+.selector-fecha-boton[aria-invalid='true'] {
+  border-color: var(--ds-error);
+}
+
+.selector-fecha-texto.vacio {
+  color: var(--ds-texto-suave);
+}
+
+.selector-fecha-icono {
+  flex: none;
+  color: var(--ds-acento-500);
+}
+
+.selector-fecha-panel {
+  max-width: 22rem;
+  margin-top: var(--ds-espacio-1);
+  padding: var(--ds-espacio-2);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio);
+}
+
+.selector-fecha-panel[hidden] {
+  display: none;
+}
+
+.selector-fecha-calendario {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.selector-fecha-borrar {
+  margin-top: var(--ds-espacio-1);
+}

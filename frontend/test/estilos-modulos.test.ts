@@ -5,7 +5,7 @@ import { estilos, MODULOS_EN_DISCO, NOMBRES_DE_MODULOS, textoDeModulo, textoDeTo
 
 /** Una regla característica de cada módulo: si se pierde o cambia de módulo, el test avisa. */
 const REGLAS_POR_MODULO: Readonly<Record<string, string>> = {
-  '01-base.css': '.encabezado {',
+  '01-base.css': '.contenido {',
   '02-formularios.css': '.campo-error {',
   '03-agenda.css': '.agenda-lista',
   '04-dialogos.css': '.dialogo-acciones {',
@@ -17,6 +17,11 @@ const REGLAS_POR_MODULO: Readonly<Record<string, string>> = {
   '10-portada.css': '.hero {',
   '11-nuevo-turno.css': '/* Fin del nuevo turno guiado (C-40) */',
   '12-configuracion.css': '.lista-config > li {',
+  '13-layout.css': '.cabecera {',
+  '14-estados.css': '.btn-principal:hover:not(:disabled)',
+  '15-estados-vacios.css': '.estado-vacio {',
+  // C-41: cuentas del personal.
+  '16-cuentas.css': '.contrasena-caja {',
 };
 
 function importaciones(): string[] {
