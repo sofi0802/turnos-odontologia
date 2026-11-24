@@ -136,6 +136,33 @@ Cada regla tiene un código `RN-{DOMINIO}-{NN}`. Entre paréntesis va el código
   - No se incluyen en recordatorios, mensajes ni logs (RN-NO-01).
   - Solo los ven los roles de la matriz de `03_actores_y_roles.md`.
 
+## Dominio: Reportes (RN-RE) [2026-11-24, C-32, en revisión]
+
+- **RN-RE-01**: **quién los ve**. La pantalla de **Reportes** es para el `ADMIN` y la `RECEPCIONISTA`, y los dos ven todo el consultorio (PA-29).
+  - El `ODONTOLOGO` no la ve. Su agenda propia sigue siendo la de RN-AG-18.
+  - El `PACIENTE` recibe `403`, igual que en cualquier dato del consultorio.
+- **RN-RE-02**: **solo cifras agregadas**. Los reportes muestran cantidades, minutos y porcentajes por profesional, por sillón o del consultorio.
+  - No muestran nombres, DNI ni contactos de pacientes, ni datos de salud: ni prestaciones de un paciente, ni piezas, ni motivos (RN-CL-01, Ley 25.326).
+  - Los motivos de sobreturnos, extensiones, ausencias y licencias tampoco se muestran.
+- **RN-RE-03**: **período**. Cada reporte es de un período de fechas del consultorio (`America/Argentina/Buenos_Aires`), con el primer y el último día incluidos.
+  - Un turno cuenta en el período si su **inicio** cae dentro.
+  - El período tiene **como máximo 92 días**; uno más largo se rechaza con `422`. Por defecto, la semana en curso.
+  - Se puede filtrar por un profesional. Sin filtro, el reporte es de todo el consultorio.
+- **RN-RE-04**: **ocupación** (PA-31). Mide qué parte del horario de atención quedó tomada por turnos.
+  - **Minutos ocupados**: la suma de `fin − inicio` de los turnos **no cancelados** del período (`RESERVADO`, `CONFIRMADO`, `ATENDIDO` y `AUSENTE`), sobreturnos incluidos. El margen de limpieza no se cuenta.
+  - **Minutos de atención del profesional**: sus horarios de trabajo en los días del período (RN-AG-13), menos sus ausencias, licencias (RN-AG-16) y bloqueos de agenda (RN-AG-10).
+  - **Ocupación** = minutos ocupados / minutos de atención, en porcentaje entero, redondeado hacia arriba desde 0,5. Con sobreturnos puede superar el 100 %. Sin minutos de atención, se muestra "Sin horario" en lugar de un porcentaje.
+  - **Ocupación de un sillón**: minutos ocupados por los turnos de ese sillón sobre los minutos de atención de los profesionales que lo tienen como **sillón habitual** (RN-RO-09). Un sillón que no es habitual de nadie muestra sus minutos ocupados y "Sin horario".
+- **RN-RE-05**: **origen de los turnos** (PA-30, DD-16). Cada turno del período se cuenta como:
+  - **Online**: lo creó el paciente desde su cuenta. En la auditoría, la creación tiene un actor `paciente-online:<id>`.
+  - **Del consultorio**: lo creó el personal, incluidos los sobreturnos.
+  - Un turno nacido de una **reprogramación** (RN-AG-08) toma el origen de quien reprogramó.
+  - Un turno sin registro de creación en la auditoría se cuenta como **sin dato**.
+- **RN-RE-06**: **ausencias**.
+  - **De pacientes**: los turnos `AUSENTE` del período y la **tasa de ausentismo** = `AUSENTE` / (`ATENDIDO` + `AUSENTE`), en porcentaje entero. Los turnos que ya terminaron sin registro de asistencia ("Sin registrar") se informan aparte y no entran en la tasa.
+  - **De profesionales**: las ausencias y licencias (RN-AG-16) que se superponen con el período, por profesional y por tipo, con los días o las horas que caen dentro del período.
+- **RN-RE-07**: **cancelaciones**. Los turnos `CANCELADO` del período, separados por quién canceló, según el actor de la cancelación en la auditoría: **el paciente** (actor `paciente-online:<id>`) o **el consultorio** (cualquier otro). Los turnos cancelados por una **reprogramación** (en la auditoría, la acción `REPROGRAMAR` en lugar de `CANCELAR`; RN-AG-08) se informan aparte, porque el paciente no perdió el turno.
+
 ## Dominio: Excepciones globales
 
 - **RN-GL-01**: **solo datos ficticios** en el repositorio, los seeds, los tests, los ejemplos y las capturas.

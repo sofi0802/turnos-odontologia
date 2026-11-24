@@ -225,6 +225,20 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 - [ ] CA-8: la recepción ve los presupuestos sin pieza ni cara, y el paciente ve los suyos en "Mi cuenta".
 **Reglas relacionadas**: RN-PR-01 a RN-PR-07, RN-OS-04
 
+## Épica 8: Reportes (post-MVP)
+
+### US-210: Ver la ocupación, el origen, las ausencias y las cancelaciones [2026-11-24, C-32, en revisión]
+**Como** administrador o recepcionista **quiero** ver cifras del consultorio en un período **para** saber cuánto se usa la agenda, cuántos pacientes reservan solos y cuántos turnos se pierden.
+**Criterios de aceptación**:
+- [ ] CA-1: elijo un período de hasta 92 días (por defecto, la semana en curso) y, si quiero, un profesional.
+- [ ] CA-2: veo la ocupación en porcentaje por profesional y por sillón, con los minutos ocupados y los de atención; "Sin horario" cuando no hay minutos de atención.
+- [ ] CA-3: veo cuántos turnos fueron online, cuántos del consultorio y cuántos sin dato.
+- [ ] CA-4: veo los turnos ausentes y la tasa de ausentismo, los turnos sin registrar aparte, y las ausencias y licencias de los profesionales.
+- [ ] CA-5: veo las cancelaciones separadas en "por el paciente", "por el consultorio" y "por reprogramación".
+- [ ] CA-6: no aparece ningún nombre, DNI ni dato de salud de un paciente.
+- [ ] CA-7: el odontólogo no ve Reportes y el paciente recibe `403`.
+**Reglas relacionadas**: RN-RE-01 a RN-RE-07
+
 ## Backlog: v1.x y posteriores (fuera del MVP)
 
 > Cada fila se vincula con su change de `CHANGES.md`. Las reglas detalladas se escriben en esta KB **antes de empezar** el change, cuando el MVP esté completo.
@@ -244,4 +258,4 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 | US-208 | Consentimiento informado con firma electrónica | Posterior | C-27 | Informe, D.3; relevamiento: Bilog (Ley 25.506) |
 | US-204 | Asistente con IA, multisucursal, exportación HL7 FHIR | Posterior | C-28, C-29, C-31 | Informe, D.3 |
 | US-209 | Sincronización de la agenda del profesional con Google Calendar | Posterior | C-30 | Roadmap (Ajustar de la líder, 2026-11-21) |
-| US-210 | Reportes de ocupación, ausencias y cancelaciones | Posterior | C-32 | `01_vision_y_objetivos.md` §Métricas de éxito |
+| US-210 | Reportes de ocupación, ausencias y cancelaciones (detallada en la Épica 8 el 2026-11-24) | Posterior | C-32 | `01_vision_y_objetivos.md` §Métricas de éxito |

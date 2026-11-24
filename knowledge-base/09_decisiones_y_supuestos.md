@@ -120,6 +120,19 @@ Como el margen es configurable (con mínimo 10), se guarda la columna `fin_con_m
 **Trade-offs aceptados**: hay datos copiados en cada ítem. Para actualizar un presupuesto con precios nuevos se rechaza y se emite otro.
 **Impacto**: RN-PR-01 a RN-PR-07, US-047, dos filas de la matriz de 03 y las entidades `Arancel`, `CoberturaPlan`, `Presupuesto` y `PresupuestoItem` (migración V13).
 
+### DD-16: El origen y quién canceló salen de la auditoría [2026-11-24, C-32, en revisión]
+**Decisión**: C-32 deduce el origen de cada turno y quién lo canceló a partir de `turno_auditoria`: un actor `paciente-online:<id>` es el paciente desde su cuenta; cualquier otro actor es el personal (RN-RE-05, RN-RE-07). No se agrega una columna `origen` al turno.
+**Contexto**: la KB describía `origen`, `creado_por` y `cancelado_en` en `Turno` (04), pero ningún change los creó. La auditoría, en cambio, registra cada creación y cancelación con su actor desde C-06, y la reserva online usa un actor propio sin datos personales desde C-10.
+**Alternativas consideradas**:
+1. Una migración que agregue `turno.origen` y lo complete desde la auditoría para los turnos existentes.
+2. Pedirle al personal que indique el origen al cargar cada turno.
+**Justificación**:
+- La auditoría ya tiene el dato, para todos los turnos y sin migración.
+- No toca `agenda/` (de Sofia) ni pide un número de migración reservado.
+- Respeta el actor sin datos personales de la reserva online.
+**Trade-offs aceptados**: los reportes dependen del formato del actor online. Si un change futuro lo cambia, tiene que mantener un prefijo reconocible o actualizar RN-RE-05. Los turnos sin registro de creación se informan como "sin dato".
+**Impacto**: RN-RE-05, RN-RE-07, la corrección de `Turno` en 04 y la métrica de origen de 01.
+
 ## Supuestos inferidos
 
 ### ~~SU-07: Todos los profesionales pueden hacer todas las prestaciones~~ (refutado)
