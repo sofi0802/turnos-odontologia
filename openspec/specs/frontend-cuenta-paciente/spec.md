@@ -31,7 +31,7 @@ Si el login responde `401`, la página MUST mostrar "Email o contraseña incorre
 - **AND** el email sigue escrito y la contraseña queda vacía
 
 ### Requirement: Cuenta del personal en el ingreso del paciente
-Si el login desde `#/mi-cuenta` responde `200` con un rol del personal, la aplicación MUST mostrar la página "Agenda" en lugar de las páginas del paciente.
+`#/mi-cuenta` SHALL ser la única página de ingreso de la aplicación, para pacientes y personal, con el mismo formulario y los mismos textos para los dos. Si el login desde `#/mi-cuenta` responde `200` con un rol del personal, la aplicación MUST mostrar la página "Agenda" en lugar de las páginas del paciente.
 
 #### Scenario: Recepción ingresa desde la página del paciente
 - **GIVEN** la página `#/mi-cuenta` abierta sin sesión
