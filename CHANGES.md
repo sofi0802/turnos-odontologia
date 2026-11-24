@@ -36,7 +36,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `backend/.../notificaciones/` | Juan Cruz | V7 |
 | `backend/.../clinica/` | Emanuel | V8 |
 | `frontend/` | Enzo | — |
-| **Ajustes del MVP (C-33 a C-43)** | | |
+| **Ajustes del MVP (C-33 a C-44)** | | |
 | `frontend/` agenda: reprogramación (C-33) | Juan Cruz (avisa a Enzo) | — |
 | `frontend/` página Configuración (C-34) | Emanuel (avisa a Enzo) | — |
 | `backend/.../agenda/api` y `frontend/` agenda propia del odontólogo (C-35) | Sofia (avisa a Juan Sebastián y a Enzo) | — |
@@ -48,6 +48,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `backend/.../usuarios/`, `shared/security/` y `frontend/` pestaña Usuarios: cuentas del personal (C-41) | Enzo (avisa a Juan Sebastián, dueño de `usuarios/` y `shared/security/`) | V21 |
 | `frontend/` Mis turnos: turnos sin registrar (C-42) | Sofia (avisa a Enzo) | — |
 | `backend/.../agenda/` y `frontend/` agenda: llegada y ausencia del paciente (C-43) | Sofia (avisa a Emanuel por la ficha clínica y a Enzo) | V22 |
+| `frontend/` ficha clínica y odontograma (C-44) | Emanuel (avisa a Enzo) | — |
 | **Post-MVP** | | |
 | `backend/.../agenda/` lista de espera, `configuracion/` política de cancelación | Sofia (C-16 avisa a Emanuel) | V9, V10 |
 | `backend/.../notificaciones/` consentimiento | Juan Cruz | V11 |
@@ -92,6 +93,7 @@ C-01 crear-turno-sin-solapamientos  [Sofia · OPSX]      ← tarea 1 = scaffoldi
   │     C-05 + C-34 + C-35 ── C-41 cuentas-del-personal [Enzo]   ← avisa a Juan Sebastián (usuarios/ y security/)
   │     C-12 + C-39 ──────── C-42 frontend-turnos-sin-registrar [Sofia]   ← detectado al revisar C-39
   │     C-06 + C-13 + C-39 ─ C-43 registro-asistencia [Sofia]   ← antes: cambio de regla en la KB (RN-AG-17, RN-AG-20)
+  │     C-13 + C-36 + C-43 ─ C-44 frontend-ficha-clinica-odontograma [Emanuel]   ← C-13 hizo solo el backend
   │
 C-02 frontend-base-ts  [Enzo]                            ← independiente: carpeta frontend/
   │
@@ -188,7 +190,11 @@ GATE 5g: KB con RN-AG-17 y RN-AG-20 aprobada por la líder
   → C-43 registro-asistencia                [Agente A · Sofia]
   (ALTO: cambia una regla y permisos. Se propone y se revisa antes de escribir código; mockups de la agenda antes del apply)
 
-GATE 6: changes de la entrega ✓ (incluye C-33 a C-43)
+GATE 5h: C-13 ✓ + C-36 ✓ + C-43 archivado ✓ (2026-11-24)
+  → C-44 frontend-ficha-clinica-odontograma [Agente C · Emanuel]
+  (ALTO: datos de salud. Mockups aprobados por la líder antes del apply; avisa a Enzo, dueño de frontend/)
+
+GATE 6: changes de la entrega ✓ (incluye C-33 a C-44)
   → C-14 entrega-readme-y-evidencia          [Agente A · Sofia]
 
 ──────────── POST-MVP ────────────
@@ -235,7 +241,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 | Bloque | Changes | Origen |
 |---|---|---|
 | **MVP v1.0** (fases 1 a 6) | C-01 a C-14 | Sección D.3 del informe, lista "imprescindible" |
-| **Ajustes del MVP** (fase 5b) | C-33 a C-43 | Prueba y revisión de la aplicación del 2026-11-23 (C-41 a C-43: 2026-11-24) |
+| **Ajustes del MVP** (fase 5b) | C-33 a C-44 | Prueba y revisión de la aplicación del 2026-11-23 (C-41 a C-44: 2026-11-24) |
 | **Post-MVP v1.x** (fase 7) | C-15 a C-17 | Sección D.3, lista "diferenciador" |
 | **Post-MVP: etapas posteriores** (fases 8 a 10) | C-18 a C-32 | Sección D.3, lista "etapas posteriores" |
 
@@ -268,7 +274,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 |---|---|---|
 | **Sofia Indovino** (líder) | **C-01** (OPSX), C-06, C-35, C-42, C-43, C-14 + revisión de todos los PR | C-15, C-16, C-29 |
 | **Juan Cruz** | C-03, C-08, C-11, C-33, C-37, C-38, C-39 | C-17, C-30, C-31 |
-| **Emanuel** | C-04, C-07, C-13, C-12, C-34 | C-25, C-26, C-27, C-28 |
+| **Emanuel** | C-04, C-07, C-13, C-12, C-34, C-44 | C-25, C-26, C-27, C-28 |
 | **Juan Sebastián** | C-05, C-10, C-36 | C-18, C-19, C-20, C-21 |
 | **Enzo** | C-02, C-09, C-40, C-41 | C-22, C-23, C-24, C-32 (backend y pantallas de administración) |
 
@@ -720,6 +726,29 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/03_actores_y_roles.md` §RBAC: matriz de permisos
   - `knowledge-base/09_decisiones_y_supuestos.md` §DD-03, §DD-11
   - `openspec/specs/agenda-turnos/spec.md`, `agenda-api/spec.md`, `ficha-clinica/spec.md` y `frontend-agenda-personal/spec.md`
+
+### [C-44] `frontend-ficha-clinica-odontograma`
+- **Estado**: `[ ]` pendiente (agregado el 2026-11-24)
+- **Responsable**: Emanuel (avisa a Enzo, dueño de `frontend/`)
+- **Scope**:
+  - C-13 hizo el backend de la ficha clínica y del odontograma, pero ninguna pantalla lo usa: hoy el odontólogo no puede cargar ni consultar una ficha desde la aplicación. Este change suma la interfaz sobre los endpoints que ya existen, sin cambiar su contrato.
+  - **Acceso**: el odontólogo y el administrador llegan a la ficha de un paciente desde el turno en la agenda del personal ("Ver ficha") y buscándolo con el buscador de C-36. La recepción y el paciente no ven ningún acceso (RN-CL-01): el frontend no lo ofrece y el backend sigue respondiendo `403`. El propose define la dirección de la página y si suma una entrada a la barra lateral de C-39.
+  - **Ficha básica** (`GET/PUT /api/v1/pacientes/{id}/ficha`): antecedentes, alergias y medicación, con quién la actualizó y cuándo. El odontólogo la edita; el administrador solo la lee. Una ficha vacía se muestra como vacía, no como error.
+  - **Odontograma** (`GET /odontograma`, `GET /odontograma/historial` y `PUT /odontograma`): dibujo de las piezas en notación FDI, permanentes y temporales, con sus cinco caras, coloreadas según el estado vigente (`SANO`, `CARIES`, `OBTURADO`, `A_TRATAR`, `AUSENTE`, `CORONA` y `ENDODONCIA`) y con leyenda. Se puede usar con teclado, y el estado no depende solo del color. El odontólogo elige pieza, cara y estado, y guarda uno o más cambios en un solo pedido. El historial se muestra del más nuevo al más viejo, con el profesional y el momento; nunca se edita ni se borra (RN-CL-02, RN-CL-03).
+  - **Ausencias**: la lista de ausencias de la ficha, con las deshechas por la recepción (C-43), y "Marcar ausente" desde la ficha (`POST /ausencias`) con la tolerancia de 15 minutos de RN-AG-17.
+  - Errores de la API (`403`, `404 RECURSO_NO_ENCONTRADO`, `422 DATOS_INVALIDOS`) con mensajes claros. Ningún dato de salud en la URL, en `localStorage` ni en los logs de la consola (Ley 26.529, regla dura 6).
+  - Sin cambios de backend ni migraciones. Si el propose encuentra que falta algo en la API, el cambio va en `clinica/`, que también es de Emanuel.
+  - Cambio visual: modo `system-and-mockups`, mockups de la ficha y del odontograma a 390 y 1440 px aprobados por la líder antes del apply.
+  - Tests: un escenario por sección y por rol (odontólogo edita, administrador solo lee, la recepción no ve el acceso), ficha vacía, guardar varios cambios del odontograma, historial sin sobrescribir, estado desconocido rechazado, marcar ausente antes y después de los 15 minutos; los de C-09, C-36 y C-43 siguen pasando.
+- **Dependencias**: `C-13, C-36, C-43`, etapa D de `C-39`
+- **Governance**: ALTO (datos de salud, Ley 26.529: se propone y se revisa antes de escribir código)
+- **Leer antes**:
+  - `knowledge-base/05_reglas_de_negocio.md` §Clínica (RN-CL-01 a RN-CL-03), §RN-AG-17
+  - `knowledge-base/04_modelo_de_datos.md` §FichaClinica, §OdontogramaRegistro
+  - `knowledge-base/03_actores_y_roles.md` §RBAC: matriz de permisos
+  - `knowledge-base/06_funcionalidades.md` §Épica 5 (US-040 a US-042)
+  - `openspec/specs/ficha-clinica/spec.md`, `frontend-agenda-personal/spec.md` y `frontend-buscador-pacientes/spec.md`
+  - `design-system/README.md` y `design-system/components.html`
 ---
 
 ## FASE 6: Entrega
@@ -731,7 +760,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `README.md` reproducible: requisitos (Java 21, opcional Docker o PostgreSQL), cómo correr `./gradlew test` (tests de dominio sin base) y los tests de integración.
   - Verificación final: suite en verde, ningún secreto en el repo, `.env.example` completo.
   - Evidencias: informe de Discovery en PDF, estado del orquestador, consulta a Engram para el video.
-- **Dependencias**: `C-01` (mínimo); los demás changes que se hayan completado, incluidos los ajustes C-33 a C-43
+- **Dependencias**: `C-01` (mínimo); los demás changes que se hayan completado, incluidos los ajustes C-33 a C-44
 - **Governance**: BAJO
 - **Leer antes**:
   - `knowledge-base/README.md`
