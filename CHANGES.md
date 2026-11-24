@@ -1080,7 +1080,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/05_reglas_de_negocio.md` §Reserva online, §Notificaciones
 
 ### [C-32] `reportes-y-metricas`
-- **Estado**: `[x]` implementado (2026-11-24; KB en el PR #111, propuesta y mockups aprobados en el PR #113, apply en la rama `change/C-32-reportes-y-metricas-apply`, PR pendiente). Change `openspec/changes/reportes-y-metricas/`. Evidencia: `docs/evidencia/c32-backend.txt` (720 unitarios y 767 de integración), 754 tests del frontend y verificación manual en la app real. Sin migración. El PR avisa a Sofia (`agenda/`), Emanuel (horarios, ausencias y bloqueos) y Juan Sebastián (actor online de `reserva/`)
+- **Estado**: `[x]` completo (2026-11-24; KB en el PR #111, propuesta y mockups en el PR #113, apply en el PR #114, archive el mismo día). Specs: `openspec/specs/reportes/` y `frontend-reportes/` (nuevos) y `frontend-navegacion/` (actualizado); change archivado en `openspec/changes/archive/2026-11-24-reportes-y-metricas/`. Evidencia: `docs/evidencia/c32-backend.txt` (720 unitarios y 767 de integración) y 754 tests del frontend. Sin migración. Aviso a C-39: su delta de `frontend-navegacion` modifica "Menú según la sesión" con una versión anterior a C-32 y a C-44; hay que actualizarlo antes de su archive para no perder "Reportes" ni "Pacientes"
 - **Responsable**: Enzo
 - **Scope**:
   - Panel con ocupación por profesional y sillón, turnos por origen (online o del personal), ausencias de pacientes y de profesionales, y cancelaciones. Solo para el personal.
