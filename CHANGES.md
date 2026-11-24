@@ -1054,7 +1054,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/05_reglas_de_negocio.md` §Reserva online, §Notificaciones
 
 ### [C-32] `reportes-y-metricas`
-- **Estado**: `[ ]` KB propuesta el 2026-11-24 (dominio Reportes: RN-RE-01 a RN-RE-07, US-210 y DD-16; PA-29 a PA-31 respondidas: lo ven el admin y la recepción, el origen sale de la auditoría, la ocupación es un porcentaje del horario de atención; corrige en 04 el `origen` del turno, que no existe en la base), en revisión con la líder; después va el propose
+- **Estado**: `[ ]` en propuesta (KB aprobada en el PR #111; propose y mockups en la rama `change/C-32-reportes-y-metricas`, mockups pendientes de aprobación). Change `openspec/changes/reportes-y-metricas/`: capabilities nuevas `reportes` y `frontend-reportes`, y delta de `frontend-navegacion`. Sin migración
 - **Responsable**: Enzo
 - **Scope**:
   - Panel con ocupación por profesional y sillón, turnos por origen (online o del personal), ausencias de pacientes y de profesionales, y cancelaciones. Solo para el personal.
