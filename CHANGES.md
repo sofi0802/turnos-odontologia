@@ -551,7 +551,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/06_funcionalidades.md` §Épica 1, §US-015 a §US-018
 
 ### [C-35] `agenda-propia-odontologo`
-- **Estado**: `[x]` completo (2026-11-23; el archive va en un PR aparte). Regla RN-AG-18 en la KB; change en `openspec/changes/agenda-propia-odontologo/` con deltas de `agenda-api`, `seguridad-autenticacion` y `frontend-agenda-personal`. Mockups aprobados (revisión 3) y verificación en `mockups/verify/`. Evidencia: `docs/evidencia/c35-backend.txt`. Sin migración. La sesión ya informa `profesionalId` del odontólogo (lo reusa C-34)
+- **Estado**: `[x]` completo (2026-11-23, PR #57 apply y PR del archive). Specs: `openspec/specs/agenda-api/`, `seguridad-autenticacion/` y `frontend-agenda-personal/` (actualizados); change archivado en `openspec/changes/archive/2026-11-23-agenda-propia-odontologo/`. Regla RN-AG-18 en la KB. Mockups aprobados (revisión 3) y verificación en `mockups/verify/`. Evidencia: `docs/evidencia/c35-backend.txt`. Sin migración. La sesión informa `profesionalId` del odontólogo (lo reusa C-34)
 - **Responsable**: Sofia Indovino
 - **Scope**:
   - **Cambio de regla de negocio**: hoy la KB dice que el `ODONTOLOGO` ve toda la agenda y "puede filtrar la propia". Antes del propose, actualizar `03_actores_y_roles.md` (y `05_reglas_de_negocio.md` si corresponde) con la regla nueva: cada odontólogo ve solo sus turnos del día y de la semana.
