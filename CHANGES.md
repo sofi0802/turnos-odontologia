@@ -980,7 +980,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/README.md` y `design-system/components.html`
 
 ### [C-26] `imagenes-y-radiografias`
-- **Estado**: `[~]` propuesta en revisión (2026-11-24, SDD; `openspec/changes/imagenes-y-radiografias/`). Decisiones de Emanuel del 2026-11-24, en la KB para que la líder las revise: solo backend, almacén en disco detrás de un puerto, JPEG, PNG y PDF de hasta 10 MB, anulación con motivo en lugar de borrado (RN-CL-07, RN-CL-08, US-048, DD-17)
+- **Estado**: `[~]` implementado (2026-11-24, SDD; propuesta en el PR #112, apply en su PR; `openspec/changes/imagenes-y-radiografias/`, migración V17). Solo backend: almacén en disco detrás de un puerto, JPEG, PNG y PDF de hasta 10 MB, anulación con motivo en lugar de borrado (RN-CL-07, RN-CL-08, US-048, DD-17). Evidencia: `docs/evidencia/c26-backend.txt`. Falta el merge y después archivarlo. El apply suma a `shared/web/ProblemDetailGlobalHandler` el `413` del límite de multipart (avisar a Juan Sebastián)
 - **Responsable**: Emanuel
 - **Scope**:
   - Carga de imágenes y radiografías por paciente, pieza y fecha, con almacenamiento detrás de un puerto (local o S3 compatible). **Migración V17**.

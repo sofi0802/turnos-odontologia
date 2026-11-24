@@ -1,0 +1,38 @@
+C-26 imagenes-y-radiografias: evidencia del backend
+Fecha: 2026-11-24. Comando: ./gradlew clean build integrationTest (PostgreSQL 16 real, perfil test).
+Resultado: código de salida 0.
+test: 726 tests, 0 fallas, 0 errores, 0 omitidos
+integrationTest: 802 tests, 0 fallas, 0 errores, 0 omitidos
+
+Tests de C-26 (integrationTest):
+  ImagenClinicaIntegrationTest$LaRecepcionYElPacienteNoAccedenALasImagenes: 5 tests, 0 fallas, 0 errores
+  ImagenClinicaIntegrationTest$DatosDeLasImagenesFueraDeLosCanalesExternos: 2 tests, 0 fallas, 0 errores
+  ImagenClinicaIntegrationTest$AccesoDelOdontologoYDelAdministradorALasImagenes: 3 tests, 0 fallas, 0 errores
+  ImagenClinicaIntegrationTest$AnularUnaImagenConMotivo: 4 tests, 0 fallas, 0 errores
+  ImagenClinicaIntegrationTest$CargarUnaImagenClinica: 6 tests, 0 fallas, 0 errores
+  ImagenClinicaIntegrationTest$DescargarElArchivoDeUnaImagen: 4 tests, 0 fallas, 0 errores
+  ImagenClinicaIntegrationTest$FechaDeLaTomaYPieza: 3 tests, 0 fallas, 0 errores
+  ImagenClinicaIntegrationTest$ImagenesInmutables: 1 tests, 0 fallas, 0 errores
+  ImagenClinicaIntegrationTest$IntegridadDelArchivo: 2 tests, 0 fallas, 0 errores
+  ImagenClinicaIntegrationTest$ListarLasImagenesDelPaciente: 5 tests, 0 fallas, 0 errores
+  ImagenClinicaIntegrationTest$TamanoMaximoDelArchivo: 2 tests, 0 fallas, 0 errores
+  ImagenClinicaIntegrationTest$TiposDeArchivoPermitidos: 4 tests, 0 fallas, 0 errores
+  RegistroImagenesJdbcIntegrationTest: 4 tests, 0 fallas, 0 errores
+  V17MigrationIntegrationTest: 6 tests, 0 fallas, 0 errores
+
+Tests unitarios nuevos (test):
+  ServicioImagenesTest: 13 tests, 0 fallas, 0 errores
+  ImagenClinicaDominioTest$AnularUnaImagenConMotivo: 2 tests, 0 fallas, 0 errores
+  ImagenClinicaDominioTest$CargarUnaImagenClinica: 3 tests, 0 fallas, 0 errores
+  ImagenClinicaDominioTest$FechaDeLaTomaYPieza: 5 tests, 0 fallas, 0 errores
+  ImagenClinicaDominioTest$TamanoMaximoDelArchivo: 2 tests, 0 fallas, 0 errores
+  ImagenClinicaDominioTest$TiposDeArchivoPermitidos: 6 tests, 0 fallas, 0 errores
+  AlmacenArchivosDiscoTest: 5 tests, 0 fallas, 0 errores
+  ProblemDetailGlobalHandlerTest: 1 tests, 0 fallas, 0 errores
+
+Prueba manual contra el backend levantado (perfil dev, tarea 7.3), con un JPEG ficticio de 50 004 bytes:
+  carga como ana.ejemplo en la pieza 36: 201, tipo image/jpeg
+  descarga: 200, image/jpeg, attachment; filename="imagen-1.jpg", Cache-Control no-store, X-Content-Type-Options nosniff
+  SHA-256 del archivo original = el de la respuesta = el del archivo descargado
+  archivo guardado en backend/data/imagenes/ab/cd/<uuid>, ignorado por git
+  anulación: 200; segunda anulación: 409 IMAGEN_YA_ANULADA

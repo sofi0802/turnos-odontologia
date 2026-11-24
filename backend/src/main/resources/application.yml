@@ -1,6 +1,11 @@
 spring:
   profiles:
     default: dev
+  servlet:
+    # C-26: imágenes clínicas de hasta 10 MB (RN-CL-07). El pedido deja margen para las partes de texto (design D5).
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 11MB
 server:
   # Fix de C-05: ni la traza ni el mensaje de una excepción salen en el cuerpo de un error, ni por el BasicErrorController
   error:
@@ -44,6 +49,11 @@ app:
   consultorio:
     nombre: ${CONSULTORIO_NOMBRE:Consultorio odontológico}
     direccion: ${CONSULTORIO_DIRECCION:Dirección a confirmar}
+  clinica:
+    imagenes:
+      # C-26: carpeta del almacén de imágenes clínicas (DD-17). Datos de salud: permisos solo para el proceso e
+      # incluirla en los respaldos. El valor por defecto queda en backend/data/, ignorado por git.
+      directorio: ${IMAGENES_DIRECTORIO:./data/imagenes}
 ---
 spring:
   config:
@@ -93,3 +103,7 @@ app:
   agenda:
     asistencia:
       activo: false
+  clinica:
+    imagenes:
+      # C-26: los tests guardan los archivos en una carpeta temporal, nunca en la del desarrollo.
+      directorio: ${java.io.tmpdir}/turnos-odontologia-imagenes-test

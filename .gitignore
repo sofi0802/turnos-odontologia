@@ -10,6 +10,10 @@ coverage/
 backend/build/
 backend/.gradle/
 
+# Almacén local de imágenes clínicas (C-26, IMAGENES_DIRECTORIO): datos de salud, nunca al repo
+/data/
+/backend/data/
+
 # Secretos y variables de entorno
 .env
 .env.*
