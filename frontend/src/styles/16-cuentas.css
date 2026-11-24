@@ -1,0 +1,179 @@
+/* Cuentas del personal (C-41; mockups aprobados en openspec/changes/cuentas-del-personal/mockups). Solo --ds-*. */
+
+/* El usuario del encabezado lleva a "Mi contraseña" (solo para el personal). */
+.usuario-enlace {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--ds-radio);
+}
+
+.usuario-enlace[href]:hover .usuario-nombre {
+  text-decoration: underline;
+}
+
+/* "Mi contraseña" en la barra lateral, separado de las páginas. */
+.lateral-cuenta {
+  margin-top: var(--ds-espacio-2);
+  padding-top: var(--ds-espacio-2);
+  border-top: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.lateral-cuenta[hidden] {
+  display: none;
+}
+
+/* Fila de una cuenta: estado y marcas. */
+.cuenta-marcas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  margin-top: var(--ds-espacio-0);
+}
+
+.marca-temporal {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px var(--ds-espacio-1);
+  font-size: var(--ds-texto-xs);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-alerta);
+  background: var(--ds-alerta-fondo);
+  border-radius: var(--ds-radio-pill);
+}
+
+.marca-temporal svg {
+  width: 14px;
+  height: 14px;
+}
+
+.marca-propia {
+  padding: 2px var(--ds-espacio-1);
+  font-size: var(--ds-texto-xs);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-acento-500);
+  background: var(--ds-acento-50);
+  border-radius: var(--ds-radio-pill);
+}
+
+.nota-fila {
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+/* Rol del alta: tarjetas con el nombre y una línea que explica qué puede hacer. */
+.alta-rol {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.alta-rol legend {
+  margin-bottom: var(--ds-espacio-1);
+  padding: 0;
+  font-weight: var(--ds-peso-medio);
+}
+
+.alta-rol .opcion {
+  display: grid;
+  gap: 2px;
+  align-items: start;
+}
+
+.alta-rol .opcion label {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  font-weight: var(--ds-peso-medio);
+  cursor: pointer;
+}
+
+.alta-rol .opcion small {
+  padding-left: calc(20px + var(--ds-espacio-1));
+  font-size: var(--ds-texto-sm);
+}
+
+/* Bloque "Acceso a la aplicación" del detalle del profesional. */
+.acceso {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1);
+  margin-top: var(--ds-espacio-2);
+  padding-top: var(--ds-espacio-2);
+  border-top: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.acceso h4 {
+  margin: 0;
+  font-size: var(--ds-texto-base);
+}
+
+.acceso p {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+/* Diálogo de la contraseña temporal. El usuario se muestra tal cual (08-paciente pone en mayúscula la primera letra de los dd). */
+.detalle-lista dd.dato-literal::first-letter {
+  text-transform: none;
+}
+
+.contrasena-caja {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  padding: var(--ds-espacio-2);
+  background: var(--ds-superficie);
+  border: var(--ds-borde-ancho) solid var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio);
+}
+
+.contrasena-caja code {
+  flex: 1 1 12rem;
+  font-family: var(--ds-fuente-mono);
+  font-size: var(--ds-texto-lg);
+  font-weight: var(--ds-peso-fuerte);
+  letter-spacing: 0.06em;
+  color: var(--ds-texto);
+  word-break: break-all;
+}
+
+.contrasena-caja .btn {
+  gap: var(--ds-espacio-0);
+}
+
+.contrasena-caja .btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Página de cambio de contraseña. */
+.pagina-angosta {
+  max-width: 28rem;
+}
+
+.pagina-angosta .formulario {
+  margin-top: var(--ds-espacio-3);
+}
+
+.volver {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-espacio-0);
+  margin-bottom: var(--ds-espacio-2);
+  font-size: var(--ds-texto-sm);
+}
+
+.volver svg {
+  width: 16px;
+  height: 16px;
+}

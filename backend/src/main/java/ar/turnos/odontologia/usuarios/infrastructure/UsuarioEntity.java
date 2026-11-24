@@ -27,6 +27,9 @@ public class UsuarioEntity {
 
     private boolean activo = true;
 
+    @Column(name = "debe_cambiar_contrasena")
+    private boolean debeCambiarContrasena;
+
     @Column(name = "creado_en", insertable = false, updatable = false)
     private Instant creadoEn;
 
@@ -48,5 +51,11 @@ public class UsuarioEntity {
     public Long getPacienteId() { return pacienteId; }
     public boolean isActivo() { return activo; }
     public void setActivo(boolean activo) { this.activo = activo; }
+
+    public boolean isDebeCambiarContrasena() { return debeCambiarContrasena; }
+
+    public void setDebeCambiarContrasena(boolean debeCambiarContrasena) { this.debeCambiarContrasena = debeCambiarContrasena; }
+
+    public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
     public Instant getCreadoEn() { return creadoEn; }
 }

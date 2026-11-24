@@ -1,5 +1,6 @@
 import { borrarReservaPendiente } from './paciente/reserva.ts';
 import { paginaAgenda } from './pages/agenda.ts';
+import { paginaCambiarContrasena } from './pages/cambiar-contrasena.ts';
 import { paginaConfiguracion } from './pages/configuracion.ts';
 import { paginaConfirmar } from './pages/confirmar.ts';
 import { paginaInicio } from './pages/inicio.ts';
@@ -8,9 +9,11 @@ import { paginaMisTurnos } from './pages/mis-turnos.ts';
 import { crearTitulo, type ContextoPagina, type Pagina } from './pages/pagina.ts';
 import { paginaReserva } from './pages/reserva.ts';
 import { api as apiPorDefecto, type ClienteApi } from './shared/api/cliente.ts';
+import { ErrorPermiso } from './shared/api/errores.ts';
 import {
   cerrarSesion,
   consultarSesion,
+  debeCambiarContrasena,
   esPaciente,
   esPersonal,
   SIN_SESION,
@@ -25,6 +28,7 @@ export const PAGINAS: readonly Pagina[] = [
   paginaInicio,
   paginaAgenda,
   paginaConfiguracion,
+  paginaCambiarContrasena,
   paginaReserva,
   paginaMisTurnos,
   paginaMiCuenta,
@@ -37,8 +41,37 @@ export const MENSAJE_SOLO_PACIENTES = 'Esta sección es para pacientes.';
 /** Direcciones viejas que siguen sirviendo: `#/ingreso` era el ingreso del personal (C-09). */
 const REDIRECCIONES: Readonly<Record<string, string>> = { ingreso: paginaMiCuenta.ruta };
 
+/** Código del 403 que el servidor responde mientras la contraseña temporal no se cambió (C-41). */
+const CAMBIO_PENDIENTE = 'CAMBIO_DE_CONTRASENA_PENDIENTE';
+
+/**
+ * Envuelve la API: si un pedido responde 403 CAMBIO_DE_CONTRASENA_PENDIENTE, avisa con `alPendiente` (la app lleva al
+ * cambio de contraseña) y deja pasar el error a la pantalla que hizo el pedido (spec frontend-cuentas-personal).
+ */
+function conCambioPendiente(base: ClienteApi, alPendiente: () => void): ClienteApi {
+  async function vigilar<T>(pedido: Promise<T>): Promise<T> {
+    try {
+      return await pedido;
+    } catch (causa: unknown) {
+      if (causa instanceof ErrorPermiso && causa.codigo === CAMBIO_PENDIENTE) {
+        alPendiente();
+      }
+      throw causa;
+    }
+  }
+  return {
+    solicitar: <T>(metodo: Parameters<ClienteApi['solicitar']>[0], ruta: string, cuerpo?: unknown) =>
+      vigilar(base.solicitar<T>(metodo, ruta, cuerpo)),
+    obtener: <T>(ruta: string) => vigilar(base.obtener<T>(ruta)),
+    crear: <T>(ruta: string, cuerpo?: unknown) => vigilar(base.crear<T>(ruta, cuerpo)),
+    actualizar: <T>(ruta: string, cuerpo?: unknown) => vigilar(base.actualizar<T>(ruta, cuerpo)),
+    borrar: <T>(ruta: string) => vigilar(base.borrar<T>(ruta)),
+  };
+}
+
 /** Arma la aplicación dentro de `raiz` y muestra la página de la dirección actual. */
-export function iniciarApp(raiz: HTMLElement, api: ClienteApi = apiPorDefecto): Router {
+export function iniciarApp(raiz: HTMLElement, apiBase: ClienteApi = apiPorDefecto): Router {
+  const api = conCambioPendiente(apiBase, () => irA(paginaCambiarContrasena.ruta));
   let navegacion = 0;
   let avisoPendiente: string | null = null;
   let sesionMostrada: Sesion | null = null;
@@ -78,7 +111,10 @@ export function iniciarApp(raiz: HTMLElement, api: ClienteApi = apiPorDefecto): 
       sesion,
       sesionLista,
       aviso,
-      irA,
+      irA(ruta, nuevoAviso) {
+        avisoPendiente = nuevoAviso ?? null;
+        irA(ruta);
+      },
       irAMiCuenta(nuevoAviso) {
         avisoPendiente = nuevoAviso ?? null;
         irA(paginaMiCuenta.ruta);
@@ -149,6 +185,12 @@ export function iniciarApp(raiz: HTMLElement, api: ClienteApi = apiPorDefecto): 
     }
     if (acceso === 'paciente' && !esPaciente(sesion.rol)) {
       mostrarAviso(pagina, MENSAJE_SOLO_PACIENTES);
+      return;
+    }
+    if (debeCambiarContrasena(sesion) && pagina !== paginaCambiarContrasena) {
+      // Con la contraseña temporal pendiente, toda página privada lleva al cambio, sin pedir sus datos (C-41).
+      history.replaceState(history.state, '', `#/${paginaCambiarContrasena.ruta}`);
+      dibujar(paginaCambiarContrasena, sesion);
       return;
     }
     dibujar(pagina, sesion);

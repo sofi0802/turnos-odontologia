@@ -41,6 +41,14 @@ export const MENSAJES_POR_CODIGO: Readonly<Record<string, string>> = {
   PERIODO_INVALIDO: 'El fin tiene que ser posterior al inicio.',
   TURNO_NO_AFECTADO: 'Ese turno ya no está afectado por ese período.',
   SILLON_HABITUAL_OCUPADO: 'Ese sillón ya es el habitual de otro profesional.',
+  // Cuentas del personal (C-41).
+  USUARIO_EXISTENTE: 'Ya existe una cuenta con ese usuario.',
+  PROFESIONAL_CON_CUENTA: 'Ese profesional ya tiene una cuenta.',
+  PROFESIONAL_NO_DISPONIBLE: 'El profesional no existe o está inactivo.',
+  OPERACION_SOBRE_CUENTA_PROPIA: 'No podés hacer esto con tu propia cuenta.',
+  USUARIO_INEXISTENTE: 'Esa cuenta ya no existe.',
+  CONTRASENA_ACTUAL_INCORRECTA: 'La contraseña actual no es correcta.',
+  CAMBIO_DE_CONTRASENA_PENDIENTE: 'Antes de seguir, elegí una contraseña nueva.',
   // Asistencia en la agenda (C-43).
   LLEGADA_REGISTRADA: 'El paciente ya tiene la llegada registrada.',
   LLEGADA_ANTICIPADA: 'La llegada se registra el día del turno.',

@@ -87,8 +87,12 @@ class OdontogramaIntegrationTest extends IntegracionClinicaBase {
     @DirtiesContext(methodMode = MethodMode.AFTER_METHOD)
     void odontologoSinProfesionalVinculado() throws Exception {
         // La base no admite un ODONTOLOGO sin profesional (CHECK de V3): el principal se inyecta en el pedido para
-        // probar la defensa del servicio (design D5).
-        UsuarioAutenticado suelto = new UsuarioAutenticado(999L, "odontologo.suelto", null, Rol.ODONTOLOGO,
+        // probar la defensa del servicio (design D5). Desde C-41 la seguridad verifica en cada pedido que la cuenta
+        // de la sesión exista y tenga la misma contraseña (design D3 de cuentas-del-personal), así que el principal
+        // apunta a la cuenta real de ana.ejemplo, pero sin su profesional.
+        long usuarioId = jdbc.queryForObject("SELECT id FROM usuario WHERE username = 'ana.ejemplo'", Long.class);
+        String hash = jdbc.queryForObject("SELECT password_hash FROM usuario WHERE id = ?", String.class, usuarioId);
+        UsuarioAutenticado suelto = new UsuarioAutenticado(usuarioId, "ana.ejemplo", hash, Rol.ODONTOLOGO,
                 null, null, true);
 
         MvcResult resultado = mvc.perform(MockMvcRequestBuilders.put(odontograma(pacienteUno))

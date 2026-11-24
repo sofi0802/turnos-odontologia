@@ -11,8 +11,8 @@ export interface ContextoPagina {
   readonly sesionLista: Promise<Sesion>;
   /** Aviso que dejó otra pantalla para esta (por ejemplo, "sesión terminada"). */
   readonly aviso: string | null;
-  /** Muestra otra página por su ruta. */
-  irA(ruta: string): void;
+  /** Muestra otra página por su ruta, con un aviso opcional para esa página (C-41). */
+  irA(ruta: string, aviso?: string): void;
   /** Lleva a Mi cuenta (`#/mi-cuenta`), el único ingreso de pacientes y personal, con un aviso opcional. */
   irAMiCuenta(aviso?: string): void;
 }
@@ -35,6 +35,8 @@ export interface Pagina {
   readonly fondoSuave?: boolean;
   /** Ícono de la opción en la barra lateral (C-39). */
   readonly icono?: NombreIcono;
+  /** `'cuenta'`: la opción va en la barra lateral separada de las páginas, como "Mi contraseña" (C-41). */
+  readonly seccionMenu?: 'cuenta';
   render(contenedor: HTMLElement, contexto: ContextoPagina): void;
 }
 

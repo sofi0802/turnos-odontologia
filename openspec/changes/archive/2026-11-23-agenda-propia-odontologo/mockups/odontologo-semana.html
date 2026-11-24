@@ -5,14 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Mi agenda · Turnos odontología</title>
   <link rel="icon" href="data:," />
-  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../../design-system/tokens.css" />
   <link rel="stylesheet" href="mockups.css" />
-  <script src="../../../../design-system/brand.js"></script>
+  <script src="../../../../../design-system/brand.js"></script>
 </head>
 <body>
-  <p class="nota-mockup"><b>Mockup C-35.</b> Sesión de <code>ana.ejemplo</code> (ODONTOLOGO). Cambia: título "Mi agenda" con "Ana Ejemplo" debajo, sin filtro "Profesional", solo turnos de Ana (el de las 10:30 con Bruno Prueba ya no aparece). Anterior y Siguiente pasan a ser flechas (también para recepción y administración). El resto queda como en C-09.</p>
+  <p class="nota-mockup"><b>Mockup C-35.</b> Vista semanal con sesión de odontólogo: mismos cambios que el día. Solo turnos de Ana en cada columna.</p>
   <header class="app-encabezado">
-    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg" alt="Logo provisorio" /><span data-brand-name>Turnos odontología</span></a>
+    <a class="marca" href="#"><img src="../../../../../design-system/assets/logo.svg" alt="Logo provisorio" /><span data-brand-name>Turnos odontología</span></a>
     <button class="btn menu" type="button" aria-expanded="false">Menú</button>
     <nav class="nav" aria-label="Principal">
       <a href="#" aria-current="page">Agenda</a><a href="#">Reserva</a><a href="#">Configuración</a>
@@ -22,15 +22,17 @@
   <main class="pagina">
     <div class="titulo"><h1>Mi agenda <span class="titulo-profesional">Ana Ejemplo</span></h1></div>
     <div class="barra">
-      <div class="grupo"><button class="btn" type="button" aria-pressed="true">Día</button><button class="btn" type="button" aria-pressed="false">Semana</button></div>
+      <div class="grupo"><button class="btn" type="button" aria-pressed="false">Día</button><button class="btn" type="button" aria-pressed="true">Semana</button></div>
       <div class="grupo"><button class="btn btn-icono" type="button" aria-label="Anterior" title="Anterior"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg></button><button class="btn" type="button">Hoy</button><button class="btn btn-icono" type="button" aria-label="Siguiente" title="Siguiente"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg></button></div>
-      <p class="periodo">Lunes 23/11</p>
+      <p class="periodo">Semana del lunes 23/11 al domingo 29/11</p>
     </div>
     <div class="filtros">
       <div class="campo"><label for="sillon">Sillón</label><select id="sillon" class="control"><option>Todos</option></select></div>
       <button class="btn btn-principal" type="button">Nuevo turno</button>
     </div>
-    <section class="lista" aria-label="Turnos">
+    <div class="semana">
+      <section class="dia"><h2>Lunes 23/11</h2>
+  <div class="lista">
       <article class="turno">
         <p><span class="turno-hora">09:00 – 09:30</span> <span class="etiqueta etiqueta-confirmado">Confirmado</span></p>
         <p>Paciente Dos</p>
@@ -49,7 +51,32 @@
         <p class="turno-meta">Ana Ejemplo · Sillón 1 · Consulta</p>
         <div class="turno-acciones"><button class="btn" type="button">Cancelar turno</button><button class="btn" type="button">Reprogramar</button></div>
       </article>
-    </section>
+  </div></section>
+      <section class="dia"><h2>Martes 24/11</h2>
+  <div class="lista">
+      <article class="turno">
+        <p><span class="turno-hora">09:00 – 09:30</span> <span class="etiqueta etiqueta-confirmado">Confirmado</span></p>
+        <p>Paciente Dos</p>
+        <p class="turno-meta">Ana Ejemplo · Sillón 1 · Consulta</p>
+        <div class="turno-acciones"><button class="btn" type="button">Cancelar turno</button><button class="btn" type="button">Reprogramar</button></div>
+      </article>
+  </div></section>
+      <section class="dia"><h2>Miércoles 25/11</h2>
+  <div class="lista">
+      <article class="turno">
+        <p><span class="turno-hora">09:00 – 09:30</span> <span class="etiqueta etiqueta-confirmado">Confirmado</span></p>
+        <p>Paciente Cuatro</p>
+        <p class="turno-meta">Ana Ejemplo · Sillón 1 · Consulta</p>
+        <div class="turno-acciones"><button class="btn" type="button">Cancelar turno</button><button class="btn" type="button">Reprogramar</button></div>
+      </article>
+      <article class="turno">
+        <p><span class="turno-hora">11:00 – 11:30</span> <span class="etiqueta etiqueta-sobreturno">Sobreturno</span></p>
+        <p>Paciente Dos</p>
+        <p class="turno-meta">Ana Ejemplo · Sillón 2 · Consulta</p>
+        <div class="turno-acciones"><button class="btn" type="button">Cancelar turno</button><button class="btn" type="button">Reprogramar</button></div>
+      </article>
+  </div></section>
+    </div>
   </main>
 </body>
 </html>

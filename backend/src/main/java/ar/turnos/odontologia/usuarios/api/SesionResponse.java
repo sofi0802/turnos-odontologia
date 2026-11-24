@@ -8,13 +8,16 @@ import com.fasterxml.jackson.annotation.JsonInclude;
  * solo se informa para el rol {@code ODONTOLOGO} (RN-AG-18, C-35).
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public record SesionResponse(boolean autenticado, String username, Rol rol, Long profesionalId) {
+public record SesionResponse(boolean autenticado, String username, Rol rol, Long profesionalId,
+                             Boolean debeCambiarContrasena) {
 
     public static SesionResponse sinSesion() {
-        return new SesionResponse(false, null, null, null);
+        return new SesionResponse(false, null, null, null, null);
     }
 
-    public static SesionResponse de(String username, Rol rol, Long profesionalId) {
-        return new SesionResponse(true, username, rol, rol == Rol.ODONTOLOGO ? profesionalId : null);
+    /** {@code debeCambiarContrasena} marca una contraseña temporal pendiente de cambiar (C-41). */
+    public static SesionResponse de(String username, Rol rol, Long profesionalId, boolean debeCambiarContrasena) {
+        return new SesionResponse(true, username, rol, rol == Rol.ODONTOLOGO ? profesionalId : null,
+                debeCambiarContrasena);
     }
 }

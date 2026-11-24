@@ -42,6 +42,7 @@ La matriz RBAC de `knowledge-base/03_actores_y_roles.md` dice que el `ADMIN` hac
 
   No se modifica "Estado de la sesión" porque ya lo cambia C-35 (`agenda-propia-odontologo`), que todavía no está archivado.
 - `frontend-configuracion-consultorio`: el requisito "Secciones según el rol" suma la pestaña "Usuarios" para `ADMIN`. `RECEPCIONISTA` y `ODONTOLOGO` no la ven.
+- `frontend-navegacion`: se agrega (ADDED) el requisito "Sección de la cuenta en el menú del personal": "Mi contraseña" va en una navegación aparte, debajo del menú principal, que no cambia. No se modifican los requisitos del menú porque C-39 los tiene abiertos (agregado durante el apply, 2026-11-24).
 
 ## Impact
 

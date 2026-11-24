@@ -67,6 +67,8 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
 
   const exito = crearAviso('status');
   const error = crearAviso('alert');
+  // Aviso que dejó otra pantalla, por ejemplo "Tu contraseña se cambió." (C-41).
+  exito.textContent = contexto.aviso ?? '';
 
   const botonDia = crearBoton('Día');
   const botonSemana = crearBoton('Semana');

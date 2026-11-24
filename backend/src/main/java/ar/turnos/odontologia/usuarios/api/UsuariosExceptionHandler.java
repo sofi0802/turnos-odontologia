@@ -2,6 +2,9 @@ package ar.turnos.odontologia.usuarios.api;
 
 import ar.turnos.odontologia.usuarios.domain.BusquedaInvalidaException;
 import ar.turnos.odontologia.usuarios.domain.CodigoRegistro;
+import ar.turnos.odontologia.usuarios.domain.CodigoCuenta;
+import ar.turnos.odontologia.usuarios.domain.CuentaRechazadaException;
+import ar.turnos.odontologia.usuarios.domain.DatosCuentaInvalidosException;
 import ar.turnos.odontologia.usuarios.domain.RegistroRechazadoException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.core.NestedExceptionUtils;
@@ -62,6 +65,29 @@ class UsuariosExceptionHandler {
         return problema;
     }
 
+    @ExceptionHandler(CuentaRechazadaException.class)
+    ProblemDetail cuentaRechazada(CuentaRechazadaException e) {
+        return cuentaRechazada(e.codigo());
+    }
+
+    /** El mensaje es fijo y nunca repite el valor recibido (C-41). */
+    @ExceptionHandler(DatosCuentaInvalidosException.class)
+    ProblemDetail datosDeCuentaInvalidos(DatosCuentaInvalidosException e) {
+        ProblemDetail problema = ProblemDetail.forStatusAndDetail(HttpStatus.UNPROCESSABLE_ENTITY,
+                "Hay datos inválidos en el pedido");
+        problema.setTitle("Datos inválidos");
+        problema.setProperty("codigo", "DATOS_INVALIDOS");
+        problema.setProperty("errores", List.of(Map.of("campo", e.campo(), "mensaje", e.getMessage())));
+        return problema;
+    }
+
+    static ProblemDetail cuentaRechazada(CodigoCuenta codigo) {
+        ProblemDetail problema = ProblemDetail.forStatusAndDetail(HttpStatus.valueOf(codigo.estado()), codigo.detalle());
+        problema.setTitle("Operación sobre la cuenta rechazada");
+        problema.setProperty("codigo", codigo.name());
+        return problema;
+    }
+
     @ExceptionHandler(RegistroRechazadoException.class)
     ProblemDetail registroRechazado(RegistroRechazadoException e) {
         return conflicto(e.codigo());
@@ -83,7 +109,7 @@ class UsuariosExceptionHandler {
         throw e;
     }
 
-    private static String nombreDeRestriccion(Throwable e) {
+    static String nombreDeRestriccion(Throwable e) {
         for (Throwable causa = e; causa != null; causa = causa.getCause()) {
             if (causa instanceof ConstraintViolationException cv && cv.getConstraintName() != null) {
                 return cv.getConstraintName();

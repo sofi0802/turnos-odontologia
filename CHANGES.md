@@ -353,7 +353,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 
 ### [C-05] `auth-sesion-roles`
 - **Estado**: `[x]` completo (2026-11-21, PR #14). Specs: `openspec/specs/seguridad-autenticacion/`, `seguridad-autorizacion/`, `cuentas-pacientes/`; change archivado en `openspec/changes/archive/2026-11-21-auth-sesion-roles/`. Evidencia: `docs/evidencia/etapa-c05-auth.txt`
-- **Fix (2026-11-24)**: `errores-rutas-inexistentes`. Una ruta inexistente responde `404 RECURSO_INEXISTENTE` y un error no controlado `500 ERROR_INTERNO`, en lugar de un `403` disfrazado. Rama `fix/C-05-error-404-apply`, PR pendiente. Se mergea antes que C-41
+- **Fix (2026-11-24)**: `errores-rutas-inexistentes`. Una ruta inexistente responde `404 RECURSO_INEXISTENTE` y un error no controlado `500 ERROR_INTERNO`, en lugar de un `403` disfrazado. Propuesta en el PR #56 y apply en el PR #84 (mergeado antes que C-41); change archivado en `openspec/changes/archive/2026-11-24-errores-rutas-inexistentes/` y spec `seguridad-autorizacion` actualizado
 - **Responsable**: Juan Sebastián
 - **Scope**:
   - Spring Security con **sesión y cookie** `HttpOnly`/`SameSite=Lax`, CSRF habilitado (DD-10). Contraseñas con BCrypt.
@@ -557,7 +557,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/06_funcionalidades.md` §Épica 1, §US-015 a §US-018
 
 ### [C-35] `agenda-propia-odontologo`
-- **Estado**: `[x]` completo (2026-11-23; el archive va en un PR aparte). Regla RN-AG-18 en la KB; change en `openspec/changes/agenda-propia-odontologo/` con deltas de `agenda-api`, `seguridad-autenticacion` y `frontend-agenda-personal`. Mockups aprobados (revisión 3) y verificación en `mockups/verify/`. Evidencia: `docs/evidencia/c35-backend.txt`. Sin migración. La sesión ya informa `profesionalId` del odontólogo (lo reusa C-34)
+- **Estado**: `[x]` completo (2026-11-23, PR #57 apply y PR del archive). Specs: `openspec/specs/agenda-api/`, `seguridad-autenticacion/` y `frontend-agenda-personal/` (actualizados); change archivado en `openspec/changes/archive/2026-11-23-agenda-propia-odontologo/`. Regla RN-AG-18 en la KB. Mockups aprobados (revisión 3) y verificación en `mockups/verify/`. Evidencia: `docs/evidencia/c35-backend.txt`. Sin migración. La sesión informa `profesionalId` del odontólogo (lo reusa C-34)
 - **Responsable**: Sofia Indovino
 - **Scope**:
   - **Cambio de regla de negocio**: hoy la KB dice que el `ODONTOLOGO` ve toda la agenda y "puede filtrar la propia". Antes del propose, actualizar `03_actores_y_roles.md` (y `05_reglas_de_negocio.md` si corresponde) con la regla nueva: cada odontólogo ve solo sus turnos del día y de la semana.
@@ -667,7 +667,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `openspec/changes/frontend-reprogramacion-agenda/`, `openspec/changes/buscador-pacientes/` y `openspec/changes/agenda-propia-odontologo/` (lo que se reusa o ya cambió en la agenda)
 
 ### [C-41] `cuentas-del-personal`
-- **Estado**: `[ ]` propuesta lista y mockups creados (2026-11-24, `openspec/changes/cuentas-del-personal/`); falta que la líder apruebe la propuesta y los mockups
+- **Estado**: `[x]` completo (2026-11-24; propuesta y mockups aprobados en el PR #81, apply en un PR aparte). Change `openspec/changes/cuentas-del-personal/`. Evidencia: `docs/evidencia/c41-backend.txt` (578 unitarios y 527 de integración), 512 tests del frontend y verificación visual en `mockups/verify/`. Migración V21. El PR del apply incluye el fix `fix/calendario-utf8` (el build del frontend fallaba en `master`) y ajusta un test de odontograma (avisar a Emanuel)
 - **Responsable**: Enzo (avisa a Juan Sebastián, dueño de `usuarios/` y `shared/security/`)
 - **Scope**:
   - Hoy solo existe el admin inicial del `.env` (C-05): no hay forma de dar acceso a un odontólogo ni a una recepcionista sin tocar la base. La matriz RBAC de `03_actores_y_roles.md` ya dice que el `ADMIN` hace el CRUD de los usuarios del personal.
