@@ -1,0 +1,155 @@
+/* C-32: pantalla Reportes. Lo nuevo respecto de los estilos actuales. Solo variables --ds-*. */
+
+.reportes-filtros {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  margin-bottom: var(--ds-espacio-2);
+}
+
+.reportes-bloques {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+/* Los paneles de una fila tienen el mismo alto, pero su contenido va arriba. */
+.reporte-panel {
+  align-content: start;
+}
+
+.reporte-panel h2 {
+  font-size: var(--ds-texto-lg);
+}
+
+.reporte-panel h3 {
+  margin: 0;
+  font-size: var(--ds-texto-base);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-texto-suave);
+}
+
+.reporte-columnas {
+  display: grid;
+  gap: var(--ds-espacio-3);
+}
+
+.reporte-columnas > div {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  align-content: start;
+}
+
+.reporte-lista,
+.reporte-ausencias {
+  display: grid;
+  gap: var(--ds-espacio-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.reporte-fila {
+  display: grid;
+  gap: var(--ds-espacio-0);
+}
+
+.reporte-fila-cabecera {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1);
+}
+
+.reporte-nombre {
+  font-weight: var(--ds-peso-medio);
+}
+
+.reporte-valor {
+  font-weight: var(--ds-peso-fuerte);
+  font-variant-numeric: tabular-nums;
+}
+
+.reporte-valor.sin-horario {
+  font-weight: var(--ds-peso-normal);
+  color: var(--ds-texto-suave);
+}
+
+.reporte-detalle,
+.reporte-nota,
+.reporte-ayuda {
+  color: var(--ds-texto-suave);
+  font-size: var(--ds-texto-sm);
+}
+
+.reporte-nota,
+.reporte-ayuda {
+  margin: 0;
+}
+
+/* Barra de porcentaje: el texto del valor siempre está al lado; el largo se limita al 100 %. */
+.medidor {
+  height: 0.625rem;
+  overflow: hidden;
+  background: var(--ds-superficie-2);
+  border-radius: var(--ds-radio-pill);
+}
+
+.medidor-relleno {
+  display: block;
+  height: 100%;
+  background: var(--ds-acento-500);
+  border-radius: inherit;
+}
+
+/* Más del 100 % (sobreturnos): rayado además del color, para no depender solo de él. */
+.medidor.excedido .medidor-relleno {
+  background: repeating-linear-gradient(135deg, var(--ds-acento-700) 0 6px, var(--ds-acento-500) 6px 12px);
+}
+
+.reporte-cifras {
+  display: grid;
+  align-items: start;
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+  gap: var(--ds-espacio-2);
+  margin: 0;
+}
+
+.reporte-cifra {
+  display: grid;
+  gap: var(--ds-espacio-0);
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  background: var(--ds-superficie);
+  border-radius: var(--ds-radio);
+}
+
+.reporte-cifra dt {
+  color: var(--ds-texto-suave);
+  font-size: var(--ds-texto-sm);
+}
+
+.reporte-cifra dd {
+  margin: 0;
+}
+
+.reporte-numero {
+  font-size: var(--ds-texto-xl);
+  font-weight: var(--ds-peso-fuerte);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (min-width: 768px) {
+  .reportes-filtros {
+    grid-template-columns: repeat(3, minmax(0, 14rem));
+    align-items: end;
+  }
+
+  .reportes-bloques {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .reporte-ocupacion {
+    grid-column: 1 / -1;
+  }
+
+  .reporte-columnas {
+    grid-template-columns: 1fr 1fr;
+  }
+}
