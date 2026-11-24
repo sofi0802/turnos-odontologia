@@ -5,6 +5,7 @@ import { mover, periodoDe, type Periodo, type Vista } from '../agenda/periodo.ts
 import { registrarAsistencia, type AccionAsistencia } from '../agenda/asistencia.ts';
 import { abrirExtension, abrirSobreturno } from '../agenda/sobreturno.ts';
 import { dibujarAgenda, fechaCorta, type AccionesTurno } from '../agenda/vista.ts';
+import { dejarSeleccion } from '../ficha/seleccion.ts';
 import { ErrorSesion } from '../shared/api/errores.ts';
 import { hoy, sumarDias } from '../shared/fecha/zona.ts';
 import { cambiarOpciones, crearAviso, crearBoton, crearCampo, crearSelector, type Opcion } from '../shared/ui/campos.ts';
@@ -173,11 +174,33 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
     await cargarTurnos();
   }
 
+  /** C-44: deja el paciente y el turno en memoria y va a "Pacientes" (design D1). */
+  function abrirFicha(turno: TurnoAgenda): void {
+    if (turno.pacienteId === null) {
+      return;
+    }
+    dejarSeleccion({
+      paciente: { id: turno.pacienteId, nombre: turno.pacienteNombre, apellido: turno.pacienteApellido, dni: null },
+      turno: {
+        id: turno.id,
+        profesionalId: turno.profesionalId,
+        inicio: turno.inicio,
+        fin: turno.fin,
+        estado: turno.estado,
+        llegadaEn: turno.llegadaEn,
+      },
+    });
+    contexto.irA('pacientes');
+  }
+
   const acciones: AccionesTurno = {
     cancelar: (turno: TurnoAgenda) => abrirCancelacion(control, turno),
     reprogramar: (turno: TurnoAgenda) => abrirReprogramacion(control, turno),
     extender: (turno: TurnoAgenda) => abrirExtension(control, turno),
     asistencia: { rol: contexto.sesion.rol, registrar: (turno, accion) => void registrar(turno, accion) },
+    ...(contexto.sesion.rol === 'ADMIN' || contexto.sesion.rol === 'ODONTOLOGO'
+      ? { verFicha: (turno: TurnoAgenda) => abrirFicha(turno) }
+      : {}),
   };
 
   function filtrosActuales(): Filtros {

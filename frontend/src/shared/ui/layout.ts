@@ -134,7 +134,7 @@ export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[], opcio
       item.append(enlace);
       (pagina.seccionMenu === 'cuenta' ? listaCuenta : lista).append(item);
       // Las páginas que exigen sesión de paciente (Mis turnos) no se ofrecen al visitante.
-      return { item, enlace, conSesion: pagina.acceso === 'paciente' };
+      return { item, enlace, conSesion: pagina.acceso === 'paciente', roles: pagina.roles };
     });
   menu.append(lista);
   lateral.append(cajonCabecera, menu, menuCuenta);
@@ -187,8 +187,10 @@ export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[], opcio
     const conSesion = sesion !== null;
     // Con la contraseña temporal pendiente no hay menú: solo el cambio de contraseña y "Salir" (C-41).
     const conMenu = conSesion && !debeCambiarContrasena(sesion);
-    for (const { item, conSesion: soloConSesion } of items) {
-      item.hidden = item.dataset['grupo'] !== grupo || (soloConSesion && !conSesion);
+    for (const { item, conSesion: soloConSesion, roles } of items) {
+      // Una página con `roles` (Pacientes, C-44) solo se ofrece a esos roles.
+      const rolPermitido = roles === undefined || (sesion?.rol != null && roles.includes(sesion.rol));
+      item.hidden = item.dataset['grupo'] !== grupo || (soloConSesion && !conSesion) || !rolPermitido;
     }
     menuCuenta.hidden = ![...listaCuenta.children].some((li) => !(li as HTMLElement).hidden);
     lateral.hidden = !conMenu;

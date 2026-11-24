@@ -1,5 +1,5 @@
 import type { ClienteApi } from '../shared/api/cliente.ts';
-import type { Sesion } from '../shared/sesion/sesion.ts';
+import type { Rol, Sesion } from '../shared/sesion/sesion.ts';
 import type { NombreIcono } from '../shared/ui/iconos.ts';
 
 /** Lo que la aplicación le da a una página al dibujarla. */
@@ -37,6 +37,11 @@ export interface Pagina {
   readonly icono?: NombreIcono;
   /** `'cuenta'`: la opción va en la barra lateral separada de las páginas, como "Mi contraseña" (C-41). */
   readonly seccionMenu?: 'cuenta';
+  /**
+   * Roles que pueden abrir la página (C-44, design D2). Sin `roles`, la abre todo el grupo de `acceso`. Con `roles`,
+   * la opción del menú solo se ve para esos roles y los demás reciben un aviso sin que la página pida datos.
+   */
+  readonly roles?: readonly Rol[];
   render(contenedor: HTMLElement, contexto: ContextoPagina): void;
 }
 

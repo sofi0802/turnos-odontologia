@@ -9,7 +9,7 @@ export interface Filtros {
 /** Turno de `GET /turnos` (capacidad `agenda-api`): sin número de reserva ni datos de salud. */
 export interface TurnoAgenda {
   readonly id: number;
-  /** C-45: para precargar el sobreturno desde un choque; `null` si la API no lo informa. */
+  /** C-44 y C-45: para abrir la ficha del paciente y precargar el sobreturno desde un choque; `null` si la API no lo envía. */
   readonly pacienteId: number | null;
   readonly pacienteNombre: string;
   readonly pacienteApellido: string;

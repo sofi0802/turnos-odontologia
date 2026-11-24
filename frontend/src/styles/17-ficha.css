@@ -1,0 +1,505 @@
+/* Ficha clínica y odontograma (C-44). Solo variables --ds-* del design system (Revision 4), portado de los
+   mockups aprobados de openspec/changes/frontend-ficha-clinica-odontograma/mockups/ficha.css. */
+
+/* ---- Página y cabecera del paciente ---- */
+.pagina-ficha {
+  display: grid;
+  gap: var(--ds-espacio-3);
+}
+
+.pagina-ficha h1 {
+  margin-bottom: 0;
+}
+
+.ficha-paciente {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.ficha-paciente-datos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1) var(--ds-espacio-2);
+}
+
+.ficha-paciente-nombre {
+  margin: 0;
+  font-size: var(--ds-texto-xl);
+  line-height: var(--ds-interlineado-titulo);
+}
+
+.ficha-paciente-dni {
+  margin: 0;
+  color: var(--ds-texto-suave);
+  font-family: var(--ds-fuente-mono);
+}
+
+.ficha-turno {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1) var(--ds-espacio-2);
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  background: var(--ds-turno-reservado-fondo);
+  border-radius: var(--ds-radio);
+}
+
+.ficha-turno p {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+}
+
+.ficha-turno .icono {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  color: var(--ds-turno-reservado);
+}
+
+.ficha-turno .ayuda-boton {
+  display: block;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+  text-align: right;
+}
+
+/* ---- Secciones ---- */
+.ficha-seccion {
+  display: grid;
+  gap: var(--ds-espacio-2);
+  align-content: start;
+}
+
+.ficha-seccion-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1);
+}
+
+.ficha-seccion-cabecera h2 {
+  margin: 0;
+}
+
+.ficha-columnas {
+  display: grid;
+  gap: var(--ds-espacio-3);
+}
+
+@media (min-width: 64rem) {
+  .ficha-columnas {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+.firma {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.ficha-dato {
+  display: grid;
+  gap: var(--ds-espacio-0);
+}
+
+.ficha-dato dt {
+  font-weight: var(--ds-peso-medio);
+}
+
+.ficha-dato dd {
+  margin: 0 0 var(--ds-espacio-1);
+  white-space: pre-line;
+}
+
+.ficha-dato dd.vacio-dato {
+  color: var(--ds-texto-suave);
+  font-style: italic;
+}
+
+/* Campos de la ficha básica: opción B ("campos suaves"), elegida por Emanuel el 2026-11-24. Fondo gris claro sin
+   borde duro, rótulo y contador en la misma línea; al enfocar, fondo blanco y borde de acento. */
+.campo-suave {
+  display: grid;
+  gap: var(--ds-espacio-0);
+}
+
+.campo-suave-cabecera {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: var(--ds-espacio-1);
+}
+
+.campo-suave label {
+  font-weight: var(--ds-peso-medio);
+}
+
+.campo-suave textarea {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 4.5rem;
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  font: inherit;
+  color: var(--ds-texto);
+  background: var(--ds-superficie);
+  border: var(--ds-borde-ancho) solid transparent;
+  border-radius: var(--ds-radio-lg);
+  resize: vertical;
+  transition:
+    background var(--ds-duracion-rapida) var(--ds-curva),
+    border-color var(--ds-duracion-rapida) var(--ds-curva);
+}
+
+.campo-suave textarea::placeholder {
+  color: var(--ds-texto-suave);
+}
+
+.campo-suave textarea:hover {
+  border-color: var(--ds-borde);
+}
+
+.campo-suave textarea:focus {
+  background: var(--ds-fondo);
+  border-color: var(--ds-acento-500);
+}
+
+.campo-suave textarea[aria-invalid='true'] {
+  border-color: var(--ds-error);
+}
+
+.campo-suave .campo-error:empty {
+  display: none;
+}
+
+.contador {
+  margin: 0;
+  font-size: var(--ds-texto-xs);
+  color: var(--ds-texto-suave);
+  text-align: right;
+}
+
+/* ---- Odontograma ---- */
+.odontograma {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.odontograma svg {
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+  height: auto;
+}
+
+.odontograma-dibujo {
+  display: grid;
+  gap: var(--ds-espacio-2);
+  padding: var(--ds-espacio-1) 0;
+}
+
+.odontograma-mitad {
+  display: grid;
+  gap: var(--ds-espacio-0);
+  min-width: 0;
+}
+
+/* Las dos mitades (lado derecho e izquierdo del paciente) quedan lado a lado en pantallas anchas (design D4). */
+@media (min-width: 48rem) {
+  .odontograma-dibujo {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+.odontograma-lado {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-texto-suave);
+}
+
+.odontograma .cara {
+  fill: var(--ds-odonto-sin-estado);
+  stroke: var(--ds-odonto-trazo);
+  stroke-width: 1;
+  cursor: pointer;
+}
+
+.odontograma[data-solo-lectura] .cara {
+  cursor: default;
+}
+
+.odontograma .cara:hover {
+  fill: var(--ds-acento-50);
+}
+
+.odontograma .cara:focus-visible {
+  outline: var(--ds-foco-ancho) solid var(--ds-foco-color);
+  stroke: var(--ds-foco-color);
+  stroke-width: 3;
+}
+
+.odontograma .cara[data-estado='SANO'] { fill: var(--ds-odonto-sano); }
+.odontograma .cara[data-estado='CARIES'] { fill: var(--ds-odonto-caries); }
+.odontograma .cara[data-estado='OBTURADO'] { fill: var(--ds-odonto-obturado); }
+.odontograma .cara[data-estado='A_TRATAR'] { fill: var(--ds-odonto-a-tratar); }
+/* Estados de la pieza completa: además de la marca (cruz, contorno o línea), las caras llevan un tinte suave del
+   color del estado, sin tokens nuevos (ajuste del apply, design D4). */
+.odontograma .cara[data-estado='AUSENTE'] { fill: color-mix(in srgb, var(--ds-odonto-ausente) 22%, var(--ds-superficie)); }
+.odontograma .cara[data-estado='CORONA'] { fill: color-mix(in srgb, var(--ds-odonto-corona) 22%, var(--ds-superficie)); }
+.odontograma .cara[data-estado='ENDODONCIA'] { fill: color-mix(in srgb, var(--ds-odonto-endodoncia) 22%, var(--ds-superficie)); }
+
+.odontograma .cara.pendiente {
+  stroke: var(--ds-texto);
+  stroke-width: 2;
+  stroke-dasharray: 3 2;
+}
+
+.odontograma .cara.elegida {
+  stroke: var(--ds-acento-500);
+  stroke-width: 3;
+}
+
+.odontograma .letra {
+  font: var(--ds-peso-fuerte) 9px var(--ds-fuente);
+  fill: var(--ds-acento-texto);
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+}
+
+.odontograma .numero {
+  font: var(--ds-peso-medio) 11px var(--ds-fuente);
+  fill: var(--ds-texto-suave);
+  text-anchor: middle;
+}
+
+.odontograma .numero.elegida {
+  fill: var(--ds-acento-500);
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.odontograma .marca-ausente { stroke: var(--ds-odonto-ausente); stroke-width: 3; stroke-linecap: round; }
+.odontograma .marca-corona { fill: none; stroke: var(--ds-odonto-corona); stroke-width: 3; }
+.odontograma .marca-endodoncia { stroke: var(--ds-odonto-endodoncia); stroke-width: 3; stroke-linecap: round; }
+
+.leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1) var(--ds-espacio-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--ds-texto-sm);
+}
+
+.leyenda li {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-0);
+}
+
+.muestra {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding: 0 0.2rem;
+  font-size: var(--ds-texto-xs);
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-acento-texto);
+  border-radius: var(--ds-radio-sm);
+}
+
+.muestra[data-estado='SANO'] { background: var(--ds-odonto-sano); }
+.muestra[data-estado='CARIES'] { background: var(--ds-odonto-caries); }
+.muestra[data-estado='OBTURADO'] { background: var(--ds-odonto-obturado); }
+.muestra[data-estado='A_TRATAR'] { background: var(--ds-odonto-a-tratar); }
+.muestra[data-estado='AUSENTE'] { background: var(--ds-odonto-ausente); }
+.muestra[data-estado='CORONA'] { background: var(--ds-odonto-corona); }
+.muestra[data-estado='ENDODONCIA'] { background: var(--ds-odonto-endodoncia); }
+
+/* ---- Panel de edición ---- */
+.editor-pieza {
+  display: grid;
+  gap: var(--ds-espacio-2);
+  padding: var(--ds-espacio-2);
+  background: var(--ds-superficie);
+  border-radius: var(--ds-radio);
+}
+
+.editor-pieza h3 {
+  margin: 0;
+  font-size: var(--ds-texto-base);
+}
+
+.editor-fila {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+@media (min-width: 64rem) {
+  .editor-fila {
+    grid-template-columns: minmax(14rem, 1fr) 2fr;
+  }
+}
+
+.opciones-caras {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1);
+}
+
+.opciones-caras .opcion {
+  min-height: var(--ds-alto-control);
+}
+
+.opciones-estados {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+  gap: var(--ds-espacio-1);
+}
+
+.opciones-estados .opcion {
+  min-height: var(--ds-alto-control);
+}
+
+.pendientes {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pendientes li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1);
+  padding: var(--ds-espacio-0) var(--ds-espacio-1);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) dashed var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio);
+}
+
+.pendientes li span {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+}
+
+.acciones-odontograma {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--ds-espacio-1);
+}
+
+/* ---- Vigentes, ausencias e historial ---- */
+.lista-ficha {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lista-ficha li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--ds-espacio-0) var(--ds-espacio-2);
+  padding: var(--ds-espacio-1) 0;
+  border-bottom: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.lista-ficha li:last-child {
+  border-bottom: 0;
+}
+
+.lista-ficha .etiqueta {
+  align-self: center;
+  white-space: nowrap;
+}
+
+.lista-ficha .detalle {
+  color: var(--ds-texto-suave);
+  font-size: var(--ds-texto-sm);
+}
+
+.deshecha {
+  color: var(--ds-texto-suave);
+}
+
+.ficha-desplegable > summary {
+  min-height: var(--ds-alto-control);
+  display: flex;
+  align-items: center;
+  font-weight: var(--ds-peso-medio);
+  cursor: pointer;
+}
+
+.ficha-desplegable > summary::before {
+  content: '▸';
+  width: 1.25rem;
+  color: var(--ds-acento-500);
+}
+
+.ficha-desplegable[open] > summary::before {
+  content: '▾';
+}
+
+.tabla-historial {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--ds-texto-sm);
+}
+
+.tabla-historial th,
+.tabla-historial td {
+  padding: var(--ds-espacio-1);
+  text-align: left;
+  border-bottom: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.tabla-historial th {
+  color: var(--ds-texto-suave);
+  font-weight: var(--ds-peso-medio);
+}
+
+@media (max-width: 47.99rem) {
+  .tabla-historial thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .tabla-historial tr {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 var(--ds-espacio-1);
+    padding: var(--ds-espacio-1) 0;
+    border-bottom: var(--ds-borde-ancho) solid var(--ds-borde);
+  }
+
+  .tabla-historial td {
+    padding: 0;
+    border: 0;
+  }
+
+  .tabla-historial td:first-child {
+    grid-column: 1 / -1;
+    color: var(--ds-texto-suave);
+  }
+}

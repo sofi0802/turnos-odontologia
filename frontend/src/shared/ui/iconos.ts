@@ -15,7 +15,8 @@ export type NombreIcono =
   | 'llave'
   | 'reloj'
   | 'copiar'
-  | 'volver';
+  | 'volver'
+  | 'pacientes';
 
 type Trazo = readonly [etiqueta: 'path' | 'rect' | 'circle', atributos: Readonly<Record<string, string>>];
 
@@ -47,6 +48,15 @@ const TRAZOS: Readonly<Record<NombreIcono, readonly Trazo[]>> = {
   reloj: [['circle', { cx: '12', cy: '12', r: '9' }], ['path', { d: 'M12 7v5l3 2' }]],
   copiar: [['rect', { x: '9', y: '9', width: '12', height: '12', rx: '2' }], ['path', { d: 'M5 15V5a2 2 0 0 1 2-2h10' }]],
   volver: [['path', { d: 'M15 18l-6-6 6-6' }]],
+  // C-44: "Pacientes" (la ficha clínica), una pieza dental.
+  pacientes: [
+    [
+      'path',
+      {
+        d: 'M7.5 3C5 3 3.5 5 3.5 7.5c0 3 1.5 4.5 2 7 .6 3 1 6.5 2.5 6.5s2-3 2.5-5c.3-1.2.8-1.5 1.5-1.5s1.2.3 1.5 1.5c.5 2 1 5 2.5 5s1.9-3.5 2.5-6.5c.5-2.5 2-4 2-7C20.5 5 19 3 16.5 3c-2 0-3 1-4.5 1s-2.5-1-4.5-1z',
+      },
+    ],
+  ],
 };
 
 export function crearIcono(nombre: NombreIcono): SVGElement {

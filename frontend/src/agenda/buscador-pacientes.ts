@@ -17,6 +17,8 @@ export interface OpcionesBuscador {
   sesionVencida(causa: unknown): boolean;
   /** Espera después de la última tecla, en milisegundos (300 por defecto). */
   esperaMs?: number;
+  /** C-44: avisa el paciente elegido (la página Pacientes abre su ficha). */
+  alElegir?(paciente: PacienteEncontrado): void;
 }
 
 /** Campo "Paciente": cumple `Campo<HTMLInputElement>` y guarda el id del paciente elegido. */
@@ -201,6 +203,7 @@ export function crearBuscadorPacientes(api: ClienteApi, opciones: OpcionesBuscad
     estado.hidden = true;
     elegido.hidden = false;
     cambiar.focus();
+    opciones.alElegir?.(paciente);
   }
 
   function mostrarResultados(encontrados: PacienteEncontrado[]): void {

@@ -1,7 +1,7 @@
 # Mockups de C-44 `frontend-ficha-clinica-odontograma`
 
-- Design system revision: 4 (`design-system/README.md`). C-44 suma los tokens `--ds-odonto-*` y la sección "Odontograma" de `components.html`. La aprobación de las revisiones 2, 3 y 4 sigue pendiente con la líder.
-- Approval: approved (2026-11-24, by Emanuel). La revisión 4 del design system sigue esperando que Sofia la renueve.
+- Design system revision: 4 (`design-system/README.md`). C-44 suma los tokens `--ds-odonto-*` y la sección "Odontograma" de `components.html`. La líder aprobó las revisiones 2, 3 y 4 al mergear el PR #94 (2026-11-24).
+- Approval: approved (2026-11-24, by Emanuel). La revisión 4 del design system la aprobó Sofia al mergear el PR #94 (2026-11-24).
 - Preview: rendered (2026-11-24).
   - Las capturas están en `previews/`, a 390 × 844 y 1440 × 900, de página completa, con Playwright.
   - Ninguna pantalla tiene desplazamiento horizontal, errores de consola ni pedidos fallidos.
@@ -77,3 +77,7 @@ Los aprueba la líder antes del apply (modo `system-and-mockups`). Una vez aprob
 ## Capturas
 
 `previews/<archivo>-390.png` y `previews/<archivo>-1440.png` para cada pantalla de la tabla.
+
+## Ajuste durante el apply
+
+- `ficha-basica-opciones.html` (capturas `previews/ficha-basica-opciones-*.png`): cuatro opciones para los campos de la ficha básica. Emanuel eligió la B, "campos suaves", el 2026-11-24, y es la que se implementó.

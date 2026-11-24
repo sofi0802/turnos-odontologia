@@ -4,7 +4,8 @@ import type { Rol } from '../shared/sesion/sesion.ts';
 import type { TurnoAgenda } from './consulta.ts';
 
 /** C-43: la ausencia se marca recién a los 15 minutos del inicio (RN-AG-17); el backend aplica la misma regla. */
-const TOLERANCIA_MS = 15 * 60 * 1000;
+/** RN-AG-17: la ausencia se marca a partir de los 15 minutos del inicio. La usa también la ficha clínica (C-44). */
+export const TOLERANCIA_MS = 15 * 60 * 1000;
 
 const ESTADOS_ACTIVOS: ReadonlySet<string> = new Set(['RESERVADO', 'CONFIRMADO']);
 
