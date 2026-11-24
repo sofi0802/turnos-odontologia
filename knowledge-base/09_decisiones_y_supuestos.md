@@ -147,6 +147,19 @@ Como el margen es configurable (con mínimo 10), se guarda la columna `fin_con_m
 - Una caída entre el guardado del archivo y el de la fila puede dejar un archivo huérfano, invisible para la API.
 **Impacto**: RN-CL-07, la entidad `ImagenClinica` (migración V17) y la variable `IMAGENES_DIRECTORIO` en `08_arquitectura_propuesta.md`.
 
+### DD-18: La deuda nace como un cargo por el copago cuando el turno queda atendido [2026-11-24, C-22, en revisión]
+**Decisión**: C-22 genera un **cargo** en la cuenta corriente del paciente cuando un turno pasa a `ATENDIDO`, por el copago de su prestación según la cobertura vigente, y lo guarda como una foto del cálculo (RN-CA-03). Los cobros se imputan a ese cargo, en uno o varios pagos (RN-CA-04).
+**Contexto**: C-19 ya calcula el copago de una prestación con el arancel y la cobertura del plan (RN-PR-01 a RN-PR-03). La competencia afirma tener caja, cobros y cuenta corriente, pero no publica cómo los calcula (relevamiento de fuentes).
+**Alternativas consideradas**:
+1. Registrar solo los cobros, sin cargos: la deuda existiría solo si alguien carga un cobro parcial.
+2. Calcular la deuda en el momento de mostrarla, con los precios y la cobertura actuales.
+**Justificación**:
+- Con el cargo, un turno atendido sin cobrar queda como deuda aunque nadie lo cobre ese día.
+- La foto evita que la deuda cambie sola cuando se actualiza un precio, igual que el presupuesto (DD-15).
+- El cargo por turno es la base que necesitan las señas (C-23) y la factura (C-24).
+**Trade-offs aceptados**: el paso a `ATENDIDO` lo hace la agenda (`agenda/`, de Sofia), así que C-22 necesita enterarse de ese cambio; el propose define cómo, sin que `agenda/` dependa de `caja/`. Un turno atendido sin arancel no genera deuda hasta que se carga el precio.
+**Impacto**: RN-CA-01 a RN-CA-08, US-207, una fila de la matriz de 03 y las entidades `Caja`, `Cargo` y `Cobro` (migración V15).
+
 ## Supuestos inferidos
 
 ### ~~SU-07: Todos los profesionales pueden hacer todas las prestaciones~~ (refutado)

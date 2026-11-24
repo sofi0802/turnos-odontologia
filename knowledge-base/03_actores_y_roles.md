@@ -42,6 +42,7 @@ C = crear, R = leer, U = modificar, D = eliminar o desactivar. "Propio" = solo s
 | Aranceles y cobertura por plan (RN-PR-01, RN-PR-02) [2026-11-24, C-19] | CRUD (sin borrar) | R | R | — |
 | Presupuesto (RN-PR-04 a RN-PR-06) [2026-11-24, C-19] | R | R, sin pieza ni cara (PA-24) | C y R, y cambia el estado | R propios, en "Mi cuenta" (PA-27) |
 | Reportes: ocupación, origen, ausencias y cancelaciones (RN-RE-01) [2026-11-24, C-32, en revisión] | R (todo el consultorio) | R (todo el consultorio; PA-29) | **—** (su agenda sigue en RN-AG-18) | **—** |
+| Caja, cobros y cuenta corriente del paciente (RN-CA-01) [2026-11-24, C-22, en revisión] | R, y anula cobros con motivo (RN-CA-07) | C y R: abre la caja, cobra y la cierra (PA-32) | **—** | **—** |
 
 > **Lección de la verificación de fuentes:** en la demo de VecDent, un rol "paciente" armado a mano veía el dashboard con estadísticas de la clínica y el menú de configuración (informe, verificación de fuentes, fila 5). El paciente **no es un rol del personal con menos permisos**: solo accede a endpoints públicos y a sus propios turnos.
 

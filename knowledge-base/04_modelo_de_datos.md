@@ -10,6 +10,7 @@
 | **Notificaciones** | Recordatorios y confirmaciones por WhatsApp o email |
 | **Clínica** | Ficha básica, odontograma y periodontograma (C-25) |
 | **Coberturas** | Obras sociales y prepagas, sus planes, el nomenclador de prácticas y la afiliación de cada paciente (C-18); aranceles, cobertura por plan y presupuestos con copago (C-19) |
+| **Caja** [2026-11-24, C-22, en revisión] | Caja diaria con apertura, cierre y arqueo, cargos por turno atendido y cobros (C-22) |
 | **Seguridad y auditoría** | Usuarios del personal, roles, registro de cambios en turnos |
 
 Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
@@ -170,6 +171,21 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
 - `id` BIGINT identity, `presupuesto_id` FK, `prestacion_id` FK, `nomenclador_id` FK nullable, `pieza` smallint nullable (FDI, como el odontograma), `cara` varchar(1) nullable, `cantidad` int, `precio_unitario` numeric(12,2), `porcentaje_cobertura` smallint, `importe`, `cobertura` y `copago` numeric(12,2).
 - Constraints: `cantidad ≥ 1`, `porcentaje_cobertura BETWEEN 0 AND 100`, `importe = precio_unitario × cantidad`, `importe = cobertura + copago`, y la pieza y la cara con los mismos valores válidos que `OdontogramaRegistro` (RN-CL-03).
 - Guarda una **copia** del precio y del porcentaje del momento en que se emitió (RN-PR-04).
+
+### Caja [2026-11-24, C-22, en revisión]
+- `id` BIGINT identity, `fecha` date (día del consultorio en que se abrió), `monto_inicial` numeric(12,2), `abierta_por` varchar(120), `abierta_en` timestamptz, `cerrada_por` varchar(120) nullable, `cerrada_en` timestamptz nullable, `efectivo_contado` numeric(12,2) nullable, `diferencia` numeric(12,2) nullable, `motivo_diferencia` varchar(255) nullable.
+- Constraints: `monto_inicial ≥ 0`; **una sola caja abierta** (índice único parcial sobre `cerrada_en IS NULL`, RN-CA-02); al cerrar, `efectivo_contado` y `diferencia` obligatorios, y `motivo_diferencia` obligatorio si `diferencia ≠ 0` (RN-CA-06).
+- No se borra ni se reabre.
+
+### Cargo [2026-11-24, C-22, en revisión]
+- `id` BIGINT identity, `paciente_id` FK, `turno_id` FK (**único**: un cargo por turno), `prestacion_id` FK, `fecha` date (del turno), `afiliacion_id` FK nullable (nulo si es particular), `precio` numeric(12,2), `porcentaje_cobertura` smallint, `cobertura` numeric(12,2), `copago` numeric(12,2), `creado_en` timestamptz.
+- Constraints: `precio = cobertura + copago`, `copago ≥ 0`, `porcentaje_cobertura BETWEEN 0 AND 100`.
+- Es una foto del cálculo del copago (RN-CA-03, DD-18). No se borra ni se modifica.
+
+### Cobro [2026-11-24, C-22, en revisión]
+- `id` BIGINT identity, `cargo_id` FK, `caja_id` FK, `importe` numeric(12,2), `medio` enum (`EFECTIVO`, `DEBITO`, `CREDITO`, `TRANSFERENCIA`), `registrado_por` varchar(120), `registrado_en` timestamptz, `anulado` boolean, `anulado_por` varchar(120) nullable, `anulado_en` timestamptz nullable, `motivo_anulacion` varchar(255) nullable.
+- Constraints: `importe > 0`; si `anulado`, `anulado_por`, `anulado_en` y `motivo_anulacion` obligatorios (RN-CA-07). La suma de los cobros no anulados de un cargo no supera su `copago` (en el servicio, con bloqueo del cargo; RN-CA-04).
+- No se borra: se anula.
 
 ### Usuario
 - `id` BIGINT identity, `username` (único), `password_hash`, `rol` enum (`ADMIN`, `RECEPCIONISTA`, `ODONTOLOGO`, `PACIENTE`), `profesional_id` FK nullable, `paciente_id` FK nullable, `activo`.

@@ -249,6 +249,20 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 - [ ] CA-7: el odontólogo no ve Reportes y el paciente recibe `403`.
 **Reglas relacionadas**: RN-RE-01 a RN-RE-07
 
+## Épica 9: Caja (post-MVP)
+
+### US-207: Caja diaria, cobros y cuenta corriente del paciente [2026-11-24, C-22, en revisión]
+**Como** recepcionista **quiero** cobrar los turnos atendidos en una caja diaria y cerrarla con su arqueo, **para** saber qué se cobró, qué deben los pacientes y si la caja cuadra.
+**Criterios de aceptación**:
+- [ ] CA-1: abro la caja del día con un monto inicial en efectivo; no puede haber dos cajas abiertas y sin caja abierta no puedo cobrar.
+- [ ] CA-2: cuando un turno queda atendido, veo en la cuenta corriente del paciente un cargo por el copago de la prestación según su cobertura; un turno sin precio figura como "Sin precio".
+- [ ] CA-3: cobro un cargo en todo o en parte con un medio de pago, y lo que falta queda como deuda.
+- [ ] CA-4: no puedo cobrar más que el saldo del cargo.
+- [ ] CA-5: al cerrar, informo el efectivo contado; veo el esperado, la diferencia y los totales por medio, y con diferencia tengo que escribir el motivo.
+- [ ] CA-6: como `ADMIN` anulo un cobro de la caja abierta con un motivo; el cobro no se borra y su importe vuelve a ser deuda.
+- [ ] CA-7: el odontólogo y el paciente no acceden a la caja ni a la cuenta corriente.
+**Reglas relacionadas**: RN-CA-01 a RN-CA-08, RN-PR-01 a RN-PR-03, RN-AG-20
+
 ## Backlog: v1.x y posteriores (fuera del MVP)
 
 > Cada fila se vincula con su change de `CHANGES.md`. Las reglas detalladas se escriben en esta KB **antes de empezar** el change, cuando el MVP esté completo.
@@ -261,7 +275,7 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 | US-200 | Obras sociales y prepagas (planes, nomencladores, liquidaciones; el catálogo y la afiliación pasaron a US-046 el 2026-11-24) | Posterior | C-18, C-20 | Informe, D.3 |
 | US-205 | Presupuestos con cobertura y copago (pasó a US-047 el 2026-11-24) | Posterior | C-19 | Informe, A.3 |
 | US-206 | Validación online de la cobertura con la obra social | Posterior | C-21 | Informe, C.2 (DentalTec) |
-| US-207 | Caja diaria, cobros y cuenta corriente del paciente | Posterior | C-22 | Roadmap (Ajustar de la líder, 2026-11-21); base de C-23 y C-24 |
+| US-207 | Caja diaria, cobros y cuenta corriente del paciente (detallada en la Épica 9 el 2026-11-24) | Posterior | C-22 | Roadmap (Ajustar de la líder, 2026-11-21); base de C-23 y C-24 |
 | US-202 | Señas con Mercado Pago | Posterior | C-23 | Informe, D.3 |
 | US-201 | Facturación electrónica ARCA | Posterior | C-24 | Informe, D.3 |
 | US-203 | ~~Imágenes y radiografías~~ (pasó a US-048 el 2026-11-24; el periodontograma, a US-045) | Posterior | C-26, C-47 | Informe, D.3 |
