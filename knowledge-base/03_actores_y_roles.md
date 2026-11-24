@@ -36,6 +36,8 @@ C = crear, R = leer, U = modificar, D = eliminar o desactivar. "Propio" = solo s
 | Paciente (datos de contacto) | CRUD | CRUD | R | R/U propio (al reservar) |
 | Ficha clínica y odontograma | R | **—** | CRUD | — |
 | Periodontograma (RN-CL-04) [2026-11-24] | R | **—** | C y R (cada carga es una versión nueva; no se edita ni se borra) | — |
+| Obras sociales, planes y nomenclador (RN-OS-01) [2026-11-24, C-18, en revisión] | CRUD (sin borrar) | R | R | — |
+| Afiliación del paciente (RN-OS-02) [2026-11-24, C-18, en revisión] | CRUD (sin borrar) | CRUD (sin borrar; la carga al dar de alta o al atender al paciente) | R | — |
 | Estadísticas o dashboard | R | R (operativas) | R (propias) | **—** |
 
 > **Lección de la verificación de fuentes:** en la demo de VecDent, un rol "paciente" armado a mano veía el dashboard con estadísticas de la clínica y el menú de configuración (informe, verificación de fuentes, fila 5). El paciente **no es un rol del personal con menos permisos**: solo accede a endpoints públicos y a sus propios turnos.
