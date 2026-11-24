@@ -24,6 +24,8 @@ const REGLAS_POR_MODULO: Readonly<Record<string, string>> = {
   '16-cuentas.css': '.contrasena-caja {',
   // C-44: ficha clínica y odontograma.
   '17-ficha.css': '.odontograma .cara {',
+  // C-45: sobreturno y extensión.
+  '18-sobreturno.css': '.aviso-choque {',
 };
 
 function importaciones(): string[] {

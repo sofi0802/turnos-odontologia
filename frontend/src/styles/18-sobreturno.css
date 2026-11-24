@@ -1,0 +1,53 @@
+/* C-45: sobreturno y extensión en la agenda del personal (mockups aprobados en
+   openspec/changes/frontend-sobreturno-y-extension/mockups/). Solo variables --ds-*. */
+
+/* "Sobreturno" (secundario) y "Nuevo turno" (principal) juntos: en el celular, una fila mitad y mitad. */
+.agenda-botones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--ds-espacio-1);
+}
+
+@media (min-width: 768px) {
+  .agenda-botones {
+    display: flex;
+    margin-left: auto;
+  }
+}
+
+/* Paciente que viene del turno extendido: texto fijo en lugar del buscador. */
+.etiqueta-campo {
+  display: block;
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.valor-fijo {
+  margin: 0;
+  padding: var(--ds-espacio-1) 0;
+  color: var(--ds-texto);
+}
+
+.nota-sillon {
+  margin: 0 0 var(--ds-espacio-2);
+  color: var(--ds-texto-suave);
+}
+
+/* Choque al extender: aviso de alerta con las dos salidas. */
+.aviso-choque {
+  margin-bottom: var(--ds-espacio-2);
+  padding: var(--ds-espacio-2);
+  border: var(--ds-borde-ancho) solid var(--ds-alerta);
+  border-left-width: 4px;
+  border-radius: var(--ds-radio);
+  background: var(--ds-alerta-fondo);
+}
+
+.aviso-choque p {
+  margin: 0 0 var(--ds-espacio-1);
+}
+
+.aviso-choque-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1);
+}

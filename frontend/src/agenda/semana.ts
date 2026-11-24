@@ -194,7 +194,16 @@ function celda(inicio: number, fin: number, desdeGrilla: number, carril: number,
 /** Las acciones del detalle cierran el diálogo antes de abrir el suyo (cancelar, reprogramar) o de pedir la agenda. */
 function cerrandoAntes(acciones: AccionesTurno, cerrar: () => void): AccionesTurno {
   const asistencia = acciones.asistencia;
+  const extender = acciones.extender;
   return {
+    ...(extender === undefined
+      ? {}
+      : {
+          extender: (turno: TurnoAgenda) => {
+            cerrar();
+            extender(turno);
+          },
+        }),
     cancelar: (turno) => {
       cerrar();
       acciones.cancelar(turno);

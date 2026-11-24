@@ -301,6 +301,21 @@ describe('Indicadores de confirmado y sobreturno', () => {
   });
 });
 
+describe('Datos del turno en la agenda (C-45)', () => {
+  it('consultarAgenda lee el pacienteId de cada turno', async () => {
+    const { consultarAgenda } = await import('../src/agenda/consulta.ts');
+    const { periodoDe } = await import('../src/agenda/periodo.ts');
+    servidor.responder('GET /turnos', () => json(200, [turno({ id: 7, pacienteId: 3 }), turno({ id: 8, pacienteId: 1 })]));
+
+    const turnos = await consultarAgenda(servidor.api, periodoDe('dia', '2026-12-01'), { profesionalId: null, sillonId: null });
+
+    expect(turnos.map((t) => [t.id, t.pacienteId])).toEqual([
+      [7, 3],
+      [8, 1],
+    ]);
+  });
+});
+
 describe('Ver la ficha desde un turno (C-44)', () => {
   const SESION_ADMIN = { autenticado: true, username: 'admin', rol: 'ADMIN' };
 

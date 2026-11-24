@@ -10,11 +10,14 @@ import {
 import { nombreDe, type Catalogos } from './catalogos.ts';
 import type { TurnoAgenda } from './consulta.ts';
 import type { Periodo } from './periodo.ts';
+import { permiteExtender } from './sobreturno.ts';
 import { dibujarSemana, type NombreEnTarjeta } from './semana.ts';
 
 export interface AccionesTurno {
   cancelar(turno: TurnoAgenda): void;
   reprogramar(turno: TurnoAgenda): void;
+  /** C-45: "Extender" en los turnos activos que no son sobreturno; sin esto, no se ofrece. */
+  extender?(turno: TurnoAgenda): void;
   /** C-43: el rol de la sesión decide los botones de asistencia; sin esto, no se ofrecen. */
   readonly asistencia?: {
     readonly rol: Rol | null;
@@ -168,6 +171,16 @@ function elementoTurno(turno: TurnoAgenda, catalogos: Catalogos, acciones: Accio
   reprogramar.setAttribute('aria-label', `Reprogramar turno de ${descripcion}`);
   reprogramar.addEventListener('click', () => acciones.reprogramar(turno));
   botones.append(cancelar, reprogramar);
+  const extender = acciones.extender;
+  if (extender !== undefined && permiteExtender(turno)) {
+    const boton = document.createElement('button');
+    boton.type = 'button';
+    boton.className = 'btn';
+    boton.textContent = 'Extender';
+    boton.setAttribute('aria-label', `Extender turno de ${descripcion}`);
+    boton.addEventListener('click', () => extender(turno));
+    botones.append(boton);
+  }
 
   item.append(botones);
   return item;

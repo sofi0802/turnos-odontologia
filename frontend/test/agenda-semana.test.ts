@@ -21,6 +21,7 @@ const CATALOGOS: Catalogos = {
 function turno(id: number, dia: string, desde: string, hasta: string, datos: Partial<TurnoAgenda> = {}): TurnoAgenda {
   return {
     id,
+    pacienteId: 1,
     pacienteNombre: 'Paciente',
     pacienteApellido: `Número ${id}`,
     profesionalId: 1,
@@ -194,6 +195,21 @@ describe('Agenda semanal en grilla', () => {
     [...(dialogo?.querySelectorAll<HTMLButtonElement>('.turno-acciones button') ?? [])][0]?.click();
     expect(cancelar).toHaveBeenCalledTimes(1);
     expect(document.querySelector('dialog.dialogo')).toBeNull();
+  });
+
+  it('Extender desde la semana', () => {
+    const extender = vi.fn();
+    const contenedor = dibujar([turno(7, '2026-12-01', '10:00', '10:30')], { extender });
+
+    contenedor.querySelector<HTMLButtonElement>('.turno-celda button')?.click();
+    const dialogo = document.querySelector<HTMLDialogElement>('dialog.dialogo');
+    const botones = [...(dialogo?.querySelectorAll<HTMLButtonElement>('.turno-acciones button') ?? [])];
+    expect(botones.map((b) => b.textContent)).toEqual(['Cancelar turno', 'Reprogramar', 'Extender']);
+
+    botones[2]?.click();
+    expect(document.querySelector('dialog.dialogo')).toBeNull();
+    expect(extender).toHaveBeenCalledTimes(1);
+    expect(extender.mock.calls[0]?.[0]).toMatchObject({ id: 7 });
   });
 
   it('Un turno atendido no ofrece cancelar ni reprogramar', () => {

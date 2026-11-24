@@ -1,0 +1,2970 @@
+/* Mockups de C-45 (frontend-sobreturno-y-extension). Base: los módulos de frontend/src/styles tal como están en master
+   (después de la etapa E de C-39), más los ayudantes de mockup. Lo nuevo de C-45 está en delta.css. Solo variables --ds-*. */
+/* ===== 01-base.css ===== */
+
+:root {
+  font-family: var(--ds-fuente);
+  line-height: var(--ds-interlineado);
+  color: var(--ds-texto);
+  background: var(--ds-fondo);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  background: var(--ds-fondo);
+}
+
+a {
+  color: var(--ds-acento-500);
+}
+
+:focus-visible {
+  outline: var(--ds-foco-ancho) solid var(--ds-foco-color);
+  outline-offset: var(--ds-foco-separacion);
+}
+
+button {
+  min-height: 44px;
+  padding: 0 var(--ds-espacio-2);
+  font: inherit;
+  color: var(--ds-texto);
+  background: var(--ds-fondo);
+  border: 1px solid var(--ds-borde);
+  border-radius: var(--ds-radio);
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: progress;
+  opacity: 0.7;
+}
+
+button[aria-pressed='true'] {
+  font-weight: 700;
+  color: var(--ds-acento-texto);
+  background: var(--ds-acento-500);
+  border-color: var(--ds-acento-500);
+}
+
+input,
+select {
+  min-height: 44px;
+  width: 100%;
+  padding: 0 var(--ds-espacio-1);
+  font: inherit;
+  color: var(--ds-texto);
+  background: var(--ds-fondo);
+  border: 1px solid var(--ds-borde);
+  border-radius: var(--ds-radio);
+}
+
+input[aria-invalid='true'],
+select[aria-invalid='true'] {
+  border-color: var(--ds-error);
+}
+
+.boton-principal {
+  font-weight: 700;
+  color: var(--ds-acento-texto);
+  background: var(--ds-acento-500);
+  border-color: var(--ds-acento-500);
+}
+
+.boton-secundario {
+  background: var(--ds-superficie);
+}
+
+.contenido {
+  max-width: var(--ds-ancho-maximo);
+  margin: 0 auto;
+  padding: var(--ds-espacio-3) var(--ds-espacio-2);
+}
+
+.contenido h1 {
+  margin-top: 0;
+  font-size: var(--ds-texto-xl);
+  line-height: var(--ds-interlineado-titulo);
+}
+
+:where(.contenido) h2 {
+  font-size: var(--ds-texto-lg);
+  line-height: var(--ds-interlineado-titulo);
+}
+
+:where(.contenido) h3 {
+  font-size: var(--ds-texto-base);
+  line-height: var(--ds-interlineado-titulo);
+}
+
+
+/* ===== 02-formularios.css ===== */
+/* Formularios y avisos */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-espacio-2);
+}
+
+.formulario-angosto {
+  max-width: 24rem;
+}
+
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.campo label {
+  font-weight: 600;
+}
+
+.campo-error {
+  margin: 0;
+  min-height: 0;
+  font-size: 0.875rem;
+  color: var(--ds-error);
+}
+
+.campo-error:empty {
+  display: none;
+}
+
+.aviso {
+  margin: 0 0 var(--ds-espacio-2);
+}
+
+.aviso:empty {
+  display: none;
+}
+
+.aviso-error {
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  color: var(--ds-error);
+  background: var(--ds-error-fondo);
+  border-left: 4px solid var(--ds-error);
+  border-radius: var(--ds-radio);
+}
+
+.aviso-ok {
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  color: var(--ds-ok);
+  background: var(--ds-ok-fondo);
+  border-left: 4px solid var(--ds-ok);
+  border-radius: var(--ds-radio);
+}
+
+
+/* ===== 03-agenda.css ===== */
+/* Agenda */
+.agenda-barra {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  margin-bottom: var(--ds-espacio-2);
+}
+
+.grupo-botones {
+  display: flex;
+  gap: 0.25rem;
+}
+
+/* C-35: Anterior y Siguiente como flechas, con el mismo objetivo táctil de 44 px */
+.boton-icono {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  padding: 0;
+}
+
+.boton-icono svg {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* C-35: nombre del profesional debajo de "Mi agenda" */
+.agenda-titulo-profesional {
+  display: block;
+  margin-top: var(--ds-espacio-0);
+  font-size: var(--ds-texto-lg);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-acento-700);
+}
+
+/* C-35: la fecha va junto a las flechas y más grande, para que se lea qué día se está mirando */
+.agenda-periodo {
+  flex-basis: 100%;
+  margin: 0;
+  font-size: var(--ds-texto-xl);
+  font-weight: var(--ds-peso-fuerte);
+  line-height: var(--ds-interlineado-titulo);
+}
+
+.agenda-periodo::first-letter {
+  text-transform: uppercase;
+}
+
+.agenda-filtros {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-espacio-1);
+  margin-bottom: var(--ds-espacio-2);
+}
+
+.agenda-avisos {
+  color: var(--ds-texto-suave);
+}
+
+.agenda-lista {
+  display: block;
+}
+
+.agenda-lista[aria-busy='true'] {
+  opacity: 0.6;
+}
+
+/* C-39, etapa E: la semana como grilla horaria. Siete columnas fijas con una escala horaria compartida; los turnos
+   se ubican por hora de inicio y duración, y los simultáneos van lado a lado. Se desplaza dentro de su contenedor:
+   los encabezados de los días y la escala quedan a la vista. Solo --ds-*. */
+.semana-grilla {
+  --semana-hora: 5.5rem;
+  --semana-minuto: calc(var(--semana-hora) / 60);
+  --semana-escala: 3.5rem;
+  --semana-columna: 9rem; /* siete columnas entran en una pantalla de escritorio; en el celular la grilla se desplaza */
+  --semana-horas: 11; /* se pisa con la cantidad de horas de la escala */
+
+  display: grid;
+  grid-template-columns: var(--semana-escala) repeat(7, minmax(var(--semana-columna), 1fr));
+  grid-template-rows: auto calc(var(--semana-horas) * var(--semana-hora));
+  min-height: 24rem;
+  max-height: calc(100dvh - 14rem);
+  overflow: auto;
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-lg);
+}
+
+.semana-encabezado,
+.semana-esquina {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  margin: 0;
+  background: var(--ds-fondo);
+  border-bottom: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.semana-encabezado {
+  padding: var(--ds-espacio-1);
+  font-size: var(--ds-texto-sm);
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.semana-encabezado[aria-current='date'] {
+  color: var(--ds-acento-700);
+  background: var(--ds-acento-50);
+}
+
+.semana-esquina {
+  left: 0;
+  z-index: 4;
+}
+
+.semana-escala {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--ds-fondo);
+  border-right: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.semana-hora {
+  --desde: 0; /* minutos desde el comienzo de la escala (lo pisa cada hora) */
+
+  position: absolute;
+  top: calc(var(--desde) * var(--semana-minuto));
+  right: var(--ds-espacio-0);
+  font-size: var(--ds-texto-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--ds-texto-suave);
+}
+
+.agenda-dia {
+  position: relative;
+  min-width: 0;
+  border-left: var(--ds-borde-ancho) solid var(--ds-borde);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(var(--semana-hora) - 1px),
+    var(--ds-borde) calc(var(--semana-hora) - 1px),
+    var(--ds-borde) var(--semana-hora)
+  );
+}
+
+.agenda-dia.es-hoy {
+  background-color: var(--ds-acento-50);
+}
+
+.turnos-semana {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.turno-celda {
+  /* Minutos desde el comienzo de la escala, duración, carril y carriles del grupo: los pisa cada turno. */
+  --desde: 0;
+  --dur: 30;
+  --carril: 0;
+  --carriles: 1;
+
+  position: absolute;
+  top: calc(var(--desde) * var(--semana-minuto));
+  left: calc(100% / var(--carriles) * var(--carril));
+  width: calc(100% / var(--carriles));
+  height: calc(var(--dur) * var(--semana-minuto));
+  min-height: 1.5rem;
+  padding: 1px;
+  list-style: none;
+}
+
+.turno-celda .turno-tarjeta,
+.turno-celda .turno-grupo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 0.125rem 0.375rem;
+  overflow: hidden;
+  font-size: var(--ds-texto-xs);
+  font-weight: var(--ds-peso-normal);
+  line-height: 1.25;
+  color: var(--ds-texto);
+  text-align: left;
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-left-width: 4px;
+  border-radius: var(--ds-radio-sm);
+}
+
+.tarjeta-linea {
+  display: flex;
+  gap: 0.375rem;
+  align-items: baseline;
+  width: 100%;
+}
+
+.tarjeta-hora {
+  flex: none;
+  font-weight: var(--ds-peso-fuerte);
+  font-variant-numeric: tabular-nums;
+}
+
+.tarjeta-nombre {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  font-weight: var(--ds-peso-fuerte);
+  overflow-wrap: anywhere;
+}
+
+.tarjeta-icono {
+  flex: none;
+}
+
+/* Colores suaves por estado; el texto del estado siempre acompaña. */
+.turno-celda .turno-reservado {
+  background: var(--ds-turno-reservado-fondo);
+  border-left-color: var(--ds-turno-reservado);
+}
+
+.turno-celda .turno-confirmado {
+  background: var(--ds-turno-confirmado-fondo);
+  border-left-color: var(--ds-turno-confirmado);
+}
+
+.turno-celda .turno-sobreturno {
+  background: var(--ds-turno-sobreturno-fondo);
+  border-left-color: var(--ds-turno-sobreturno);
+}
+
+.turno-celda .turno-atendido {
+  background: var(--ds-turno-atendido-fondo);
+  border-left-color: var(--ds-turno-atendido);
+}
+
+.turno-celda .turno-ausente {
+  background: var(--ds-turno-ausente-fondo);
+  border-left-color: var(--ds-turno-ausente);
+}
+
+.turno-celda .turno-cancelado {
+  background: var(--ds-turno-cancelado-fondo);
+  border-left-color: var(--ds-turno-cancelado);
+}
+
+.turno-celda .turno-sin-registrar {
+  background: var(--ds-alerta-fondo);
+  border-left-color: var(--ds-alerta);
+}
+
+.turno-celda .turno-llego {
+  background: var(--ds-ok-fondo);
+  border-left-color: var(--ds-ok);
+}
+
+.turno-celda .turno-cancelado .tarjeta-nombre {
+  text-decoration: line-through;
+}
+
+.turno-celda .turno-grupo {
+  justify-content: center;
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-acento-700);
+  background: var(--ds-acento-50);
+  border-style: dashed;
+  border-color: var(--ds-acento-500);
+}
+
+.turno-celda .turno-tarjeta:hover,
+.turno-celda .turno-grupo:hover {
+  border-color: var(--ds-acento-500);
+  box-shadow: var(--ds-sombra-2);
+}
+
+.agenda-vacia {
+  color: var(--ds-texto-suave);
+}
+
+.turnos {
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-espacio-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.turno {
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  background: var(--ds-fondo);
+  box-shadow: var(--ds-sombra-1);
+  border: 1px solid var(--ds-borde);
+  border-left: 4px solid var(--ds-turno-reservado);
+  border-radius: var(--ds-radio);
+}
+
+.turno-confirmado {
+  border-left-color: var(--ds-turno-confirmado);
+}
+
+.turno-sobreturno {
+  border-left-color: var(--ds-turno-sobreturno);
+}
+
+.turno-atendido {
+  border-left-color: var(--ds-turno-atendido);
+}
+
+.turno-ausente {
+  border-left-color: var(--ds-turno-ausente);
+}
+
+.turno-cancelado {
+  border-left-color: var(--ds-turno-cancelado);
+}
+
+.turno p {
+  margin: 0;
+}
+
+.turno-horario {
+  font-size: var(--ds-texto-sm);
+  font-weight: 700;
+  color: var(--ds-acento-700);
+}
+
+/* C-39, etapa D: el paciente del turno es texto, no la tarjeta de "Mis turnos" (`.turno-paciente`). */
+.turno-persona {
+  font-size: var(--ds-texto-lg);
+  font-weight: var(--ds-peso-fuerte);
+  line-height: var(--ds-interlineado-titulo);
+}
+
+.turno-detalle {
+  color: var(--ds-texto-suave);
+  overflow-wrap: anywhere;
+}
+
+.turno-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1);
+  margin-top: var(--ds-espacio-2);
+}
+
+.etiqueta {
+  display: inline-block;
+  padding: 0 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+}
+
+.etiqueta-confirmado {
+  color: var(--ds-turno-confirmado);
+}
+
+.etiqueta-sobreturno {
+  color: var(--ds-turno-sobreturno);
+}
+
+
+/* C-43: asistencia en la agenda del personal. Solo tokens existentes del design system (Revision 3). */
+.etiqueta-atendido {
+  color: var(--ds-turno-atendido);
+}
+
+.etiqueta-ausente {
+  color: var(--ds-turno-ausente);
+}
+
+.etiqueta-llegada {
+  color: var(--ds-ok);
+  background: var(--ds-ok-fondo);
+}
+
+.etiqueta-sin-registrar {
+  color: var(--ds-alerta);
+  background: var(--ds-alerta-fondo);
+}
+
+.turno-sin-registrar {
+  border-left-color: var(--ds-alerta);
+}
+
+.turno-llego {
+  border-left-color: var(--ds-ok);
+}
+
+.turno-horario .etiqueta + .etiqueta {
+  margin-left: var(--ds-espacio-0);
+}
+
+.turno-asistencia {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  margin-top: var(--ds-espacio-2);
+}
+
+.turno-asistencia + .turno-acciones {
+  margin-top: var(--ds-espacio-1);
+}
+
+.turno-pista {
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+/* ===== 04-dialogos.css ===== */
+/* Diálogo de los formularios */
+.dialogo {
+  width: calc(100% - 2rem);
+  max-width: 32rem;
+  max-height: calc(100dvh - 2 * var(--ds-espacio-2));
+  padding: var(--ds-espacio-3) var(--ds-espacio-2);
+  overflow-y: auto;
+  color: var(--ds-texto);
+  border: 1px solid var(--ds-borde);
+  border-radius: var(--ds-radio);
+}
+
+.dialogo::backdrop {
+  background: var(--ds-capa-modal);
+}
+
+.dialogo h2 {
+  margin-top: 0;
+}
+
+.dialogo-resumen {
+  color: var(--ds-texto-suave);
+}
+
+/* Botones uniformes (C-39): "descartar" y después "principal" en el documento; en el celular se apilan con el
+   principal arriba, y desde 768 px van en fila, el principal a la derecha. */
+.dialogo-acciones {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--ds-espacio-1);
+  margin-top: var(--ds-espacio-1);
+}
+
+.dialogo-acciones .btn {
+  width: 100%;
+}
+
+
+/* ===== 05-reprogramar.css ===== */
+/* Reprogramar turno (C-33): horarios libres como botones .chip dentro del diálogo. */
+.dos-campos {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.dialogo fieldset {
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+.dialogo legend {
+  padding: 0;
+  font-weight: 600;
+}
+
+.dialogo .chips {
+  margin-top: var(--ds-espacio-1);
+}
+
+.dialogo .ayuda {
+  margin-top: var(--ds-espacio-1);
+}
+
+.sin-horarios {
+  padding: var(--ds-espacio-2);
+  margin: var(--ds-espacio-1) 0 0;
+  color: var(--ds-texto-suave);
+  text-align: center;
+  border: 1px dashed var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio);
+}
+
+.buscando {
+  margin: var(--ds-espacio-1) 0 0;
+  color: var(--ds-texto-suave);
+}
+
+
+/* ===== 06-componentes.css ===== */
+/* Componentes del design system (design-system/components.html, Revision 1), solo con --ds-*.
+   Los usan las páginas del paciente de C-12. */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-espacio-1);
+  min-height: var(--ds-alto-control);
+  padding: 0 var(--ds-espacio-2);
+  font: inherit;
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-texto);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-principal {
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-acento-texto);
+  background: var(--ds-acento-500);
+  border-color: var(--ds-acento-500);
+}
+
+.btn-fantasma {
+  color: var(--ds-acento-500);
+  background: transparent;
+  border-color: transparent;
+}
+
+.btn-peligro {
+  color: var(--ds-error);
+  border-color: var(--ds-error);
+}
+
+/* C-43: "Llegó" en la agenda de la recepción. Va después de `.btn` para que gane el color. */
+.btn-llego {
+  color: var(--ds-ok);
+  border-color: var(--ds-ok);
+}
+
+.btn:disabled {
+  color: var(--ds-texto-deshabilitado);
+  background: var(--ds-superficie);
+  border-color: var(--ds-borde);
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.control {
+  min-height: var(--ds-alto-control);
+  width: 100%;
+  font-size: var(--ds-texto-base);
+  border-color: var(--ds-borde-fuerte);
+}
+
+.control[aria-invalid='true'] {
+  border-width: 2px;
+}
+
+.error-campo {
+  font-size: var(--ds-texto-sm);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-error);
+}
+
+.aviso-alerta {
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  color: var(--ds-alerta);
+  background: var(--ds-alerta-fondo);
+  border-left: 4px solid var(--ds-alerta);
+  border-radius: var(--ds-radio);
+}
+
+.aviso-info {
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  color: var(--ds-info);
+  background: var(--ds-info-fondo);
+  border-left: 4px solid var(--ds-info);
+  border-radius: var(--ds-radio);
+}
+
+.estado {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-espacio-0);
+  padding: 2px var(--ds-espacio-1);
+  font-size: var(--ds-texto-xs);
+  font-weight: var(--ds-peso-fuerte);
+  white-space: nowrap;
+  border-radius: var(--ds-radio-pill);
+}
+
+.estado::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: currentColor;
+  border-radius: 50%;
+}
+
+.e-reservado {
+  color: var(--ds-turno-reservado);
+  background: var(--ds-turno-reservado-fondo);
+}
+
+.e-confirmado {
+  color: var(--ds-turno-confirmado);
+  background: var(--ds-turno-confirmado-fondo);
+}
+
+.e-atendido {
+  color: var(--ds-turno-atendido);
+  background: var(--ds-turno-atendido-fondo);
+}
+
+.e-cancelado {
+  color: var(--ds-turno-cancelado);
+  background: var(--ds-turno-cancelado-fondo);
+}
+
+.e-ausente {
+  color: var(--ds-turno-ausente);
+  background: var(--ds-turno-ausente-fondo);
+}
+
+/* C-42: turno pasado que nadie registró. Reusa los tokens neutros de "Cancelado"; se distingue por el texto. */
+.e-sin-registrar {
+  color: var(--ds-turno-cancelado);
+  background: var(--ds-turno-cancelado-fondo);
+}
+
+.pasos {
+  display: flex;
+  gap: var(--ds-espacio-0);
+  margin: 0 0 var(--ds-espacio-1);
+  padding: 0;
+  list-style: none;
+}
+
+.pasos li {
+  flex: 1;
+  height: 4px;
+  background: var(--ds-superficie-2);
+  border-radius: var(--ds-radio-pill);
+}
+
+.pasos li.hecho {
+  background: var(--ds-acento-500);
+}
+
+.paso-numero {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.opciones {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.opciones legend {
+  margin-bottom: var(--ds-espacio-1);
+  padding: 0;
+  font-weight: var(--ds-peso-medio);
+}
+
+.opcion {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  min-height: 56px;
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio);
+  cursor: pointer;
+}
+
+.opcion:has(input:checked) {
+  background: var(--ds-acento-50);
+  border-color: var(--ds-acento-500);
+  box-shadow: inset 0 0 0 1px var(--ds-acento-500);
+}
+
+.opcion input {
+  flex: none;
+  width: 20px;
+  height: 20px;
+  min-height: 0;
+  accent-color: var(--ds-acento-500);
+}
+
+.opcion small {
+  display: block;
+  color: var(--ds-texto-suave);
+}
+
+
+/* ===== 07-selector-prestaciones.css ===== */
+/* Selector de prestaciones con buscador (C-38, mockups de openspec/changes/frontend-reserva-explorador-prestaciones), solo con --ds-*. */
+.selector,
+.selector .control {
+  min-width: 0;
+  max-width: 100%;
+}
+
+.selector-campo {
+  position: relative;
+}
+
+.selector-campo .lupa {
+  position: absolute;
+  top: 50%;
+  left: var(--ds-espacio-1);
+  width: 20px;
+  height: 20px;
+  color: var(--ds-texto-suave);
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.selector-campo .control {
+  padding-right: var(--ds-alto-control);
+  padding-left: calc(var(--ds-espacio-1) + 20px + var(--ds-espacio-1));
+}
+
+.selector-campo .control[aria-expanded='true'] {
+  border-color: var(--ds-acento-500);
+  box-shadow: inset 0 0 0 1px var(--ds-acento-500);
+}
+
+.selector-flecha {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: var(--ds-alto-control);
+  height: var(--ds-alto-control);
+  padding: 0;
+  color: var(--ds-texto-suave);
+  background: transparent;
+  border: 0;
+  border-radius: var(--ds-radio);
+  cursor: pointer;
+}
+
+.selector-flecha svg {
+  width: 20px;
+  height: 20px;
+  transition: transform var(--ds-duracion-rapida);
+}
+
+.selector-flecha[aria-expanded='true'] svg {
+  transform: rotate(180deg);
+}
+
+.selector-lista {
+  max-height: 16rem;
+  margin: var(--ds-espacio-0) 0 0;
+  padding: var(--ds-espacio-0);
+  overflow-y: auto;
+  list-style: none;
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio-lg);
+  box-shadow: var(--ds-sombra-1);
+}
+
+.selector-opcion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1);
+  min-height: 48px;
+  padding: var(--ds-espacio-0) var(--ds-espacio-1);
+  border-radius: var(--ds-radio);
+  cursor: pointer;
+}
+
+.selector-opcion[aria-selected='true'] {
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-acento-700);
+}
+
+.selector-opcion.activa,
+.selector-opcion:hover {
+  background: var(--ds-acento-50);
+  box-shadow: inset 3px 0 0 var(--ds-acento-500);
+}
+
+.selector-opcion .nombre {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.selector-opcion small {
+  flex: none;
+  font-weight: var(--ds-peso-normal);
+  color: var(--ds-texto-suave);
+  white-space: nowrap;
+}
+
+.selector-vacio {
+  margin: var(--ds-espacio-0) 0 0;
+  padding: var(--ds-espacio-2);
+  color: var(--ds-texto-suave);
+  text-align: center;
+  overflow-wrap: anywhere;
+  background: var(--ds-superficie);
+  border: var(--ds-borde-ancho) dashed var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio-lg);
+}
+
+.chips {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(5.5rem, 1fr));
+  gap: var(--ds-espacio-1);
+  margin: 0;
+}
+
+.chip {
+  min-height: var(--ds-alto-control);
+  font-family: var(--ds-fuente-mono);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-acento-700);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-acento-100);
+  border-radius: var(--ds-radio);
+}
+
+.chip[aria-pressed='true'] {
+  color: var(--ds-acento-texto);
+  background: var(--ds-acento-500);
+  border-color: var(--ds-acento-500);
+}
+
+.resumen {
+  margin: 0;
+  padding: var(--ds-espacio-2);
+  background: var(--ds-superficie);
+  border-radius: var(--ds-radio);
+}
+
+.detalle-lista {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--ds-espacio-1) var(--ds-espacio-2);
+  margin: 0;
+}
+
+.detalle-lista dt {
+  color: var(--ds-texto-suave);
+}
+
+.detalle-lista dd {
+  margin: 0;
+  font-weight: var(--ds-peso-medio);
+}
+
+.comprobante {
+  padding: var(--ds-espacio-3) var(--ds-espacio-2);
+  text-align: center;
+  background: var(--ds-ok-fondo);
+  border-radius: var(--ds-radio-lg);
+}
+
+.comprobante .detalle-lista {
+  margin-top: var(--ds-espacio-2);
+  font-size: var(--ds-texto-sm);
+  text-align: left;
+}
+
+.numero-reserva {
+  display: inline-block;
+  margin: var(--ds-espacio-1) 0;
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  font-family: var(--ds-fuente-mono);
+  font-size: var(--ds-texto-xl);
+  font-weight: var(--ds-peso-fuerte);
+  letter-spacing: 0.12em;
+  background: var(--ds-fondo);
+  border: 2px dashed var(--ds-ok);
+  border-radius: var(--ds-radio);
+}
+
+
+/* ===== 08-paciente.css ===== */
+/* Páginas del paciente (mockups de C-12) */
+[hidden] {
+  display: none !important;
+}
+
+.solo-lectores {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.ayuda,
+.subtitulo {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.subtitulo {
+  font-size: var(--ds-texto-base);
+}
+
+.pila {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.turno-fecha::first-letter,
+.detalle-lista dd::first-letter,
+.campo .ayuda::first-letter {
+  text-transform: uppercase;
+}
+
+.pagina-paciente {
+  display: grid;
+  gap: var(--ds-espacio-2);
+  max-width: 44rem;
+  margin: 0 auto;
+}
+
+.panel {
+  display: grid;
+  gap: var(--ds-espacio-2);
+  padding: var(--ds-espacio-3) var(--ds-espacio-2);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-lg);
+  box-shadow: var(--ds-sombra-1);
+}
+
+.panel h2,
+.panel p,
+.pagina-paciente h2 {
+  margin: 0;
+}
+
+.acciones {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--ds-espacio-1);
+}
+
+.acciones .btn {
+  width: 100%;
+}
+
+.seccion-titulo {
+  margin: var(--ds-espacio-2) 0 0;
+  font-size: var(--ds-texto-sm);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.pestanas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  overflow: hidden;
+  border: var(--ds-borde-ancho) solid var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio);
+}
+
+.pestanas button {
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-texto-suave);
+  border: 0;
+  border-radius: 0;
+}
+
+.pestanas button + button {
+  border-left: var(--ds-borde-ancho) solid var(--ds-borde-fuerte);
+}
+
+.pestanas button[aria-selected='true'] {
+  color: var(--ds-acento-texto);
+  background: var(--ds-acento-500);
+}
+
+.lista-turnos {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.turno-paciente {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  padding: var(--ds-espacio-2);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-lg);
+  box-shadow: var(--ds-sombra-1);
+}
+
+.turno-paciente p {
+  margin: 0;
+}
+
+.turno-anterior {
+  background: transparent;
+  box-shadow: none;
+}
+
+.turno-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-0) var(--ds-espacio-1);
+}
+
+.turno-fecha {
+  font-size: var(--ds-texto-lg);
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.turno-meta,
+.turno-numero {
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.turno-numero {
+  font-family: var(--ds-fuente-mono);
+}
+
+.turno-paciente .turno-acciones {
+  flex-direction: column;
+  margin-top: 0;
+}
+
+.cambio {
+  display: grid;
+  gap: var(--ds-espacio-2);
+  padding-top: var(--ds-espacio-2);
+  border-top: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+
+/* ===== 09-buscador-pacientes.css ===== */
+/* Buscador de pacientes (C-36): solo variables --ds-*. La lista va en el flujo del diálogo, no flota. */
+.buscador-entrada {
+  position: relative;
+}
+
+.buscador-entrada input {
+  padding-left: 2.5rem;
+}
+
+.buscador-entrada input[aria-expanded='true'] {
+  border-color: var(--ds-acento-500);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.buscador-lupa {
+  position: absolute;
+  top: 50%;
+  left: var(--ds-espacio-1);
+  width: 20px;
+  height: 20px;
+  color: var(--ds-texto-suave);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.buscador-estado {
+  min-height: 1.25rem;
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.buscador-estado .girador {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 6px;
+  vertical-align: -1px;
+  border: 2px solid var(--ds-borde-fuerte);
+  border-top-color: var(--ds-acento-500);
+  border-radius: 50%;
+  animation: buscador-girar 0.8s linear infinite;
+}
+
+.buscador-estado.buscador-vacio {
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  border: 1px dashed var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio);
+}
+
+.buscador-lista {
+  margin: calc(-1 * var(--ds-espacio-0)) 0 0;
+  padding: 0;
+  list-style: none;
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-acento-500);
+  border-top: 0;
+  border-radius: 0 0 var(--ds-radio) var(--ds-radio);
+  box-shadow: var(--ds-sombra-2);
+  overflow: hidden;
+}
+
+.buscador-lista[hidden],
+.buscador-nota[hidden],
+.buscador-elegido[hidden],
+.buscador-entrada[hidden],
+.buscador-estado[hidden] {
+  display: none;
+}
+
+.buscador-opcion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--ds-espacio-1);
+  min-height: 48px;
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  cursor: pointer;
+}
+
+.buscador-opcion + .buscador-opcion {
+  border-top: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.buscador-opcion[aria-selected='true'] {
+  background: var(--ds-acento-50);
+  box-shadow: inset 4px 0 0 var(--ds-acento-500);
+}
+
+.buscador-opcion .nombre,
+.buscador-elegido .nombre {
+  font-weight: var(--ds-peso-medio);
+}
+
+.buscador-opcion .dni,
+.buscador-elegido .dni {
+  font-family: var(--ds-fuente-mono);
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.buscador-nota {
+  margin: 0;
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+  background: var(--ds-superficie);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio);
+}
+
+.buscador-elegido {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1);
+  min-height: var(--ds-alto-control);
+  padding: var(--ds-espacio-0) var(--ds-espacio-0) var(--ds-espacio-0) var(--ds-espacio-2);
+  background: var(--ds-acento-50);
+  border: var(--ds-borde-ancho) solid var(--ds-acento-500);
+  border-radius: var(--ds-radio);
+}
+
+.buscador-elegido .nombre {
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.buscador-elegido button {
+  min-height: 44px;
+}
+
+@keyframes buscador-girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (min-width: 768px) {
+  .panel {
+    padding: var(--ds-espacio-4);
+  }
+
+  .chips {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  /* El diálogo con horarios mide 34 rem (mockups de C-33) y su grilla se ajusta al ancho: con 6 columnas fijas los
+     botones no entraban en 32 rem y aparecía una barra de desplazamiento horizontal. */
+  .dialogo:has(.chips) {
+    max-width: 34rem;
+  }
+
+  .dialogo .chips {
+    grid-template-columns: repeat(auto-fill, minmax(4.5rem, 1fr));
+  }
+
+  .dos-campos {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .acciones {
+    flex-direction: row-reverse;
+  }
+
+  .acciones .btn {
+    flex: 1 1 10rem;
+    width: auto;
+  }
+
+  .turno-paciente .turno-acciones {
+    flex-direction: row;
+  }
+
+  .contenido {
+    padding: var(--ds-espacio-3);
+  }
+
+  .dialogo-acciones {
+    flex-direction: row;
+    justify-content: flex-end;
+  }
+
+  .dialogo-acciones .btn {
+    width: auto;
+    min-width: 8rem;
+  }
+
+  .agenda-periodo {
+    flex-basis: auto;
+    margin-left: var(--ds-espacio-1);
+  }
+
+  .agenda-filtros {
+    flex-direction: row;
+    align-items: flex-end;
+  }
+
+  .agenda-filtros .campo {
+    flex: 0 1 16rem;
+  }
+
+  .agenda-filtros .boton-principal {
+    margin-left: auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+
+/* ===== 10-portada.css ===== */
+/* Portada (C-37, mockups de openspec/changes/frontend-portada-y-acceso), solo con --ds-*. */
+.inicio {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 0 0 var(--ds-espacio-5);
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ds-espacio-3);
+  align-items: center;
+  padding: var(--ds-espacio-4) var(--ds-espacio-3);
+  background: linear-gradient(135deg, var(--ds-acento-50), var(--ds-fondo) 75%);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-lg);
+}
+
+.hero .eyebrow {
+  margin: 0 0 var(--ds-espacio-1);
+  font-size: var(--ds-texto-sm);
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-acento-700);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: clamp(1.75rem, 6.5vw, 2.75rem);
+  line-height: 1.15;
+}
+
+.hero-lead {
+  max-width: 34rem;
+  margin: var(--ds-espacio-2) 0 0;
+  font-size: var(--ds-texto-lg);
+  color: var(--ds-texto-suave);
+}
+
+.hero-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1);
+  margin-top: var(--ds-espacio-3);
+}
+
+.hero-acciones .btn {
+  flex: 1 1 12rem;
+  min-height: var(--ds-alto-control);
+}
+
+.hero-ilustracion svg {
+  display: block;
+  width: 100%;
+  max-width: 22rem;
+  height: auto;
+  margin: 0 auto;
+}
+
+.seccion-pasos {
+  margin-top: var(--ds-espacio-5);
+}
+
+.seccion-pasos > h2 {
+  font-size: var(--ds-texto-xl);
+}
+
+.tarjetas-pasos {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--ds-espacio-2);
+  margin: var(--ds-espacio-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tarjeta-paso {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: var(--ds-espacio-0) var(--ds-espacio-2);
+  align-content: start;
+  align-items: start;
+  padding: var(--ds-espacio-2);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-lg);
+  box-shadow: var(--ds-sombra-1);
+}
+
+.tarjeta-paso h3 {
+  margin: 0;
+  align-self: end;
+  font-size: var(--ds-texto-lg);
+}
+
+.tarjeta-paso h3 span {
+  margin-right: var(--ds-espacio-0);
+  color: var(--ds-acento-500);
+}
+
+.tarjeta-paso p {
+  margin: 0;
+  color: var(--ds-texto-suave);
+}
+
+.paso-icono {
+  display: grid;
+  grid-row: span 2;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  color: var(--ds-acento-500);
+  background: var(--ds-acento-50);
+  border-radius: 50%;
+}
+
+.paso-icono svg {
+  width: 26px;
+  height: 26px;
+}
+
+.nota-personal {
+  margin: var(--ds-espacio-3) 0 0;
+  padding-top: var(--ds-espacio-2);
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+  text-align: center;
+  border-top: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+@media (min-width: 768px) {
+  .hero {
+    grid-template-columns: 1.15fr 0.85fr;
+    padding: var(--ds-espacio-5);
+  }
+
+  .hero-acciones .btn {
+    flex: 0 0 auto;
+  }
+
+  .tarjetas-pasos {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .tarjeta-paso {
+    grid-template-columns: minmax(0, 1fr);
+    padding: var(--ds-espacio-3);
+  }
+
+  .paso-icono {
+    grid-row: auto;
+  }
+
+  .tarjeta-paso h3 {
+    align-self: start;
+  }
+}
+
+
+/* ===== 11-nuevo-turno.css ===== */
+/* Nuevo turno guiado (C-40): solo variables --ds-*, como en los mockups aprobados (PR #65). */
+.dos-columnas,
+.fecha-y-horario {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.dialogo .campo-deshabilitado legend,
+.campo-calendario:disabled legend {
+  color: var(--ds-texto-deshabilitado);
+}
+
+.dialogo select:disabled {
+  color: var(--ds-texto-deshabilitado);
+  background: var(--ds-superficie);
+  cursor: not-allowed;
+}
+
+.sillon-nuevo-turno .etiqueta-campo {
+  font-weight: var(--ds-peso-medio);
+}
+
+.sillon-fijo {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: var(--ds-espacio-1);
+  min-height: var(--ds-alto-control);
+  margin: 0;
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-texto);
+  background: var(--ds-superficie);
+  border-radius: var(--ds-radio);
+}
+
+.sillon-fijo .sillon-nombre {
+  white-space: nowrap;
+}
+
+.sillon-fijo .sillon-detalle {
+  font-size: var(--ds-texto-sm);
+  font-weight: var(--ds-peso-normal);
+  color: var(--ds-texto-suave);
+}
+
+.calendario {
+  padding: 2px;
+  background: var(--ds-fondo);
+  border-radius: var(--ds-radio);
+}
+
+.calendario.bloqueado {
+  opacity: 0.55;
+}
+
+.cal-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1);
+  margin-bottom: var(--ds-espacio-1);
+}
+
+.cal-nav {
+  min-width: var(--ds-alto-control);
+  min-height: var(--ds-alto-control);
+  font-size: var(--ds-texto-lg);
+  color: var(--ds-acento-500);
+  background: transparent;
+  border-color: transparent;
+}
+
+.cal-nav:disabled {
+  color: var(--ds-texto-deshabilitado);
+  background: var(--ds-superficie);
+}
+
+.cal-mes {
+  margin: 0;
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.cal-mes::first-letter {
+  text-transform: uppercase;
+}
+
+.cal-semana,
+.cal-dias {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 0;
+}
+
+.cal-semana span {
+  padding-bottom: 2px;
+  font-size: var(--ds-texto-xs);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-texto-suave);
+  text-align: center;
+}
+
+.cal-dia {
+  min-width: 0;
+  min-height: var(--ds-alto-control);
+  padding: 0;
+  font-variant-numeric: tabular-nums;
+  color: var(--ds-texto);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid transparent;
+  border-radius: var(--ds-radio);
+}
+
+.cal-dia:hover:not(:disabled) {
+  background: var(--ds-acento-50);
+  border-color: var(--ds-acento-100);
+}
+
+.cal-dia.hoy {
+  font-weight: var(--ds-peso-fuerte);
+  border-color: var(--ds-acento-500);
+}
+
+.cal-dia[aria-pressed='true'] {
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-acento-texto);
+  background: var(--ds-acento-500);
+  border-color: var(--ds-acento-500);
+}
+
+.cal-dia:disabled {
+  color: var(--ds-texto-deshabilitado);
+  text-decoration: line-through;
+  background: transparent;
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.cal-dia.otro-mes {
+  visibility: hidden;
+}
+
+.dialogo .cal-ayuda {
+  font-size: var(--ds-texto-xs);
+}
+
+@media (min-width: 768px) {
+  .dialogo.dialogo-ancho {
+    max-width: 52rem;
+  }
+
+  .dos-columnas {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+
+  .fecha-y-horario {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: var(--ds-espacio-3);
+    align-items: start;
+  }
+
+  .calendario {
+    padding: var(--ds-espacio-1);
+    border: var(--ds-borde-ancho) solid var(--ds-borde);
+  }
+
+  .cal-semana,
+  .cal-dias {
+    gap: 2px;
+  }
+
+  .fecha-y-horario .chips {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+/* Fin del nuevo turno guiado (C-40) */
+
+
+/* Selector de fecha (C-39): el calendario en un desplegable, en lugar del selector nativo del navegador. */
+.selector-fecha {
+  position: relative;
+}
+
+.fecha-nativa {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.selector-fecha-boton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-2);
+  font-weight: var(--ds-peso-normal);
+  color: var(--ds-texto);
+  text-align: left;
+  background: var(--ds-fondo);
+}
+
+.selector-fecha-boton[aria-invalid='true'] {
+  border-color: var(--ds-error);
+}
+
+.selector-fecha-texto.vacio {
+  color: var(--ds-texto-suave);
+}
+
+.selector-fecha-icono {
+  flex: none;
+  color: var(--ds-acento-500);
+}
+
+.selector-fecha-panel {
+  max-width: 22rem;
+  margin-top: var(--ds-espacio-1);
+  padding: var(--ds-espacio-2);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio);
+}
+
+.selector-fecha-panel[hidden] {
+  display: none;
+}
+
+.selector-fecha-calendario {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.selector-fecha-borrar {
+  margin-top: var(--ds-espacio-1);
+}
+
+/* ===== 12-configuracion.css ===== */
+/* --- Configuración del consultorio (C-34, design D11). Solo variables del design system. --- */
+.pagina-config {
+  max-width: 64rem;
+}
+
+.btn-chico {
+  padding: 0 var(--ds-espacio-1);
+  font-size: var(--ds-texto-sm);
+}
+
+.pestanas-config {
+  display: flex;
+  gap: var(--ds-espacio-0);
+  margin: 0 0 var(--ds-espacio-3);
+  overflow-x: auto;
+  border-bottom: var(--ds-borde-ancho) solid var(--ds-borde);
+  scrollbar-width: thin;
+}
+
+.pestana {
+  flex: none;
+  min-height: var(--ds-alto-control);
+  padding: 0 var(--ds-espacio-2);
+  font: inherit;
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-texto-suave);
+  white-space: nowrap;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  border-bottom: 3px solid transparent;
+}
+
+.pestana[aria-selected='true'] {
+  color: var(--ds-acento-500);
+  border-bottom-color: var(--ds-acento-500);
+}
+
+.cabecera-seccion {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1);
+  margin-bottom: var(--ds-espacio-2);
+}
+
+.cabecera-seccion h2 {
+  margin: 0;
+  font-size: var(--ds-texto-lg);
+}
+
+.lista-config {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-lg);
+}
+
+.lista-config > li {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  padding: var(--ds-espacio-2);
+}
+
+.lista-config > li + li {
+  border-top: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.item-nombre {
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.item-datos {
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.item-datos span + span::before {
+  content: ' · ';
+}
+
+.item-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1);
+}
+
+.item-inactivo .item-nombre {
+  color: var(--ds-texto-suave);
+}
+
+.item-elegido {
+  background: var(--ds-acento-50);
+}
+
+.estado-activo,
+.estado-inactivo {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--ds-texto-xs);
+  font-weight: var(--ds-peso-medio);
+}
+
+.estado-activo::before,
+.estado-inactivo::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.estado-activo {
+  color: var(--ds-ok);
+}
+
+.estado-activo::before {
+  background: var(--ds-ok);
+}
+
+.estado-inactivo {
+  color: var(--ds-texto-suave);
+}
+
+.estado-inactivo::before {
+  border: 2px solid currentColor;
+}
+
+.detalle-profesional {
+  grid-column: 1 / -1;
+  margin-top: var(--ds-espacio-1);
+  padding: var(--ds-espacio-2);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio);
+}
+
+.detalle-profesional h3 {
+  margin: 0 0 var(--ds-espacio-1);
+}
+
+.detalle-profesional fieldset {
+  margin: 0 0 var(--ds-espacio-2);
+  padding: 0;
+  border: 0;
+}
+
+.detalle-profesional legend {
+  margin-bottom: var(--ds-espacio-1);
+  font-weight: var(--ds-peso-medio);
+}
+
+.casillas {
+  display: grid;
+  gap: var(--ds-espacio-0);
+}
+
+.casilla {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  min-height: var(--ds-alto-control);
+}
+
+.casilla input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--ds-acento-500);
+}
+
+.etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-0);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.etiquetas li {
+  padding: 2px var(--ds-espacio-1);
+  font-size: var(--ds-texto-sm);
+  background: var(--ds-superficie);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-pill);
+}
+
+.selector-profesional {
+  max-width: 22rem;
+  margin-bottom: var(--ds-espacio-2);
+}
+
+.profesional-fijo {
+  margin: 0 0 var(--ds-espacio-2);
+  font-weight: var(--ds-peso-medio);
+}
+
+.franjas {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-lg);
+}
+
+.franjas > li {
+  display: grid;
+  gap: var(--ds-espacio-0);
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+}
+
+.franjas > li + li {
+  border-top: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.franjas .dia {
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.franjas .no-atiende {
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.franja {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1);
+}
+
+.franja + .franja {
+  margin-top: var(--ds-espacio-0);
+}
+
+.franja-horas {
+  font-family: var(--ds-fuente-mono);
+}
+
+.franja-nueva .franja-horas {
+  color: var(--ds-alerta);
+}
+
+.franja-nueva .franja-horas::after {
+  content: 'sin guardar';
+  margin-left: var(--ds-espacio-1);
+  font-family: var(--ds-fuente);
+  font-size: var(--ds-texto-xs);
+}
+
+.agregar-franja-dias {
+  display: grid;
+  gap: var(--ds-espacio-2);
+  margin-top: var(--ds-espacio-2);
+  padding: var(--ds-espacio-2);
+  background: var(--ds-fondo);
+  border: 1px dashed var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio);
+}
+
+.agregar-franja-dias .horas {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.acciones-config {
+  display: flex;
+  flex-wrap: wrap-reverse;
+  gap: var(--ds-espacio-1);
+  margin-top: var(--ds-espacio-3);
+}
+
+.acciones-config .btn {
+  flex: 1 1 10rem;
+}
+
+.margen-valor {
+  font-family: var(--ds-fuente-mono);
+  font-size: var(--ds-texto-xl);
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.campo-margen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--ds-espacio-1);
+}
+
+.campo-margen .campo {
+  width: 8rem;
+}
+
+.afectados {
+  margin-top: var(--ds-espacio-2);
+  padding: var(--ds-espacio-2);
+  background: var(--ds-alerta-fondo);
+  border-radius: var(--ds-radio);
+}
+
+.afectados h3 {
+  margin: 0 0 var(--ds-espacio-1);
+  color: var(--ds-alerta);
+}
+
+.afectados .lista-config {
+  margin-top: var(--ds-espacio-1);
+}
+
+/* Revisión 2: espaciado del detalle, días, horas de 5 en 5, columna Profesional y sillón habitual. */
+.grupo-config {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  justify-items: start;
+}
+
+.grupo-config + .grupo-config {
+  margin-top: var(--ds-espacio-3);
+}
+
+.grupo-config fieldset {
+  margin: 0;
+}
+
+.grupo-config .campo {
+  width: 100%;
+  max-width: 22rem;
+}
+
+.dias-semana {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--ds-espacio-0);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.dias-semana legend {
+  margin-bottom: var(--ds-espacio-1);
+  padding: 0;
+  font-weight: var(--ds-peso-medio);
+}
+
+.etiqueta-hora {
+  font-weight: var(--ds-peso-medio);
+}
+
+.hora-5 {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-0);
+}
+
+.hora-5 .control {
+  flex: 1;
+  width: auto;
+  min-width: 4.5rem;
+}
+
+.hora-5 .separador {
+  font-family: var(--ds-fuente-mono);
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.item-profesional {
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.item-profesional::before {
+  content: 'Profesional: ';
+}
+
+.lista-config > li.encabezado-columnas {
+  display: none;
+}
+
+fieldset.campo {
+  width: 100%;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+fieldset.campo > legend {
+  margin-bottom: var(--ds-espacio-1);
+  padding: 0;
+  font-weight: var(--ds-peso-medio);
+}
+
+.opciones-sillon {
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  width: 100%;
+}
+
+.opcion-ocupada {
+  color: var(--ds-texto-deshabilitado);
+  background: var(--ds-superficie);
+  border-color: var(--ds-borde);
+  border-style: dashed;
+  cursor: not-allowed;
+}
+
+.opcion-ocupada small {
+  color: var(--ds-texto-deshabilitado);
+}
+
+.grupo-config:has(.opciones-sillon) {
+  justify-items: stretch;
+}
+
+.grupo-config:has(.opciones-sillon) > .btn {
+  justify-self: start;
+}
+
+.grupo-config fieldset.campo:has(.opciones-sillon) {
+  max-width: none;
+}
+
+@media (min-width: 768px) {
+  .lista-config > li {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+
+  .franjas > li {
+    grid-template-columns: 8rem 1fr;
+    align-items: start;
+  }
+
+  .dias-semana {
+    grid-template-columns: repeat(7, auto);
+    justify-content: start;
+    gap: var(--ds-espacio-2);
+  }
+
+  .agregar-franja-dias .horas {
+    grid-template-columns: repeat(2, auto);
+    justify-content: start;
+    align-items: end;
+    gap: var(--ds-espacio-3);
+  }
+
+  .lista-config.con-columna > li {
+    grid-template-columns: 11rem 1fr auto;
+  }
+
+  .lista-config.con-columna > li.encabezado-columnas {
+    display: grid;
+    background: var(--ds-superficie);
+    font-size: var(--ds-texto-sm);
+    font-weight: var(--ds-peso-medio);
+    color: var(--ds-texto-suave);
+  }
+
+  .lista-config.con-columna .item-profesional {
+    font-size: inherit;
+    font-weight: var(--ds-peso-medio);
+    color: var(--ds-texto);
+  }
+
+  .lista-config.con-columna .item-profesional::before {
+    content: none;
+  }
+}
+
+/* ===== 13-layout.css ===== */
+/* Encabezado, barra lateral y pie (C-39, etapa B; mockups aprobados en openspec/changes/frontend-uniformidad-visual/mockups/B). Solo --ds-*. */
+.app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+.cuerpo {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+}
+
+.cuerpo > .contenido {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Pantallas del paciente: fondo suave con tarjetas blancas (etapa C) */
+.cuerpo.fondo-suave {
+  background: var(--ds-superficie);
+}
+
+/* Encabezado azul */
+.cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-espacio-0) var(--ds-espacio-1);
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  color: var(--ds-acento-texto);
+  background: var(--ds-acento-500);
+  box-shadow: var(--ds-sombra-1);
+}
+
+.cabecera :focus-visible {
+  outline-color: var(--ds-acento-texto);
+}
+
+.marca {
+  display: flex;
+  align-items: center;
+  min-height: var(--ds-alto-control);
+  color: inherit;
+  text-decoration: none;
+}
+
+.marca .logo {
+  display: block;
+  height: 36px;
+  width: auto;
+}
+
+.acciones-cabecera {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  min-width: 0;
+  margin-left: auto;
+}
+
+.acciones-cabecera [hidden] {
+  display: none;
+}
+
+.avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  font-size: var(--ds-texto-xs);
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-acento-700);
+  background: var(--ds-acento-100);
+  border-radius: 50%;
+}
+
+.usuario-nombre {
+  max-width: 11rem;
+  font-size: var(--ds-texto-sm);
+  overflow: hidden;
+  color: var(--ds-acento-texto);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.btn-sobre-azul {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--ds-espacio-1);
+  min-height: var(--ds-alto-control);
+  padding: 0 var(--ds-espacio-2);
+  font: inherit;
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-acento-texto);
+  text-decoration: none;
+  background: transparent;
+  border: var(--ds-borde-ancho) solid var(--ds-acento-texto);
+  border-radius: var(--ds-radio);
+  cursor: pointer;
+}
+
+.enlace-sobre-azul {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--ds-alto-control);
+  padding: 0 var(--ds-espacio-1);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-acento-texto);
+  text-decoration: none;
+  border-radius: var(--ds-radio);
+}
+
+.menu-boton {
+  padding: 0 var(--ds-espacio-1);
+}
+
+.menu-boton[hidden] {
+  display: none;
+}
+
+.icono {
+  flex: none;
+  width: 20px;
+  height: 20px;
+}
+
+/* Barra lateral: cajón en el celular, fija desde 768 px */
+.lateral {
+  position: fixed;
+  z-index: 20;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--ds-espacio-0);
+  width: min(18rem, 85vw);
+  padding: var(--ds-espacio-1);
+  overflow-y: auto;
+  background: var(--ds-fondo);
+  box-shadow: var(--ds-sombra-3);
+  visibility: hidden;
+  transform: translateX(-105%);
+  transition:
+    transform var(--ds-duracion) var(--ds-curva),
+    visibility 0s linear var(--ds-duracion);
+}
+
+.lateral[hidden] {
+  display: none;
+}
+
+.lateral.abierto {
+  visibility: visible;
+  transform: none;
+  transition: transform var(--ds-duracion) var(--ds-curva);
+}
+
+.cajon-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: var(--ds-alto-control);
+  padding: 0 var(--ds-espacio-1);
+  font-size: var(--ds-texto-sm);
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.cajon-cabecera .cerrar {
+  display: grid;
+  place-items: center;
+  width: var(--ds-alto-control);
+  padding: 0;
+  color: var(--ds-texto-suave);
+  background: transparent;
+  border: 0;
+}
+
+.lateral ul {
+  display: grid;
+  gap: var(--ds-espacio-0);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lateral li[hidden] {
+  display: none;
+}
+
+.lateral a {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  min-height: var(--ds-alto-control);
+  padding: 0 var(--ds-espacio-1);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-texto-suave);
+  text-decoration: none;
+  border-left: 3px solid transparent;
+  border-radius: var(--ds-radio);
+}
+
+.lateral a[aria-current='page'] {
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-acento-700);
+  background: var(--ds-acento-50);
+  border-left-color: var(--ds-acento-500);
+}
+
+.velo {
+  position: fixed;
+  z-index: 10;
+  inset: 0;
+  display: none;
+  background: var(--ds-capa-modal);
+}
+
+.cajon-abierto .velo {
+  display: block;
+}
+
+/* Pie azul */
+.pie {
+  padding: var(--ds-espacio-2);
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-acento-texto);
+  text-align: center;
+  background: var(--ds-acento-500);
+}
+
+@media (max-width: 479px) {
+  .marca .logo {
+    height: 28px;
+  }
+
+  .avatar,
+  .usuario-nombre {
+    display: none;
+  }
+
+  .acciones-cabecera .btn-sobre-azul,
+  .acciones-cabecera .enlace-sobre-azul {
+    padding: 0 var(--ds-espacio-1);
+    font-size: var(--ds-texto-sm);
+  }
+}
+
+@media (min-width: 768px) {
+  .cabecera {
+    padding: var(--ds-espacio-1) var(--ds-espacio-3);
+  }
+
+  .menu-boton,
+  .cajon-cabecera {
+    display: none;
+  }
+
+  .lateral {
+    position: static;
+    flex: none;
+    align-self: stretch;
+    width: 15rem;
+    padding-top: var(--ds-espacio-2);
+    box-shadow: none;
+    visibility: visible;
+    border-right: var(--ds-borde-ancho) solid var(--ds-borde);
+    transform: none;
+  }
+
+  .cajon-abierto .velo {
+    display: none;
+  }
+}
+
+/* ===== 14-estados.css ===== */
+/* Estados de los botones (C-39, etapa B; mockups aprobados): hover, presionado, foco visible y deshabilitado.
+   Va al final para que valga sobre las reglas de cada pantalla. Solo --ds-*. */
+.btn,
+.boton-principal,
+.boton-secundario,
+.chip,
+.opcion,
+.btn-sobre-azul,
+.enlace-sobre-azul,
+.lateral a,
+.cajon-cabecera .cerrar {
+  transition:
+    background var(--ds-duracion-rapida) var(--ds-curva),
+    border-color var(--ds-duracion-rapida) var(--ds-curva),
+    color var(--ds-duracion-rapida) var(--ds-curva);
+}
+
+/* Hover */
+.btn:hover:not(:disabled),
+.boton-secundario:hover:not(:disabled) {
+  background: var(--ds-acento-50);
+  border-color: var(--ds-acento-500);
+}
+
+.btn-principal:hover:not(:disabled),
+.boton-principal:hover:not(:disabled) {
+  background: var(--ds-acento-600);
+  border-color: var(--ds-acento-600);
+}
+
+.btn-fantasma:hover:not(:disabled) {
+  background: var(--ds-acento-50);
+  border-color: transparent;
+}
+
+.btn-peligro:hover:not(:disabled) {
+  background: var(--ds-error-fondo);
+  border-color: var(--ds-error);
+}
+
+.chip:hover:not(:disabled),
+.opcion:hover {
+  background: var(--ds-acento-50);
+  border-color: var(--ds-acento-500);
+}
+
+.btn-sobre-azul:hover:not(:disabled),
+.enlace-sobre-azul:hover {
+  background: var(--ds-acento-600);
+}
+
+.lateral a:hover,
+.cajon-cabecera .cerrar:hover {
+  color: var(--ds-texto);
+  background: var(--ds-superficie);
+}
+
+.lateral a[aria-current='page']:hover {
+  color: var(--ds-acento-700);
+  background: var(--ds-acento-50);
+}
+
+/* Presionado */
+.btn:active:not(:disabled) {
+  background: var(--ds-superficie-2);
+}
+
+.btn-principal:active:not(:disabled),
+.boton-principal:active:not(:disabled) {
+  background: var(--ds-acento-700);
+  border-color: var(--ds-acento-700);
+}
+
+.btn-peligro:active:not(:disabled) {
+  background: var(--ds-error-fondo);
+}
+
+.chip:active:not(:disabled) {
+  background: var(--ds-acento-100);
+}
+
+.btn-sobre-azul:active:not(:disabled) {
+  background: var(--ds-acento-700);
+}
+
+/* Foco visible con el teclado: el anillo del design system (en rojo para el botón de peligro) */
+.btn:focus-visible,
+.boton-principal:focus-visible,
+.boton-secundario:focus-visible,
+.chip:focus-visible,
+.lateral a:focus-visible,
+.opcion:has(input:focus-visible) {
+  outline: var(--ds-foco-ancho) solid var(--ds-foco-color);
+  outline-offset: var(--ds-foco-separacion);
+}
+
+.btn-peligro:focus-visible {
+  outline-color: var(--ds-error);
+}
+
+.cabecera .btn-sobre-azul:focus-visible,
+.cabecera .enlace-sobre-azul:focus-visible,
+.cabecera .marca:focus-visible {
+  outline-color: var(--ds-acento-texto);
+}
+
+/* Deshabilitado */
+.btn:disabled,
+.boton-principal:disabled,
+.boton-secundario:disabled,
+.chip:disabled {
+  cursor: not-allowed;
+}
+
+/* ===== 15-estados-vacios.css ===== */
+/* Estados vacíos y de carga (C-39, etapa B; mockups aprobados). Solo --ds-*. */
+.estado-vacio {
+  display: grid;
+  justify-items: center;
+  gap: var(--ds-espacio-1);
+  padding: var(--ds-espacio-4) var(--ds-espacio-2);
+  text-align: center;
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) dashed var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio-lg);
+}
+
+.estado-vacio svg {
+  width: 8.5rem;
+  height: auto;
+}
+
+.estado-vacio.chico {
+  padding: var(--ds-espacio-3) var(--ds-espacio-2);
+}
+
+.estado-vacio.chico svg {
+  width: 5rem;
+}
+
+.estado-vacio-titulo {
+  margin: 0;
+  font-size: var(--ds-texto-lg);
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.estado-vacio-texto {
+  max-width: 24rem;
+  margin: 0;
+  color: var(--ds-texto-suave);
+}
+
+.cargando {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  color: var(--ds-texto-suave);
+}
+
+.rueda {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--ds-acento-100);
+  border-top-color: var(--ds-acento-500);
+  border-radius: 50%;
+  animation: girar calc(var(--ds-duracion) * 4.5) linear infinite;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rueda {
+    animation: none;
+  }
+}
+
+/* ===== 16-cuentas.css ===== */
+/* Cuentas del personal (C-41; mockups aprobados en openspec/changes/cuentas-del-personal/mockups). Solo --ds-*. */
+
+/* El usuario del encabezado lleva a "Mi contraseña" (solo para el personal). */
+.usuario-enlace {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  min-width: 0;
+  color: inherit;
+  text-decoration: none;
+  border-radius: var(--ds-radio);
+}
+
+.usuario-enlace[href]:hover .usuario-nombre {
+  text-decoration: underline;
+}
+
+/* "Mi contraseña" en la barra lateral, separado de las páginas. */
+.lateral-cuenta {
+  margin-top: var(--ds-espacio-2);
+  padding-top: var(--ds-espacio-2);
+  border-top: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.lateral-cuenta[hidden] {
+  display: none;
+}
+
+/* Fila de una cuenta: estado y marcas. */
+.cuenta-marcas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  margin-top: var(--ds-espacio-0);
+}
+
+.marca-temporal {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px var(--ds-espacio-1);
+  font-size: var(--ds-texto-xs);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-alerta);
+  background: var(--ds-alerta-fondo);
+  border-radius: var(--ds-radio-pill);
+}
+
+.marca-temporal svg {
+  width: 14px;
+  height: 14px;
+}
+
+.marca-propia {
+  padding: 2px var(--ds-espacio-1);
+  font-size: var(--ds-texto-xs);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-acento-500);
+  background: var(--ds-acento-50);
+  border-radius: var(--ds-radio-pill);
+}
+
+.nota-fila {
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+/* Rol del alta: tarjetas con el nombre y una línea que explica qué puede hacer. */
+.alta-rol {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.alta-rol legend {
+  margin-bottom: var(--ds-espacio-1);
+  padding: 0;
+  font-weight: var(--ds-peso-medio);
+}
+
+.alta-rol .opcion {
+  display: grid;
+  gap: 2px;
+  align-items: start;
+}
+
+.alta-rol .opcion label {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  font-weight: var(--ds-peso-medio);
+  cursor: pointer;
+}
+
+.alta-rol .opcion small {
+  padding-left: calc(20px + var(--ds-espacio-1));
+  font-size: var(--ds-texto-sm);
+}
+
+/* Bloque "Acceso a la aplicación" del detalle del profesional. */
+.acceso {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1);
+  margin-top: var(--ds-espacio-2);
+  padding-top: var(--ds-espacio-2);
+  border-top: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.acceso h4 {
+  margin: 0;
+  font-size: var(--ds-texto-base);
+}
+
+.acceso p {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+/* Diálogo de la contraseña temporal. El usuario se muestra tal cual (08-paciente pone en mayúscula la primera letra de los dd). */
+.detalle-lista dd.dato-literal::first-letter {
+  text-transform: none;
+}
+
+.contrasena-caja {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  padding: var(--ds-espacio-2);
+  background: var(--ds-superficie);
+  border: var(--ds-borde-ancho) solid var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio);
+}
+
+.contrasena-caja code {
+  flex: 1 1 12rem;
+  font-family: var(--ds-fuente-mono);
+  font-size: var(--ds-texto-lg);
+  font-weight: var(--ds-peso-fuerte);
+  letter-spacing: 0.06em;
+  color: var(--ds-texto);
+  word-break: break-all;
+}
+
+.contrasena-caja .btn {
+  gap: var(--ds-espacio-0);
+}
+
+.contrasena-caja .btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* Página de cambio de contraseña. */
+.pagina-angosta {
+  max-width: 28rem;
+}
+
+.pagina-angosta .formulario {
+  margin-top: var(--ds-espacio-3);
+}
+
+.volver {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-espacio-0);
+  margin-bottom: var(--ds-espacio-2);
+  font-size: var(--ds-texto-sm);
+}
+
+.volver svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ===== Ayudantes de mockup ===== */
+.dialogo-mock { position: fixed; z-index: 30; inset: 0; display: grid; place-items: center; padding: var(--ds-espacio-2); background: var(--ds-capa-modal); overflow-y: auto; }
+.dialogo-mock dialog.dialogo { position: static; margin: 0; }
+.menu-separado { margin-top: var(--ds-espacio-2); padding-top: var(--ds-espacio-2); border-top: 1px solid var(--ds-borde); }

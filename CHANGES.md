@@ -36,7 +36,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `backend/.../notificaciones/` | Juan Cruz | V7 |
 | `backend/.../clinica/` | Emanuel | V8 |
 | `frontend/` | Enzo | — |
-| **Ajustes del MVP (C-33 a C-44)** | | |
+| **Ajustes del MVP (C-33 a C-45)** | | |
 | `frontend/` agenda: reprogramación (C-33) | Juan Cruz (avisa a Enzo) | — |
 | `frontend/` página Configuración (C-34) | Emanuel (avisa a Enzo) | — |
 | `backend/.../agenda/api` y `frontend/` agenda propia del odontólogo (C-35) | Sofia (avisa a Juan Sebastián y a Enzo) | — |
@@ -49,6 +49,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `frontend/` Mis turnos: turnos sin registrar (C-42) | Sofia (avisa a Enzo) | — |
 | `backend/.../agenda/` y `frontend/` agenda: llegada y ausencia del paciente (C-43) | Sofia (avisa a Emanuel por la ficha clínica y a Enzo) | V22 |
 | `frontend/` ficha clínica y odontograma (C-44) | Emanuel (avisa a Enzo) | — |
+| `frontend/` agenda: sobreturno y extensión (C-45) | Enzo (avisa a Juan Cruz) | — |
 | **Post-MVP** | | |
 | `backend/.../agenda/` lista de espera, `configuracion/` política de cancelación | Sofia (C-16 avisa a Emanuel) | V9, V10 |
 | `backend/.../notificaciones/` consentimiento | Juan Cruz | V11 |
@@ -94,6 +95,7 @@ C-01 crear-turno-sin-solapamientos  [Sofia · OPSX]      ← tarea 1 = scaffoldi
   │     C-12 + C-39 ──────── C-42 frontend-turnos-sin-registrar [Sofia]   ← detectado al revisar C-39
   │     C-06 + C-13 + C-39 ─ C-43 registro-asistencia [Sofia]   ← antes: cambio de regla en la KB (RN-AG-17, RN-AG-20)
   │     C-13 + C-36 + C-43 ─ C-44 frontend-ficha-clinica-odontograma [Emanuel]   ← C-13 hizo solo el backend
+  │     C-08 + C-36 + C-43 ─ C-45 frontend-sobreturno-y-extension [Enzo]   ← C-08 hizo solo el backend
   │
 C-02 frontend-base-ts  [Enzo]                            ← independiente: carpeta frontend/
   │
@@ -194,7 +196,11 @@ GATE 5h: C-13 ✓ + C-36 ✓ + C-43 archivado ✓ (2026-11-24)
   → C-44 frontend-ficha-clinica-odontograma [Agente C · Emanuel]
   (ALTO: datos de salud. Mockups aprobados por la líder antes del apply; avisa a Enzo, dueño de frontend/)
 
-GATE 6: changes de la entrega ✓ (incluye C-33 a C-44)
+GATE 5i: C-08 ✓ + C-36 ✓ + C-43 ✓ + etapa E de C-39 ✓ (2026-11-24)
+  → C-45 frontend-sobreturno-y-extension    [Agente B · Enzo]
+  (MEDIO: frontend sobre la API de C-08. Mockups aprobados antes del apply; avisa a Juan Cruz)
+
+GATE 6: changes de la entrega ✓ (incluye C-33 a C-45)
   → C-14 entrega-readme-y-evidencia          [Agente A · Sofia]
 
 ──────────── POST-MVP ────────────
@@ -241,7 +247,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 | Bloque | Changes | Origen |
 |---|---|---|
 | **MVP v1.0** (fases 1 a 6) | C-01 a C-14 | Sección D.3 del informe, lista "imprescindible" |
-| **Ajustes del MVP** (fase 5b) | C-33 a C-44 | Prueba y revisión de la aplicación del 2026-11-23 (C-41 a C-44: 2026-11-24) |
+| **Ajustes del MVP** (fase 5b) | C-33 a C-45 | Prueba y revisión de la aplicación del 2026-11-23 (C-41 a C-45: 2026-11-24) |
 | **Post-MVP v1.x** (fase 7) | C-15 a C-17 | Sección D.3, lista "diferenciador" |
 | **Post-MVP: etapas posteriores** (fases 8 a 10) | C-18 a C-32 | Sección D.3, lista "etapas posteriores" |
 
@@ -276,7 +282,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 | **Juan Cruz** | C-03, C-08, C-11, C-33, C-37, C-38, C-39 | C-17, C-30, C-31 |
 | **Emanuel** | C-04, C-07, C-13, C-12, C-34, C-44 | C-25, C-26, C-27, C-28 |
 | **Juan Sebastián** | C-05, C-10, C-36 | C-18, C-19, C-20, C-21 |
-| **Enzo** | C-02, C-09, C-40, C-41 | C-22, C-23, C-24, C-32 (backend y pantallas de administración) |
+| **Enzo** | C-02, C-09, C-40, C-41, C-45 | C-22, C-23, C-24, C-32 (backend y pantallas de administración) |
 
 ---
 
@@ -749,6 +755,26 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/06_funcionalidades.md` §Épica 5 (US-040 a US-042)
   - `openspec/specs/ficha-clinica/spec.md`, `frontend-agenda-personal/spec.md` y `frontend-buscador-pacientes/spec.md`
   - `design-system/README.md` y `design-system/components.html`
+
+### [C-45] `frontend-sobreturno-y-extension`
+- **Estado**: `[x]` implementado (2026-11-24, rama `change/C-45-frontend-sobreturno-y-extension`, PR pendiente; mockups aprobados por Enzo). Change `openspec/changes/frontend-sobreturno-y-extension/`. Evidencia: 592 tests del frontend (eran 560), `tsc` y build en verde, y verificación manual en la app real. Sin migración ni cambios de backend. El PR ajusta el ejemplo de un test de C-33 en `mensajes.test.ts` (avisar a Juan Cruz)
+- **Responsable**: Enzo (avisa a Juan Cruz, dueño del backend de sobreturno y extensión)
+- **Scope**:
+  - C-08 hizo el backend del sobreturno y de la extensión, pero ninguna pantalla lo usa: la agenda muestra la etiqueta "Sobreturno", pero el personal no puede cargar uno ni extender un turno desde la aplicación. Este change suma la interfaz sobre los endpoints que ya existen, sin cambiar su contrato.
+  - **Sobreturno** (`POST /api/v1/turnos/sobreturno`; US-013, RN-AG-06): botón "Sobreturno" junto a "Nuevo turno" para la recepción, el administrador y el odontólogo (este último, solo con su profesional, RN-AG-18). Paciente con el buscador de C-36, prestación, profesional habilitado, fecha, hora libre (puede pisar la agenda del profesional) y motivo administrativo obligatorio. El sillón lo asigna el servidor y se informa al confirmar.
+  - **Extensión** (`POST /api/v1/turnos/{id}/extender`; US-019): acción "Extender" en los turnos `RESERVADO` o `CONFIRMADO` que no son sobreturno, con el nuevo fin y el motivo. Si choca con el turno siguiente, se avisa sin mover nada y se ofrecen las salidas de US-019 CA-2: reprogramar el turno siguiente o cargar la atención como sobreturno.
+  - Mensajes claros para `SIN_SILLON_DISPONIBLE`, `TURNO_NO_EXTENSIBLE`, `TURNO_NO_ACTIVO`, `SOLAPAMIENTO_SILLON`, `MARGEN_INSUFICIENTE` y `422 DATOS_INVALIDOS`. El motivo es administrativo: la ayuda del campo pide no escribir datos de salud (regla dura 6).
+  - Sin cambios de backend ni migraciones. Si el propose encuentra que falta algo en la API, el cambio va en `agenda/`, de Juan Cruz.
+  - Cambio visual: modo `system-and-mockups`, mockups del sobreturno y de la extensión a 390 y 1440 px aprobados antes del apply.
+  - Tests: un escenario por requisito del delta (rol, motivo obligatorio, sillón asignado, sin sillón libre, extensión aceptada, choque con el siguiente, sobreturno no extensible); los de C-09, C-36, C-40 y C-43 siguen pasando.
+- **Dependencias**: `C-08, C-36, C-40, C-43`, etapa E de `C-39`
+- **Governance**: MEDIO (frontend sobre una API existente)
+- **Leer antes**:
+  - `knowledge-base/05_reglas_de_negocio.md` §RN-AG-06, §RN-AG-18
+  - `knowledge-base/06_funcionalidades.md` US-013 y US-019
+  - `knowledge-base/03_actores_y_roles.md` §RBAC: sobreturno y extensión
+  - `openspec/specs/agenda-api/spec.md` (sobreturno, extensión y códigos de rechazo), `agenda-turnos/spec.md` y `frontend-agenda-personal/spec.md`
+  - `design-system/README.md` y `design-system/components.html`
 ---
 
 ## FASE 6: Entrega
@@ -760,7 +786,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `README.md` reproducible: requisitos (Java 21, opcional Docker o PostgreSQL), cómo correr `./gradlew test` (tests de dominio sin base) y los tests de integración.
   - Verificación final: suite en verde, ningún secreto en el repo, `.env.example` completo.
   - Evidencias: informe de Discovery en PDF, estado del orquestador, consulta a Engram para el video.
-- **Dependencias**: `C-01` (mínimo); los demás changes que se hayan completado, incluidos los ajustes C-33 a C-44
+- **Dependencias**: `C-01` (mínimo); los demás changes que se hayan completado, incluidos los ajustes C-33 a C-45
 - **Governance**: BAJO
 - **Leer antes**:
   - `knowledge-base/README.md`
