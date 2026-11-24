@@ -13,10 +13,17 @@ public enum CodigoCobertura {
     PLAN_INACTIVO(Estado.CONFLICTO),
     OBRA_SOCIAL_INACTIVA(Estado.CONFLICTO),
     AFILIACION_CERRADA(Estado.CONFLICTO),
+    // C-19 (design D9): el pedido está bien formado y choca con el estado del catálogo o del presupuesto.
+    ARANCEL_INEXISTENTE(Estado.CONFLICTO),
+    PRESTACION_INACTIVA(Estado.CONFLICTO),
+    PRESUPUESTO_VENCIDO(Estado.CONFLICTO),
+    PRESUPUESTO_CERRADO(Estado.CONFLICTO),
     RECURSO_NO_ENCONTRADO(Estado.NO_ENCONTRADO),
     DATOS_INVALIDOS(Estado.INVALIDO),
     VIGENCIA_INVALIDA(Estado.INVALIDO),
-    PRESTACION_INEXISTENTE(Estado.INVALIDO);
+    PRESTACION_INEXISTENTE(Estado.INVALIDO),
+    CODIGO_NOMENCLADOR_REQUERIDO(Estado.INVALIDO),
+    CODIGO_NOMENCLADOR_INVALIDO(Estado.INVALIDO);
 
     /** La clase de respuesta HTTP, sin depender de Spring en el dominio. */
     public enum Estado { CONFLICTO, NO_ENCONTRADO, INVALIDO }

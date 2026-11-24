@@ -154,7 +154,7 @@ Más los triggers de D5. Notas:
 5. Porcentaje: particular → 0; si no, `cobertura_plan` del plan de la afiliación y el código, o 0 sin fila. La vigencia de la afiliación no depende de que el plan siga activo (igual que `ConsultaCobertura`).
 6. Arma el agregado y lo guarda con JPA (`saveAndFlush`, ítems en cascada). Errores evaluados en orden de ítem: el primero que falla responde y no se guarda nada.
 
-**Foto (DD-15, RN-PR-04)**: además de lo que pide la KB (precio, porcentaje, importes y `afiliacion_id`), se guardan `obra_social_nombre`, `plan_nombre`, `numero_afiliado`, `prestacion_nombre` y `codigo_nomenclador`. Motivo: C-18 permite corregir el plan de una afiliación, renombrar un plan o una prestación y cambiar un código; leerlos por join haría que el presupuesto emitido "cambie". La FK compuesta `(afiliacion_id, paciente_id)` impide asociar la afiliación de otro paciente. **(a confirmar, ver Open Questions 1)**.
+**Foto (DD-15, RN-PR-04)**: además de lo que pide la KB (precio, porcentaje, importes y `afiliacion_id`), se guardan `obra_social_nombre`, `plan_nombre`, `numero_afiliado`, `prestacion_nombre` y `codigo_nomenclador`. Motivo: C-18 permite corregir el plan de una afiliación, renombrar un plan o una prestación y cambiar un código; leerlos por join haría que el presupuesto emitido "cambie". La FK compuesta `(afiliacion_id, paciente_id)` impide asociar la afiliación de otro paciente. (decisión 1, aceptada).
 
 ### D5. Estados, vencimiento e inmutabilidad
 
@@ -163,13 +163,13 @@ Más los triggers de D5. Notas:
   `UPDATE presupuesto SET estado = ? WHERE id = ? AND paciente_id = ? AND estado = 'PENDIENTE' AND (? = 'RECHAZADO' OR vence_el >= ?)`.
   Si actualiza 0 filas, se relee para responder `404` (no existe o es de otro paciente), `409 PRESUPUESTO_CERRADO` (ya no está pendiente) o `409 PRESUPUESTO_VENCIDO`. Con dos pedidos a la vez, PostgreSQL serializa las dos actualizaciones de la fila y el segundo ve `estado <> 'PENDIENTE'`. No hace falta el reintento por deadlock de C-18 (no hay `EXCLUDE`).
   **Alternativa descartada**: leer la entidad, cambiarla y guardar con `@Version`: más código y un `409` por `OptimisticLockException` que habría que traducir aparte.
-- Cualquier `ODONTOLOGO` acepta o rechaza, no solo el autor (como la ficha clínica, que escribe cualquier odontólogo). **(a confirmar, Open Questions 4)**.
-- **Inmutabilidad en la base** (como `odontograma_solo_agregado` de V8): trigger `presupuesto_item_solo_agregado` (BEFORE UPDATE OR DELETE → error) y trigger `presupuesto_solo_estado` (BEFORE DELETE → error; BEFORE UPDATE → error si cambia otra columna que `estado`, si `OLD.estado <> 'PENDIENTE'` o si `NEW.estado` no es `ACEPTADO` ni `RECHAZADO`). Los mensajes de los triggers son fijos y no incluyen valores. `TRUNCATE` (tests) no dispara triggers de fila. **(a confirmar, Open Questions 5)**.
+- Cualquier `ODONTOLOGO` acepta o rechaza, no solo el autor (como la ficha clínica, que escribe cualquier odontólogo). (decisión 4, aceptada).
+- **Inmutabilidad en la base** (como `odontograma_solo_agregado` de V8): trigger `presupuesto_item_solo_agregado` (BEFORE UPDATE OR DELETE → error) y trigger `presupuesto_solo_estado` (BEFORE DELETE → error; BEFORE UPDATE → error si cambia otra columna que `estado`, si `OLD.estado <> 'PENDIENTE'` o si `NEW.estado` no es `ACEPTADO` ni `RECHAZADO`). Los mensajes de los triggers son fijos y no incluyen valores. `TRUNCATE` (tests) no dispara triggers de fila. (decisión 5, aceptada).
 - Las entidades JPA son `@Immutable` (solo insertan); el estado cambia solo por el `UPDATE` de arriba.
 
 ### D6. Aranceles y cobertura por plan
 
-- `PUT /api/v1/aranceles/{prestacionId}` y `PUT .../coberturas/{nomencladorId}` son **upsert** idempotentes por JDBC (`INSERT ... ON CONFLICT (prestacion_id) DO UPDATE` y `ON CONFLICT (plan_id, nomenclador_id) DO UPDATE`): dos pedidos simultáneos no chocan con la restricción única y no hace falta un código `COBERTURA_EXISTENTE`. `actualizado_en` sale del `Clock`. **(a confirmar, Open Questions 6)**.
+- `PUT /api/v1/aranceles/{prestacionId}` y `PUT .../coberturas/{nomencladorId}` son **upsert** idempotentes por JDBC (`INSERT ... ON CONFLICT (prestacion_id) DO UPDATE` y `ON CONFLICT (plan_id, nomenclador_id) DO UPDATE`): dos pedidos simultáneos no chocan con la restricción única y no hace falta un código `COBERTURA_EXISTENTE`. `actualizado_en` sale del `Clock`. (decisión 6, aceptada).
 - Se puede cargar el precio de una prestación inactiva y la cobertura de un plan o un código inactivos (es configuración); lo que se rechaza es **presupuestar** una prestación inactiva o con un código inactivo.
 - El plan se busca junto con su obra social de la ruta (`404` si no coinciden), como en C-18.
 
@@ -193,7 +193,7 @@ Más los triggers de D5. Notas:
 - Pedido de emisión: `{ "items": [ { "prestacionId", "nomencladorId"?, "pieza"?, "cara"?, "cantidad" } ] }`.
 - Respuesta: `{ id, fecha, venceEl, estado, vencido, profesional { id, nombre }, particular, cobertura { afiliacionId, obraSocial, plan, numeroAfiliado } | null, items [ { id, prestacion { id, nombre }, codigoNomenclador, pieza, cara, cantidad, precioUnitario, porcentajeCobertura, importe, cobertura, copago } ], totales { precio, cobertura, copago }, creadoEn }`.
 - **Vista de recepción**: records propios (`PresupuestoRecepcionRespuesta`, `ItemRecepcionRespuesta`) **sin** los componentes `pieza` y `cara`, no los mismos con `null`: así el campo no existe en el JSON y no depende de la configuración de Jackson. El controller elige el mapeo con `Authentication` (rol `RECEPCIONISTA`); el servicio devuelve siempre la vista completa.
-- El paciente ve sus presupuestos completos, con pieza y cara (son sus datos, PA-27); `PresupuestosPacienteController` usa `@AuthenticationPrincipal UsuarioAutenticado` y busca `id = ? AND paciente_id = sesión`, sin `@PathVariable` de paciente. **(a confirmar, Open Questions 7)**.
+- El paciente ve sus presupuestos completos, con pieza y cara (son sus datos, PA-27); `PresupuestosPacienteController` usa `@AuthenticationPrincipal UsuarioAutenticado` y busca `id = ? AND paciente_id = sesión`, sin `@PathVariable` de paciente. (decisión 7, aceptada).
 
 ### D8. Sugerencias desde el odontograma
 
@@ -220,7 +220,7 @@ Usa el índice `odontograma_registro_vigente_idx` de V8. No llama a `clinica/` n
 | `CODIGO_NOMENCLADOR_REQUERIDO`, `CODIGO_NOMENCLADOR_INVALIDO` | `422` |
 
 Se reutilizan `RECURSO_NO_ENCONTRADO` (`404`), `DATOS_INVALIDOS` y `PRESTACION_INEXISTENTE` (`422`). `ACCESO_DENEGADO` (`403`) lo escribe la seguridad.
-- `ARANCEL_INEXISTENTE` y `PRESTACION_INACTIVA` son `409`: el pedido está bien formado y choca con el estado del catálogo, igual que `PLAN_INACTIVO` en C-18. **(a confirmar, Open Questions 3)**.
+- `ARANCEL_INEXISTENTE` y `PRESTACION_INACTIVA` son `409`: el pedido está bien formado y choca con el estado del catálogo, igual que `PLAN_INACTIVO` en C-18. (decisión 3, aceptada).
 - `PRESTACION_INEXISTENTE` queda `422` porque el id viene en el body (como en el nomenclador de C-18); un id inexistente en la **ruta** es `404`.
 - Restricciones traducidas por nombre (red de seguridad): `arancel_precio_positivo`, `cobertura_plan_porcentaje_valido`, `presupuesto_item_cantidad` y los `presupuesto_item_pieza_fdi`/`_cara_*` → `DATOS_INVALIDOS`. Las demás (`presupuesto_totales`, `presupuesto_item_cobertura`, triggers) indican un defecto del código: se relanzan y terminan en `500` sin valores.
 - `detail` fijo por código; los `422` llevan solo el campo (`items[0].pieza`), nunca el valor recibido (RN-PR-07).
@@ -232,8 +232,8 @@ El módulo no escribe logs con piezas, caras ni importes; `SqlExceptionHelper` y
 ### D11. Seed de desarrollo `db/seed/V13_1__seed_presupuestos_dev.sql`
 
 - Aranceles y coberturas exactamente como el seed de la KB ("Aranceles y cobertura (C-19)"), con `ON CONFLICT DO NOTHING` y buscando por nombre o código.
-- Vincula `N-0301` a "Extracción simple" (`UPDATE nomenclador SET prestacion_id = ... WHERE codigo = 'N-0301' AND prestacion_id IS NULL`); sin eso, el 70 % de "Plan Integral" y el 80 % de "Plan Oro" para `N-0301` nunca se aplicarían. **(a confirmar, Open Questions 2)**.
-- Agrega "Paciente Tres" (`99000003`) con "Plan Oro" de "Prepaga Prueba" y el número `PP-000003` desde 2026-01-01, para tener en dev un paciente de cada tipo (la KB pide 3 pacientes ficticios). **(a confirmar, Open Questions 2)**.
+- Vincula `N-0301` a "Extracción simple" (`UPDATE nomenclador SET prestacion_id = ... WHERE codigo = 'N-0301' AND prestacion_id IS NULL`); sin eso, el 70 % de "Plan Integral" y el 80 % de "Plan Oro" para `N-0301` nunca se aplicarían. (decisión 2, aceptada).
+- Agrega "Paciente Tres" (`99000003`) con "Plan Oro" de "Prepaga Prueba" y el número `PP-000003` desde 2026-01-01, para tener en dev un paciente de cada tipo (la KB pide 3 pacientes ficticios). (decisión 2, aceptada).
 - No crea presupuestos (dependen de la fecha y del odontólogo de la sesión).
 
 ### Tests
@@ -259,7 +259,7 @@ El módulo no escribe logs con piezas, caras ni importes; `SqlExceptionHelper` y
 
 ## Open Questions
 
-Decisiones "(a confirmar)" con la líder en la tarea 0.1. Las respuestas 1 y 2 tocan escenarios de las specs; si difieren de la recomendación, se actualiza el change con `openspec-update-change` antes del apply.
+Decisiones que se consultaron con la líder en la tarea 0.1; las respuestas están en "Resolución de decisiones (2026-11-24)" al final de este documento.
 
 1. **Foto con nombres** (D4): guardar además de lo que pide la KB `obra_social_nombre`, `plan_nombre`, `numero_afiliado`, `prestacion_nombre` y `codigo_nomenclador`. *Recomendación*: sí; sin eso, corregir la afiliación o renombrar un plan cambia lo que muestra un presupuesto emitido (escenario "Se corrige la afiliación después de emitir").
 2. **Seed dev V13_1** (D11): vincular `N-0301` a "Extracción simple" y agregar "Paciente Tres" con "Plan Oro". *Recomendación*: sí, para que el seed de cobertura de la KB tenga efecto y haya en dev un paciente con obra social, uno con prepaga y uno particular.
@@ -270,6 +270,20 @@ Decisiones "(a confirmar)" con la líder en la tarea 0.1. Las respuestas 1 y 2 t
 7. **El paciente ve pieza y cara** de sus presupuestos (D7). *Recomendación*: sí, son sus propios datos (PA-27); la restricción de PA-24 es solo para la recepción.
 8. **Límites**: 1 a 50 ítems por presupuesto y cantidad de 1 a 99. *Recomendación*: sí; evita desbordar `NUMERIC(12,2)` y pedidos abusivos.
 9. **Quién y cuándo aceptó o rechazó**: la KB no lo guarda. *Recomendación*: no agregarlo en C-19; si C-22 lo necesita, una migración propia agrega `resuelto_en` y `resuelto_por`.
+
+## Resolución de decisiones (2026-11-24)
+
+La líder (Sofia Indovino) aprobó el propose al mergear el PR #110 y, por medio de Juan Sebastián, aceptó **las 9 decisiones tal como se recomendaron**; no hay cambios en las specs ni en las tareas:
+
+1. Foto con nombres: se guardan también `obra_social_nombre`, `plan_nombre`, `numero_afiliado`, `prestacion_nombre` y `codigo_nomenclador`. **Aceptada.**
+2. Seed dev V13_1: vincula `N-0301` a "Extracción simple" y agrega "Paciente Tres" (`99000003`) con "Plan Oro" y `PP-000003` (ficticios, `ON CONFLICT DO NOTHING` como V12_1). **Aceptada.**
+3. `ARANCEL_INEXISTENTE` y `PRESTACION_INACTIVA` responden `409`. **Aceptada.**
+4. Cualquier `ODONTOLOGO` puede aceptar o rechazar. **Aceptada.**
+5. Triggers de inmutabilidad en `presupuesto` y `presupuesto_item`. **Aceptada.**
+6. `PUT` con upsert para aranceles y coberturas. **Aceptada.**
+7. El paciente ve pieza y cara de sus presupuestos. **Aceptada.**
+8. De 1 a 50 ítems por presupuesto y cantidad de 1 a 99. **Aceptada.**
+9. No se registra quién ni cuándo aceptó o rechazó por ahora. **Aceptada.**
 
 ## UI Mockups
 
