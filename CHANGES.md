@@ -45,6 +45,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `frontend/` explorador de prestaciones en la reserva (C-38) | Juan Cruz (avisa a Enzo) | — |
 | `frontend/` barra lateral, colores y estilo uniforme (C-39) | Juan Cruz (avisa a Enzo) | — |
 | `frontend/` agenda: nuevo turno guiado por prestación (C-40) | Enzo (si la disponibilidad necesita filtrar por sillón, avisa a Juan Sebastián) | — |
+| `backend/.../usuarios/`, `shared/security/` y `frontend/` pestaña Usuarios: cuentas del personal (C-41) | Enzo (avisa a Juan Sebastián, dueño de `usuarios/` y `shared/security/`) | V21 |
 | **Post-MVP** | | |
 | `backend/.../agenda/` lista de espera, `configuracion/` política de cancelación | Sofia (C-16 avisa a Emanuel) | V9, V10 |
 | `backend/.../notificaciones/` consentimiento | Juan Cruz | V11 |
@@ -84,6 +85,9 @@ C-01 crear-turno-sin-solapamientos  [Sofia · OPSX]      ← tarea 1 = scaffoldi
   │     C-12 + ingreso-unico-mi-cuenta ── C-37 frontend-portada-y-acceso [Juan Cruz]
   │     C-12 + C-37 ──────── C-38 frontend-reserva-explorador-prestaciones [Juan Cruz]
   │     C-33 a C-38 ──────── C-39 frontend-uniformidad-visual [Juan Cruz]
+  │
+  │  Ajustes del MVP, cuentas del personal (2026-11-24: la matriz RBAC lo promete y ningún change lo hacía)
+  │     C-05 + C-34 + C-35 ── C-41 cuentas-del-personal [Enzo]   ← avisa a Juan Sebastián (usuarios/ y security/)
   │
 C-02 frontend-base-ts  [Enzo]                            ← independiente: carpeta frontend/
   │
@@ -167,7 +171,12 @@ GATE 5d: C-33 ✓ + C-35 ✓ + C-36 ✓ (2026-11-23)                ← en paral
   (rehace el formulario "Nuevo turno" que tocaron C-35 y C-36: sus tests tienen que seguir pasando.
    Va antes de la etapa D de C-39, que reestiliza las pantallas del personal: coordinar el orden con Juan Cruz)
 
-GATE 6: changes de la entrega ✓ (incluye C-33 a C-40)
+GATE 5e: C-05 ✓ + C-34 archivado ✓ + C-35 ✓ (2026-11-24)        ← en paralelo con C-39
+  → C-41 cuentas-del-personal                 [Agente C · Enzo]
+  (CRÍTICO: la líder aprueba proposal, specs, design y tasks antes del apply. Suma una pestaña a Configuración,
+   que la etapa D de C-39 reestiliza: coordinar el orden de los PR con Juan Cruz)
+
+GATE 6: changes de la entrega ✓ (incluye C-33 a C-41)
   → C-14 entrega-readme-y-evidencia          [Agente A · Sofia]
 
 ──────────── POST-MVP ────────────
@@ -214,7 +223,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 | Bloque | Changes | Origen |
 |---|---|---|
 | **MVP v1.0** (fases 1 a 6) | C-01 a C-14 | Sección D.3 del informe, lista "imprescindible" |
-| **Ajustes del MVP** (fase 5b) | C-33 a C-40 | Prueba y revisión de la aplicación del 2026-11-23 |
+| **Ajustes del MVP** (fase 5b) | C-33 a C-41 | Prueba y revisión de la aplicación del 2026-11-23 (C-41: 2026-11-24) |
 | **Post-MVP v1.x** (fase 7) | C-15 a C-17 | Sección D.3, lista "diferenciador" |
 | **Post-MVP: etapas posteriores** (fases 8 a 10) | C-18 a C-32 | Sección D.3, lista "etapas posteriores" |
 
@@ -249,7 +258,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 | **Juan Cruz** | C-03, C-08, C-11, C-33, C-37, C-38, C-39 | C-17, C-30, C-31 |
 | **Emanuel** | C-04, C-07, C-13, C-12, C-34 | C-25, C-26, C-27, C-28 |
 | **Juan Sebastián** | C-05, C-10, C-36 | C-18, C-19, C-20, C-21 |
-| **Enzo** | C-02, C-09, C-40 | C-22, C-23, C-24, C-32 (backend y pantallas de administración) |
+| **Enzo** | C-02, C-09, C-40, C-41 | C-22, C-23, C-24, C-32 (backend y pantallas de administración) |
 
 ---
 
@@ -644,6 +653,27 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `openspec/specs/frontend-agenda-personal/spec.md`, `openspec/specs/disponibilidad-online/spec.md`
   - `openspec/changes/frontend-reprogramacion-agenda/`, `openspec/changes/buscador-pacientes/` y `openspec/changes/agenda-propia-odontologo/` (lo que se reusa o ya cambió en la agenda)
 
+### [C-41] `cuentas-del-personal`
+- **Estado**: `[ ]` propuesta en curso (2026-11-24); falta la aprobación de la líder y los mockups
+- **Responsable**: Enzo (avisa a Juan Sebastián, dueño de `usuarios/` y `shared/security/`)
+- **Scope**:
+  - Hoy solo existe el admin inicial del `.env` (C-05): no hay forma de dar acceso a un odontólogo ni a una recepcionista sin tocar la base. La matriz RBAC de `03_actores_y_roles.md` ya dice que el `ADMIN` hace el CRUD de los usuarios del personal.
+  - El `ADMIN` crea cuentas `ADMIN`, `RECEPCIONISTA` y `ODONTOLOGO`. La de `ODONTOLOGO` queda vinculada a un profesional activo que todavía no tenga cuenta; un `ADMIN` puede vincularse a un profesional si el dueño también atiende.
+  - **Contraseña temporal** (decidido por Enzo el 2026-11-24): la genera el servidor y se muestra una sola vez al crear la cuenta o al restablecerla. Con contraseña temporal, la sesión solo puede cambiar su contraseña, consultar la sesión y salir; el resto de `/api/v1/**` se rechaza con un código estable hasta que la cambie. El servidor lo impone, no solo la pantalla.
+  - El `ADMIN` desactiva y reactiva cuentas (no se borran) y restablece contraseñas. Al desactivar una cuenta o restablecer su contraseña se cierran sus sesiones abiertas. El `ADMIN` no puede desactivarse a sí mismo ni dejar el consultorio sin ningún `ADMIN` activo.
+  - Cualquier usuario del personal puede cambiar su propia contraseña con la actual.
+  - Frontend: pestaña "Usuarios" en Configuración (solo `ADMIN`), acceso "Dar acceso" en el detalle del profesional sin cuenta y pantalla de cambio obligatorio de contraseña. Cambio visual: mockups aprobados por la líder antes del apply.
+  - **Migración V21**: la marca de contraseña temporal en `usuario`.
+  - Ninguna contraseña ni hash en logs ni en respuestas, salvo la temporal en la respuesta que la crea.
+  - Tests: un escenario por cada requisito, por rol (solo `ADMIN`), vínculo inválido con el profesional, último `ADMIN`, sesión con contraseña temporal y sesiones cerradas al desactivar; los de C-05, C-34 y C-35 siguen pasando.
+- **Dependencias**: `C-05, C-34, C-35`
+- **Governance**: CRÍTICO (autenticación y cuentas)
+- **Leer antes**:
+  - `knowledge-base/03_actores_y_roles.md` (matriz RBAC, usuarios del personal)
+  - `knowledge-base/09_decisiones_y_supuestos.md` §DD-10
+  - `knowledge-base/08_arquitectura_propuesta.md` §Seguridad
+  - `openspec/specs/seguridad-autenticacion/spec.md`, `seguridad-autorizacion/spec.md` y `frontend-configuracion-consultorio/spec.md`
+
 ---
 
 ## FASE 6: Entrega
@@ -655,7 +685,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `README.md` reproducible: requisitos (Java 21, opcional Docker o PostgreSQL), cómo correr `./gradlew test` (tests de dominio sin base) y los tests de integración.
   - Verificación final: suite en verde, ningún secreto en el repo, `.env.example` completo.
   - Evidencias: informe de Discovery en PDF, estado del orquestador, consulta a Engram para el video.
-- **Dependencias**: `C-01` (mínimo); los demás changes que se hayan completado, incluidos los ajustes C-33 a C-40
+- **Dependencias**: `C-01` (mínimo); los demás changes que se hayan completado, incluidos los ajustes C-33 a C-41
 - **Governance**: BAJO
 - **Leer antes**:
   - `knowledge-base/README.md`
