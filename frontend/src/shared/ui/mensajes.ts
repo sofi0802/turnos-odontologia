@@ -55,6 +55,8 @@ export const MENSAJES_POR_CODIGO: Readonly<Record<string, string>> = {
   AUSENCIA_ANTES_DE_TOLERANCIA: 'Todavía no pasaron 15 minutos desde el inicio del turno.',
   TURNO_NO_AUSENTE: 'El turno no está marcado como ausente.',
   TURNO_TERMINADO: 'El turno ya terminó.',
+  PIEZA_INVALIDA: 'La pieza no existe en la notación FDI.',
+  CARA_INVALIDA: 'Hay una cara que no corresponde a esa pieza.',
 };
 
 export const MENSAJE_SIN_PERMISO = 'No tenés permiso para esta acción.';

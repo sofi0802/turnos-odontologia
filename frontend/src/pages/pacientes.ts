@@ -1,0 +1,265 @@
+import { crearBuscadorPacientes, type PacienteEncontrado } from '../agenda/buscador-pacientes.ts';
+import { crearAusencias, marcarAusenteDisponible } from '../ficha/ausencias.ts';
+import {
+  guardarFicha,
+  marcarAusente,
+  obtenerFicha,
+  obtenerHistorial,
+  obtenerOdontograma,
+  registrarCambios,
+} from '../ficha/api.ts';
+import { crearFichaBasica } from '../ficha/ficha-basica.ts';
+import { rangoDelTurno } from '../ficha/formato.ts';
+import { crearHistorial } from '../ficha/historial.ts';
+import { crearOdontograma, type Odontograma } from '../ficha/odontograma.ts';
+import { tomarSeleccion, type SeleccionFicha } from '../ficha/seleccion.ts';
+import { ErrorNoEncontrado, ErrorPermiso, ErrorSesion } from '../shared/api/errores.ts';
+import { crearAviso, crearBoton } from '../shared/ui/campos.ts';
+import { abrirDialogo } from '../shared/ui/dialogo.ts';
+import { crearCargando, crearEstadoVacio } from '../shared/ui/estado-vacio.ts';
+import { crearIcono } from '../shared/ui/iconos.ts';
+import { mensajeDeError } from '../shared/ui/mensajes.ts';
+import { MENSAJE_SESION_TERMINADA } from './agenda.ts';
+import { crearTitulo, type ContextoPagina, type Pagina } from './pagina.ts';
+
+export const MENSAJE_ELEGIR_PACIENTE = 'Buscá un paciente para ver su ficha.';
+export const MENSAJE_PACIENTE_INEXISTENTE = 'No encontramos a ese paciente.';
+export const MENSAJE_SIN_PERMISO_FICHA = 'No tenés permiso para ver la ficha clínica.';
+export const MENSAJE_SOLO_LECTURA = 'Solo lectura: la ficha clínica la edita el odontólogo.';
+export const MENSAJE_DESCARTAR = 'Hay cambios sin guardar en el odontograma. ¿Descartarlos?';
+
+/** Cada dibujo de la página tiene su número: un pedido que vuelve después de salir no dibuja nada (design D9). */
+let dibujo = 0;
+
+function mensajeDeFicha(causa: unknown): string {
+  if (causa instanceof ErrorNoEncontrado) {
+    return MENSAJE_PACIENTE_INEXISTENTE;
+  }
+  if (causa instanceof ErrorPermiso) {
+    return MENSAJE_SIN_PERMISO_FICHA;
+  }
+  return mensajeDeError(causa);
+}
+
+function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): void {
+  dibujo += 1;
+  const este = dibujo;
+  const vigente = (): boolean => este === dibujo && contenedor.isConnected;
+  const editable = contexto.sesion.rol === 'ODONTOLOGO';
+
+  const pagina = document.createElement('div');
+  pagina.className = 'pagina-ficha';
+  const exito = crearAviso('status');
+  const error = crearAviso('alert');
+  const cuerpo = document.createElement('div');
+  cuerpo.className = 'pagina-ficha';
+  pagina.append(crearTitulo('Pacientes'), exito, error, cuerpo);
+  contenedor.replaceChildren(pagina);
+
+  let odontograma: Odontograma | null = null;
+
+  function sesionVencida(causa: unknown): boolean {
+    if (causa instanceof ErrorSesion) {
+      contexto.irAMiCuenta(MENSAJE_SESION_TERMINADA);
+      return true;
+    }
+    return false;
+  }
+
+  function mostrarBuscador(): void {
+    odontograma = null;
+    const panel = document.createElement('section');
+    panel.className = 'panel ficha-seccion';
+    const titulo = document.createElement('h2');
+    titulo.textContent = 'Buscar paciente';
+    const buscador = crearBuscadorPacientes(contexto.api, {
+      sesionVencida,
+      alElegir: (paciente: PacienteEncontrado) => {
+        error.textContent = '';
+        mostrarFicha({ paciente, turno: null });
+      },
+    });
+    panel.append(titulo, buscador.contenedor);
+    cuerpo.replaceChildren(panel, crearEstadoVacio({ titulo: 'Todavía no elegiste un paciente', texto: MENSAJE_ELEGIR_PACIENTE }));
+  }
+
+  function cambiarDePaciente(): void {
+    if (odontograma === null || odontograma.pendientes() === 0) {
+      exito.textContent = '';
+      mostrarBuscador();
+      return;
+    }
+    const dialogo = abrirDialogo({
+      titulo: '¿Descartar los cambios?',
+      resumen: MENSAJE_DESCARTAR,
+      textoDescartar: 'Seguir editando',
+      textoPrincipal: 'Descartar',
+      peligro: true,
+    });
+    dialogo.formulario.addEventListener('submit', (evento) => {
+      evento.preventDefault();
+      dialogo.cerrar();
+      exito.textContent = '';
+      mostrarBuscador();
+    });
+  }
+
+  function cabeceraDelPaciente(seleccion: SeleccionFicha): HTMLElement {
+    const panel = document.createElement('section');
+    panel.className = 'panel ficha-paciente';
+    const datos = document.createElement('div');
+    datos.className = 'ficha-paciente-datos';
+    const quien = document.createElement('div');
+    const nombre = document.createElement('h2');
+    nombre.className = 'ficha-paciente-nombre';
+    nombre.textContent = `${seleccion.paciente.nombre} ${seleccion.paciente.apellido}`.trim();
+    quien.append(nombre);
+    if (seleccion.paciente.dni !== null) {
+      const dni = document.createElement('p');
+      dni.className = 'ficha-paciente-dni';
+      dni.textContent = `DNI ${seleccion.paciente.dni}`;
+      quien.append(dni);
+    }
+    const cambiar = crearBoton('Cambiar de paciente');
+    cambiar.className = 'btn';
+    cambiar.addEventListener('click', cambiarDePaciente);
+    datos.append(quien, cambiar);
+    panel.append(datos);
+    if (!editable) {
+      const aviso = document.createElement('p');
+      aviso.className = 'aviso aviso-info';
+      aviso.textContent = MENSAJE_SOLO_LECTURA;
+      panel.append(aviso);
+    }
+    const turno = seleccion.turno;
+    if (turno !== null) {
+      const franja = document.createElement('div');
+      franja.className = 'ficha-turno';
+      const texto = document.createElement('p');
+      texto.append(crearIcono('reloj'), `Turno del ${rangoDelTurno(turno.inicio, turno.fin)}`);
+      franja.append(texto);
+      const disponible = marcarAusenteDisponible(turno, contexto.sesion.rol, contexto.sesion.profesionalId, new Date());
+      if (disponible !== null) {
+        const caja = document.createElement('div');
+        const boton = crearBoton('Marcar ausente');
+        boton.className = 'btn btn-peligro';
+        caja.append(boton);
+        if (!disponible.habilitado) {
+          boton.disabled = true;
+          const pista = document.createElement('span');
+          pista.className = 'ayuda-boton';
+          pista.id = `pista-ausente-${turno.id}`;
+          pista.textContent = `Desde las ${disponible.desde}`;
+          boton.setAttribute('aria-describedby', pista.id);
+          caja.append(pista);
+        }
+        boton.addEventListener('click', () => void registrarAusencia(seleccion, boton));
+        franja.append(caja);
+      }
+      panel.append(franja);
+    }
+    return panel;
+  }
+
+  async function registrarAusencia(seleccion: SeleccionFicha, boton: HTMLButtonElement): Promise<void> {
+    const turno = seleccion.turno;
+    if (turno === null) {
+      return;
+    }
+    boton.disabled = true;
+    exito.textContent = '';
+    error.textContent = '';
+    let siguiente: SeleccionFicha = seleccion;
+    try {
+      await marcarAusente(contexto.api, seleccion.paciente.id, turno.id);
+      siguiente = { ...seleccion, turno: { ...turno, estado: 'AUSENTE' } };
+      exito.textContent = 'Ausencia registrada.';
+    } catch (causa) {
+      if (sesionVencida(causa)) {
+        return;
+      }
+      error.textContent = mensajeDeError(causa);
+    }
+    if (vigente()) {
+      mostrarFicha(siguiente, false);
+    }
+  }
+
+  function mostrarFicha(seleccion: SeleccionFicha, limpiarAvisos = true): void {
+    const pacienteId = seleccion.paciente.id;
+    if (limpiarAvisos) {
+      exito.textContent = '';
+    }
+    cuerpo.replaceChildren(cabeceraDelPaciente(seleccion), crearCargando('Cargando la ficha…'));
+    void (async () => {
+      try {
+        const [ficha, registros] = await Promise.all([
+          obtenerFicha(contexto.api, pacienteId),
+          obtenerOdontograma(contexto.api, pacienteId),
+        ]);
+        if (!vigente()) {
+          return;
+        }
+        const historial = crearHistorial(
+          () => obtenerHistorial(contexto.api, pacienteId),
+          (causa) => (sesionVencida(causa) ? '' : mensajeDeFicha(causa)),
+        );
+        odontograma = crearOdontograma({
+          registros,
+          editable,
+          guardar: (cambios) => registrarCambios(contexto.api, pacienteId, cambios),
+          mensajeDeError: (causa) => (sesionVencida(causa) ? '' : mensajeDeError(causa)),
+          alGuardar: () => historial.recargar(),
+        });
+        const basica = crearFichaBasica({
+          ficha,
+          editable,
+          guardar: (datos) => guardarFicha(contexto.api, pacienteId, datos),
+          mensajeDeError: (causa) => (sesionVencida(causa) ? '' : mensajeDeError(causa)),
+        });
+        const columnas = document.createElement('div');
+        columnas.className = 'ficha-columnas';
+        const derecha = document.createElement('div');
+        derecha.className = 'ficha-seccion';
+        derecha.append(crearAusencias(ficha.ausencias), historial.elemento);
+        columnas.append(basica, derecha);
+        cuerpo.replaceChildren(cabeceraDelPaciente(seleccion), odontograma.elemento, columnas);
+      } catch (causa) {
+        if (!vigente() || sesionVencida(causa)) {
+          return;
+        }
+        error.textContent = mensajeDeFicha(causa);
+        if (causa instanceof ErrorNoEncontrado || causa instanceof ErrorPermiso) {
+          mostrarBuscador();
+          return;
+        }
+        const reintentar = crearBoton('Reintentar');
+        reintentar.className = 'btn btn-principal';
+        reintentar.addEventListener('click', () => {
+          error.textContent = '';
+          mostrarFicha(seleccion);
+        });
+        cuerpo.replaceChildren(cabeceraDelPaciente(seleccion), reintentar);
+      }
+    })();
+  }
+
+  const seleccion = tomarSeleccion();
+  if (seleccion === null) {
+    mostrarBuscador();
+  } else {
+    mostrarFicha(seleccion);
+  }
+}
+
+/** Pacientes: búsqueda del paciente y su ficha clínica, solo para ADMIN y ODONTOLOGO (C-44, RN-CL-01). */
+export const paginaPacientes: Pagina = {
+  ruta: 'pacientes',
+  titulo: 'Pacientes',
+  acceso: 'personal',
+  menu: 'personal',
+  icono: 'pacientes',
+  fondoSuave: true,
+  roles: ['ADMIN', 'ODONTOLOGO'],
+  render: dibujarPacientes,
+};

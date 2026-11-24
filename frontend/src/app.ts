@@ -6,6 +6,7 @@ import { paginaConfirmar } from './pages/confirmar.ts';
 import { paginaInicio } from './pages/inicio.ts';
 import { paginaMiCuenta } from './pages/mi-cuenta.ts';
 import { paginaMisTurnos } from './pages/mis-turnos.ts';
+import { paginaPacientes } from './pages/pacientes.ts';
 import { crearTitulo, type ContextoPagina, type Pagina } from './pages/pagina.ts';
 import { paginaReserva } from './pages/reserva.ts';
 import { api as apiPorDefecto, type ClienteApi } from './shared/api/cliente.ts';
@@ -27,6 +28,7 @@ import { crearRouter, type Router } from './shared/ui/router.ts';
 export const PAGINAS: readonly Pagina[] = [
   paginaInicio,
   paginaAgenda,
+  paginaPacientes,
   paginaConfiguracion,
   paginaCambiarContrasena,
   paginaReserva,
@@ -37,6 +39,8 @@ export const PAGINAS: readonly Pagina[] = [
 
 export const MENSAJE_SOLO_PERSONAL = 'Esta sección es solo para el personal del consultorio.';
 export const MENSAJE_SOLO_PACIENTES = 'Esta sección es para pacientes.';
+/** Aviso de una página con `roles` para quien no tiene uno de esos roles (C-44: Pacientes). */
+export const MENSAJE_SOLO_ODONTOLOGOS_Y_ADMIN = 'Esta sección es solo para odontólogos y administradores.';
 
 /** Direcciones viejas que siguen sirviendo: `#/ingreso` era el ingreso del personal (C-09). */
 const REDIRECCIONES: Readonly<Record<string, string>> = { ingreso: paginaMiCuenta.ruta };
@@ -185,6 +189,11 @@ export function iniciarApp(raiz: HTMLElement, apiBase: ClienteApi = apiPorDefect
     }
     if (acceso === 'paciente' && !esPaciente(sesion.rol)) {
       mostrarAviso(pagina, MENSAJE_SOLO_PACIENTES);
+      return;
+    }
+    if (pagina.roles !== undefined && (sesion.rol === null || !pagina.roles.includes(sesion.rol))) {
+      // No se llama a `render`, así la página no pide ningún dato (C-44, design D2).
+      mostrarAviso(pagina, MENSAJE_SOLO_ODONTOLOGOS_Y_ADMIN);
       return;
     }
     if (debeCambiarContrasena(sesion) && pagina !== paginaCambiarContrasena) {

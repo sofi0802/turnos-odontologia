@@ -300,3 +300,48 @@ describe('Indicadores de confirmado y sobreturno', () => {
     expect(etiquetas()).toEqual([]);
   });
 });
+
+describe('Ver la ficha desde un turno (C-44)', () => {
+  const SESION_ADMIN = { autenticado: true, username: 'admin', rol: 'ADMIN' };
+
+  function botonesDelTurno(id = 7): string[] {
+    const tarjeta = raiz().querySelector<HTMLElement>(`.turno[data-id="${id}"]`);
+    return [...(tarjeta?.querySelectorAll('button') ?? [])].map((b) => b.textContent ?? '');
+  }
+
+  it('El odontólogo abre la ficha', async () => {
+    servidor.responder('GET /public/sesion', () => json(200, SESION_ODONTOLOGA));
+    servidor.responder('GET /turnos', () => json(200, [turno()]));
+    servidor.responder('GET /pacientes/{id}/ficha', () =>
+      json(200, { pacienteId: 1, antecedentes: '', alergias: '', medicacion: '', ausencias: [] }),
+    );
+    servidor.responder('GET /pacientes/{id}/odontograma', () => json(200, []));
+    await abrirAgenda();
+    await vi.waitFor(() => expect(turnosVisibles()).toHaveLength(1));
+
+    boton(raiz(), 'Ver ficha de Paciente Uno').click();
+
+    await vi.waitFor(() => expect(titulo().textContent).toBe('Pacientes'));
+    await vi.waitFor(() => expect(servidor.a('GET', '/pacientes/1/ficha')).toHaveLength(1));
+    expect(servidor.a('GET', '/pacientes/1/odontograma')).toHaveLength(1);
+    expect(raiz().querySelector('.ficha-paciente-nombre')?.textContent).toBe('Paciente Uno');
+    expect(window.location.hash).toBe('#/pacientes');
+  });
+
+  it('El administrador ve el acceso', async () => {
+    servidor.responder('GET /public/sesion', () => json(200, SESION_ADMIN));
+    servidor.responder('GET /turnos', () => json(200, [turno()]));
+    await abrirAgenda();
+    boton(raiz(), 'Semana').click();
+
+    await vi.waitFor(() => expect(botonesDelTurno()).toContain('Ver ficha'));
+  });
+
+  it('La recepción no ve el acceso', async () => {
+    servidor.responder('GET /turnos', () => json(200, [turno()]));
+    await abrirAgenda();
+    await vi.waitFor(() => expect(turnosVisibles()).toHaveLength(1));
+
+    expect(botonesDelTurno()).not.toContain('Ver ficha');
+  });
+});

@@ -728,7 +728,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `openspec/specs/agenda-turnos/spec.md`, `agenda-api/spec.md`, `ficha-clinica/spec.md` y `frontend-agenda-personal/spec.md`
 
 ### [C-44] `frontend-ficha-clinica-odontograma`
-- **Estado**: `[ ]` pendiente (agregado el 2026-11-24)
+- **Estado**: `[x]` implementado (2026-11-24, PR #94 propuesta y mockups, PR del apply; falta el archive después del merge). Página "Pacientes" (`#/pacientes`) para `ADMIN` y `ODONTOLOGO`, "Ver ficha" en la agenda, ficha básica, odontograma con historial, ausencias y "Marcar ausente". Verificación visual en `openspec/changes/frontend-ficha-clinica-odontograma/mockups/verify/`. 602 tests en el frontend
 - **Responsable**: Emanuel (avisa a Enzo, dueño de `frontend/`)
 - **Scope**:
   - C-13 hizo el backend de la ficha clínica y del odontograma, pero ninguna pantalla lo usa: hoy el odontólogo no puede cargar ni consultar una ficha desde la aplicación. Este change suma la interfaz sobre los endpoints que ya existen, sin cambiar su contrato.

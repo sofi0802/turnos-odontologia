@@ -19,6 +19,8 @@ export interface AccionesTurno {
     readonly rol: Rol | null;
     registrar(turno: TurnoAgenda, accion: AccionAsistencia): void;
   };
+  /** C-44: abre la ficha clínica del paciente; solo se pasa para ADMIN y ODONTOLOGO (RN-CL-01). */
+  verFicha?(turno: TurnoAgenda): void;
 }
 
 function fechaCorta(fecha: Fecha): string {
@@ -133,12 +135,25 @@ function elementoTurno(turno: TurnoAgenda, catalogos: Catalogos, acciones: Accio
   if (grupoAsistencia !== null) {
     item.append(grupoAsistencia);
   }
+  const botones = document.createElement('div');
+  botones.className = 'turno-acciones';
+  const verFicha = acciones.verFicha;
+  if (verFicha !== undefined && turno.pacienteId !== null) {
+    const ficha = document.createElement('button');
+    ficha.type = 'button';
+    ficha.className = 'btn';
+    ficha.textContent = 'Ver ficha';
+    ficha.setAttribute('aria-label', `Ver ficha de ${nombrePaciente(turno)}`);
+    ficha.addEventListener('click', () => verFicha(turno));
+    botones.append(ficha);
+  }
   if (!permiteCancelarYReprogramar(turno)) {
+    if (botones.childElementCount > 0) {
+      item.append(botones);
+    }
     return item;
   }
 
-  const botones = document.createElement('div');
-  botones.className = 'turno-acciones';
   const cancelar = document.createElement('button');
   cancelar.type = 'button';
   cancelar.className = 'btn btn-peligro';

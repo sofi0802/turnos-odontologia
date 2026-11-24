@@ -323,3 +323,44 @@ describe('Menú según la sesión', () => {
     expect(enlaceIngresar()?.hidden).toBe(true);
   });
 });
+
+describe('Página "Pacientes" para odontólogos y administradores (C-44)', () => {
+  const SESION_ODONTOLOGO = { autenticado: true, username: 'ana.ejemplo', rol: 'ODONTOLOGO', profesionalId: 1 };
+
+  /** Pedidos de datos de pacientes o de su ficha clínica. */
+  function pedidosDePacientes(servidor: ServidorFalso): string[] {
+    return servidor.pedidos.map((p) => p.ruta).filter((ruta) => ruta.startsWith('/pacientes'));
+  }
+
+  it('Menú del odontólogo', async () => {
+    const servidor = new ServidorFalso();
+    servidor.responder('GET /public/sesion', () => json(200, SESION_ODONTOLOGO));
+    abrirEn('#/agenda', servidor);
+
+    await vi.waitFor(() => expect(enlacesVisibles()).toEqual(['Agenda', 'Pacientes', 'Configuración']));
+  });
+
+  it('Menú de la recepción', async () => {
+    abrirEn('#/agenda');
+    await esperarTitulo('Agenda');
+
+    expect(enlacesVisibles()).not.toContain('Pacientes');
+  });
+
+  it('La recepción abre la dirección', async () => {
+    const servidor = abrirEn('#/pacientes');
+
+    await vi.waitFor(() =>
+      expect(raiz.querySelector('main [role="alert"]')?.textContent).toBe(
+        'Esta sección es solo para odontólogos y administradores.',
+      ),
+    );
+    expect(pedidosDePacientes(servidor)).toEqual([]);
+  });
+
+  it('Sin sesión', async () => {
+    abrirEn('#/pacientes', sinSesion());
+
+    await esperarTitulo('Mi cuenta');
+  });
+});
