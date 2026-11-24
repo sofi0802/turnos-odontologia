@@ -35,6 +35,7 @@ function turno(): TurnoAgenda {
     fin: '2026-12-01T10:30:00-03:00',
     estado: 'RESERVADO',
     esSobreturno: false,
+    llegadaEn: null,
   };
 }
 

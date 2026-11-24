@@ -20,14 +20,14 @@ class ConsultaAgendaJpa implements ConsultaAgenda {
     }
 
     @Override
-    public List<TurnoEnAgenda> turnosActivos(Instant desde, Instant hasta, Long profesionalId, Long sillonId) {
-        return turnos.activosDelPeriodo(desde, hasta).stream()
+    public List<TurnoEnAgenda> turnosDeAgenda(Instant desde, Instant hasta, Long profesionalId, Long sillonId) {
+        return turnos.deAgendaDelPeriodo(desde, hasta).stream()
                 .filter(t -> profesionalId == null || profesionalId.equals(t.getProfesional().getId()))
                 .filter(t -> sillonId == null || sillonId.equals(t.getSillon().getId()))
                 .map(t -> new TurnoEnAgenda(t.getId(), t.getPaciente().getId(), t.getPaciente().getNombre(),
                         t.getPaciente().getApellido(), t.getProfesional().getId(), t.getSillon().getId(),
                         t.getPrestacion().getId(), t.getInicio(), t.getFin(), EstadoTurno.valueOf(t.getEstado()),
-                        t.isEsSobreturno()))
+                        t.isEsSobreturno(), t.getLlegadaEn()))
                 .toList();
     }
 }

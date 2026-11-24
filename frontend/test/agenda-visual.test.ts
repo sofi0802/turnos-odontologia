@@ -22,6 +22,7 @@ function turno(id: number, dia: string, datos: Partial<TurnoAgenda> = {}): Turno
     fin: `${dia}T10:30:00-03:00`,
     estado: 'RESERVADO',
     esSobreturno: false,
+    llegadaEn: null,
     ...datos,
   };
 }

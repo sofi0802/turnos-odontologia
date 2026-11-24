@@ -36,7 +36,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `backend/.../notificaciones/` | Juan Cruz | V7 |
 | `backend/.../clinica/` | Emanuel | V8 |
 | `frontend/` | Enzo | — |
-| **Ajustes del MVP (C-33 a C-42)** | | |
+| **Ajustes del MVP (C-33 a C-43)** | | |
 | `frontend/` agenda: reprogramación (C-33) | Juan Cruz (avisa a Enzo) | — |
 | `frontend/` página Configuración (C-34) | Emanuel (avisa a Enzo) | — |
 | `backend/.../agenda/api` y `frontend/` agenda propia del odontólogo (C-35) | Sofia (avisa a Juan Sebastián y a Enzo) | — |
@@ -47,6 +47,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `frontend/` agenda: nuevo turno guiado por prestación (C-40) | Enzo (si la disponibilidad necesita filtrar por sillón, avisa a Juan Sebastián) | — |
 | `backend/.../usuarios/`, `shared/security/` y `frontend/` pestaña Usuarios: cuentas del personal (C-41) | Enzo (avisa a Juan Sebastián, dueño de `usuarios/` y `shared/security/`) | V21 |
 | `frontend/` Mis turnos: turnos sin registrar (C-42) | Sofia (avisa a Enzo) | — |
+| `backend/.../agenda/` y `frontend/` agenda: llegada y ausencia del paciente (C-43) | Sofia (avisa a Emanuel por la ficha clínica y a Enzo) | V22 |
 | **Post-MVP** | | |
 | `backend/.../agenda/` lista de espera, `configuracion/` política de cancelación | Sofia (C-16 avisa a Emanuel) | V9, V10 |
 | `backend/.../notificaciones/` consentimiento | Juan Cruz | V11 |
@@ -90,6 +91,7 @@ C-01 crear-turno-sin-solapamientos  [Sofia · OPSX]      ← tarea 1 = scaffoldi
   │  Ajustes del MVP, cuentas del personal (2026-11-24: la matriz RBAC lo promete y ningún change lo hacía)
   │     C-05 + C-34 + C-35 ── C-41 cuentas-del-personal [Enzo]   ← avisa a Juan Sebastián (usuarios/ y security/)
   │     C-12 + C-39 ──────── C-42 frontend-turnos-sin-registrar [Sofia]   ← detectado al revisar C-39
+  │     C-06 + C-13 + C-39 ─ C-43 registro-asistencia [Sofia]   ← antes: cambio de regla en la KB (RN-AG-17, RN-AG-20)
   │
 C-02 frontend-base-ts  [Enzo]                            ← independiente: carpeta frontend/
   │
@@ -182,7 +184,11 @@ GATE 5f: C-12 ✓ + etapa C de C-39 ✓ (2026-11-24)
   → C-42 frontend-turnos-sin-registrar      [Agente A · Sofia]
   (Mis turnos del paciente: mockups aprobados por la líder antes del apply)
 
-GATE 6: changes de la entrega ✓ (incluye C-33 a C-42)
+GATE 5g: KB con RN-AG-17 y RN-AG-20 aprobada por la líder
+  → C-43 registro-asistencia                [Agente A · Sofia]
+  (ALTO: cambia una regla y permisos. Se propone y se revisa antes de escribir código; mockups de la agenda antes del apply)
+
+GATE 6: changes de la entrega ✓ (incluye C-33 a C-43)
   → C-14 entrega-readme-y-evidencia          [Agente A · Sofia]
 
 ──────────── POST-MVP ────────────
@@ -229,7 +235,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 | Bloque | Changes | Origen |
 |---|---|---|
 | **MVP v1.0** (fases 1 a 6) | C-01 a C-14 | Sección D.3 del informe, lista "imprescindible" |
-| **Ajustes del MVP** (fase 5b) | C-33 a C-42 | Prueba y revisión de la aplicación del 2026-11-23 (C-41 y C-42: 2026-11-24) |
+| **Ajustes del MVP** (fase 5b) | C-33 a C-43 | Prueba y revisión de la aplicación del 2026-11-23 (C-41 a C-43: 2026-11-24) |
 | **Post-MVP v1.x** (fase 7) | C-15 a C-17 | Sección D.3, lista "diferenciador" |
 | **Post-MVP: etapas posteriores** (fases 8 a 10) | C-18 a C-32 | Sección D.3, lista "etapas posteriores" |
 
@@ -260,7 +266,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 
 | Integrante | MVP | Post-MVP (sugerido, por afinidad con su módulo) |
 |---|---|---|
-| **Sofia Indovino** (líder) | **C-01** (OPSX), C-06, C-35, C-42, C-14 + revisión de todos los PR | C-15, C-16, C-29 |
+| **Sofia Indovino** (líder) | **C-01** (OPSX), C-06, C-35, C-42, C-43, C-14 + revisión de todos los PR | C-15, C-16, C-29 |
 | **Juan Cruz** | C-03, C-08, C-11, C-33, C-37, C-38, C-39 | C-17, C-30, C-31 |
 | **Emanuel** | C-04, C-07, C-13, C-12, C-34 | C-25, C-26, C-27, C-28 |
 | **Juan Sebastián** | C-05, C-10, C-36 | C-18, C-19, C-20, C-21 |
@@ -697,6 +703,23 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/05_reglas_de_negocio.md` §Dominio: Agenda (RN-AG-17)
   - `openspec/specs/frontend-turnos-paciente/spec.md`
   - `openspec/changes/frontend-uniformidad-visual/` (etapa C: pantallas del paciente)
+
+### [C-43] `registro-asistencia`
+- **Estado**: `[x]` implementado (2026-11-24, PR pendiente de merge; KB, propuesta y mockups aprobados por la líder). Change `openspec/changes/registro-asistencia/`. Migración V22. Evidencia: `docs/evidencia/c43-backend.txt` (504 tests y 528 de integración), 517 tests del frontend y verificación contra el backend de desarrollo en `mockups/verify/`
+- **Responsable**: Sofia Indovino
+- **Scope**:
+  - **Cambio de regla de negocio**: la ausencia del paciente la marcan la recepción desde la agenda o el odontólogo desde la ficha, a partir de los 15 minutos del inicio (tolerancia fija), y nunca el sistema. Solo la recepción la deshace, si el horario sigue libre; si no, le da otro turno (RN-AG-17). La recepción registra la **llegada**, el turno sigue activo y, al terminar su horario, pasa a `ATENDIDO` (RN-AG-20).
+  - Backend (`agenda/`): registrar la llegada, marcar la ausencia desde la agenda (reusa `MarcarAusencia` de C-13), deshacer la ausencia validando la superposición, y un proceso programado que pasa a `ATENDIDO` los turnos terminados con llegada (como `TareaRecordatorios` de C-11). Auditoría de las tres acciones. **Migración V22** (reservada): la columna `turno.llegada_en`. Las restricciones `EXCLUDE` **no cambian** (DD-03, regla dura 5).
+  - Ficha clínica (`clinica/`, de Emanuel): aplicar la tolerancia de 15 minutos y mostrar la ausencia deshecha.
+  - Frontend: en la agenda del personal, "Llegó", "Ausente" y "Deshacer ausencia" según el rol y el momento; mockups aprobados por la líder antes del apply.
+  - Tests: un escenario por regla (llegada tarde, ausente antes de los 15 minutos, ausente con llegada, deshacer con el horario libre y ocupado, paso automático a `ATENDIDO`, permisos por rol) contra PostgreSQL real.
+- **Dependencias**: `C-06, C-11, C-13`, etapa D de `C-39`
+- **Governance**: ALTO (cambia una regla de negocio y permisos)
+- **Leer antes**:
+  - `knowledge-base/05_reglas_de_negocio.md` §Dominio: Agenda (RN-AG-17, RN-AG-20)
+  - `knowledge-base/03_actores_y_roles.md` §RBAC: matriz de permisos
+  - `knowledge-base/09_decisiones_y_supuestos.md` §DD-03, §DD-11
+  - `openspec/specs/agenda-turnos/spec.md`, `agenda-api/spec.md`, `ficha-clinica/spec.md` y `frontend-agenda-personal/spec.md`
 ---
 
 ## FASE 6: Entrega
@@ -708,7 +731,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `README.md` reproducible: requisitos (Java 21, opcional Docker o PostgreSQL), cómo correr `./gradlew test` (tests de dominio sin base) y los tests de integración.
   - Verificación final: suite en verde, ningún secreto en el repo, `.env.example` completo.
   - Evidencias: informe de Discovery en PDF, estado del orquestador, consulta a Engram para el video.
-- **Dependencias**: `C-01` (mínimo); los demás changes que se hayan completado, incluidos los ajustes C-33 a C-42
+- **Dependencias**: `C-01` (mínimo); los demás changes que se hayan completado, incluidos los ajustes C-33 a C-43
 - **Governance**: BAJO
 - **Leer antes**:
   - `knowledge-base/README.md`

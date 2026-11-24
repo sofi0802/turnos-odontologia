@@ -19,6 +19,7 @@ import ar.turnos.odontologia.agenda.application.ReasignarTurnoCommand;
 import ar.turnos.odontologia.agenda.application.ReprogramarTurno;
 import ar.turnos.odontologia.agenda.application.ReprogramarTurnoCommand;
 import ar.turnos.odontologia.agenda.application.SillonTomadoException;
+import ar.turnos.odontologia.agenda.domain.EstadoTurno;
 import ar.turnos.odontologia.agenda.domain.Turno;
 import java.time.Instant;
 import java.util.HashSet;
@@ -43,6 +44,9 @@ public class ServicioAgenda {
 
     static final int INTENTOS = 3;
 
+    /** C-43: actor de la auditoría del paso automático a {@code ATENDIDO}. */
+    static final String ACTOR_SISTEMA = "sistema";
+
     private final CrearTurno crearTurno;
     private final CrearSobreturno crearSobreturno;
     private final ExtenderTurno extenderTurno;
@@ -51,6 +55,7 @@ public class ServicioAgenda {
     private final ConfirmarTurno confirmarTurno;
     private final ReasignarTurno reasignarTurno;
     private final MarcarAusencia marcarAusencia;
+    private final CasosAsistencia asistencia;
     private final ConsultaAgenda consulta;
     private final AuditoriaTurnos auditoria;
     private final TransactionTemplate transaccion;
@@ -58,7 +63,7 @@ public class ServicioAgenda {
 
     ServicioAgenda(CrearTurno crearTurno, CrearSobreturno crearSobreturno, ExtenderTurno extenderTurno,
                    CancelarTurno cancelarTurno, ReprogramarTurno reprogramarTurno, ConfirmarTurno confirmarTurno,
-                   ReasignarTurno reasignarTurno, MarcarAusencia marcarAusencia,
+                   ReasignarTurno reasignarTurno, MarcarAusencia marcarAusencia, CasosAsistencia asistencia,
                    ConsultaAgenda consulta, AuditoriaTurnos auditoria, PlatformTransactionManager transacciones) {
         this.crearTurno = crearTurno;
         this.crearSobreturno = crearSobreturno;
@@ -68,6 +73,7 @@ public class ServicioAgenda {
         this.confirmarTurno = confirmarTurno;
         this.reasignarTurno = reasignarTurno;
         this.marcarAusencia = marcarAusencia;
+        this.asistencia = asistencia;
         this.consulta = consulta;
         this.auditoria = auditoria;
         this.transaccion = new TransactionTemplate(transacciones);
@@ -165,12 +171,46 @@ public class ServicioAgenda {
         });
     }
 
+    /**
+     * C-43: registra la llegada con la auditoría {@code LLEGADA}. Si el turno pasó a {@code ATENDIDO} en la misma
+     * operación (la llegada se registró después de su fin con margen), también registra {@code ATENDIDO} con el mismo
+     * actor.
+     */
+    public Turno registrarLlegada(Long turnoId, String actor) {
+        return enTransaccion(() -> {
+            Turno turno = asistencia.registrarLlegada().ejecutar(turnoId);
+            auditoria.registrar(turno.id(), Accion.LLEGADA, actor, null);
+            if (turno.estado() == EstadoTurno.ATENDIDO) {
+                auditoria.registrar(turno.id(), Accion.ATENDIDO, actor, null);
+            }
+            return turno;
+        });
+    }
+
+    /** C-43: deshace la ausencia con la auditoría {@code DESHACER_AUSENCIA}; si se rechaza, no queda registro. */
+    public Turno deshacerAusencia(Long turnoId, String actor) {
+        return enTransaccion(() -> {
+            Turno turno = asistencia.deshacerAusencia().ejecutar(turnoId);
+            auditoria.registrar(turno.id(), Accion.DESHACER_AUSENCIA, actor, null);
+            return turno;
+        });
+    }
+
+    /** C-43: el paso automático a {@code ATENDIDO}, con un registro por turno y el actor {@code sistema}. */
+    public int pasarAAtendidos() {
+        return enTransaccion(() -> {
+            List<Long> cambiados = asistencia.pasarAAtendidos().ejecutar();
+            cambiados.forEach(id -> auditoria.registrar(id, Accion.ATENDIDO, ACTOR_SISTEMA, null));
+            return cambiados.size();
+        });
+    }
+
     public List<ConsultaAgenda.TurnoEnAgenda> agenda(Instant desde, Instant hasta, Long profesionalId, Long sillonId) {
-        return lectura.execute(estado -> consulta.turnosActivos(desde, hasta, profesionalId, sillonId));
+        return lectura.execute(estado -> consulta.turnosDeAgenda(desde, hasta, profesionalId, sillonId));
     }
 
     /** Ejecuta la operación en una transacción y la reintenta entera si la base la abortó por un bloqueo. */
-    private Turno enTransaccion(Supplier<Turno> operacion) {
+    private <T> T enTransaccion(Supplier<T> operacion) {
         for (int intento = 1; ; intento++) {
             try {
                 return transaccion.execute(estado -> operacion.get());

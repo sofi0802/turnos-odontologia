@@ -1,6 +1,10 @@
 package ar.turnos.odontologia.agenda.infrastructure;
 
+import ar.turnos.odontologia.agenda.application.AuditoriaTurnos;
 import ar.turnos.odontologia.agenda.application.CancelarTurno;
+import ar.turnos.odontologia.agenda.application.DeshacerAusencia;
+import ar.turnos.odontologia.agenda.application.PasarAAtendidos;
+import ar.turnos.odontologia.agenda.application.RegistrarLlegada;
 import ar.turnos.odontologia.agenda.application.ConfirmarTurno;
 import ar.turnos.odontologia.agenda.application.CrearSobreturno;
 import ar.turnos.odontologia.agenda.application.CrearTurno;
@@ -91,6 +95,15 @@ class AgendaConfig {
     @Bean
     MarcarAusencia marcarAusencia(TurnoRepository turnos, Clock reloj) {
         return new MarcarAusencia(turnos, reloj);
+    }
+
+    /** C-43: los casos de uso de la asistencia, juntos para no alargar la firma de {@link ServicioAgenda}. */
+    @Bean
+    CasosAsistencia casosAsistencia(TurnoRepository turnos, AuditoriaTurnos auditoria,
+                                    PasarAAtendidos.TurnosConLlegada conLlegada, Clock reloj, ZoneId zonaHoraria,
+                                    Margen margen) {
+        return new CasosAsistencia(new RegistrarLlegada(turnos, reloj, zonaHoraria, margen),
+                new DeshacerAusencia(turnos, auditoria, reloj, margen), new PasarAAtendidos(conLlegada, reloj));
     }
 
     @Bean

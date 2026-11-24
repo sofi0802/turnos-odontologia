@@ -1,5 +1,12 @@
 import { diaDeLaSemana, fechaDeInstante, formatearHora, type Fecha } from '../shared/fecha/zona.ts';
+import type { Rol } from '../shared/sesion/sesion.ts';
 import { crearEstadoVacio } from '../shared/ui/estado-vacio.ts';
+import {
+  accionesDeAsistencia,
+  etiquetaDeAsistencia,
+  permiteCancelarYReprogramar,
+  type AccionAsistencia,
+} from './asistencia.ts';
 import { nombreDe, type Catalogos } from './catalogos.ts';
 import type { TurnoAgenda } from './consulta.ts';
 import { diasDe, type Periodo } from './periodo.ts';
@@ -7,6 +14,11 @@ import { diasDe, type Periodo } from './periodo.ts';
 export interface AccionesTurno {
   cancelar(turno: TurnoAgenda): void;
   reprogramar(turno: TurnoAgenda): void;
+  /** C-43: el rol de la sesión decide los botones de asistencia; sin esto, no se ofrecen. */
+  readonly asistencia?: {
+    readonly rol: Rol | null;
+    registrar(turno: TurnoAgenda, accion: AccionAsistencia): void;
+  };
 }
 
 function fechaCorta(fecha: Fecha): string {
@@ -25,10 +37,69 @@ function nombrePaciente(turno: TurnoAgenda): string {
   return `${turno.pacienteNombre} ${turno.pacienteApellido}`.trim();
 }
 
-function elementoTurno(turno: TurnoAgenda, catalogos: Catalogos, acciones: AccionesTurno): HTMLLIElement {
+function botonAsistencia(texto: string, clase: string, descripcion: string, alElegir: () => void): HTMLButtonElement {
+  const boton = document.createElement('button');
+  boton.type = 'button';
+  boton.className = clase;
+  boton.textContent = texto;
+  boton.setAttribute('aria-label', `${texto}: ${descripcion}`);
+  boton.addEventListener('click', alElegir);
+  return boton;
+}
+
+/** C-43: "Llegó", "Ausente" (deshabilitado hasta la tolerancia) y "Deshacer ausencia", solo para la recepción. */
+function botonesDeAsistencia(turno: TurnoAgenda, acciones: AccionesTurno, descripcion: string, ahora: Date): HTMLElement | null {
+  const asistencia = acciones.asistencia;
+  if (asistencia === undefined) {
+    return null;
+  }
+  const disponibles = accionesDeAsistencia(turno, asistencia.rol, ahora);
+  const grupo = document.createElement('div');
+  grupo.className = 'turno-asistencia';
+  if (disponibles.llego) {
+    grupo.append(
+      botonAsistencia('Llegó', 'btn btn-llego', descripcion, () => asistencia.registrar(turno, 'llegada')),
+    );
+  }
+  if (disponibles.ausente !== null) {
+    const ausente = botonAsistencia('Ausente', 'btn', descripcion, () => asistencia.registrar(turno, 'ausencia'));
+    grupo.append(ausente);
+    if (!disponibles.ausente.habilitado) {
+      ausente.disabled = true;
+      const pista = document.createElement('span');
+      pista.className = 'turno-pista';
+      pista.id = `pista-asistencia-${turno.id}`;
+      pista.textContent = `Desde las ${disponibles.ausente.desde}`;
+      ausente.setAttribute('aria-describedby', pista.id);
+      grupo.append(pista);
+    }
+  }
+  if (disponibles.deshacer) {
+    grupo.append(
+      botonAsistencia('Deshacer ausencia', 'btn', descripcion, () => asistencia.registrar(turno, 'deshacer-ausencia')),
+    );
+  }
+  return grupo.childElementCount === 0 ? null : grupo;
+}
+
+/** Clase del borde: un sobreturno se distingue por encima de todo (C-39); después, la asistencia (C-43). */
+function claseDelTurno(turno: TurnoAgenda, claseEtiqueta: string | undefined): string {
+  if (turno.esSobreturno) {
+    return 'turno-sobreturno';
+  }
+  if (claseEtiqueta === 'etiqueta-sin-registrar') {
+    return 'turno-sin-registrar';
+  }
+  if (claseEtiqueta === 'etiqueta-llegada') {
+    return 'turno-llego';
+  }
+  return `turno-${turno.estado.toLowerCase()}`;
+}
+
+function elementoTurno(turno: TurnoAgenda, catalogos: Catalogos, acciones: AccionesTurno, ahora: Date): HTMLLIElement {
   const item = document.createElement('li');
-  // El borde izquierdo lleva el color del estado; un sobreturno se distingue por encima del estado (C-39).
-  item.className = `turno turno-${turno.esSobreturno ? 'sobreturno' : turno.estado.toLowerCase()}`;
+  const asistencia = etiquetaDeAsistencia(turno, ahora);
+  item.className = `turno ${claseDelTurno(turno, asistencia?.clase)}`;
   item.dataset['id'] = String(turno.id);
 
   const horario = document.createElement('p');
@@ -39,6 +110,9 @@ function elementoTurno(turno: TurnoAgenda, catalogos: Catalogos, acciones: Accio
   }
   if (turno.esSobreturno) {
     horario.append(' ', etiqueta('Sobreturno', 'etiqueta-sobreturno'));
+  }
+  if (asistencia !== null) {
+    horario.append(' ', etiqueta(asistencia.texto, asistencia.clase));
   }
 
   const paciente = document.createElement('p');
@@ -53,9 +127,18 @@ function elementoTurno(turno: TurnoAgenda, catalogos: Catalogos, acciones: Accio
     nombreDe(catalogos, 'prestaciones', turno.prestacionId),
   ].join(' · ');
 
+  const descripcion = `${nombrePaciente(turno)}, ${formatearHora(turno.inicio)} – ${formatearHora(turno.fin)}`;
+  item.append(horario, paciente, detalle);
+  const grupoAsistencia = botonesDeAsistencia(turno, acciones, descripcion, ahora);
+  if (grupoAsistencia !== null) {
+    item.append(grupoAsistencia);
+  }
+  if (!permiteCancelarYReprogramar(turno)) {
+    return item;
+  }
+
   const botones = document.createElement('div');
   botones.className = 'turno-acciones';
-  const descripcion = `${nombrePaciente(turno)}, ${horario.textContent}`;
   const cancelar = document.createElement('button');
   cancelar.type = 'button';
   cancelar.className = 'btn btn-peligro';
@@ -70,14 +153,15 @@ function elementoTurno(turno: TurnoAgenda, catalogos: Catalogos, acciones: Accio
   reprogramar.addEventListener('click', () => acciones.reprogramar(turno));
   botones.append(cancelar, reprogramar);
 
-  item.append(horario, paciente, detalle, botones);
+  item.append(botones);
   return item;
 }
 
 function listaDeTurnos(turnos: readonly TurnoAgenda[], catalogos: Catalogos, acciones: AccionesTurno): HTMLUListElement {
   const lista = document.createElement('ul');
   lista.className = 'turnos';
-  lista.append(...turnos.map((t) => elementoTurno(t, catalogos, acciones)));
+  const ahora = new Date();
+  lista.append(...turnos.map((t) => elementoTurno(t, catalogos, acciones, ahora)));
   return lista;
 }
 

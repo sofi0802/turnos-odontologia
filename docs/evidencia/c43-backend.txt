@@ -1,0 +1,31 @@
+C-43 registro-asistencia: evidencia del backend
+Fecha: 2026-11-24. Comando: ./gradlew build integrationTest (PostgreSQL 16 real, perfil test).
+Resultado: BUILD SUCCESSFUL.
+test: 504 tests, 0 fallas, 0 errores, 0 omitidos
+integrationTest: 528 tests, 0 fallas, 0 errores, 0 omitidos
+
+Tests de C-43 y de los changes que toca (integrationTest):
+  AsistenciaIntegrationTest$Api: 5 tests, 0 fallas, 0 errores
+  AsistenciaIntegrationTest$Auditoria: 3 tests, 0 fallas, 0 errores
+  AsistenciaIntegrationTest$DeshacerLaAusencia: 5 tests, 0 fallas, 0 errores
+  AsistenciaIntegrationTest$Ficha: 2 tests, 0 fallas, 0 errores
+  AsistenciaIntegrationTest$Llegada: 5 tests, 0 fallas, 0 errores
+  AsistenciaIntegrationTest$MarcarLaAusencia: 3 tests, 0 fallas, 0 errores
+  AsistenciaIntegrationTest$PasoAAtendido: 3 tests, 0 fallas, 0 errores
+  AsistenciaIntegrationTest$QuienMarcaLaAusencia: 4 tests, 0 fallas, 0 errores
+  AsistenciaIntegrationTest$Tolerancia: 3 tests, 0 fallas, 0 errores
+  AuditoriaTurnosIntegrationTest: 5 tests, 0 fallas, 0 errores
+  TurnosApiIntegrationTest: 29 tests, 0 fallas, 0 errores
+  AgendaConfigIntegrationTest: 1 tests, 0 fallas, 0 errores
+  AusenciaPacienteIntegrationTest: 9 tests, 0 fallas, 0 errores
+  FichaIntegrationTest: 9 tests, 0 fallas, 0 errores
+  Reprogramar online: 10 tests, 0 fallas, 0 errores
+
+Tests unitarios nuevos o cambiados (test):
+  AsistenciaTest$Deshacer: 8 tests, 0 fallas, 0 errores
+  AsistenciaTest$Llegada: 3 tests, 0 fallas, 0 errores
+  MarcarAusenciaTest$ConservaLosCamposDeC08: 2 tests, 0 fallas, 0 errores
+  MarcarAusenciaTest$DesdeLaRecepcion: 2 tests, 0 fallas, 0 errores
+  MarcarAusenciaTest$OrdenDeVerificacion: 5 tests, 0 fallas, 0 errores
+  TurnoAsistenciaTest: 14 tests, 0 fallas, 0 errores
+  ServicioAgendaTest: 7 tests, 0 fallas, 0 errores

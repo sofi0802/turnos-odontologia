@@ -18,6 +18,8 @@ export interface TurnoAgenda {
   readonly fin: string;
   readonly estado: string;
   readonly esSobreturno: boolean;
+  /** C-43: hora de llegada del paciente; `null` si no se registró. */
+  readonly llegadaEn: string | null;
 }
 
 export function rutaDeAgenda(periodo: Periodo, filtros: Filtros): string {
@@ -74,6 +76,7 @@ function leerTurno(elemento: unknown): TurnoAgenda | null {
     fin,
     estado,
     esSobreturno: Reflect.get(elemento, 'esSobreturno') === true,
+    llegadaEn: cadena(elemento, 'llegadaEn'),
   };
 }
 

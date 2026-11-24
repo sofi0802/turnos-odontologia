@@ -4,7 +4,7 @@
 
 | Actor | Descripción | Cómo interactúa |
 |---|---|---|
-| **Recepcionista o secretaria** (`RECEPCIONISTA`) | Personal administrativo del consultorio | Panel web: carga, mueve y cancela turnos; carga sobreturnos; administra los datos de contacto de los pacientes |
+| **Recepcionista o secretaria** (`RECEPCIONISTA`) | Personal administrativo del consultorio | Panel web: carga, mueve y cancela turnos; carga sobreturnos; registra la llegada y la ausencia de los pacientes (RN-AG-17, RN-AG-20); administra los datos de contacto de los pacientes |
 | **Odontólogo** (`ODONTOLOGO`) | Profesional que atiende | Panel web: ve **solo** su agenda (RN-AG-18), bloquea horarios, carga sobreturnos, registra la ficha y el odontograma |
 | **Administrador del consultorio** (`ADMIN`) | Dueño o encargado (puede ser el mismo odontólogo) | Panel web: configura profesionales, sillones, prestaciones y usuarios |
 | **Paciente** (`PACIENTE`, cuenta propia, no es personal) | Persona que se atiende | Con **su cuenta**: reserva, ve sus turnos, cancela o reprograma con el número de reserva (RN-AG-07, RN-RO-08). Sin cuenta: confirma desde el link del recordatorio o llama al consultorio, que valida DNI y número de reserva |
@@ -30,6 +30,9 @@ C = crear, R = leer, U = modificar, D = eliminar o desactivar. "Propio" = solo s
 | Ausencias y licencias del profesional | CRUD | CRUD | R (propias) | — |
 | Margen entre turnos (configuración) | U (mínimo 10 min) | R | R | — |
 | Extensión de un turno por complicaciones | U | U | U | — |
+| Llegada del paciente (RN-AG-20) [2026-11-24] | — | U (desde la agenda) | — | — |
+| Ausencia del paciente (RN-AG-17) [2026-11-24] | — | U (desde la agenda) | U propio (desde la ficha) | — |
+| Deshacer la ausencia del paciente (RN-AG-17) [2026-11-24] | — | U (si el horario sigue libre) | — (ve en la ficha que se deshizo) | — |
 | Paciente (datos de contacto) | CRUD | CRUD | R | R/U propio (al reservar) |
 | Ficha clínica y odontograma | R | **—** | CRUD | — |
 | Estadísticas o dashboard | R | R (operativas) | R (propias) | **—** |

@@ -21,4 +21,15 @@ class AuditoriaTurnosJpa implements AuditoriaTurnos {
     public void registrar(Long turnoId, Accion accion, String actor, Long turnoRelacionadoId) {
         em.persist(new TurnoAuditoriaEntity(turnoId, accion.name(), actor, reloj.instant(), turnoRelacionadoId));
     }
+
+    @Override
+    public boolean registrada(Long turnoId, Accion accion) {
+        return !em.createQuery("select a.id from TurnoAuditoriaEntity a where a.turnoId = :turno and a.accion = :accion",
+                        Long.class)
+                .setParameter("turno", turnoId)
+                .setParameter("accion", accion.name())
+                .setMaxResults(1)
+                .getResultList()
+                .isEmpty();
+    }
 }

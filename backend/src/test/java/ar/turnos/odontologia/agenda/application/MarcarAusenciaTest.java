@@ -23,7 +23,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-/** Ausencia del paciente (C-13, design D6), con dobles en memoria y reloj fijo. El turno es de 10:00 a 10:30. */
+/**
+ * Ausencia del paciente (C-13, design D6; C-43: tolerancia de 15 minutos y marca desde la recepción), con dobles en
+ * memoria y reloj fijo. El turno es de 10:00 a 10:30.
+ */
 class MarcarAusenciaTest {
 
     private final AgendaEnMemoria agenda = new AgendaEnMemoria();
@@ -63,22 +66,24 @@ class MarcarAusenciaTest {
         }
 
         @Test
-        @DisplayName("Un turno que todavía no empezó es TURNO_NO_INICIADO y queda sin cambios")
-        void noIniciado() {
+        @DisplayName("Antes de la tolerancia es AUSENCIA_ANTES_DE_TOLERANCIA y queda sin cambios")
+        void antesDeLaTolerancia() {
             Turno turno = agenda.dePacienteUno(a(10, 0), EstadoTurno.RESERVADO);
 
             assertRechazo(() -> marcar(relojALas(9, 50), turno.id(), PACIENTE_UNO, DRA_A),
-                    CodigoRechazo.TURNO_NO_INICIADO);
+                    CodigoRechazo.AUSENCIA_ANTES_DE_TOLERANCIA);
+            assertRechazo(() -> marcar(relojALas(10, 14), turno.id(), PACIENTE_UNO, DRA_A),
+                    CodigoRechazo.AUSENCIA_ANTES_DE_TOLERANCIA);
             assertThat(estado(turno)).isEqualTo(EstadoTurno.RESERVADO);
         }
 
         @Test
-        @DisplayName("Desde el inicio exacto, el turno pasa a AUSENTE")
+        @DisplayName("Al cumplirse la tolerancia, el turno pasa a AUSENTE")
         void exito() {
             Turno reservado = agenda.dePacienteUno(a(10, 0), EstadoTurno.RESERVADO);
             Turno confirmado = agenda.dePacienteUno(a(11, 0), EstadoTurno.CONFIRMADO);
 
-            Turno ausente = marcar(relojALas(10, 0), reservado.id(), PACIENTE_UNO, DRA_A);
+            Turno ausente = marcar(relojALas(10, 15), reservado.id(), PACIENTE_UNO, DRA_A);
             marcar(relojALas(12, 0), confirmado.id(), PACIENTE_UNO, DRA_A);
 
             assertThat(ausente.estado()).isEqualTo(EstadoTurno.AUSENTE);
@@ -98,7 +103,7 @@ class MarcarAusenciaTest {
                     new Intervalo(a(10, 0), a(10, 30)), EstadoTurno.RESERVADO, agenda.numeros.generar(),
                     true, "Urgencia ficticia", false, null));
 
-            Turno ausente = marcar(relojALas(10, 10), sobreturno.id(), PACIENTE_UNO, DRA_A);
+            Turno ausente = marcar(relojALas(10, 20), sobreturno.id(), PACIENTE_UNO, DRA_A);
 
             assertThat(ausente.esSobreturno()).isTrue();
             assertThat(ausente.motivoSobreturno()).isEqualTo("Urgencia ficticia");
@@ -112,11 +117,35 @@ class MarcarAusenciaTest {
                     new Intervalo(a(10, 0), a(10, 45)), EstadoTurno.RESERVADO, agenda.numeros.generar(),
                     false, null, true, "Complicación ficticia"));
 
-            Turno ausente = marcar(relojALas(10, 10), extendido.id(), PACIENTE_UNO, DRA_A);
+            Turno ausente = marcar(relojALas(10, 20), extendido.id(), PACIENTE_UNO, DRA_A);
 
             assertThat(ausente.extendido()).isTrue();
             assertThat(ausente.motivoExtension()).isEqualTo("Complicación ficticia");
             assertThat(ausente.intervalo().fin()).isEqualTo(a(10, 45));
+        }
+    }
+
+    @Nested
+    class DesdeLaRecepcion {
+
+        @Test
+        @DisplayName("La recepción marca la ausencia sin paciente ni profesional que comprobar")
+        void recepcion() {
+            Turno turno = agenda.dePacienteUno(a(10, 0), EstadoTurno.RESERVADO);
+
+            Turno ausente = new MarcarAusencia(agenda.turnos, relojALas(10, 20))
+                    .ejecutar(MarcarAusenciaCommand.deRecepcion(turno.id()));
+
+            assertThat(ausente.estado()).isEqualTo(EstadoTurno.AUSENTE);
+            assertThat(estado(turno)).isEqualTo(EstadoTurno.AUSENTE);
+        }
+
+        @Test
+        @DisplayName("Un turno inexistente es TurnoInexistenteException también para la recepción")
+        void inexistente() {
+            assertThatThrownBy(() -> new MarcarAusencia(agenda.turnos, relojALas(10, 20))
+                    .ejecutar(MarcarAusenciaCommand.deRecepcion(999L)))
+                    .isInstanceOf(TurnoInexistenteException.class);
         }
     }
 

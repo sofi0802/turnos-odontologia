@@ -23,6 +23,19 @@ public enum CodigoRechazo {
     PROFESIONAL_NO_HABILITADO,
     /** C-07: el turno que se quiere reasignar no es del profesional o no se cruza con la ausencia citada. */
     TURNO_NO_AFECTADO,
-    /** C-13: la ausencia del paciente solo se marca después del inicio del turno (RN-AG-17). */
-    TURNO_NO_INICIADO
+    /**
+     * C-13: la ausencia del paciente solo se marcaba después del inicio del turno. Desde C-43 no se usa: la reemplaza
+     * {@link #AUSENCIA_ANTES_DE_TOLERANCIA}. Se conserva para no cambiar el significado de un código publicado.
+     */
+    TURNO_NO_INICIADO,
+    /** C-43: la ausencia se marca recién a partir de los 15 minutos del inicio (RN-AG-17). */
+    AUSENCIA_ANTES_DE_TOLERANCIA,
+    /** C-43: el turno ya tiene la llegada registrada (RN-AG-20). */
+    LLEGADA_REGISTRADA,
+    /** C-43: la llegada se registra desde las 00:00 del día del turno. */
+    LLEGADA_ANTICIPADA,
+    /** C-43: solo se deshace la ausencia de un turno {@code AUSENTE}. */
+    TURNO_NO_AUSENTE,
+    /** C-43: la ausencia ya no se deshace después del fin del turno. */
+    TURNO_TERMINADO
 }

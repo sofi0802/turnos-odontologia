@@ -40,7 +40,23 @@ public final class Agenda {
         }
     }
 
+    /**
+     * C-43: verificación al deshacer una ausencia. Un turno normal se verifica como uno nuevo; un sobreturno, solo
+     * contra el sillón y su margen, como al crearlo, pero con los códigos de superposición y no
+     * {@code SIN_SILLON_DISPONIBLE}, porque el sillón es el suyo.
+     */
+    public void verificarRestauracion(Turno restaurado, Collection<Turno> existentes) {
+        buscarConflicto(restaurado, existentes, !restaurado.esSobreturno()).ifPresent(codigo -> {
+            throw new TurnoRechazadoException(codigo, mensajePara(codigo));
+        });
+    }
+
     Optional<CodigoRechazo> buscarConflicto(Turno nuevo, Collection<Turno> existentes) {
+        return buscarConflicto(nuevo, existentes, true);
+    }
+
+    private Optional<CodigoRechazo> buscarConflicto(Turno nuevo, Collection<Turno> existentes,
+                                                    boolean porProfesional) {
         boolean solapaProfesional = false;
         boolean solapaSillon = false;
         boolean faltaMargen = false;
@@ -49,7 +65,7 @@ public final class Agenda {
             if (!existente.esActivo()) {
                 continue;
             }
-            boolean compartePorProfesional = nuevo.mismoProfesionalQue(existente);
+            boolean compartePorProfesional = porProfesional && nuevo.mismoProfesionalQue(existente);
             boolean seSuperpone = nuevo.intervalo().seSuperponeCon(existente.intervalo());
             if (compartePorProfesional && seSuperpone) {
                 solapaProfesional = true;

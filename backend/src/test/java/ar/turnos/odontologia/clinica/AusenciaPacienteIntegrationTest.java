@@ -10,14 +10,15 @@ import org.springframework.test.web.servlet.MvcResult;
 
 /**
  * Un test por escenario de la ausencia del paciente: delta de {@code agenda-turnos} (RN-AG-17) y de
- * {@code auditoria-turnos} (C-13). Los turnos se insertan por JDBC y el reloj se mueve por escenario.
+ * {@code auditoria-turnos} (C-13). Los turnos se insertan por JDBC y el reloj se mueve por escenario. Desde C-43 la
+ * ausencia se marca a partir de los 15 minutos del inicio, con {@code AUSENCIA_ANTES_DE_TOLERANCIA} antes.
  */
 class AusenciaPacienteIntegrationTest extends IntegracionClinicaBase {
 
     @Test
     @DisplayName("La ausencia libera el resto del horario")
     void laAusenciaLiberaElRestoDelHorario() throws Exception {
-        reloj.ahoraEs(diciembre(1, 10, 10));
+        reloj.ahoraEs(diciembre(1, 10, 20));
         long turno = turno(pacienteUno, draA, diciembre(1, 10, 0), "RESERVADO");
 
         MvcResult resultado = marcarAusencia(como("ana.ejemplo"), pacienteUno, turno);
@@ -25,13 +26,13 @@ class AusenciaPacienteIntegrationTest extends IntegracionClinicaBase {
         assertThat(status(resultado)).isEqualTo(200);
         assertThat(cuerpo(resultado).path("estado").asText()).isEqualTo("AUSENTE");
         assertThat(estadoDelTurno(turno)).isEqualTo("AUSENTE");
-        // se puede crear un turno de "Consulta" con la Dra. A en el Sillón 1 a las 10:15
+        // se puede crear un turno de "Consulta" con la Dra. A en el Sillón 1 a las 10:25
         Map<String, Object> pedido = new LinkedHashMap<>();
         pedido.put("pacienteId", pacienteDos);
         pedido.put("profesionalId", draA);
         pedido.put("sillonId", sillon1);
         pedido.put("prestacionId", consulta);
-        pedido.put("inicio", iso(diciembre(1, 10, 15)));
+        pedido.put("inicio", iso(diciembre(1, 10, 25)));
         MvcResult nuevo = como("recepcion").post("/api/v1/turnos", json.writeValueAsString(pedido)).andReturn();
         assertThat(status(nuevo)).as(texto(nuevo)).isEqualTo(201);
     }
@@ -55,7 +56,7 @@ class AusenciaPacienteIntegrationTest extends IntegracionClinicaBase {
         MvcResult resultado = marcarAusencia(como("ana.ejemplo"), pacienteUno, turno);
 
         assertThat(status(resultado)).isEqualTo(409);
-        assertThat(codigo(resultado)).isEqualTo("TURNO_NO_INICIADO");
+        assertThat(codigo(resultado)).isEqualTo("AUSENCIA_ANTES_DE_TOLERANCIA");
         assertThat(estadoDelTurno(turno)).isEqualTo("RESERVADO");
     }
 
@@ -74,7 +75,7 @@ class AusenciaPacienteIntegrationTest extends IntegracionClinicaBase {
     @Test
     @DisplayName("Otro odontólogo marca la ausencia")
     void otroOdontologoMarcaLaAusencia() throws Exception {
-        reloj.ahoraEs(diciembre(1, 10, 10));
+        reloj.ahoraEs(diciembre(1, 10, 20));
         long turno = turno(pacienteUno, draA, diciembre(1, 10, 0), "RESERVADO");
 
         MvcResult resultado = marcarAusencia(como("bruno.prueba"), pacienteUno, turno);
@@ -115,7 +116,7 @@ class AusenciaPacienteIntegrationTest extends IntegracionClinicaBase {
     @Test
     @DisplayName("Se registra la ausencia")
     void seRegistraLaAusencia() throws Exception {
-        reloj.ahoraEs(diciembre(1, 10, 10));
+        reloj.ahoraEs(diciembre(1, 10, 20));
         long turno = turno(pacienteUno, draA, diciembre(1, 10, 0), "RESERVADO");
 
         marcarAusencia(como("ana.ejemplo"), pacienteUno, turno);
@@ -135,7 +136,7 @@ class AusenciaPacienteIntegrationTest extends IntegracionClinicaBase {
 
         MvcResult resultado = marcarAusencia(como("ana.ejemplo"), pacienteUno, turno);
 
-        assertThat(codigo(resultado)).isEqualTo("TURNO_NO_INICIADO");
+        assertThat(codigo(resultado)).isEqualTo("AUSENCIA_ANTES_DE_TOLERANCIA");
         assertThat(jdbc.queryForObject("SELECT count(*) FROM turno_auditoria WHERE turno_id = ? AND accion = 'AUSENTE'",
                 Integer.class, turno)).isZero();
     }

@@ -70,6 +70,7 @@ class TurnoRepositoryJpa implements TurnoRepository {
             TurnoEntity entidad = turnos.findById(turno.id())
                     .orElseThrow(() -> new IllegalStateException("No existe el turno " + turno.id()));
             entidad.cambiarEstado(turno.estado().name());
+            entidad.cambiarLlegada(turno.llegadaEn());
             if (turno.extendido()) {
                 entidad.actualizarExtension(turno.intervalo().fin(),
                         turno.intervalo().fin().plus(margen.valor()), turno.motivoExtension());
@@ -114,6 +115,7 @@ class TurnoRepositoryJpa implements TurnoRepository {
         return new Turno(t.getId(), t.getPaciente().getId(), t.getProfesional().getId(), t.getSillon().getId(),
                 t.getPrestacion().getId(), new Intervalo(t.getInicio(), t.getFin()),
                 EstadoTurno.valueOf(t.getEstado()), new NumeroReserva(t.getCodigoReserva()),
-                t.isEsSobreturno(), t.getMotivoSobreturno(), t.isExtendido(), t.getMotivoExtension());
+                t.isEsSobreturno(), t.getMotivoSobreturno(), t.isExtendido(), t.getMotivoExtension(),
+                t.getLlegadaEn());
     }
 }

@@ -30,6 +30,11 @@ app:
     ruta-cancelar: ${NOTIFICACIONES_RUTA_CANCELAR:/mis-turnos/cancelar}
     ruta-reprogramar: ${NOTIFICACIONES_RUTA_REPROGRAMAR:/mis-turnos/reprogramar}
     intervalo-ms: ${NOTIFICACIONES_INTERVALO_MS:300000}
+  agenda:
+    asistencia:
+      # C-43: tarea que pasa a ATENDIDO los turnos con llegada cuyo margen terminó (el perfil de test la apaga)
+      activo: ${AGENDA_ASISTENCIA_ACTIVO:true}
+      intervalo-ms: ${AGENDA_ASISTENCIA_INTERVALO_MS:300000}
   consultorio:
     nombre: ${CONSULTORIO_NOMBRE:Consultorio odontológico}
     direccion: ${CONSULTORIO_DIRECCION:Dirección a confirmar}
@@ -77,3 +82,8 @@ spring:
     enabled: true
     locations: classpath:db/migration
     out-of-order: true
+# C-43: los tests llaman al paso a atendidos a mano, con el reloj de cada escenario.
+app:
+  agenda:
+    asistencia:
+      activo: false
