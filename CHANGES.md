@@ -529,7 +529,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 > C-40 es un change nuevo por pedir comportamiento nuevo en "Nuevo turno" de la agenda del personal. Puede ir en paralelo con C-37 y C-38, que tocan otras pantallas, pero su PR se mergea antes de la etapa D de C-39 (pantallas del personal).
 
 ### [C-33] `frontend-reprogramacion-agenda`
-- **Estado**: `[x]` mergeado (PR #55, 2026-11-23); falta archivarlo (`openspec archive frontend-reprogramacion-agenda`)
+- **Estado**: `[x]` mergeado (PR #55, 2026-11-23) y archivado (2026-11-24, `openspec/changes/archive/2026-11-24-frontend-reprogramacion-agenda`)
 - **Responsable**: Juan Cruz
 - **Scope**:
   - En "Reprogramar turno" de la agenda del personal, ofrecer solo los profesionales habilitados para la prestación del turno (RN-AG-15), con `GET /public/profesionales?prestacionId=`. Hoy se ofrecen todos.
@@ -601,7 +601,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/06_funcionalidades.md` §US-010
 
 ### [C-37] `frontend-portada-y-acceso`
-- **Estado**: `[x]` mergeado (PR #67, 2026-11-23; 345 tests, mockups aprobados); falta archivarlo, después del archive de `ingreso-unico-mi-cuenta`
+- **Estado**: `[x]` mergeado (PR #67, 2026-11-23; 345 tests, mockups aprobados) y archivado (2026-11-24, `openspec/changes/archive/2026-11-24-frontend-portada-y-acceso`, después del de `ingreso-unico-mi-cuenta`)
 - **Responsable**: Juan Cruz (avisa a Enzo, dueño de `frontend/`)
 - **Scope**:
   - **Portada pública** en su propia dirección, `#/inicio`, que pasa a ser la página inicial: la dirección vacía (`http://localhost:5173/`) y las direcciones desconocidas la muestran en lugar de llevar a `#/reserva`, y el logo del encabezado lleva a ella. Pantalla descriptiva del consultorio y de la aplicación (qué hace y cómo se usa en tres pasos), atractiva, con ilustraciones SVG propias (sin recursos remotos ni fotos de personas). Dos botones principales: "Reservar turno" (`#/reserva`, sin registrarse antes) e "Ingresar a mi cuenta" (`#/mi-cuenta`). Arriba a la derecha, el botón "Acceso personal" para empleados (`#/mi-cuenta`).
@@ -620,7 +620,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/README.md` y `design-system/brand.md`
 
 ### [C-38] `frontend-reserva-explorador-prestaciones`
-- **Estado**: `[x]` mergeado (PR #72, 2026-11-23; 447 tests, mockups aprobados); falta archivarlo
+- **Estado**: `[x]` mergeado (PR #72, 2026-11-23; 447 tests, mockups aprobados) y archivado (2026-11-24, `openspec/changes/archive/2026-11-24-frontend-reserva-explorador-prestaciones`)
 - **Responsable**: Juan Cruz (avisa a Enzo)
 - **Scope**:
   - En el paso 1 de `#/reserva`, reemplazar la lista con todas las prestaciones por un **explorador**: un selector desplegable con buscador (combobox accesible, con teclado) que muestra solo las coincidencias, con el nombre y la duración de cada prestación.
