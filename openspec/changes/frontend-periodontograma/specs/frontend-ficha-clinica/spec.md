@@ -25,13 +25,22 @@ La ficha SHALL mostrar una sección "Periodontograma" debajo del odontograma, qu
 - **AND** al elegir "Reintentar" se vuelve a pedir solo el periodontograma
 
 ### Requirement: Mapa de piezas con su estado
-La sección SHALL dibujar las 32 piezas permanentes por cuadrante (18 a 11 y 21 a 28 arriba, 48 a 41 y 31 a 38 abajo). Cada pieza cargada MUST mostrar su número y su estado con el nombre ("Sano", "Leve", "Moderado", "Severo" o "Ausente"), un color y una marca de nivel, de modo que el estado no dependa solo del color. Una pieza que la versión no tiene se ve como "Sin cargar".
+La sección SHALL dibujar las 32 piezas permanentes por cuadrante (18 a 11 y 21 a 28 arriba, 48 a 41 y 31 a 38 abajo). Cada pieza cargada MUST mostrar su número y su estado con el nombre ("Sano", "Leve", "Moderado", "Severo" o "Ausente") y un color, de modo que el estado no dependa solo del color. Una pieza que la versión no tiene se ve como "Sin cargar".
 
 #### Scenario: Estados dibujados
 - **GIVEN** que la versión tiene la pieza 16 `SANO`, la 21 `SEVERO` y la 18 ausente
 - **WHEN** se abre la ficha
 - **THEN** la pieza 16 se ve como "Sano", la 21 como "Severo" y la 18 como "Ausente"
 - **AND** las demás piezas se ven como "Sin cargar"
+
+### Requirement: Dibujo de las piezas
+Cada pieza del mapa SHALL dibujarse como un diente según su tipo (incisivo, canino, premolar o molar), con la raíz hacia arriba en el maxilar superior y hacia abajo en el inferior. Sobre la cara vestibular de una pieza cargada SHALL trazar el margen de la encía y el fondo de la bolsa a partir de la recesión y la profundidad de sus sitios. Una pieza ausente se dibuja tachada y sin líneas, y una sin cargar, con el contorno punteado.
+
+#### Scenario: Líneas del margen y de la bolsa
+- **GIVEN** que la pieza 16 tiene en el sitio `V` recesión 0 mm y profundidad 4 mm
+- **WHEN** se abre la ficha
+- **THEN** en el dibujo de la pieza 16 el margen de la encía pasa por el límite amelocementario en el sitio vestibular
+- **AND** el fondo de la bolsa queda 4 mm más hacia la raíz
 
 ### Requirement: Detalle de una pieza
 Al elegir una pieza cargada, la sección SHALL mostrar sus 6 sitios (mesiovestibular, vestibular, distovestibular, mesiolingual o mesiopalatino, lingual o palatino, distolingual o distopalatino según el maxilar) con la profundidad de sondaje, la recesión, la pérdida de inserción, el sangrado y la placa, más la movilidad, la furcación si la tiene y el estado.
@@ -41,6 +50,19 @@ Al elegir una pieza cargada, la sección SHALL mostrar sus 6 sitios (mesiovestib
 - **WHEN** se elige la pieza 16
 - **THEN** se ven los sitios mesiovestibular, vestibular, distovestibular, mesiopalatino, palatino y distopalatino
 - **AND** el sitio vestibular muestra profundidad 4 mm, recesión 0 mm y pérdida de inserción 4 mm
+
+### Requirement: Vista grande de la pieza
+Al elegir una pieza cargada, la sección SHALL dibujarla en grande por vestibular y por palatino o lingual, con una grilla de 1 mm y las líneas del margen y de la bolsa de cada cara. El dibujo es decorativo: los valores se leen en el detalle.
+
+#### Scenario: Pieza inferior en grande
+- **GIVEN** que la versión tiene la pieza 46 cargada
+- **WHEN** se elige la pieza 46
+- **THEN** se ven dos dibujos rotulados "Vestibular" y "Lingual", con la raíz hacia abajo
+
+#### Scenario: Cara con un sitio vacío
+- **GIVEN** una nueva versión con la pieza 36 y el sitio `DL` vacío
+- **WHEN** se mira la pieza 36
+- **THEN** el dibujo lingual se ve sin líneas y el vestibular con las suyas
 
 ### Requirement: Versiones anteriores
 La sección SHALL ofrecer un selector con todas las versiones, de la más nueva a la más vieja, cada una con la fecha, la hora y el profesional. Al elegir una, MUST pedir esa versión y mostrarla en solo lectura, sin ofrecer editarla ni borrarla.

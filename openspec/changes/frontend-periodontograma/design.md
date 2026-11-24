@@ -27,15 +27,19 @@ La ficha clínica del frontend es de C-44: `pages/pacientes.ts` arma la página 
 La sección pide la lista y la versión más nueva al montarse, después de que la ficha y el odontograma cargaron, con su propio `AbortController` y el contador de dibujo de la página (un pedido viejo no dibuja nada). Un error se muestra solo en la sección, con "Reintentar" (spec "Falla la carga del periodontograma"). Así una falla del periodontograma no deja sin ficha al odontólogo, a diferencia de la regla "sin datos parciales" de C-44, que sigue valiendo para la ficha básica y el odontograma.
 
 ### D3. Mapa de piezas
-- Una grilla HTML (no SVG): una fila de 16 botones por arcada, con el orden FDI de D4 de C-44 (lado derecho del paciente a la izquierda). En 390 px cada cuadrante ocupa dos filas de 4 botones (unos 75 px cada uno), para que el nombre del estado entre completo.
-- Cada botón muestra el número, el nombre corto del estado y una marca de nivel de 0 a 3 barras (sano 0, leve 1, moderado 2, severo 3); ausente lleva una cruz y "Sin cargar" un borde punteado. Así el estado no depende del color (spec "Mapa de piezas con su estado").
+- Una grilla HTML de botones: una fila de 16 por arcada, con el orden FDI de D4 de C-44 (lado derecho del paciente a la izquierda). En 390 px cada cuadrante ocupa dos filas de 4 botones (unos 75 px cada uno), para que el nombre del estado entre completo.
+- Cada botón lleva un dibujo SVG propio y simplificado del diente según su tipo (incisivo, canino, premolar, premolar con dos raíces para 14 y 24, molar superior de tres raíces y molar inferior de dos), en un lienzo de 40 × 100 con el límite amelocementario fijo y 3,2 unidades por mm. Los inferiores son el mismo dibujo invertido, con la raíz hacia abajo.
+- Sobre el diente, en la cara vestibular, se trazan el margen de la encía (rojo, `--ds-error`) en LAC − recesión y el fondo de la bolsa (azul, `--ds-info`) en LAC − (recesión + profundidad), uniendo los tres sitios. El contorno va con el color del estado; ausente se tacha y "Sin cargar" lleva contorno punteado. El número y el nombre del estado van siempre en texto, así que el estado no depende del color (spec "Mapa de piezas con su estado").
+- El SVG es `aria-hidden`: la información accesible está en el `aria-label` del botón y en la tabla del detalle.
+- *Alternativa*: botones con barras de nivel, sin dibujo. Se descartó a pedido de la líder: el odontólogo reconoce mejor la pieza y ve la pérdida de inserción como en el periodontograma en papel.
 - El botón tiene `aria-label` "Pieza 21: Severo" y `aria-pressed` cuando está elegido. Las flechas no mueven el foco entre piezas: con 32 botones alcanza con Tab, como el odontograma.
-- Debajo, una leyenda con los cuatro estados, ausente y sin cargar.
+- Debajo, una leyenda con los cuatro estados, ausente, sin cargar y los tres trazos (margen, fondo de la bolsa y límite amelocementario).
 
 ### D4. Detalle y formulario de la pieza
 - Al elegir una pieza se abre un panel debajo del mapa. En consulta es una tabla de 6 filas (sitios) y 5 columnas (profundidad, recesión, pérdida de inserción, sangrado, placa), más movilidad, furcación y estado. La pérdida de inserción se muestra calculada (profundidad + recesión) porque es solo una suma para leer, no el estado.
 - En la nueva versión, el panel tiene la misma tabla con campos: `input type="number"` con `inputmode="numeric"`, `min`, `max` y `step=1` para profundidad y recesión, y casillas para sangrado y placa. La movilidad y la furcación son `select` de 0 a 3 (la furcación con "Sin registrar" vacío y solo en piezas multirradiculares). Arriba: "Pieza ausente" (casilla) y "Quitar de esta versión".
 - Los nombres de los sitios siguen el maxilar: palatinos en las piezas superiores y linguales en las inferiores, aunque el código de la API sea siempre `ML`, `L` y `DL`.
+- Arriba de la tabla, la pieza en grande (96 × 240) por vestibular y por palatino o lingual, con grilla de 1 mm (más marcada cada 5 mm). En la nueva versión el dibujo se actualiza con lo cargado; una cara con un sitio vacío se dibuja sin líneas.
 - La ayuda de la recesión va en un `<p>` enlazado con `aria-describedby` a cada campo de recesión.
 - En 390 px la tabla pasa a una tarjeta por sitio (cuatro campos en dos columnas), para no tener desplazamiento horizontal.
 
@@ -56,7 +60,7 @@ La sección pide la lista y la versión más nueva al montarse, después de que 
 - *Alternativa*: reusar solo colores existentes (`--ds-info` para moderado). Se descarta: el azul se lee como "información", no como un grado intermedio entre leve y severo.
 
 ### D8. Estilos
-Un módulo nuevo `frontend/src/styles/19-periodontograma.css`, importado al final de `styles.css`, con la grilla, los botones de pieza, el panel y las tarjetas de 390 px. Solo usa tokens.
+Un módulo nuevo `frontend/src/styles/19-periodontograma.css`, importado al final de `styles.css`, con la grilla, los botones de pieza, los trazos del dibujo, el panel y las tarjetas de 390 px. Solo usa tokens.
 
 ## Risks / Trade-offs
 

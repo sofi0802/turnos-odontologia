@@ -69,8 +69,9 @@
 .perio-pieza {
   display: grid;
   justify-items: center;
+  align-content: start;
   gap: 2px;
-  min-height: 4.25rem;
+  min-height: 7.5rem;
   padding: var(--ds-espacio-1) 0;
   border: var(--ds-borde-ancho) solid var(--ds-borde-fuerte);
   border-radius: var(--ds-radio-sm, 0.375rem);
@@ -108,22 +109,6 @@
   white-space: nowrap;
 }
 
-.perio-nivel {
-  display: flex;
-  gap: 2px;
-  height: 0.5rem;
-}
-
-.perio-nivel span {
-  width: 0.375rem;
-  border-radius: 1px;
-  border: 1px solid currentColor;
-}
-
-.perio-nivel span.lleno {
-  background: currentColor;
-}
-
 .perio-pieza[data-estado='SANO'] { background: var(--ds-perio-sano-fondo); color: var(--ds-perio-sano); border-color: var(--ds-perio-sano); }
 .perio-pieza[data-estado='LEVE'] { background: var(--ds-perio-leve-fondo); color: var(--ds-perio-leve); border-color: var(--ds-perio-leve); }
 .perio-pieza[data-estado='MODERADO'] { background: var(--ds-perio-moderado-fondo); color: var(--ds-perio-moderado); border-color: var(--ds-perio-moderado); }
@@ -139,9 +124,104 @@
   box-shadow: 0 0 0 2px var(--ds-error-fondo);
 }
 
-.perio-cruz {
-  font-weight: var(--ds-peso-fuerte);
-  line-height: 0.5rem;
+/* ---- Dientes dibujados (design D3): corona y raíces por tipo, con el margen de la encía y el fondo de la bolsa ---- */
+
+[data-estado='SANO'] { --perio-trazo: var(--ds-perio-sano); }
+[data-estado='LEVE'] { --perio-trazo: var(--ds-perio-leve); }
+[data-estado='MODERADO'] { --perio-trazo: var(--ds-perio-moderado); }
+[data-estado='SEVERO'] { --perio-trazo: var(--ds-perio-severo); }
+[data-estado='AUSENTE'] { --perio-trazo: var(--ds-odonto-ausente); }
+[data-estado='SIN_CARGAR'],
+[data-estado='CARGANDO'] { --perio-trazo: var(--ds-texto-suave); }
+
+.perio-diente {
+  display: block;
+  overflow: visible;
+}
+
+.perio-corona,
+.perio-raiz {
+  fill: var(--ds-fondo);
+  stroke: var(--perio-trazo, var(--ds-texto-suave));
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.perio-raiz {
+  fill: var(--ds-superficie);
+}
+
+[data-estado='SIN_CARGAR'] .perio-corona,
+[data-estado='SIN_CARGAR'] .perio-raiz {
+  stroke-dasharray: 3 2;
+}
+
+[data-estado='AUSENTE'] .perio-corona,
+[data-estado='AUSENTE'] .perio-raiz {
+  fill: none;
+  stroke-dasharray: 2 2;
+}
+
+.perio-lac {
+  stroke: var(--ds-texto-suave);
+  stroke-width: 1;
+  stroke-dasharray: 3 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.perio-linea-margen,
+.perio-linea-fondo {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.perio-linea-margen { stroke: var(--ds-error); }
+.perio-linea-fondo { stroke: var(--ds-info); }
+
+.perio-grilla {
+  stroke: var(--ds-borde);
+  stroke-width: 0.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.perio-grilla.fuerte {
+  stroke: var(--ds-borde-fuerte);
+}
+
+.perio-cruz-svg {
+  fill: none;
+  stroke: var(--ds-odonto-ausente);
+  stroke-width: 2;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Vistas grandes de la pieza elegida: vestibular y palatina o lingual, con grilla de 1 mm. */
+.perio-vistas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-4);
+  margin: 0 0 var(--ds-espacio-3);
+}
+
+.perio-vista {
+  margin: 0;
+  padding: var(--ds-espacio-2) var(--ds-espacio-3);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-sm, 0.375rem);
+  background: var(--ds-fondo);
+}
+
+.perio-vista figcaption {
+  margin-bottom: var(--ds-espacio-1);
+  font-size: var(--ds-texto-xs);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-texto-suave);
+  text-align: center;
 }
 
 /* ---- Leyenda ---- */
@@ -162,12 +242,19 @@
   gap: var(--ds-espacio-2);
 }
 
-.perio-leyenda .perio-pieza {
-  min-height: 0;
-  width: 1.75rem;
-  padding: 3px;
-  cursor: default;
+.perio-muestra {
+  display: inline-flex;
 }
+
+.perio-trazo {
+  display: inline-block;
+  width: 1.5rem;
+  border-top: 2px solid;
+}
+
+.perio-trazo.margen { border-color: var(--ds-error); }
+.perio-trazo.fondo { border-color: var(--ds-info); }
+.perio-trazo.lac { border-top: 1px dashed var(--ds-texto-suave); }
 
 /* ---- Detalle y formulario de la pieza (design D4) ---- */
 

@@ -16,7 +16,7 @@
 
 ## 3. Consulta
 
-- [ ] 3.1 Escribir los tests de los escenarios de "Periodontograma en la ficha", "Mapa de piezas con su estado", "Detalle de una pieza", "Versiones anteriores" y "Periodontograma accesible" (nombre de la pieza), y después la sección en modo consulta montada en `pages/pacientes.ts`; verificar con `npm test`
+- [ ] 3.1 Escribir los tests de los escenarios de "Periodontograma en la ficha", "Mapa de piezas con su estado", "Dibujo de las piezas", "Detalle de una pieza", "Vista grande de la pieza", "Versiones anteriores" y "Periodontograma accesible" (nombre de la pieza), y después el dibujo SVG de los dientes (funciones puras de geometría en `periodontograma-modelo.ts`) y la sección en modo consulta montada en `pages/pacientes.ts`; verificar con `npm test`
 - [ ] 3.2 Crear `styles/19-periodontograma.css` (design D8) según los mockups aprobados e importarlo en `styles.css`; verificar con el test de módulos de estilos (`estilos-modulos.test.ts`) y `npm run build`
 
 ## 4. Nueva versión

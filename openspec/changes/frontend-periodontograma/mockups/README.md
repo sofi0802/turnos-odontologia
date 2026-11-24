@@ -6,7 +6,7 @@
 
 ## Cómo verlos
 
-Los mockups cargan `frontend/src/styles.css` tal como está en la rama, más `periodontograma.css`, que es la propuesta del módulo `19-periodontograma.css`. `mockup.js` es la copia del de C-44 (encabezado y barra lateral) y `perio-mockup.js` dibuja el mapa, la leyenda y las tablas desde atributos `data-*`.
+Los mockups cargan `frontend/src/styles.css` tal como está en la rama, más `periodontograma.css`, que es la propuesta del módulo `19-periodontograma.css`. `mockup.js` es la copia del de C-44 (encabezado y barra lateral) y `perio-mockup.js` dibuja los dientes del mapa, la leyenda, las vistas grandes y las tablas desde atributos `data-*`.
 
 Para evitar bloqueos de `file://`, serví la raíz del repo y abrí la página desde ahí:
 
@@ -22,7 +22,7 @@ Después abrí `http://127.0.0.1:8765/openspec/changes/frontend-periodontograma/
 - **Qué tienen que poder hacer:** ver de un vistazo qué piezas están peor, mirar los sitios de una pieza, abrir una versión anterior y cargar la visita de hoy partiendo de la anterior.
 - **Dónde:** sección "Periodontograma" de la ficha (`#/pacientes`), debajo del odontograma de C-44 (decisión de la líder). Sin entrada nueva en la barra lateral.
 - **Tamaños:** 390 × 844 (cuatro piezas por fila y una tarjeta por sitio) y 1440 × 900 (16 piezas por fila y la tabla de sitios).
-- **Restricciones:** tokens del design system; el estado se lee por texto y por barras de nivel, no solo por color; controles de 44 px; datos ficticios; ningún dato de salud en la dirección ni en el navegador.
+- **Restricciones:** tokens del design system; el estado se lee por texto, no solo por color; controles de 44 px; datos ficticios; ningún dato de salud en la dirección ni en el navegador.
 
 ## Pantallas
 
@@ -35,8 +35,8 @@ Después abrí `http://127.0.0.1:8765/openspec/changes/frontend-periodontograma/
 
 ## Decisiones visuales
 
-- **Mapa en grilla y no en dibujo:** el estado periodontal es uno por pieza, así que alcanza con un botón por pieza, ordenado como en la boca (lado derecho del paciente a la izquierda). Es más fácil de tocar que el SVG del odontograma.
-- **Marca de nivel:** de 0 a 3 barras (sano, leve, moderado, severo), una cruz para la ausente y borde punteado para "Sin cargar".
+- **Dientes dibujados** (pedido de la líder, 2026-11-24): cada botón del mapa tiene un dibujo propio y simplificado del diente según su tipo, con la raíz hacia afuera de la boca, como en el periodontograma en papel. Sobre la cara vestibular van el margen de la encía (rojo) y el fondo de la bolsa (azul); la distancia entre el límite amelocementario punteado y el fondo es la pérdida de inserción. Ausente se tacha y "Sin cargar" va punteado. El número y el estado siguen en texto.
+- **Vistas grandes:** la pieza elegida se ve por vestibular y por palatino o lingual con grilla de 1 mm, arriba de la tabla de sitios.
 - **En la nueva versión** cada pieza muestra el estado de la versión copiada hasta guardar; el estado nuevo lo calcula el sistema al guardar (design, Non-Goals).
 - **La pérdida de inserción** se muestra por sitio como suma para leer (profundidad + recesión); el estado no se calcula en la pantalla.
 - **En 390 px** el formulario de una pieza es largo (una tarjeta por sitio). Se acepta porque se edita de a una pieza.
