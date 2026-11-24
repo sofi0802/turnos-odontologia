@@ -9,7 +9,7 @@
 | **Pacientes** | Datos de contacto y preferencia de canal |
 | **Notificaciones** | Recordatorios y confirmaciones por WhatsApp o email |
 | **Clínica** | Ficha básica, odontograma y periodontograma (C-25) |
-| **Coberturas** | Obras sociales y prepagas, sus planes, el nomenclador de prácticas y la afiliación de cada paciente (C-18); aranceles, cobertura por plan y presupuestos con copago (C-19) |
+| **Coberturas** | Obras sociales y prepagas, sus planes, el nomenclador de prácticas y la afiliación de cada paciente (C-18); aranceles, cobertura por plan y presupuestos con copago (C-19); liquidaciones mensuales a cada obra social y su conciliación (C-20) |
 | **Caja** [2026-11-24, C-22, en revisión] | Caja diaria con apertura, cierre y arqueo, cargos por turno atendido y cobros (C-22) |
 | **Seguridad y auditoría** | Usuarios del personal, roles, registro de cambios en turnos |
 
@@ -40,6 +40,7 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
  Prestacion ─1──0..1─ Arancel   (precio particular, C-19)
  Plan ─1──*─ CoberturaPlan ─*──1─ Nomenclador   (porcentaje cubierto, C-19)
  Paciente ─1──*─ Presupuesto ─1──*─ PresupuestoItem ─*──1─ Prestacion   (C-19)
+ ObraSocial ─1──*─ Liquidacion ─1──*─ LiquidacionLinea ─0..1──1─ Turno (ATENDIDO)   (C-20)
  Usuario(PACIENTE) ─1──1─ Paciente
 ```
 
@@ -186,6 +187,17 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
 - `id` BIGINT identity, `cargo_id` FK, `caja_id` FK, `importe` numeric(12,2), `medio` enum (`EFECTIVO`, `DEBITO`, `CREDITO`, `TRANSFERENCIA`), `registrado_por` varchar(120), `registrado_en` timestamptz, `anulado` boolean, `anulado_por` varchar(120) nullable, `anulado_en` timestamptz nullable, `motivo_anulacion` varchar(255) nullable.
 - Constraints: `importe > 0`; si `anulado`, `anulado_por`, `anulado_en` y `motivo_anulacion` obligatorios (RN-CA-07). La suma de los cobros no anulados de un cargo no supera su `copago` (en el servicio, con bloqueo del cargo; RN-CA-04).
 - No se borra: se anula.
+
+### Liquidacion [2026-11-24, C-20, en revisión]
+- `id` BIGINT identity, `obra_social_id` FK, `periodo` date (el día 1 del mes liquidado), `estado` enum (`BORRADOR`, `PRESENTADA`, `CERRADA`), `total_solicitado` y `total_cobrado` numeric(12,2), `generada_en`, `presentada_en` y `cerrada_en` timestamptz (las dos últimas nullable).
+- Constraints: `UNIQUE (obra_social_id, periodo)` (una liquidación por obra social y mes, RN-LQ-02) y `periodo` siempre el día 1.
+- No se borra. Una vez `PRESENTADA` sus líneas no cambian; solo se registra lo cobrado (RN-LQ-04, RN-LQ-06).
+
+### LiquidacionLinea [2026-11-24, C-20, en revisión]
+- `id` BIGINT identity, `liquidacion_id` FK, `turno_id` FK (único: un turno se liquida una sola vez), `paciente_id` FK, `plan_id` FK.
+- Copia del momento en que se generó (como DD-15): `fecha` (la del turno), nombre y DNI del paciente, `numero_afiliado`, nombre del plan, `nomenclador_id` y código, nombre de la prestación, `precio` y `porcentaje`, y `monto_solicitado` numeric(12,2).
+- Conciliación (RN-LQ-06): `monto_cobrado` numeric(12,2) nullable, `resultado` enum nullable (`COBRADA`, `PARCIAL`, `RECHAZADA`) y `motivo_rechazo` varchar(200) nullable.
+- Constraints: `monto_solicitado = round(precio × porcentaje / 100, 2)`, `0 ≤ monto_cobrado ≤ monto_solicitado`, y el `resultado` coherente con el monto cobrado.
 
 ### Usuario
 - `id` BIGINT identity, `username` (único), `password_hash`, `rol` enum (`ADMIN`, `RECEPCIONISTA`, `ODONTOLOGO`, `PACIENTE`), `profesional_id` FK nullable, `paciente_id` FK nullable, `activo`.

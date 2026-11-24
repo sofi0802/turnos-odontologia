@@ -67,6 +67,11 @@
 | PA-35 | ¿Cuántas cajas hay abiertas a la vez? *(2026-11-24, C-22)* | **Una por día del consultorio**: una sola abierta, con monto inicial en efectivo | RN-CA-02 |
 | PA-36 | ¿Cuándo nace la deuda de un turno? *(2026-11-24, C-22)* | Cuando el turno queda **`ATENDIDO`**; ausentes y cancelados no generan deuda | RN-CA-03, DD-18 |
 | PA-37 | ¿Cómo se corrige un cobro o una diferencia de arqueo? *(2026-11-24, C-22)* | El `ADMIN` **anula** el cobro con motivo, sin borrarlo; una diferencia al cerrar se registra con su motivo | RN-CA-06, RN-CA-07 |
+| PA-38 | ¿Qué código se liquida si la prestación tiene varios? *(2026-11-24, C-20)* | La línea queda **sin código** en el borrador y el `ADMIN` elige uno antes de presentar | RN-LQ-01, RN-LQ-04 |
+| PA-39 | ¿Quién maneja las liquidaciones? *(2026-11-24, C-20)* | **Solo el `ADMIN`** | RN-LQ-08, matriz de 03 |
+| PA-40 | ¿Con qué precio se liquida? *(2026-11-24, C-20)* | El del **cargo de caja del turno** (C-22) si existe; si no, el precio vigente al generar, guardado como copia | RN-LQ-03 |
+| PA-41 | ¿CSV, PDF o los dos? *(2026-11-24, C-20)* | **CSV** en C-20; el PDF queda para después | RN-LQ-05 |
+| PA-42 | ¿Se reabre una liquidación presentada? *(2026-11-24, C-20)* | **No**; se corrige en la del mes siguiente | RN-LQ-04 |
 
 ## Puntos "No evidenciado" del Discovery
 

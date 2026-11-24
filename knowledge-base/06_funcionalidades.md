@@ -263,6 +263,17 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 - [ ] CA-7: el odontólogo y el paciente no acceden a la caja ni a la cuenta corriente.
 **Reglas relacionadas**: RN-CA-01 a RN-CA-08, RN-PR-01 a RN-PR-03, RN-AG-20
 
+### US-049: Liquidar a las obras sociales y conciliar lo cobrado [2026-11-24, C-20, en revisión]
+**Como** administrador **quiero** generar cada mes la liquidación de los turnos atendidos para cada obra social y registrar después lo que pagó, **para** saber cuánto cobré, cuánto me deben y qué rechazaron.
+**Criterios de aceptación**:
+- [ ] CA-1: elijo una obra social y un mes, y se genera una liquidación con los turnos atendidos de sus afiliados, agrupados por plan, con el monto de cada uno y el total.
+- [ ] CA-2: un turno de un paciente particular, de una prestación sin código o de un código que el plan no cubre no entra.
+- [ ] CA-3: un turno ya liquidado no entra en otra liquidación; uno marcado atendido tarde entra en la del mes siguiente.
+- [ ] CA-4: mientras está en borrador la puedo regenerar y quitar líneas; una vez presentada no cambia y la descargo en CSV.
+- [ ] CA-5: registro por línea lo cobrado (completo, parcial o rechazado con motivo) y veo el total cobrado y la diferencia; con todas las líneas conciliadas, la cierro.
+- [ ] CA-6: solo el administrador ve y maneja las liquidaciones.
+**Reglas relacionadas**: RN-LQ-01 a RN-LQ-08
+
 ## Backlog: v1.x y posteriores (fuera del MVP)
 
 > Cada fila se vincula con su change de `CHANGES.md`. Las reglas detalladas se escriben en esta KB **antes de empezar** el change, cuando el MVP esté completo.
