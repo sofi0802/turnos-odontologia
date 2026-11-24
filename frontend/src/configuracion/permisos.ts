@@ -25,6 +25,8 @@ export interface Permisos {
    */
   readonly profesionalFijo: boolean;
   readonly profesionalFijoId: number | null;
+  /** Ver y administrar las cuentas del personal (pestaña Usuarios y "Dar acceso"): solo `ADMIN` (C-41). */
+  readonly gestionaUsuarios: boolean;
 }
 
 const NINGUNO: Permisos = {
@@ -38,6 +40,7 @@ const NINGUNO: Permisos = {
   veTodos: false,
   profesionalFijo: false,
   profesionalFijoId: null,
+  gestionaUsuarios: false,
 };
 
 export function permisos(sesion: Sesion): Permisos {
@@ -54,6 +57,7 @@ export function permisos(sesion: Sesion): Permisos {
         veTodos: true,
         profesionalFijo: false,
         profesionalFijoId: null,
+        gestionaUsuarios: true,
       };
     case 'RECEPCIONISTA':
       return { ...NINGUNO, gestionaAusencias: true, reasigna: true, veBloqueos: true, veTodos: true };

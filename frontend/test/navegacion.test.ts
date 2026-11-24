@@ -52,8 +52,14 @@ function enlace(texto: string): HTMLAnchorElement {
 }
 
 /** Enlaces del menú que se ven: los del otro grupo quedan ocultos (design D3 de C-12). */
+/**
+ * Enlaces visibles del menú principal de la barra lateral. Desde C-41 el personal también tiene "Mi contraseña" en
+ * una navegación aparte ("Tu cuenta"), que prueba `cuentas-personal.test.ts`.
+ */
 function enlacesVisibles(): string[] {
-  return [...raiz.querySelectorAll<HTMLAnchorElement>('aside nav li:not([hidden]) a')].map((a) => a.textContent ?? '');
+  return [...raiz.querySelectorAll<HTMLAnchorElement>('aside nav[aria-label="Principal"] li:not([hidden]) a')].map(
+    (a) => a.textContent ?? '',
+  );
 }
 
 /** Enlace "Ingresar" del encabezado, fuera del menú. */

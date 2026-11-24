@@ -20,6 +20,8 @@ const REGLAS_POR_MODULO: Readonly<Record<string, string>> = {
   '13-layout.css': '.cabecera {',
   '14-estados.css': '.btn-principal:hover:not(:disabled)',
   '15-estados-vacios.css': '.estado-vacio {',
+  // C-41: cuentas del personal.
+  '16-cuentas.css': '.contrasena-caja {',
 };
 
 function importaciones(): string[] {

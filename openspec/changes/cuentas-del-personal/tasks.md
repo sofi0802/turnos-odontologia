@@ -36,18 +36,18 @@ Cada escenario de la spec tiene un test con el mismo nombre. Los tests de integr
 
 ## 4. Cliente de la API en el frontend
 
-- [ ] 4.1 RED: tests de `configuracion/api.ts` (o un módulo nuevo) para listar, crear, desactivar, activar, restablecer y cambiar la propia contraseña, con los tipos de `CuentaPersonal` y `CuentaCreada` (sin `any`). GREEN: implementarlos. Verificar con `npm test`
-- [ ] 4.2 RED: `debeCambiarContrasena` en `consultarSesion` y en la respuesta del login, y que un `403 CAMBIO_DE_CONTRASENA_PENDIENTE` se reconoce en `shared/api/errores.ts`. GREEN: implementarlo. Verificar con `npm test`
+- [x] 4.1 RED: tests de `configuracion/api.ts` (o un módulo nuevo) para listar, crear, desactivar, activar, restablecer y cambiar la propia contraseña, con los tipos de `CuentaPersonal` y `CuentaCreada` (sin `any`). GREEN: implementarlos. Verificar con `npm test`
+- [x] 4.2 RED: `debeCambiarContrasena` en `consultarSesion` y en la respuesta del login, y que un `403 CAMBIO_DE_CONTRASENA_PENDIENTE` se reconoce en `shared/api/errores.ts`. GREEN: implementarlo. Verificar con `npm test`
 
 ## 5. Pantallas (specs `frontend-cuentas-personal` y `frontend-configuracion-consultorio`)
 
-- [ ] 5.1 RED: los escenarios modificados de "Secciones según el rol", incluido "Recepción no ve la pestaña Usuarios". GREEN: `gestionaUsuarios` en `permisos.ts` y la pestaña en `pestanas.ts` (D9). Verificar que pasan los tests nuevos y los de C-34
-- [ ] 5.2 RED: "Ver las cuentas del consultorio" y los cuatro escenarios de "Alta de una cuenta del personal". GREEN: `configuracion/usuarios.ts` y `usuario-alta.ts`. Verificar que pasan
-- [ ] 5.3 RED: los dos escenarios de "Contraseña temporal mostrada una sola vez". GREEN: `configuracion/contrasena-temporal.ts` con "Copiar" y con el nodo vaciado al cerrar. Verificar que pasan y que no se escribe en `localStorage` ni en `sessionStorage`
-- [ ] 5.4 RED: los tres escenarios de "Dar acceso desde el detalle del profesional". GREEN: `profesional-detalle.ts`. Verificar que pasan y que con `recepcion` no se pide `GET /api/v1/usuarios`
-- [ ] 5.5 RED: los tres escenarios de "Desactivar, reactivar y restablecer desde la lista" y "Usuario repetido" de "Errores de las cuentas". GREEN: las acciones con confirmación y el mapa de mensajes. Verificar que pasan
-- [ ] 5.6 RED: los dos escenarios de "Cambio obligatorio de la contraseña temporal" y los cuatro de "Formulario de cambio de contraseña". GREEN: `pages/cambiar-contrasena.ts`, el guard de `app.ts`, el paso posterior al login en `pages/mi-cuenta.ts`, "Mi contraseña" en el menú lateral y el enlace del usuario en el encabezado. Verificar que pasan y que los tests de `ingreso-unico-mi-cuenta`, C-35 y C-37 siguen pasando
-- [ ] 5.7 Correr `npm test` y `npm run build` y anotar la cantidad de tests. Verificar que todo pasa y que no hay `any` (`npm run build` con `strict`)
+- [x] 5.1 RED: los escenarios modificados de "Secciones según el rol", incluido "Recepción no ve la pestaña Usuarios". GREEN: `gestionaUsuarios` en `permisos.ts` y la pestaña en `pestanas.ts` (D9). Verificar que pasan los tests nuevos y los de C-34
+- [x] 5.2 RED: "Ver las cuentas del consultorio" y los cuatro escenarios de "Alta de una cuenta del personal". GREEN: `configuracion/usuarios.ts` y `usuario-alta.ts`. Verificar que pasan
+- [x] 5.3 RED: los dos escenarios de "Contraseña temporal mostrada una sola vez". GREEN: `configuracion/contrasena-temporal.ts` con "Copiar" y con el nodo vaciado al cerrar. Verificar que pasan y que no se escribe en `localStorage` ni en `sessionStorage`
+- [x] 5.4 RED: los tres escenarios de "Dar acceso desde el detalle del profesional". GREEN: `profesional-detalle.ts`. Verificar que pasan y que con `recepcion` no se pide `GET /api/v1/usuarios`
+- [x] 5.5 RED: los tres escenarios de "Desactivar, reactivar y restablecer desde la lista" y "Usuario repetido" de "Errores de las cuentas". GREEN: las acciones con confirmación y el mapa de mensajes. Verificar que pasan
+- [x] 5.6 RED: los dos escenarios de "Cambio obligatorio de la contraseña temporal" y los cuatro de "Formulario de cambio de contraseña". GREEN: `pages/cambiar-contrasena.ts`, el guard de `app.ts`, el paso posterior al login en `pages/mi-cuenta.ts`, "Mi contraseña" en el menú lateral y el enlace del usuario en el encabezado. Verificar que pasan y que los tests de `ingreso-unico-mi-cuenta`, C-35 y C-37 siguen pasando
+- [x] 5.7 Correr `npm test` y `npm run build` y anotar la cantidad de tests. Verificar que todo pasa y que no hay `any` (`npm run build` con `strict`) *(2026-11-24: 512 tests en verde, 30 nuevos en `test/cuentas-personal.test.ts`, y el build compila. Las llamadas de `configuracion/cuentas-api.ts` y de la sesión se prueban a través de las pantallas. Ajustes: `configuracion-pestanas.test.ts` por la pestaña nueva, `navegacion.test.ts` acotado al menú "Principal" (requisito ADDED en `frontend-navegacion`) y `estilos.ts`/`estilos-modulos.test.ts` por el módulo `16-cuentas.css`)*
 
 ## 6. Verificación integrada
 

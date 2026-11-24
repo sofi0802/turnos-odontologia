@@ -4,6 +4,7 @@ import { montarPrestaciones, montarProfesionales, montarSillones } from '../conf
 import { montarHorarios } from '../configuracion/horarios.ts';
 import { montarMargen } from '../configuracion/margen.ts';
 import { permisos } from '../configuracion/permisos.ts';
+import { montarUsuarios } from '../configuracion/usuarios.ts';
 import { crearPestanas, type Pestana } from '../configuracion/pestanas.ts';
 import { esErrorDeSesion, type ContextoSeccion, type MontarSeccion } from '../configuracion/ui.ts';
 import { MENSAJE_SESION_TERMINADA } from './agenda.ts';
@@ -35,6 +36,10 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   // Los tres roles ven los bloqueos; registrar y borrar es solo de ADMIN y ODONTOLOGO (design D3).
   if (permisosDelRol.veBloqueos) {
     definiciones.push(['Bloqueos', montarBloqueos]);
+  }
+  // Las cuentas del personal son solo del administrador (C-41).
+  if (permisosDelRol.gestionaUsuarios) {
+    definiciones.push(['Usuarios', montarUsuarios]);
   }
   const pestanas: Pestana[] = definiciones.map(([titulo, montar]) => ({
     titulo,
