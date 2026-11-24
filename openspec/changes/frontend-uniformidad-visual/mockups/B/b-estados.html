@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estados vacíos y de carga · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <div class="app">
+  <header class="cabecera">
+    <button class="btn-sobre-azul menu-boton" type="button" aria-controls="menu-principal" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"/></svg>Menú</button>
+    <a class="marca" href="#"><img src="../../../../../design-system/assets/logo.svg?v=3" alt="Turnos odontología" /></a>
+    <div class="acciones-cabecera"><span class="avatar" aria-hidden="true">PU</span><span class="usuario-nombre">paciente.uno@example.com</span><button class="btn-sobre-azul" type="button">Salir</button></div>
+  </header>
+  <div class="cuerpo">
+    <aside class="lateral" id="menu-principal">
+      <div class="cajon-cabecera"><span>Menú</span><button class="cerrar" type="button" aria-label="Cerrar el menú"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+      <nav aria-label="Principal"><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 2v4M16 2v4M3 10h18"/><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M12 13v5M9.5 15.5h5"/></svg>Reservar turno</a><a href="#" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg>Mis turnos</a></nav>
+    </aside>
+    <div class="velo" aria-hidden="true"></div>
+    <main class="contenido-app">
+      <div class="pagina">
+        <h1>Estados vacíos y de carga</h1>
+        <h3 style="margin-top:var(--ds-espacio-2)">Mis turnos sin turnos</h3>
+        <div class="vacio" style="margin-top:var(--ds-espacio-1)"><svg viewBox="0 0 160 120" aria-hidden="true" focusable="false">
+  <ellipse cx="80" cy="64" rx="64" ry="50" fill="var(--ds-acento-100)" opacity=".55"/>
+  <g transform="translate(46 26)">
+    <rect width="68" height="66" rx="10" fill="var(--ds-fondo)" stroke="var(--ds-acento-500)" stroke-width="3"/>
+    <path d="M0 10a10 10 0 0 1 10-10h48a10 10 0 0 1 10 10v14H0z" fill="var(--ds-acento-500)"/>
+    <rect x="15" y="-6" width="6" height="14" rx="3" fill="var(--ds-acento-700)"/><rect x="47" y="-6" width="6" height="14" rx="3" fill="var(--ds-acento-700)"/>
+    <g fill="var(--ds-superficie-2)"><circle cx="18" cy="40" r="5"/><circle cx="34" cy="40" r="5"/><circle cx="50" cy="40" r="5"/><circle cx="18" cy="54" r="5"/><circle cx="34" cy="54" r="5"/></g>
+  </g>
+  <path d="M130 22l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="var(--ds-acento-500)" opacity=".6"/>
+  <path d="M26 92l1.5 4 4 1.5-4 1.5-1.5 4-1.5-4-4-1.5 4-1.5z" fill="var(--ds-acento-500)" opacity=".5"/>
+</svg><h2>Todavía no tenés turnos</h2><p>Cuando reserves uno, lo vas a ver acá con su número de reserva.</p><a class="btn btn-principal" href="#">Reservar turno</a></div>
+        <h3 style="margin-top:var(--ds-espacio-3)">Agenda de un día sin turnos</h3>
+        <div class="vacio chico" style="margin-top:var(--ds-espacio-1)"><svg viewBox="0 0 160 120" aria-hidden="true" focusable="false">
+  <ellipse cx="80" cy="64" rx="64" ry="50" fill="var(--ds-acento-100)" opacity=".55"/>
+  <g transform="translate(46 26)">
+    <rect width="68" height="66" rx="10" fill="var(--ds-fondo)" stroke="var(--ds-acento-500)" stroke-width="3"/>
+    <path d="M0 10a10 10 0 0 1 10-10h48a10 10 0 0 1 10 10v14H0z" fill="var(--ds-acento-500)"/>
+    <rect x="15" y="-6" width="6" height="14" rx="3" fill="var(--ds-acento-700)"/><rect x="47" y="-6" width="6" height="14" rx="3" fill="var(--ds-acento-700)"/>
+    <g fill="var(--ds-superficie-2)"><circle cx="18" cy="40" r="5"/><circle cx="34" cy="40" r="5"/><circle cx="50" cy="40" r="5"/><circle cx="18" cy="54" r="5"/><circle cx="34" cy="54" r="5"/></g>
+  </g>
+  <path d="M130 22l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="var(--ds-acento-500)" opacity=".6"/>
+  <path d="M26 92l1.5 4 4 1.5-4 1.5-1.5 4-1.5-4-4-1.5 4-1.5z" fill="var(--ds-acento-500)" opacity=".5"/>
+</svg><p>No hay turnos para este día.</p></div>
+        <h3 style="margin-top:var(--ds-espacio-3)">Cargando</h3>
+        <div aria-busy="true" style="margin-top:var(--ds-espacio-1)">
+          <div class="cargando" role="status"><span class="rueda" aria-hidden="true"></span><span>Cargando…</span></div>
+          <div class="esqueleto" aria-hidden="true"><span></span><span></span><span></span></div>
+        </div>
+        <p class="nota-mockup" style="padding:0;margin-top:var(--ds-espacio-2)"><b>Mockup C-39 B.</b> La ilustración es decorativa (<code>aria-hidden</code>); el contenedor que carga lleva <code>aria-busy</code> y el estado de carga se anuncia con <code>role="status"</code>.</p>
+      </div>
+    </main>
+  </div>
+  <footer class="pie"><span data-brand-name>Turnos odontología</span></footer>
+  </div>
+
+</body>
+</html>

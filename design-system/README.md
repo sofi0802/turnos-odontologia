@@ -1,8 +1,8 @@
 # Design system del proyecto
 
 Mode: system-and-mockups
-Revision: 2
-Approval: pending (Revision 1 aprobada el 2026-11-22, by user; la Revision 2 solo quita alias y no cambia ningún valor: falta que la líder la renueve)
+Revision: 3
+Approval: pending (Revision 1 aprobada el 2026-11-22, by user; las revisiones 2 y 3 no cambian ningún valor de los tokens: la 2 quita alias y la 3 cambia el texto del logo provisorio; falta que la líder las renueve)
 Revisiones: ver "Historial de revisiones" al final.
 Decisión: Sofia Indovino (líder), 2026-11-22. Reemplaza la política `off` del 2026-11-18 a pedido explícito de la líder.
 
@@ -20,7 +20,7 @@ Decisión: Sofia Indovino (líder), 2026-11-22. Reemplaza la política `off` del
 | `brand.md` | Nombre, logo, tono, voz y reglas de uso, con su fuente o `(TBD)`. |
 | `brand.js` | Constante `BRAND_NAME` y binding de `[data-brand-name]` para las vistas previas HTML. |
 | `components.html` | Referencia de componentes y estados: encabezado, botones, campos, avisos, estados del turno, agenda del día, día vacío, reserva móvil del paciente, comprobante y diálogo. |
-| `assets/logo.svg` | Logo **provisorio**, rotulado como tal. |
+| `assets/logo.svg` | Logo **provisorio** con el nombre "Turnos odontología", rotulado como tal ("placeholder · (TBD)"). |
 | `previews/` | Capturas a 1440×900 y 390×844 (página completa). |
 
 ## Fuentes
@@ -51,3 +51,4 @@ Abrir `design-system/components.html` con doble clic en el navegador (no requier
 |---|---|---|---|
 | 1 | 2026-11-22 | Sistema inicial: tokens, marca, componentes y vistas previas. | Aprobada por la líder (2026-11-22) |
 | 2 | 2026-11-23 | C-39 etapa A: se quitan los alias `--color-*`, `--espacio-*`, `--radio` y `--ancho-maximo` de `tokens.css` (el frontend usa solo `--ds-*`) y se suma `--ds-capa-modal` (la capa detrás de los diálogos, antes escrita a mano con el mismo valor). **No cambia ningún valor ni el aspecto de ninguna pantalla** (capturas de antes y después idénticas, ver `openspec/changes/frontend-uniformidad-visual/mockups/`). | Pendiente de renovar |
+| 3 | 2026-11-23 | C-39 etapa B: el logo provisorio (`assets/logo.svg`) dice "Turnos odontología" en lugar de "LOGO PROVISORIO", y el encabezado de la aplicación deja de repetir el nombre al lado del logo. Sigue rotulado como provisorio. Sin cambios en `tokens.css`. | Pendiente de renovar |

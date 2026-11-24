@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="160" height="40" viewBox="0 0 160 40" role="img" aria-labelledby="t">
-  <title id="t">Logo provisorio (placeholder, no es la marca aprobada)</title>
+  <title id="t">Turnos odontología (logo provisorio, no es la marca aprobada)</title>
   <rect x="1" y="1" width="158" height="38" rx="8" fill="#e8f4f7" stroke="#0b6e8a" stroke-width="2" stroke-dasharray="6 4"/>
   <!-- Diente simplificado -->
   <path d="M14 11c-3 0-5 2.5-5 6 0 4 2 6 2.5 10 .3 2.2 1 3.5 2 3.5 1.5 0 1.8-3 2.6-5 .4-1 1-1 1.4 0 .8 2 1.1 5 2.6 5 1 0 1.7-1.3 2-3.5.5-4 2.5-6 2.5-10 0-3.5-2-6-5-6-1.8 0-2.6 1-3.8 1s-2-1-3.8-1z" fill="#0b6e8a"/>
-  <text x="36" y="19" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#07475a">LOGO PROVISORIO</text>
+  <text x="36" y="19" font-family="system-ui, sans-serif" font-size="11" font-weight="700" fill="#07475a" textLength="116" lengthAdjust="spacingAndGlyphs">Turnos odontología</text>
   <text x="36" y="31" font-family="system-ui, sans-serif" font-size="9" fill="#4c5d69">placeholder · (TBD)</text>
 </svg>
