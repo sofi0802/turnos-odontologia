@@ -604,5 +604,6 @@ export const paginaReserva: Pagina = {
   ruta: 'reserva',
   titulo: 'Reservar turno',
   menu: 'paciente',
+  icono: 'reservar',
   render: dibujar,
 };

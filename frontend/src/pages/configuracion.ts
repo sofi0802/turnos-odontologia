@@ -51,5 +51,6 @@ export const paginaConfiguracion: Pagina = {
   titulo: 'Configuración',
   acceso: 'personal',
   menu: 'personal',
+  icono: 'configuracion',
   render: dibujar,
 };

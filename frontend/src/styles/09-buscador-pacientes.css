@@ -173,33 +173,18 @@
     flex-direction: row;
   }
 
-  .encabezado {
-    flex-wrap: nowrap;
-    padding: var(--ds-espacio-1) var(--ds-espacio-3);
+  .contenido {
+    padding: var(--ds-espacio-3);
   }
 
-  .menu-boton {
-    display: none;
-  }
-
-  .menu,
-  .menu.abierto {
-    display: block;
-    width: auto;
-  }
-
-  .menu ul {
-    display: flex;
-    gap: var(--ds-espacio-1);
-  }
-
-  .usuario {
-    width: auto;
+  .dialogo-acciones {
+    flex-direction: row;
     justify-content: flex-end;
   }
 
-  .contenido {
-    padding: var(--ds-espacio-3);
+  .dialogo-acciones .btn {
+    width: auto;
+    min-width: 8rem;
   }
 
   .agenda-periodo {
@@ -218,17 +203,6 @@
 
   .agenda-filtros .boton-principal {
     margin-left: auto;
-  }
-
-  .agenda-lista {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
-    gap: var(--ds-espacio-2);
-  }
-
-  .agenda-lista > .turnos,
-  .agenda-lista > .agenda-vacia {
-    grid-column: 1 / -1;
   }
 }
 

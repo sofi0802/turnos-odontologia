@@ -76,6 +76,20 @@ Todos los diálogos SHALL poner el mensaje de error o de aviso en el mismo lugar
 - **WHEN** se muestra el mensaje
 - **THEN** está debajo del título del diálogo y antes del primer campo, en todos los diálogos
 
+### Requirement: Agenda con el color de cada turno
+Cada turno de la agenda del personal SHALL tener un borde izquierdo de 4 px con el color de su estado (`--ds-turno-*`; un sobreturno lleva el suyo), y la vista semanal SHALL acomodar los días en columnas que se ajustan al ancho, sin huecos cuando unos días tienen más turnos que otros, y manteniendo los días en orden de lunes a domingo.
+
+#### Scenario: El borde del turno según su estado
+- **GIVEN** la agenda de un día con un turno reservado, uno confirmado y un sobreturno
+- **WHEN** se muestra
+- **THEN** cada turno tiene la clase de su estado, y el borde izquierdo usa el color del estado correspondiente
+
+#### Scenario: Semana con días de distinta cantidad de turnos
+- **GIVEN** la vista semanal con un día con tres turnos y otros con uno o ninguno
+- **WHEN** se muestra en una pantalla de 1440 px
+- **THEN** los siete días están en orden de lunes a domingo
+- **AND** cada día queda debajo del anterior de su columna, sin dejar un hueco del alto del día más largo
+
 ### Requirement: Estados vacíos y de carga
 Las listas sin elementos y las pantallas que están cargando datos SHALL mostrar un estado propio con una ilustración o un indicador SVG propio, un texto breve y, si corresponde, la acción siguiente; las ilustraciones decorativas MUST estar ocultas para los lectores de pantalla y la carga MUST anunciarse con `aria-busy`.
 
