@@ -38,13 +38,13 @@
 ## D. Pantallas del personal
 
 - [x] D.1 Verificar que C-40 está mergeado (lo está) y traer `master`; mockups de la etapa D en `mockups/D/` (agenda del día y de la semana, Nuevo turno guiado, reprogramar y cancelar, buscador de pacientes y las siete pestañas de Configuración con sus diálogos), capturas a 390 × 844 y 1440 × 900 y `README.md`. Verificar abriendo las capturas
-- [ ] D.2 Presentar los mockups de D y registrar la aprobación de la líder en `design.md`. No empezar el apply de D sin esto
-- [ ] D.3 Aplicar los componentes y estilos de B a las pantallas del personal sin cambiar su comportamiento: los tests de C-09, C-33, C-34, C-35, C-36 y C-40 siguen pasando. Verificar con `npm test`
-- [ ] D.4 Verificación visual contra los mockups de D (capturas en `mockups/D/verify/`, diferencias por prioridad, consola, red y teclado), `npm test`, `npm run build` y PR de la etapa D
+- [x] D.2 Presentar los mockups de D y registrar la aprobación de la líder en `design.md`. No empezar el apply de D sin esto
+- [x] D.3 Aplicar los componentes y estilos de B a las pantallas del personal sin cambiar su comportamiento: los tests de C-09, C-33, C-34, C-35, C-36 y C-40 siguen pasando. Verificar con `npm test`
+- [x] D.4 Verificación visual contra los mockups de D (capturas en `mockups/D/verify/`, diferencias por prioridad, consola, red y teclado), `npm test`, `npm run build` y PR de la etapa D
 
 ## 7. Cierre
 
-- [ ] 7.1 Recorrer los deltas y verificar que los 24 escenarios tienen un test con el nombre del escenario, sin duplicados. Verificar con un `grep` de los nombres
+- [ ] 7.1 Recorrer los deltas y verificar que los 28 escenarios tienen un test con el nombre del escenario, sin duplicados. Verificar con un `grep` de los nombres
 - [ ] 7.2 Completar `Preview` y `Visual verify` de cada etapa en `design.md`; correr `openspec validate frontend-uniformidad-visual --strict` y verificar que el change es válido
 
 ## Workflow follow-up

@@ -48,6 +48,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
 /** Configuración del consultorio para el personal (C-34). */
 export const paginaConfiguracion: Pagina = {
   ruta: 'configuracion',
+  fondoSuave: true,
   titulo: 'Configuración',
   acceso: 'personal',
   menu: 'personal',

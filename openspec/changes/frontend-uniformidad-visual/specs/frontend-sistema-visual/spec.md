@@ -96,11 +96,39 @@ Las pantallas del paciente (portada, Reservar turno, Mi cuenta, Mis turnos y Con
 #### Scenario: Fondo suave en las pantallas del paciente
 - **GIVEN** cada pantalla del paciente abierta
 - **WHEN** se mira el contenedor de la página
-- **THEN** lleva el fondo suave, y las pantallas del personal todavía no
+- **THEN** lleva el fondo suave
 
 #### Scenario: Jerarquía de títulos
 - **WHEN** se leen las reglas de los títulos
 - **THEN** `h1`, `h2` y `h3` usan los tamaños `--ds-texto-xl`, `--ds-texto-lg` y `--ds-texto-base`, con el interlineado de títulos
+
+### Requirement: Pantallas del personal con fondo suave y tarjeta de turno uniforme
+Las pantallas del personal (agenda y Configuración) SHALL llevar el mismo fondo suave que las del paciente; en la agenda, cada turno MUST ser una tarjeta blanca con el nombre del paciente como texto propio (sin reutilizar la tarjeta de "Mis turnos"), y "Cancelar turno" MUST ser un botón de peligro y "Reprogramar" uno secundario.
+
+#### Scenario: Fondo suave en las pantallas del personal
+- **GIVEN** una persona del personal con la agenda o Configuración abiertas
+- **WHEN** se mira el contenedor de la página
+- **THEN** lleva el fondo suave
+
+#### Scenario: Tarjeta del turno y sus acciones
+- **GIVEN** la agenda con un turno
+- **WHEN** se mira su tarjeta
+- **THEN** el paciente está en `.turno-persona` y no en `.turno-paciente`
+- **AND** "Cancelar turno" tiene la clase de botón de peligro y "Reprogramar" la de botón secundario
+
+### Requirement: Selector de fecha de la aplicación
+Los campos de fecha SHALL usar el calendario de la aplicación en un desplegable, no el selector nativo del navegador; el valor MUST seguir en el campo `AAAA-MM-DD` y el campo opcional MUST poder borrarse.
+
+#### Scenario: Elegir un día con el calendario
+- **GIVEN** un campo de fecha con día mínimo
+- **WHEN** se abre el calendario y se toca un día
+- **THEN** el campo toma ese día, avisa el cambio y el calendario se cierra
+- **AND** los días anteriores al mínimo no se pueden elegir
+
+#### Scenario: Fecha opcional
+- **GIVEN** un campo de fecha opcional con un día elegido
+- **WHEN** se toca "Borrar" en el calendario
+- **THEN** el campo queda vacío y el botón muestra "Elegí un día"
 
 ### Requirement: Estados vacíos y de carga
 Las listas sin elementos y las pantallas que están cargando datos SHALL mostrar un estado propio con una ilustración o un indicador SVG propio, un texto breve y, si corresponde, la acción siguiente; las ilustraciones decorativas MUST estar ocultas para los lectores de pantalla y la carga MUST anunciarse con `aria-busy`.

@@ -53,11 +53,7 @@ describe('Pantallas del paciente', () => {
       const raiz = await abrirYEsperar(hash, servidor());
       expect(raiz.querySelector('.cuerpo')?.classList.contains('fondo-suave'), hash).toBe(true);
     }
-    // Las pantallas del personal se adaptan en la etapa D: todavía no lo llevan.
-    router?.detener();
-    const agenda = await abrirYEsperar('#/agenda', new ServidorFalso());
-    expect(agenda.querySelector('.cuerpo')?.classList.contains('fondo-suave')).toBe(false);
-
+    // Las pantallas del personal lo llevan desde la etapa D (personal-visual.test.ts).
     const layout = textoDeModulo('13-layout.css');
     expect(regla(layout, '.cuerpo.fondo-suave')).toMatch(/background:\s*var\(--ds-superficie\)/);
   });

@@ -6,7 +6,7 @@ export interface Calendario {
   elegido(): Fecha | null;
   /** Quita el d√≠a elegido y vuelve al mes de hoy. */
   limpiar(): void;
-  /** Marca un dÌa (o ninguno) y muestra su mes, sin avisar a `alElegir`. */
+  /** Marca un d√≠a (o ninguno) y muestra su mes, sin avisar a `alElegir`. */
   fijar(fecha: Fecha | null): void;
   /** Habilita o deshabilita la elecci√≥n; `ayuda` reemplaza el texto bajo el calendario. */
   habilitar(si: boolean, ayuda?: string): void;
@@ -14,7 +14,7 @@ export interface Calendario {
 
 export interface OpcionesCalendario {
   readonly leyenda: string;
-  /** Primer dÌa elegible; por defecto hoy, `null` si se puede elegir cualquier dÌa. */
+  /** Primer d√≠a elegible; por defecto hoy, `null` si se puede elegir cualquier d√≠a. */
   readonly minimo?: Fecha | null;
   /** Sin el texto de ayuda bajo el calendario (cuando va dentro de un selector de fecha). */
   readonly sinAyuda?: boolean;
