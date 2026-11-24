@@ -224,6 +224,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
 /** Agenda del personal (US-014). Privada: solo con sesión del personal. */
 export const paginaAgenda: Pagina = {
   ruta: 'agenda',
+  fondoSuave: true,
   titulo: 'Agenda',
   acceso: 'personal',
   menu: 'personal',

@@ -42,7 +42,7 @@ function elementoTurno(turno: TurnoAgenda, catalogos: Catalogos, acciones: Accio
   }
 
   const paciente = document.createElement('p');
-  paciente.className = 'turno-paciente';
+  paciente.className = 'turno-persona';
   paciente.textContent = nombrePaciente(turno);
 
   const detalle = document.createElement('p');
@@ -58,13 +58,13 @@ function elementoTurno(turno: TurnoAgenda, catalogos: Catalogos, acciones: Accio
   const descripcion = `${nombrePaciente(turno)}, ${horario.textContent}`;
   const cancelar = document.createElement('button');
   cancelar.type = 'button';
-  cancelar.className = 'boton-secundario';
+  cancelar.className = 'btn btn-peligro';
   cancelar.textContent = 'Cancelar turno';
   cancelar.setAttribute('aria-label', `Cancelar turno de ${descripcion}`);
   cancelar.addEventListener('click', () => acciones.cancelar(turno));
   const reprogramar = document.createElement('button');
   reprogramar.type = 'button';
-  reprogramar.className = 'boton-secundario';
+  reprogramar.className = 'btn';
   reprogramar.textContent = 'Reprogramar';
   reprogramar.setAttribute('aria-label', `Reprogramar turno de ${descripcion}`);
   reprogramar.addEventListener('click', () => acciones.reprogramar(turno));
