@@ -573,7 +573,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `openspec/specs/seguridad-autorizacion/spec.md`, `openspec/specs/agenda-api/spec.md`
 
 ### [C-36] `buscador-pacientes`
-- **Estado**: `[x]` completo (2026-11-23, PR #53 propuesta y PR #54 apply). Specs: `openspec/specs/busqueda-pacientes/` y `frontend-buscador-pacientes/` (nuevos) y `frontend-agenda-personal/` (actualizado); change archivado en `openspec/changes/archive/2026-11-23-buscador-pacientes/`. Sin migración V20 (D7); "Sobreturno" fuera de C-36 (D11). Pendiente: prueba manual con lector de pantalla (tarea 7.4)
+- **Estado**: `[x]` completo (2026-11-23, PR #53 propuesta y PR #54 apply). Specs: `openspec/specs/busqueda-pacientes/` y `frontend-buscador-pacientes/` (nuevos) y `frontend-agenda-personal/` (actualizado); change archivado en `openspec/changes/archive/2026-11-23-buscador-pacientes/`. Sin migración V20 (D7); "Sobreturno" fuera de C-36 (D11). Tarea 7.4 (lector de pantalla) probada el 2026-11-24
 - **Responsable**: Juan Sebastián
 - **Scope**:
   - Backend: `GET /api/v1/pacientes?q=` para el personal (`ADMIN`, `RECEPCIONISTA` y `ODONTOLOGO`), que busca por DNI o por nombre y apellido y devuelve una lista corta: id, nombre, apellido y DNI. Sin datos de salud ni de contacto (Ley 25.326). Hoy no existe ningún endpoint para buscar pacientes.
