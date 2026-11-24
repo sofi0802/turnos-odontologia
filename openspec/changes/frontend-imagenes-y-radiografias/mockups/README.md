@@ -1,7 +1,7 @@
 # Mockups de C-47 `frontend-imagenes-y-radiografias`
 
 - **Design system revision**: 5, aprobada. No suma tokens: `imagenes.css` usa solo los de la Revision 5.
-- **Approval**: pending. Son el criterio de aceptación visual del apply y la líder los tiene que aprobar antes.
+- **Approval**: approved (2026-11-24, by user: Emanuel). Son el criterio de aceptación visual del apply; falta la revisión de la líder en el PR #119.
 - **Preview**: rendered (2026-11-24). Las capturas de página completa están en `previews/`, a 1440 × 900 y 390 × 844, hechas con Playwright. Ninguna pantalla tiene desplazamiento horizontal a 390 px ni errores de consola.
 
 ## Cómo verlos

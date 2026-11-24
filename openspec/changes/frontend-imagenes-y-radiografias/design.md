@@ -141,5 +141,5 @@ Sin migraciones ni cambios de backend. Rollback: revertir el PR deja la ficha si
 - Design system revision: 5 (sin tokens nuevos).
 - Decision: yes (2026-11-24). Modo `system-and-mockups`.
 - Mockups: `openspec/changes/frontend-imagenes-y-radiografias/mockups/` (ver su `README.md`).
-- Approval: pending.
+- Approval: approved (2026-11-24, by user: Emanuel). Falta la revisión de la líder en el PR #119.
 - Preview: rendered (2026-11-24). Capturas en `mockups/previews/`, a 390 × 844 y 1440 × 900, sin desplazamiento horizontal ni errores de consola.
