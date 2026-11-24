@@ -212,6 +212,19 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 - [ ] CA-6: como paciente veo en "Mi cuenta" mi obra social, mi plan, mi número de afiliado y la vigencia, o que me atiendo como particular. No puedo cambiarla ni ver la de otro paciente (PA-21).
 **Reglas relacionadas**: RN-OS-01 a RN-OS-07
 
+### US-047: Armar un presupuesto con cobertura y copago [2026-11-24, C-19, en revisión]
+**Como** odontólogo **quiero** armar el presupuesto del paciente con las prestaciones de su tratamiento, **para** que sepa cuánto cubre su obra social y cuánto paga él.
+**Criterios de aceptación**:
+- [ ] CA-1: como `ADMIN` cargo el precio particular de cada prestación y el porcentaje que cubre cada plan por código del nomenclador.
+- [ ] CA-2: al armar el presupuesto veo sugeridas las piezas y caras del odontograma marcadas `A_TRATAR` o `CARIES`, y elijo la prestación de cada una.
+- [ ] CA-3: cada ítem muestra el importe, la cobertura y el copago, y el presupuesto muestra los totales y la cobertura que se usó, o "Particular".
+- [ ] CA-4: un paciente sin cobertura vigente paga el importe completo como copago.
+- [ ] CA-5: si después cambian los precios o la cobertura del plan, el presupuesto emitido no cambia.
+- [ ] CA-6: el presupuesto pasa de pendiente a aceptado o rechazado, y no se borra.
+- [ ] CA-7: el presupuesto vence a los 30 días; uno vencido ya no se puede aceptar.
+- [ ] CA-8: la recepción ve los presupuestos sin pieza ni cara, y el paciente ve los suyos en "Mi cuenta".
+**Reglas relacionadas**: RN-PR-01 a RN-PR-07, RN-OS-04
+
 ## Backlog: v1.x y posteriores (fuera del MVP)
 
 > Cada fila se vincula con su change de `CHANGES.md`. Las reglas detalladas se escriben en esta KB **antes de empezar** el change, cuando el MVP esté completo.
@@ -222,7 +235,7 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 | US-101 | Política de cancelación configurable por consultorio | v1.x | C-16 | Informe, C.4 |
 | US-102 | Registro de consentimiento para comunicaciones con una pantalla propia | v1.x | C-17 | Informe, D.3 |
 | US-200 | Obras sociales y prepagas (planes, nomencladores, liquidaciones; el catálogo y la afiliación pasaron a US-046 el 2026-11-24) | Posterior | C-18, C-20 | Informe, D.3 |
-| US-205 | Presupuestos con cobertura y copago | Posterior | C-19 | Informe, A.3 |
+| US-205 | Presupuestos con cobertura y copago (pasó a US-047 el 2026-11-24) | Posterior | C-19 | Informe, A.3 |
 | US-206 | Validación online de la cobertura con la obra social | Posterior | C-21 | Informe, C.2 (DentalTec) |
 | US-207 | Caja diaria, cobros y cuenta corriente del paciente | Posterior | C-22 | Roadmap (Ajustar de la líder, 2026-11-21); base de C-23 y C-24 |
 | US-202 | Señas con Mercado Pago | Posterior | C-23 | Informe, D.3 |

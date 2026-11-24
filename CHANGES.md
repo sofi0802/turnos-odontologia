@@ -866,7 +866,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `docs/discovery/sources/relevamiento-fuentes.md` §DentalTec, §DentalCore, §Dentalink
 
 ### [C-19] `presupuestos-y-cobertura`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[ ]` KB propuesta el 2026-11-24 (dominio Presupuestos: RN-PR-01 a RN-PR-07, US-047 y DD-15; PA-23 a PA-28 respondidas: arma el odontólogo, la recepción lo ve sin pieza ni cara, cobertura solo por porcentaje, vence a los 30 días, el paciente ve los suyos, precio sin historial), en revisión con la líder; después va el propose
 - **Responsable**: Juan Sebastián
 - **Scope**:
   - Presupuesto por paciente a partir de las prestaciones del odontograma, separando la parte que cubre la obra social y el copago. **Migración V13**.
