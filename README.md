@@ -26,7 +26,7 @@ Trabajo Global de Integración de **Desarrollo de Software**: del Discovery a la
 | 1. `/active-orchestrator` + `openspec init` | Hecho |
 | 2. Discovery | Hecho: 5 fuentes verificadas por el equipo y [PDF](docs/discovery/informe-discovery.pdf) |
 | 3. Base de conocimiento (`knowledge-base/`) | Hecho |
-| 4. Roadmap (`CHANGES.md`) | Hecho: 40 changes en 10 fases. MVP: C-01 a C-14 y los ajustes C-33 a C-43 |
+| 4. Roadmap (`CHANGES.md`) | Hecho: 44 changes en 10 fases. MVP: C-01 a C-14 y los ajustes C-33 a C-44 |
 | 5. Skills y reglas del agente (`AGENTS.md`, `CLAUDE.md`) | Hecho: skills en el repo, [registro](.atl/skill-registry.md) y 10 reglas duras |
 | 6. Ciclo OPSX sobre un change | Hecho: C-01 `crear-turno-sin-solapamientos` (explore → propose → apply → verify → archive), 12 escenarios con su test. [Evidencia](docs/evidencia/etapa-6-c01-tests.txt) |
 | 7. Memoria del agente (Engram) | Hecho: memorias y consulta real ([evidencia y guion del video](docs/evidencia/etapa-7-engram.md)) |
