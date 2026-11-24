@@ -18,7 +18,8 @@
 /* Hover */
 .btn:hover:not(:disabled),
 .boton-secundario:hover:not(:disabled) {
-  background: var(--ds-superficie);
+  background: var(--ds-acento-50);
+  border-color: var(--ds-acento-500);
 }
 
 .btn-principal:hover:not(:disabled),
@@ -29,10 +30,12 @@
 
 .btn-fantasma:hover:not(:disabled) {
   background: var(--ds-acento-50);
+  border-color: transparent;
 }
 
 .btn-peligro:hover:not(:disabled) {
   background: var(--ds-error-fondo);
+  border-color: var(--ds-error);
 }
 
 .chip:hover:not(:disabled),

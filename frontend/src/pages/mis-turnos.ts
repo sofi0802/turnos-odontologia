@@ -6,6 +6,7 @@ import { cancelarTurno, ESTADOS, listarMisTurnos, reprogramarTurno, separarTurno
 import { ErrorNegocio, ErrorSesion } from '../shared/api/errores.ts';
 import { fechaDeInstante, fechaLarga, formatearHora, hoy } from '../shared/fecha/zona.ts';
 import { crearAviso, crearBoton, crearCampo, crearEntrada, crearSelector, type Opcion } from '../shared/ui/campos.ts';
+import { usarSelectorFecha } from '../shared/ui/selector-fecha.ts';
 import { abrirDialogo } from '../shared/ui/dialogo.ts';
 import { crearCargando, crearEstadoVacio } from '../shared/ui/estado-vacio.ts';
 import { mensajeDeError } from '../shared/ui/mensajes.ts';
@@ -219,6 +220,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
     entrada.min = hoy();
     entrada.value = fechaDeInstante(turno.inicio) < hoy() ? hoy() : fechaDeInstante(turno.inicio);
     const campoDia = crearCampo('Día', entrada);
+    usarSelectorFecha(campoDia);
 
     const avisoCambio = crearAviso('alert');
     const zonaHorarios = document.createElement('div');
@@ -342,6 +344,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
 /** Turnos del paciente (`#/mis-turnos`): solo con sesión de paciente. */
 export const paginaMisTurnos: Pagina = {
   ruta: 'mis-turnos',
+  fondoSuave: true,
   titulo: 'Mis turnos',
   acceso: 'paciente',
   menu: 'paciente',
