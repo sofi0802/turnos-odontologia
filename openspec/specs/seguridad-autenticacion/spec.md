@@ -72,13 +72,24 @@ La sesión SHALL identificarse solo con una cookie del servidor marcada `HttpOnl
 - **THEN** el identificador de sesión después del login es distinto del anterior
 
 ### Requirement: Estado de la sesión
-El sistema SHALL exponer `GET /api/v1/public/sesion`, que responde `200` indicando si hay una sesión iniciada y, si la hay, el usuario y el rol. Esta respuesta MUST incluir la cookie del token CSRF para que el frontend pueda enviar pedidos que modifican datos, incluido el login.
+El sistema SHALL exponer `GET /api/v1/public/sesion`, que responde `200` indicando si hay una sesión iniciada y, si la hay, el usuario y el rol. Si el rol es `ODONTOLOGO`, la respuesta SHALL incluir también `profesionalId`, el profesional vinculado a ese usuario; para los demás roles MUST NOT incluirlo. Esta respuesta MUST incluir la cookie del token CSRF para que el frontend pueda enviar pedidos que modifican datos, incluido el login.
 
 #### Scenario: Sin sesión iniciada
 - **GIVEN** un navegador sin sesión
 - **WHEN** pide `GET /api/v1/public/sesion`
 - **THEN** la respuesta es `200` e indica que no hay sesión iniciada
 - **AND** la respuesta fija la cookie `XSRF-TOKEN`
+
+#### Scenario: Sesión de un odontólogo
+- **GIVEN** el usuario `ana.ejemplo` (rol `ODONTOLOGO`), vinculado a la Dra. A, con sesión iniciada
+- **WHEN** pide `GET /api/v1/public/sesion`
+- **THEN** la respuesta es `200` con `rol` igual a `ODONTOLOGO` y `profesionalId` igual al id de la Dra. A
+
+#### Scenario: Sesión de recepción sin profesional
+- **GIVEN** el usuario `recepcion` con sesión iniciada
+- **WHEN** pide `GET /api/v1/public/sesion`
+- **THEN** la respuesta es `200` con `rol` igual a `RECEPCIONISTA`
+- **AND** la respuesta no incluye `profesionalId`
 
 ### Requirement: Protección CSRF en los pedidos que modifican datos
 El sistema MUST rechazar con `403` y el código `CSRF_INVALIDO` todo `POST`, `PUT`, `PATCH` o `DELETE` que no traiga en el encabezado `X-XSRF-TOKEN` el valor de la cookie `XSRF-TOKEN`, incluidos el login, el logout y el registro. La cookie `XSRF-TOKEN` es legible por el frontend; la de sesión, no. El token MUST renovarse al iniciar sesión.
