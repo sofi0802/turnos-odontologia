@@ -115,6 +115,6 @@ Sin migraciones. Se despliega con el backend y el build del frontend. Para volve
 - Design system revision: 5 (aprobada el 2026-11-24 por Sofia Indovino)
 - Decision: yes (2026-11-24, política `system-and-mockups`)
 - Mockups: `openspec/changes/reportes-y-metricas/mockups/` (ver su README)
-- Approval: pending
+- Approval: approved (2026-11-24, by user: Enzo aprobó los 5 mockups de la revisión 1)
 - Preview: rendered (2026-11-24, 5 pantallas en `mockups/previews/` a 390x844 y 1440x900, sin desplazamiento horizontal)
 - Visual verify: pending

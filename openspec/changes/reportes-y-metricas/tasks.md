@@ -5,7 +5,7 @@ Acceptance criteria: los escenarios de los deltas `reportes`, `frontend-reportes
 ## 0. Mockups (antes del apply)
 
 - [x] 0.1 Mockups de la pantalla Reportes con los tokens de la Revision 5: con datos, con filtro de profesional, período vacío, error de período y aviso para el odontólogo, a 390 y 1440 px; capturas en `mockups/previews/`
-- [ ] 0.2 Aprobación de los mockups registrada en `design.md` (`Approval: approved`) antes de empezar el grupo 1
+- [x] 0.2 Aprobación de los mockups registrada en `design.md` (`Approval: approved`) antes de empezar el grupo 1
 
 ## 1. Dominio de reportes (backend, unitarios sin base)
 

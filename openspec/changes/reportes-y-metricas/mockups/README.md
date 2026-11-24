@@ -1,6 +1,6 @@
 # Mockups de C-32 `reportes-y-metricas`
 
-- **Approval: pending**
+- **Approval: approved (2026-11-24, by user: Enzo)**
 - Design system: Revision 5 (`design-system/README.md`)
 - Base: el encabezado y la barra lateral de los mockups de la etapa D de C-39, con los estilos actuales de `frontend/src/styles/` copiados en `mockups.css`. Lo nuevo de C-32 está en `delta.css`.
 - Datos ficticios: Ana Ejemplo y Bruno Prueba, los sillones 1 a 3 y "Carla Muestra" como profesional sin horario. Ningún dato de paciente.
