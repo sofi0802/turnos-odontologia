@@ -1,5 +1,6 @@
 package ar.turnos.odontologia.shared.security;
 
+import ar.turnos.odontologia.usuarios.application.UsuarioRepository;
 import ar.turnos.odontologia.usuarios.domain.Rol;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -25,6 +26,7 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 import org.springframework.security.web.context.DelegatingSecurityContextRepository;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
@@ -79,13 +81,17 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http, CsrfTokenRepository csrfTokenRepository,
                                     SecurityContextRepository contextRepository,
                                     ProblemDetailAuthenticationEntryPoint entryPoint,
-                                    ProblemDetailAccessDeniedHandler accessDeniedHandler) throws Exception {
+                                    ProblemDetailAccessDeniedHandler accessDeniedHandler,
+                                    UsuarioRepository usuarios, ProblemDetailWriter escritor) throws Exception {
         http
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(csrfTokenRepository)
                         .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler()))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
+                // C-41: cierra sesiones de cuentas desactivadas o restablecidas y frena la contraseña temporal pendiente
+                .addFilterAfter(new VerificacionDeCuentaFilter(usuarios, contextRepository, escritor),
+                        SecurityContextHolderFilter.class)
                 .securityContext(contexto -> contexto.securityContextRepository(contextRepository))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)

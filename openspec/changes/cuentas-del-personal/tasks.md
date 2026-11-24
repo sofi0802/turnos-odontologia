@@ -6,33 +6,33 @@ Cada escenario de la spec tiene un test con el mismo nombre. Los tests de integr
 
 - [x] 0.1 Registrar en `design.md` la aprobación de la líder de proposal, specs, design y tasks (governance CRÍTICO). Verificar que figura con fecha; no empezar el grupo 1 sin esto *(2026-11-24: aprobada por Sofia con el merge del PR #81, confirmado por Enzo)*
 - [x] 0.2 Avisar a Juan Sebastián (dueño de `usuarios/` y `shared/security/`) y acordar con Juan Cruz el orden respecto de la etapa D de C-39. Verificar dejando la constancia en el PR de la propuesta *(2026-11-24: Enzo habló con los dos)*
-- [ ] 0.3 Correr `./gradlew build` y, en `frontend/`, `npm test` y `npm run build` sobre la rama, y anotar acá la cantidad de tests. Verificar que todo pasa antes de tocar código
+- [x] 0.3 Correr `./gradlew build` y, en `frontend/`, `npm test` y `npm run build` sobre la rama, y anotar acá la cantidad de tests. Verificar que todo pasa antes de tocar código *(2026-11-24: backend 477 tests unitarios y 487 de integración en verde; frontend 482 tests en verde. El build del frontend fallaba en `master` porque `shared/ui/calendario.ts` tenía dos líneas en Windows-1252 (etapa C de C-39); se arregló en la rama `fix/calendario-utf8`, mergeada en esta rama, y con eso compila)*
 - [x] 0.4 Crear `mockups/` con las pantallas de la sección UI Mockups de `design.md`, con HTML y CSS locales que importan `design-system/tokens.css` y `brand.js`. Renderizarlas a 390 × 844 y 1440 × 900, guardar las capturas en `mockups/previews/` y completar su `README.md`. Verificar abriendo las capturas y que no hay desplazamiento horizontal *(2026-11-24: 11 pantallas y 22 capturas, sin desplazamiento horizontal ni errores de consola; ver `mockups/README.md`)*
 - [x] 0.5 Presentar los mockups y registrar la aprobación de la líder en `design.md` (`Approval: approved (<fecha>, by user)`, `Preview: rendered`). Verificar que la sección UI Mockups lo dice; no empezar el grupo 5 sin esto *(2026-11-24: aprobados por Sofia con el merge del PR #81)*
 
 ## 1. Modelo y migración
 
-- [ ] 1.1 Crear `V21__cuentas_del_personal.sql` con la columna `debe_cambiar_contrasena` (D5) y sumarla a `UsuarioEntity`, `Usuario` y `UsuarioRepositoryJpa`. Verificar con un test de integración que una cuenta existente queda en `false` y que `./gradlew build` pasa
-- [ ] 1.2 RED: tests unitarios de `GeneradorContrasenaTemporal` (D2): largo, alfabeto sin caracteres confusos, mayúscula, minúscula y dígito, cumple `PoliticaContrasena` y dos llamadas dan valores distintos. GREEN: implementarlo en `usuarios/domain`. Verificar que pasan
+- [x] 1.1 Crear `V21__cuentas_del_personal.sql` con la columna `debe_cambiar_contrasena` (D5) y sumarla a `UsuarioEntity`, `Usuario` y `UsuarioRepositoryJpa`. Verificar con un test de integración que una cuenta existente queda en `false` y que `./gradlew build` pasa
+- [x] 1.2 RED: tests unitarios de `GeneradorContrasenaTemporal` (D2): largo, alfabeto sin caracteres confusos, mayúscula, minúscula y dígito, cumple `PoliticaContrasena` y dos llamadas dan valores distintos. GREEN: implementarlo en `usuarios/domain`. Verificar que pasan
 
 ## 2. API de cuentas (spec `cuentas-personal`)
 
-- [ ] 2.1 RED: tests de "Operaciones de cuentas solo para el administrador" (los tres escenarios). GREEN: crear `UsuariosController` con `@PreAuthorize("hasRole('ADMIN')")` (D1). Verificar que pasan
-- [ ] 2.2 RED: "Listar las cuentas". GREEN: `GET /api/v1/usuarios` con un DTO sin contraseña ni hash. Verificar que pasa y que el JSON no tiene `passwordHash`
-- [ ] 2.3 RED: "Alta de una recepcionista", "La contraseña temporal no se vuelve a mostrar" y "Usuario normalizado". GREEN: el caso de uso de alta con el generador, el hash BCrypt, `debeCambiarContrasena` en `true`, `CuentaCreadaResponse` y `Cache-Control: no-store` (D2). Verificar que pasan
-- [ ] 2.4 RED: los seis escenarios de "Vínculo de la cuenta con un profesional". GREEN: el puerto `ProfesionalesParaCuentas` con JDBC de solo lectura (D6) y las reglas por rol. Verificar que pasan y que no cambió ningún archivo de `configuracion/`
-- [ ] 2.5 RED: los tres escenarios de "Validación del alta". GREEN: Bean Validation, verificación previa de `USUARIO_EXISTENTE` y traducción de la violación de `usuario_username_unico` y `usuario_profesional_unico` a sus `409` (D6, D7) en `UsuariosExceptionHandler`. Verificar que pasan
-- [ ] 2.6 RED: los tres escenarios de "Desactivar y reactivar una cuenta". GREEN: las dos acciones y `404 USUARIO_INEXISTENTE` para un id inexistente o de un paciente. Verificar que pasan
-- [ ] 2.7 RED: "Restablecer la contraseña de un odontólogo". GREEN: la acción con contraseña temporal nueva y `no-store`. Verificar que pasa
-- [ ] 2.8 RED: los tres escenarios de "Protección de la propia cuenta". GREEN: `409 OPERACION_SOBRE_CUENTA_PROPIA` comparando con el usuario de la sesión (D8). Verificar que pasan
-- [ ] 2.9 RED: "Alta registrada sin contraseña", capturando el log con `OutputCaptureExtension`. GREEN: el log de cada operación con el `ADMIN` y la cuenta, sin contraseña ni hash. Verificar que pasa
+- [x] 2.1 RED: tests de "Operaciones de cuentas solo para el administrador" (los tres escenarios). GREEN: crear `UsuariosController` con `@PreAuthorize("hasRole('ADMIN')")` (D1). Verificar que pasan
+- [x] 2.2 RED: "Listar las cuentas". GREEN: `GET /api/v1/usuarios` con un DTO sin contraseña ni hash. Verificar que pasa y que el JSON no tiene `passwordHash`
+- [x] 2.3 RED: "Alta de una recepcionista", "La contraseña temporal no se vuelve a mostrar" y "Usuario normalizado". GREEN: el caso de uso de alta con el generador, el hash BCrypt, `debeCambiarContrasena` en `true`, `CuentaCreadaResponse` y `Cache-Control: no-store` (D2). Verificar que pasan
+- [x] 2.4 RED: los seis escenarios de "Vínculo de la cuenta con un profesional". GREEN: el puerto `ProfesionalesParaCuentas` con JDBC de solo lectura (D6) y las reglas por rol. Verificar que pasan y que no cambió ningún archivo de `configuracion/`
+- [x] 2.5 RED: los tres escenarios de "Validación del alta". GREEN: Bean Validation, verificación previa de `USUARIO_EXISTENTE` y traducción de la violación de `usuario_username_unico` y `usuario_profesional_unico` a sus `409` (D6, D7) en `UsuariosExceptionHandler`. Verificar que pasan
+- [x] 2.6 RED: los tres escenarios de "Desactivar y reactivar una cuenta". GREEN: las dos acciones y `404 USUARIO_INEXISTENTE` para un id inexistente o de un paciente. Verificar que pasan
+- [x] 2.7 RED: "Restablecer la contraseña de un odontólogo". GREEN: la acción con contraseña temporal nueva y `no-store`. Verificar que pasa
+- [x] 2.8 RED: los tres escenarios de "Protección de la propia cuenta". GREEN: `409 OPERACION_SOBRE_CUENTA_PROPIA` comparando con el usuario de la sesión (D8). Verificar que pasan
+- [x] 2.9 RED: "Alta registrada sin contraseña", capturando el log con `OutputCaptureExtension`. GREEN: el log de cada operación con el `ADMIN` y la cuenta, sin contraseña ni hash. Verificar que pasa
 
 ## 3. Sesión y contraseña propia (spec `seguridad-autenticacion`)
 
-- [ ] 3.1 RED: los cuatro escenarios de "Sesión con contraseña temporal". GREEN: sumar `debeCambiarContrasena` a `SesionResponse` (login y sesión) y el filtro de `shared/security` que responde `403 CAMBIO_DE_CONTRASENA_PENDIENTE` fuera de las rutas permitidas (D4). Verificar que pasan y que los tests de C-05 y C-35 siguen pasando
-- [ ] 3.2 RED: los dos escenarios de "Cierre de las sesiones de una cuenta" (spec `cuentas-personal`). GREEN: en el mismo filtro, releer la cuenta e invalidar la sesión si está inactiva o cambió su hash (D3). Verificar que pasan
-- [ ] 3.3 RED: los cinco escenarios de "Cambio de la propia contraseña". GREEN: `POST /api/v1/cuenta/contrasena`, que reemplaza el principal de la sesión actual para que siga abierta (D3) y responde `422 CONTRASENA_ACTUAL_INCORRECTA` (D7). Verificar que pasan
-- [ ] 3.4 Correr `./gradlew build` con los tests de integración. Verificar que todo pasa y guardar la salida en `docs/evidencia/c41-backend.txt`
+- [x] 3.1 RED: los cuatro escenarios de "Sesión con contraseña temporal". GREEN: sumar `debeCambiarContrasena` a `SesionResponse` (login y sesión) y el filtro de `shared/security` que responde `403 CAMBIO_DE_CONTRASENA_PENDIENTE` fuera de las rutas permitidas (D4). Verificar que pasan y que los tests de C-05 y C-35 siguen pasando
+- [x] 3.2 RED: los dos escenarios de "Cierre de las sesiones de una cuenta" (spec `cuentas-personal`). GREEN: en el mismo filtro, releer la cuenta e invalidar la sesión si está inactiva o cambió su hash (D3). Verificar que pasan
+- [x] 3.3 RED: los cinco escenarios de "Cambio de la propia contraseña". GREEN: `POST /api/v1/cuenta/contrasena`, que reemplaza el principal de la sesión actual para que siga abierta (D3) y responde `422 CONTRASENA_ACTUAL_INCORRECTA` (D7). Verificar que pasan
+- [x] 3.4 Correr `./gradlew build` con los tests de integración. Verificar que todo pasa y guardar la salida en `docs/evidencia/c41-backend.txt` *(2026-11-24: 578 unitarios y 527 de integración en verde; ajustado el principal de un test de odontograma, ver la evidencia)*
 
 ## 4. Cliente de la API en el frontend
 
