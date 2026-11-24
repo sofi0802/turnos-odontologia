@@ -1,0 +1,61 @@
+/* C-45: lo nuevo respecto de la agenda actual. En los mockups, los elementos nuevos llevan además la clase `.nuevo`
+   solo para señalarlos en la revisión; esa clase no pasa a la aplicación. Solo variables --ds-*. */
+
+/* Barra: "Sobreturno" (secundario) y "Nuevo turno" (principal) juntos. En 390 px, una fila mitad y mitad. */
+.agenda-botones {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--ds-espacio-1);
+}
+
+@media (min-width: 768px) {
+  .agenda-botones {
+    display: flex;
+    margin-left: auto;
+    align-self: end;
+  }
+}
+
+/* Paciente precargado (extensión cargada como sobreturno): texto fijo en lugar del buscador. */
+.etiqueta-campo {
+  display: block;
+  font-weight: var(--ds-peso-fuerte);
+  margin-bottom: var(--ds-espacio-1);
+}
+
+.valor-fijo {
+  margin: 0;
+  padding: var(--ds-espacio-1) 0;
+  color: var(--ds-texto);
+}
+
+.nota-sillon {
+  margin: 0 0 var(--ds-espacio-2);
+  color: var(--ds-texto-suave);
+}
+
+/* Aviso de choque al extender: borde y fondo de alerta, con las dos salidas. */
+.aviso-choque {
+  margin-bottom: var(--ds-espacio-2);
+  padding: var(--ds-espacio-2);
+  border: 1px solid var(--ds-alerta);
+  border-left: 4px solid var(--ds-alerta);
+  border-radius: var(--ds-radio);
+  background: var(--ds-alerta-fondo);
+}
+
+.aviso-choque p {
+  margin: 0 0 var(--ds-espacio-1);
+}
+
+.aviso-choque-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1);
+}
+
+/* Señal de revisión: lo nuevo de C-45 (solo en mockups). */
+.nuevo {
+  outline: 2px dashed var(--ds-acento-500);
+  outline-offset: 3px;
+}
