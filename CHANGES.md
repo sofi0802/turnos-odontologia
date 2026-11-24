@@ -625,7 +625,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/components.html` (secciones "Reserva online" y "Formularios y avisos")
 
 ### [C-39] `frontend-uniformidad-visual`
-- **Estado**: `[ ]` en curso, en cuatro etapas, cada una con su PR: **A tokens y CSS modular (hecha, PR #74, 2026-11-23; mergeada, falta la renovación de la aprobación del design system, Revision 2)**, **B barra lateral y componentes (hecha, PR #77, 2026-11-23; 471 tests, mockups aprobados)**, C pantallas del paciente (hecha en la rama `change/C-39-frontend-uniformidad-visual`, 2026-11-24; 474 tests, mockups aprobados; falta el PR), D pantallas del personal (hecha en la rama `change/C-39-frontend-uniformidad-visual`, 2026-11-24; 484 tests, mockups aprobados; falta el PR; después de ella queda el archive). Proposal, specs, design y tasks en `openspec/changes/frontend-uniformidad-visual/`
+- **Estado**: `[x]` mergeado, en cuatro etapas, cada una con su PR: A tokens y CSS modular (PR #74, 2026-11-23), B barra lateral y componentes (PR #77, 2026-11-23; 471 tests), C pantallas del paciente (PR #79, 2026-11-24; 474 tests) y D pantallas del personal (PR #83, 2026-11-24; 484 tests), todas con mockups aprobados. Falta el archive, con sus tareas A.5, 7.1 y 7.2, y que la líder renueve la aprobación del design system (Revision 3, sin cambios en los valores de los tokens). Proposal, specs, design y tasks en `openspec/changes/frontend-uniformidad-visual/`
 - **Responsable**: Juan Cruz (avisa a Enzo)
 - **Scope**:
   - **Barra lateral desplegable** con los botones del menú ("Reservar turno", "Mis turnos", "Agenda", "Configuración"), que muestra solo las opciones del rol que ingresó. En el celular es un cajón con un botón de menú. Sin sesión se mantiene un encabezado simple con "Acceso personal" arriba a la derecha.
@@ -644,7 +644,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `openspec/specs/frontend-navegacion/` y los specs `frontend-*` de cada pantalla
 
 ### [C-40] `frontend-nuevo-turno-guiado`
-- **Estado**: `[x]` mergeado (2026-11-23, PR #69; propuesta y mockups aprobados en el PR #65). Change `openspec/changes/frontend-nuevo-turno-guiado/` (delta de `frontend-agenda-personal`). Evidencia: 381 tests y verificación contra el backend de desarrollo en `mockups/verify/`. Sin migración ni cambios de backend
+- **Estado**: `[x]` mergeado (2026-11-23, PR #69; propuesta y mockups aprobados en el PR #65); falta archivarlo. Change `openspec/changes/frontend-nuevo-turno-guiado/` (delta de `frontend-agenda-personal`). Evidencia: 381 tests y verificación contra el backend de desarrollo en `mockups/verify/`. Sin migración ni cambios de backend
 - **Responsable**: Enzo
 - **Scope**:
   - Rehacer "Nuevo turno" de la agenda del personal (`ADMIN`, `RECEPCIONISTA` y `ODONTOLOGO`) como un formulario guiado, donde cada paso se habilita cuando el anterior tiene un valor: **prestación → profesional → fecha → horario**, y el **sillón** del profesional se muestra sin poder cambiarlo. El paciente se sigue eligiendo con el buscador de C-36.
@@ -667,7 +667,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `openspec/changes/frontend-reprogramacion-agenda/`, `openspec/changes/buscador-pacientes/` y `openspec/changes/agenda-propia-odontologo/` (lo que se reusa o ya cambió en la agenda)
 
 ### [C-41] `cuentas-del-personal`
-- **Estado**: `[x]` completo (2026-11-24; propuesta y mockups aprobados en el PR #81, apply en un PR aparte). Change `openspec/changes/cuentas-del-personal/`. Evidencia: `docs/evidencia/c41-backend.txt` (578 unitarios y 527 de integración), 512 tests del frontend y verificación visual en `mockups/verify/`. Migración V21. El PR del apply incluye el fix `fix/calendario-utf8` (el build del frontend fallaba en `master`) y ajusta un test de odontograma (avisar a Emanuel)
+- **Estado**: `[x]` mergeado (2026-11-24; propuesta y mockups aprobados en el PR #81, apply en el PR #87); falta archivarlo. Change `openspec/changes/cuentas-del-personal/`. Evidencia: `docs/evidencia/c41-backend.txt` (578 unitarios y 527 de integración), 512 tests del frontend y verificación visual en `mockups/verify/`. Migración V21. El PR del apply incluye el fix `fix/calendario-utf8` (el build del frontend fallaba en `master`) y ajusta un test de odontograma (avisar a Emanuel)
 - **Responsable**: Enzo (avisa a Juan Sebastián, dueño de `usuarios/` y `shared/security/`)
 - **Scope**:
   - Hoy solo existe el admin inicial del `.env` (C-05): no hay forma de dar acceso a un odontólogo ni a una recepcionista sin tocar la base. La matriz RBAC de `03_actores_y_roles.md` ya dice que el `ADMIN` hace el CRUD de los usuarios del personal.
@@ -689,7 +689,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 
 
 ### [C-42] `frontend-turnos-sin-registrar`
-- **Estado**: `[x]` implementado (2026-11-24, PR pendiente de merge; mockups revisión 2 aprobados por la líder). Change `openspec/changes/frontend-turnos-sin-registrar/`. Evidencia: 495 tests y verificación contra el backend de desarrollo en `mockups/verify/`. Sin migración ni cambios de backend
+- **Estado**: `[x]` mergeado (2026-11-24, PR #85; mockups revisión 2 aprobados por la líder); falta archivarlo. Change `openspec/changes/frontend-turnos-sin-registrar/`. Evidencia: 495 tests y verificación contra el backend de desarrollo en `mockups/verify/`. Sin migración ni cambios de backend
 - **Responsable**: Sofia Indovino
 - **Scope**:
   - En "Mis turnos" del paciente, un turno `RESERVADO` o `CONFIRMADO` cuyo horario ya terminó se muestra como **"Sin registrar"**, con el texto "El consultorio todavía no registró la asistencia.". Hoy queda como "Reservado" para siempre, porque nadie registra la asistencia.
@@ -725,7 +725,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 ## FASE 6: Entrega
 
 ### [C-14] `entrega-readme-y-evidencia`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` hecho (2026-11-24, ODD acordado con la líder, sin change de OpenSpec; PR pendiente de merge). README reproducible y verificación final en `docs/evidencia/c14-entrega.md`: 605 tests y 568 de integración en el backend, 547 en el frontend, sin secretos en el repo. Quedan los archives de OpenSpec de los changes mergeados (ver el documento)
 - **Responsable**: Sofia Indovino
 - **Scope**:
   - `README.md` reproducible: requisitos (Java 21, opcional Docker o PostgreSQL), cómo correr `./gradlew test` (tests de dominio sin base) y los tests de integración.
