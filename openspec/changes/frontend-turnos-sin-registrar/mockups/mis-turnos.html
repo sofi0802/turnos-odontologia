@@ -14,59 +14,83 @@
   <div class="app">
   <header class="cabecera">
     <button class="btn-sobre-azul menu-boton" type="button" aria-controls="menu-principal" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"/></svg>Menú</button>
-    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg?v=3" alt="Turnos odontología" /></a>
+    <a class="marca" href="c-inicio-sin-sesion.html"><img src="../../../../design-system/assets/logo.svg?v=5" alt="Turnos odontología" /></a>
     <div class="acciones-cabecera"><span class="avatar" aria-hidden="true">PU</span><span class="usuario-nombre">paciente.uno@example.com</span><button class="btn-sobre-azul" type="button">Salir</button></div>
   </header>
   <div class="cuerpo">
     <aside class="lateral" id="menu-principal">
       <div class="cajon-cabecera"><span>Menú</span><button class="cerrar" type="button" aria-label="Cerrar el menú"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
-      <nav aria-label="Principal"><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 2v4M16 2v4M3 10h18"/><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M12 13v5M9.5 15.5h5"/></svg>Reservar turno</a><a href="#" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg>Mis turnos</a></nav>
+      <nav aria-label="Principal"><a href="#"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/><path d="M12 13v5M9.5 15.5h5"/></svg>Reservar turno</a><a href="c-mis-turnos.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg>Mis turnos</a></nav>
     </aside>
     <div class="velo" aria-hidden="true"></div>
     <main class="contenido-app">
       <div class="pagina">
-        <h1>Mis turnos</h1>
-        <section aria-label="Próximos turnos">
-          <h2 class="seccion-titulo">Próximos turnos</h2>
-          <ul class="lista-turnos">
-            <li class="turno-paciente">
-              <div class="turno-cabecera"><p class="turno-fecha">jueves 3 de diciembre · 10:00</p><span class="estado e-reservado">Reservado</span></div>
-              <p class="turno-meta"><span>Consulta</span><span>Ana Ejemplo</span></p>
-              <p class="turno-numero">Reserva R-0002</p>
-              <div class="turno-acciones"><button class="btn" type="button">Cambiar horario</button><button class="btn btn-peligro" type="button">Cancelar turno</button></div>
-            </li>
-          </ul>
-        </section>
-        <section aria-label="Turnos anteriores">
-          <h2 class="seccion-titulo">Turnos anteriores</h2>
-          <ul class="lista-turnos">
-            <li class="turno-paciente turno-anterior">
-              <div class="turno-cabecera"><p class="turno-fecha">sábado 28 de noviembre · 10:00</p><span class="estado e-sin-registrar">Sin registrar</span></div>
-              <p class="turno-meta"><span>Consulta</span><span>Ana Ejemplo</span></p>
-              <p class="turno-meta">El consultorio todavía no registró la asistencia.</p>
-              <p class="turno-numero">Reserva R-0001</p>
-            </li>
-            <li class="turno-paciente turno-anterior">
-              <div class="turno-cabecera"><p class="turno-fecha">viernes 27 de noviembre · 09:00</p><span class="estado e-sin-registrar">Sin registrar</span></div>
-              <p class="turno-meta"><span>Limpieza dental</span><span>Ana Ejemplo</span></p>
-              <p class="turno-meta">El consultorio todavía no registró la asistencia.</p>
-              <p class="turno-numero">Reserva R-0004</p>
-            </li>
-            <li class="turno-paciente turno-anterior">
-              <div class="turno-cabecera"><p class="turno-fecha">miércoles 25 de noviembre · 10:00</p><span class="estado e-atendido">Atendido</span></div>
-              <p class="turno-meta"><span>Consulta</span><span>Ana Ejemplo</span></p>
-              <p class="turno-numero">Reserva R-0005</p>
-            </li>
-            <li class="turno-paciente turno-anterior">
-              <div class="turno-cabecera"><p class="turno-fecha">viernes 20 de noviembre · 11:00</p><span class="estado e-cancelado">Cancelado</span></div>
-              <p class="turno-meta"><span>Consulta</span><span>Ana Ejemplo</span></p>
-              <p class="turno-numero">Reserva R-0006</p>
-            </li>
-          </ul>
-        </section>
-        <div class="acciones"><a class="btn" href="#">Reservar otro turno</a></div>
-        <p class="nota-mockup" style="padding:0;margin-top:var(--ds-espacio-2)"><b>Mockup C-42.</b> Los turnos del 27 y 28 de noviembre ya terminaron y nadie registró la asistencia: se muestran como "Sin registrar" con el texto aclaratorio. "Atendido" y "Cancelado" no cambian. Ahora: martes 1 de diciembre, 08:00.</p>
+    <h1>Mis turnos</h1>
+
+    <h2 class="seccion-titulo">Próximos turnos</h2>
+    <article class="turno-paciente">
+      <div class="turno-cabecera">
+        <span class="turno-fecha">Martes 1 de diciembre · 18:00</span>
+        <span class="estado e-confirmado">Confirmado</span>
       </div>
+      <p class="turno-meta"><span>Extracción simple</span><span>Bruno Prueba</span></p>
+      <p class="turno-numero">Reserva K7P2-9QXM</p>
+      <div class="aviso aviso-alerta"><div><strong>Faltan menos de 24 h.</strong>Para cancelarlo o cambiarlo, contactá al consultorio.</div></div>
+    </article>
+    <article class="turno-paciente">
+      <div class="turno-cabecera">
+        <span class="turno-fecha">Jueves 3 de diciembre · 10:00</span>
+        <span class="estado e-reservado">Reservado</span>
+      </div>
+      <p class="turno-meta"><span>Consulta o control</span><span>Ana Ejemplo</span></p>
+      <p class="turno-numero">Reserva R4MD-2HZC</p>
+      <div class="turno-acciones">
+        <a class="btn" href="#">Cambiar horario</a>
+        <a class="btn btn-peligro" href="#">Cancelar turno</a>
+      </div>
+    </article>
+
+    <h2 class="seccion-titulo">Turnos anteriores</h2>
+    <article class="turno-paciente turno-anterior">
+      <div class="turno-cabecera">
+        <span class="turno-fecha">Sábado 28 de noviembre · 10:00</span>
+        <span class="estado e-sin-registrar">Sin registrar</span>
+      </div>
+      <p class="turno-meta"><span>Consulta o control</span><span>Ana Ejemplo</span></p>
+      <p class="turno-meta turno-nota">El consultorio todavía no registró la asistencia.</p>
+      <p class="turno-numero">Reserva P9WK-3TRB</p>
+    </article>
+    <article class="turno-paciente turno-anterior">
+      <div class="turno-cabecera">
+        <span class="turno-fecha">Viernes 27 de noviembre · 09:00</span>
+        <span class="estado e-sin-registrar">Sin registrar</span>
+      </div>
+      <p class="turno-meta"><span>Limpieza (profilaxis)</span><span>Ana Ejemplo</span></p>
+      <p class="turno-meta turno-nota">El consultorio todavía no registró la asistencia.</p>
+      <p class="turno-numero">Reserva M2XH-8KDV</p>
+    </article>
+    <article class="turno-paciente turno-anterior">
+      <div class="turno-cabecera">
+        <span class="turno-fecha">Viernes 20 de noviembre · 11:00</span>
+        <span class="estado e-cancelado">Cancelado</span>
+      </div>
+      <p class="turno-meta"><span>Limpieza (profilaxis)</span><span>Ana Ejemplo</span></p>
+      <p class="turno-numero">Reserva W8TB-5LNE</p>
+    </article>
+    <article class="turno-paciente turno-anterior">
+      <div class="turno-cabecera">
+        <span class="turno-fecha">Lunes 2 de noviembre · 09:30</span>
+        <span class="estado e-atendido">Atendido</span>
+      </div>
+      <p class="turno-meta"><span>Consulta o control</span><span>Ana Ejemplo</span></p>
+      <p class="turno-numero">Reserva C3QF-7VJA</p>
+    </article>
+
+    <p class="nota-mockup"><b>Mockup C-42.</b> Los turnos del 27 y 28 de noviembre ya terminaron y nadie registró la asistencia: se muestran como "Sin registrar" con el texto aclaratorio. "Cancelado" y "Atendido" no cambian. Ahora: martes 1 de diciembre, 08:00.</p>
+
+    <p style="margin-top:var(--ds-espacio-3);text-align:center"><a class="btn btn-principal" href="#">Reservar otro turno</a></p>
+  </div>
+
     </main>
   </div>
   <footer class="pie"><span data-brand-name>Turnos odontología</span></footer>

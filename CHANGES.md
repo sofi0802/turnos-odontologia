@@ -682,7 +682,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 
 
 ### [C-42] `frontend-turnos-sin-registrar`
-- **Estado**: `[ ]` en propuesta: proposal, specs, design y tasks en `openspec/changes/frontend-turnos-sin-registrar/`. Faltan volver a renderizar los mockups sobre la etapa C de C-39 y que la líder los apruebe.
+- **Estado**: `[ ]` en propuesta: proposal, specs, design y tasks en `openspec/changes/frontend-turnos-sin-registrar/`. Mockups (revisión 2, sobre la etapa C de C-39) aprobados por la líder el 2026-11-24.
 - **Responsable**: Sofia Indovino
 - **Scope**:
   - En "Mis turnos" del paciente, un turno `RESERVADO` o `CONFIRMADO` cuyo horario ya terminó se muestra como **"Sin registrar"**, con el texto "El consultorio todavía no registró la asistencia.". Hoy queda como "Reservado" para siempre, porque nadie registra la asistencia.
