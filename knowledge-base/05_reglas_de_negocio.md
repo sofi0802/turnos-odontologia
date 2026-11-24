@@ -109,7 +109,7 @@ Cada regla tiene un código `RN-{DOMINIO}-{NN}`. Entre paréntesis va el código
   - No se incluyen en recordatorios, mensajes ni logs (RN-NO-01).
   - La ve el personal, según la matriz de `03_actores_y_roles.md`, y el propio paciente en "Mi cuenta" (PA-21). Un paciente nunca ve la cobertura de otro.
 
-## Dominio: Presupuestos (RN-PR) [2026-11-24, C-19, en revisión]
+## Dominio: Presupuestos (RN-PR) [2026-11-24, C-19]
 
 - **RN-PR-01**: **aranceles**. Cada prestación puede tener un **precio particular** en pesos, mayor que cero y con dos decimales.
   - Solo el `ADMIN` lo carga y lo cambia.

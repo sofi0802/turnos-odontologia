@@ -140,24 +140,24 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
   - `numero_afiliado` es único por obra social (RN-OS-03), validado en el dominio y en la base.
 - No se borra. Una afiliación que termina se cierra con `vigente_hasta` y queda como historial (RN-OS-02).
 
-### Arancel [2026-11-24, C-19, en revisión]
+### Arancel [2026-11-24, C-19]
 - `id` BIGINT identity, `prestacion_id` FK (único), `precio` numeric(12,2), `actualizado_en` timestamptz.
 - Es el **precio particular** de cada prestación, en pesos argentinos. Constraint: `precio > 0`.
 - Hay un solo precio vigente por prestación. Cambiarlo no modifica los presupuestos ya emitidos, porque cada presupuesto guarda una copia de los valores (RN-PR-04).
 
-### CoberturaPlan [2026-11-24, C-19, en revisión]
+### CoberturaPlan [2026-11-24, C-19]
 - `id` BIGINT identity, `plan_id` FK, `nomenclador_id` FK, `porcentaje` smallint.
 - Constraints: `porcentaje BETWEEN 0 AND 100`, y `UNIQUE (plan_id, nomenclador_id)`.
 - Indica qué parte del precio particular cubre un plan para un código del nomenclador. Si no hay fila, el plan no cubre ese código (0 %).
 
-### Presupuesto [2026-11-24, C-19, en revisión]
+### Presupuesto [2026-11-24, C-19]
 - `id` BIGINT identity, `paciente_id` FK, `profesional_id` FK, `fecha` date, `vence_el` date (`fecha` + 30 días, RN-PR-05), `afiliacion_id` FK nullable, `estado` enum (`PENDIENTE`, `ACEPTADO`, `RECHAZADO`), `total_precio`, `total_cobertura` y `total_copago` numeric(12,2), `creado_en` timestamptz.
 - `afiliacion_id` es la afiliación vigente del paciente en la `fecha` del presupuesto, o nulo si es particular (RN-OS-04).
 - Constraints: `total_precio = total_cobertura + total_copago` y `vence_el = fecha + 30`.
 - "Vencido" no es un estado guardado: un `PENDIENTE` con `vence_el` anterior a hoy (en `America/Argentina/Buenos_Aires`) se informa como vencido.
 - No se borra. Su contenido no cambia después de emitirlo; solo cambia el estado (RN-PR-05).
 
-### PresupuestoItem [2026-11-24, C-19, en revisión]
+### PresupuestoItem [2026-11-24, C-19]
 - `id` BIGINT identity, `presupuesto_id` FK, `prestacion_id` FK, `nomenclador_id` FK nullable, `pieza` smallint nullable (FDI, como el odontograma), `cara` varchar(1) nullable, `cantidad` int, `precio_unitario` numeric(12,2), `porcentaje_cobertura` smallint, `importe`, `cobertura` y `copago` numeric(12,2).
 - Constraints: `cantidad ≥ 1`, `porcentaje_cobertura BETWEEN 0 AND 100`, `importe = precio_unitario × cantidad`, `importe = cobertura + copago`, y la pieza y la cara con los mismos valores válidos que `OdontogramaRegistro` (RN-CL-03).
 - Guarda una **copia** del precio y del porcentaje del momento en que se emitió (RN-PR-04).
