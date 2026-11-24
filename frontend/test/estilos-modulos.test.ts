@@ -22,6 +22,8 @@ const REGLAS_POR_MODULO: Readonly<Record<string, string>> = {
   '15-estados-vacios.css': '.estado-vacio {',
   // C-41: cuentas del personal.
   '16-cuentas.css': '.contrasena-caja {',
+  // C-45: sobreturno y extensión.
+  '17-sobreturno.css': '.aviso-choque {',
 };
 
 function importaciones(): string[] {

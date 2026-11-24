@@ -3,6 +3,7 @@ import { consultarAgenda, type Filtros, type TurnoAgenda } from '../agenda/consu
 import { abrirCancelacion, abrirNuevoTurno, abrirReprogramacion, type ControlAgenda } from '../agenda/formularios.ts';
 import { mover, periodoDe, type Periodo, type Vista } from '../agenda/periodo.ts';
 import { registrarAsistencia, type AccionAsistencia } from '../agenda/asistencia.ts';
+import { abrirExtension, abrirSobreturno } from '../agenda/sobreturno.ts';
 import { dibujarAgenda, fechaCorta, type AccionesTurno } from '../agenda/vista.ts';
 import { ErrorSesion } from '../shared/api/errores.ts';
 import { hoy, sumarDias } from '../shared/fecha/zona.ts';
@@ -101,12 +102,18 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   const sillon = crearCampo('Sillón', crearSelector('sillonId', [TODOS]));
   const nuevo = crearBoton('Nuevo turno');
   nuevo.className = 'boton-principal';
+  // C-45: "Sobreturno" como acción secundaria, antes de "Nuevo turno" (design D10).
+  const sobreturno = crearBoton('Sobreturno');
+  sobreturno.className = 'boton-secundario';
+  const botonesAgenda = document.createElement('div');
+  botonesAgenda.className = 'agenda-botones';
+  botonesAgenda.append(sobreturno, nuevo);
   const filtros = document.createElement('div');
   filtros.className = 'agenda-filtros';
   if (profesionalFijo === undefined) {
-    filtros.append(profesional.contenedor, sillon.contenedor, nuevo);
+    filtros.append(profesional.contenedor, sillon.contenedor, botonesAgenda);
   } else {
-    filtros.append(sillon.contenedor, nuevo);
+    filtros.append(sillon.contenedor, botonesAgenda);
   }
 
   const avisosCatalogo = document.createElement('div');
@@ -132,6 +139,8 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
       exito.textContent = '';
       error.textContent = mensaje;
     },
+    turnosCargados: () => turnos,
+    profesionalFijo,
     sesionVencida(causa) {
       if (causa instanceof ErrorSesion) {
         contexto.irAMiCuenta(MENSAJE_SESION_TERMINADA);
@@ -167,6 +176,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   const acciones: AccionesTurno = {
     cancelar: (turno: TurnoAgenda) => abrirCancelacion(control, turno),
     reprogramar: (turno: TurnoAgenda) => abrirReprogramacion(control, turno),
+    extender: (turno: TurnoAgenda) => abrirExtension(control, turno),
     asistencia: { rol: contexto.sesion.rol, registrar: (turno, accion) => void registrar(turno, accion) },
   };
 
@@ -231,6 +241,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   profesional.control.addEventListener('change', () => void cargarTurnos());
   sillon.control.addEventListener('change', () => void cargarTurnos());
   nuevo.addEventListener('click', () => abrirNuevoTurno(control));
+  sobreturno.addEventListener('click', () => abrirSobreturno(control));
 
   void cargarCatalogos(contexto.api).then((cargados) => {
     catalogos = cargados;

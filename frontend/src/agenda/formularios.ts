@@ -33,11 +33,15 @@ export interface ControlAgenda {
   mostrarError(mensaje: string): void;
   /** Si el error es de sesión vencida, lleva a Mi cuenta y devuelve `true`. */
   sesionVencida(causa: unknown): boolean;
+  /** C-45: los turnos de la última consulta, para encontrar el que choca con una extensión. */
+  turnosCargados(): readonly TurnoAgenda[];
+  /** C-45: el profesional del odontólogo de la sesión (RN-AG-18); `undefined` para recepción y administración. */
+  readonly profesionalFijo: number | undefined;
 }
 
-type CampoFormulario = Campo<HTMLInputElement> | Campo<HTMLSelectElement>;
+export type CampoFormulario = Campo<HTMLInputElement> | Campo<HTMLSelectElement>;
 
-interface Dialogo {
+export interface Dialogo {
   readonly formulario: HTMLFormElement;
   readonly general: HTMLParagraphElement;
   readonly enviar: HTMLButtonElement;
@@ -45,7 +49,7 @@ interface Dialogo {
 }
 
 /** Abre el diálogo uniforme de la agenda con título, resumen opcional, campos y "Cerrar" (design D5, C-39 D8). */
-function abrirDialogo(titulo: string, resumen: string | null, campos: readonly CampoFormulario[], textoEnviar: string): Dialogo {
+export function abrirDialogo(titulo: string, resumen: string | null, campos: readonly CampoFormulario[], textoEnviar: string): Dialogo {
   const { formulario, general, enviar, cerrar } = abrirDialogoUniforme({
     titulo,
     ...(resumen === null ? {} : { resumen }),
@@ -56,25 +60,25 @@ function abrirDialogo(titulo: string, resumen: string | null, campos: readonly C
   return { formulario, general, enviar, cerrar };
 }
 
-function opcionesActivas(items: readonly ItemCatalogo[], primera: string): Opcion[] {
+export function opcionesActivas(items: readonly ItemCatalogo[], primera: string): Opcion[] {
   return [
     { valor: '', texto: primera },
     ...items.filter((i) => i.activo).map((i) => ({ valor: String(i.id), texto: i.nombre })),
   ];
 }
 
-function selector(etiqueta: string, nombre: string, opciones: readonly Opcion[]): Campo<HTMLSelectElement> {
+export function selector(etiqueta: string, nombre: string, opciones: readonly Opcion[]): Campo<HTMLSelectElement> {
   return crearCampo(etiqueta, crearSelector(nombre, opciones));
 }
 
-function entrada(etiqueta: string, tipo: string, nombre: string, valor = ''): Campo<HTMLInputElement> {
+export function entrada(etiqueta: string, tipo: string, nombre: string, valor = ''): Campo<HTMLInputElement> {
   const campo = crearCampo(etiqueta, crearEntrada(tipo, nombre));
   campo.control.value = valor;
   return campo;
 }
 
 /** Marca como obligatorio cada campo vacío; devuelve `true` si todos tienen valor. */
-function validarObligatorios(obligatorios: ReadonlyArray<readonly [CampoFormulario, string]>): boolean {
+export function validarObligatorios(obligatorios: ReadonlyArray<readonly [CampoFormulario, string]>): boolean {
   let validos = true;
   for (const [campo, mensaje] of obligatorios) {
     const vacio = campo.control.value.trim() === '';
@@ -84,13 +88,13 @@ function validarObligatorios(obligatorios: ReadonlyArray<readonly [CampoFormular
   return validos;
 }
 
-function leerNumeroReserva(cuerpo: unknown): string {
+export function leerNumeroReserva(cuerpo: unknown): string {
   const valor: unknown = typeof cuerpo === 'object' && cuerpo !== null ? Reflect.get(cuerpo, 'numeroReserva') : null;
   return typeof valor === 'string' ? valor : '';
 }
 
 /** Envía el pedido y muestra el resultado; los errores de campo van junto a su campo. */
-function manejarEnvio(
+export function manejarEnvio(
   control: ControlAgenda,
   dialogo: Dialogo,
   porCampo: Readonly<Record<string, { mostrarError(mensaje: string): void }>>,
@@ -137,7 +141,7 @@ function manejarEnvio(
     });
 }
 
-function resumenDe(turno: TurnoAgenda): string {
+export function resumenDe(turno: TurnoAgenda): string {
   const paciente = `${turno.pacienteNombre} ${turno.pacienteApellido}`.trim();
   return `${paciente}, ${fechaDeInstante(turno.inicio)} de ${formatearHora(turno.inicio)} a ${formatearHora(turno.fin)}.`;
 }

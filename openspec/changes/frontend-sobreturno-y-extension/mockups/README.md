@@ -1,6 +1,6 @@
 # Mockups de C-45 `frontend-sobreturno-y-extension`
 
-- **Approval: pending**
+- **Approval: approved (2026-11-24, by user: Enzo)**
 - Design system: Revision 4 (`design-system/README.md`)
 - Base: el HTML de la agenda de los mockups de la etapa D de C-39, con los estilos actuales de `frontend/src/styles/` (después de la etapa E), copiados en `mockups.css`. Lo nuevo de C-45 está en `delta.css`.
 - Los elementos nuevos llevan un **borde punteado** (clase `.nuevo`) solo para señalarlos en la revisión. Ese borde no pasa a la aplicación.

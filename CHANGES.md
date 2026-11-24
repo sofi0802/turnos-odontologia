@@ -757,7 +757,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/README.md` y `design-system/components.html`
 
 ### [C-45] `frontend-sobreturno-y-extension`
-- **Estado**: `[ ]` en propuesta (agregado el 2026-11-24, rama `change/C-45-frontend-sobreturno-y-extension`)
+- **Estado**: `[x]` implementado (2026-11-24, rama `change/C-45-frontend-sobreturno-y-extension`, PR pendiente; mockups aprobados por Enzo). Change `openspec/changes/frontend-sobreturno-y-extension/`. Evidencia: 592 tests del frontend (eran 560), `tsc` y build en verde, y verificación manual en la app real. Sin migración ni cambios de backend. El PR ajusta el ejemplo de un test de C-33 en `mensajes.test.ts` (avisar a Juan Cruz)
 - **Responsable**: Enzo (avisa a Juan Cruz, dueño del backend de sobreturno y extensión)
 - **Scope**:
   - C-08 hizo el backend del sobreturno y de la extensión, pero ninguna pantalla lo usa: la agenda muestra la etiqueta "Sobreturno", pero el personal no puede cargar uno ni extender un turno desde la aplicación. Este change suma la interfaz sobre los endpoints que ya existen, sin cambiar su contrato.

@@ -20,6 +20,8 @@ describe('Mensajes por código', () => {
     ['FUERA_DE_HORARIO', 'El profesional no atiende en ese horario.'],
     ['PROFESIONAL_AUSENTE', 'El profesional tiene registrada una ausencia en ese horario.'],
     ['AGENDA_BLOQUEADA', 'La agenda del profesional está bloqueada en ese horario.'],
+    ['SIN_SILLON_DISPONIBLE', 'No hay ningún sillón libre en ese horario. Probá con otra hora.'],
+    ['TURNO_NO_EXTENSIBLE', 'Un sobreturno no se puede extender.'],
   ])('%s tiene su mensaje propio', (codigo, mensaje) => {
     expect(mensajeDeError(new ErrorNegocio(codigo, 'detalle del servidor'))).toBe(mensaje);
     expect(MENSAJES_POR_CODIGO[codigo]).toBe(mensaje);
@@ -97,7 +99,8 @@ describe('Mensajes de rechazo de la reprogramación', () => {
     expect(new Set(textos).size).toBe(3);
   });
 
-  it.each(['CODIGO_QUE_NO_EXISTE', 'SIN_SILLON_DISPONIBLE', 'X'])(
+  // C-45 le dio texto a SIN_SILLON_DISPONIBLE: el ejemplo de código sin texto pasa a ser otro.
+  it.each(['CODIGO_QUE_NO_EXISTE', 'SIN_TEXTO_PROPIO', 'X'])(
     'el código %s sin texto muestra el mensaje genérico, nunca vacío ni el código',
     (codigo) => {
       const texto = mensajeDeReprogramacion(new ErrorNegocio(codigo, ''));

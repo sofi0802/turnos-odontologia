@@ -18,6 +18,9 @@ export const MENSAJES_POR_CODIGO: Readonly<Record<string, string>> = {
   FUERA_DE_HORARIO: 'El profesional no atiende en ese horario.',
   PROFESIONAL_AUSENTE: 'El profesional tiene registrada una ausencia en ese horario.',
   AGENDA_BLOQUEADA: 'La agenda del profesional está bloqueada en ese horario.',
+  // C-45: sobreturno sin sillón libre y extensión de un sobreturno.
+  SIN_SILLON_DISPONIBLE: 'No hay ningún sillón libre en ese horario. Probá con otra hora.',
+  TURNO_NO_EXTENSIBLE: 'Un sobreturno no se puede extender.',
   TURNO_INEXISTENTE: 'El turno ya no existe.',
   ACCESO_DENEGADO: 'No tenés permiso para esta acción.',
   SIN_DISPONIBILIDAD: 'Ese horario se ocupó recién. Elegí otro.',

@@ -26,6 +26,7 @@ function regla(css: string, selector: string): string {
 function turno(): TurnoAgenda {
   return {
     id: 1,
+    pacienteId: 1,
     pacienteNombre: 'Paciente',
     pacienteApellido: 'Uno',
     profesionalId: 1,

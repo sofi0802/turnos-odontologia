@@ -169,8 +169,10 @@ export function escribir(elemento: HTMLInputElement | HTMLSelectElement, valor: 
 /** Mensaje de error asociado a un campo con `aria-describedby`. */
 export function errorDeCampo(raiz: ParentNode, etiqueta: string): string {
   const elemento = campo(raiz, etiqueta);
-  const id = elemento.getAttribute('aria-describedby');
-  return id === null ? '' : (document.getElementById(id)?.textContent ?? '');
+  // Un campo con ayuda (C-45) se describe por la ayuda y por el error: se lee el que es el error.
+  const ids = (elemento.getAttribute('aria-describedby') ?? '').split(/\s+/).filter((id) => id !== '');
+  const error = ids.map((id) => document.getElementById(id)).find((e) => e?.classList.contains('campo-error'));
+  return error?.textContent ?? '';
 }
 
 export function texto(raiz: HTMLElement): string {

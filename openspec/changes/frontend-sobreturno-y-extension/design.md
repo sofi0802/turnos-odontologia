@@ -70,6 +70,6 @@ Solo frontend: se despliega con el build de Vite, sin migraciones. Para volver a
 - Design system revision: 4
 - Decision: yes (2026-11-24, política `system-and-mockups`)
 - Mockups: `openspec/changes/frontend-sobreturno-y-extension/mockups/` (ver su README)
-- Approval: pending
+- Approval: approved (2026-11-24, by user: Enzo aprobó los 8 mockups de la revisión 1)
 - Preview: rendered (2026-11-24, 8 pantallas en `mockups/previews/` a 390x844 y 1440x900, sin desplazamiento horizontal)
-- Visual verify: pending
+- Visual verify: manual (2026-11-24, Enzo probó el sobreturno, la extensión y el choque en la app real con el backend de desarrollo y confirmó que está bien; la verificación con capturas automatizadas no se hizo porque el panel del navegador del agente no tenía sesión, así que no hay capturas en `mockups/verify/`)
