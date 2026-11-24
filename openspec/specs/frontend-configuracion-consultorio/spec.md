@@ -30,9 +30,8 @@ Datos ficticios de los escenarios (salvo que el escenario diga otra cosa):
 ### Requirement: Secciones según el rol
 `#/configuracion` SHALL mostrar estas pestañas:
 
-- **Para `ADMIN`:** "Profesionales", "Sillones", "Prestaciones", "Margen", "Horarios", "Ausencias" y "Bloqueos".
-- **Para `RECEPCIONISTA`:** las mismas siete.
-- **Para `ODONTOLOGO`:** las mismas siete.
+- **Para `ADMIN`:** "Profesionales", "Sillones", "Prestaciones", "Margen", "Horarios", "Ausencias", "Bloqueos" y "Usuarios".
+- **Para `RECEPCIONISTA` y `ODONTOLOGO`:** las mismas, sin "Usuarios".
 
 La pestaña elegida MUST quedar marcada con `aria-selected` y solo su contenido MUST estar visible. Como Agenda, la página MUST exigir una sesión del personal: sin sesión lleva a `#/ingreso` sin pedir datos de configuración.
 
@@ -45,8 +44,14 @@ La pestaña elegida MUST quedar marcada con `aria-selected` y solo su contenido 
 #### Scenario: Pestañas del administrador
 - **GIVEN** una sesión de `admin`
 - **WHEN** se abre `#/configuracion`
-- **THEN** se ven las pestañas "Profesionales", "Sillones", "Prestaciones", "Margen", "Horarios", "Ausencias" y "Bloqueos"
+- **THEN** se ven las pestañas "Profesionales", "Sillones", "Prestaciones", "Margen", "Horarios", "Ausencias", "Bloqueos" y "Usuarios"
 - **AND** "Profesionales" está seleccionada y muestra la lista de profesionales
+
+#### Scenario: Recepción no ve la pestaña Usuarios
+- **GIVEN** una sesión de `recepcion`
+- **WHEN** se abre `#/configuracion`
+- **THEN** se ven siete pestañas, sin "Usuarios"
+- **AND** no se envía ningún pedido a `/api/v1/usuarios`
 
 #### Scenario: Recepción ve los bloqueos sin poder registrarlos
 - **GIVEN** una sesión de `recepcion`

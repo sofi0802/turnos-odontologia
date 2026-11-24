@@ -659,7 +659,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `openspec/specs/frontend-navegacion/` y los specs `frontend-*` de cada pantalla
 
 ### [C-40] `frontend-nuevo-turno-guiado`
-- **Estado**: `[x]` mergeado (2026-11-23, PR #69; propuesta y mockups aprobados en el PR #65); falta archivarlo. Change `openspec/changes/frontend-nuevo-turno-guiado/` (delta de `frontend-agenda-personal`). Evidencia: 381 tests y verificación contra el backend de desarrollo en `mockups/verify/`. Sin migración ni cambios de backend
+- **Estado**: `[x]` completo (2026-11-23, PR #69; propuesta y mockups aprobados en el PR #65; archive el 2026-11-24). Spec `openspec/specs/frontend-agenda-personal/` actualizada; change archivado en `openspec/changes/archive/2026-11-24-frontend-nuevo-turno-guiado/`. Evidencia: 381 tests y verificación contra el backend de desarrollo en `mockups/verify/`. Sin migración ni cambios de backend
 - **Responsable**: Enzo
 - **Scope**:
   - Rehacer "Nuevo turno" de la agenda del personal (`ADMIN`, `RECEPCIONISTA` y `ODONTOLOGO`) como un formulario guiado, donde cada paso se habilita cuando el anterior tiene un valor: **prestación → profesional → fecha → horario**, y el **sillón** del profesional se muestra sin poder cambiarlo. El paciente se sigue eligiendo con el buscador de C-36.
@@ -682,7 +682,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `openspec/changes/frontend-reprogramacion-agenda/`, `openspec/changes/buscador-pacientes/` y `openspec/changes/agenda-propia-odontologo/` (lo que se reusa o ya cambió en la agenda)
 
 ### [C-41] `cuentas-del-personal`
-- **Estado**: `[x]` mergeado (2026-11-24; propuesta y mockups aprobados en el PR #81, apply en el PR #87); falta archivarlo. Change `openspec/changes/cuentas-del-personal/`. Evidencia: `docs/evidencia/c41-backend.txt` (578 unitarios y 527 de integración), 512 tests del frontend y verificación visual en `mockups/verify/`. Migración V21. El PR del apply incluye el fix `fix/calendario-utf8` (el build del frontend fallaba en `master`) y ajusta un test de odontograma (avisar a Emanuel)
+- **Estado**: `[x]` completo (2026-11-24; propuesta y mockups aprobados en el PR #81, apply en el PR #87, archive el mismo día). Specs: `openspec/specs/cuentas-personal/` y `frontend-cuentas-personal/` (nuevos), `frontend-configuracion-consultorio/`, `frontend-navegacion/` y `seguridad-autenticacion/` (actualizados); change archivado en `openspec/changes/archive/2026-11-24-cuentas-del-personal/`. Evidencia: `docs/evidencia/c41-backend.txt` (578 unitarios y 527 de integración), 512 tests del frontend y verificación visual en `mockups/verify/`. Migración V21. El PR del apply incluye el fix `fix/calendario-utf8` (el build del frontend fallaba en `master`) y ajusta un test de odontograma (avisar a Emanuel)
 - **Responsable**: Enzo (avisa a Juan Sebastián, dueño de `usuarios/` y `shared/security/`)
 - **Scope**:
   - Hoy solo existe el admin inicial del `.env` (C-05): no hay forma de dar acceso a un odontólogo ni a una recepcionista sin tocar la base. La matriz RBAC de `03_actores_y_roles.md` ya dice que el `ADMIN` hace el CRUD de los usuarios del personal.
@@ -760,7 +760,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/README.md` y `design-system/components.html`
 
 ### [C-45] `frontend-sobreturno-y-extension`
-- **Estado**: `[x]` implementado (2026-11-24, rama `change/C-45-frontend-sobreturno-y-extension`, PR pendiente; mockups aprobados por Enzo). Change `openspec/changes/frontend-sobreturno-y-extension/`. Evidencia: 592 tests del frontend (eran 560), `tsc` y build en verde, y verificación manual en la app real. Sin migración ni cambios de backend. El PR ajusta el ejemplo de un test de C-33 en `mensajes.test.ts` (avisar a Juan Cruz)
+- **Estado**: `[x]` completo (2026-11-24, PR #97; mockups aprobados por Enzo; archive el mismo día). Spec `openspec/specs/frontend-agenda-personal/` actualizada; change archivado en `openspec/changes/archive/2026-11-24-frontend-sobreturno-y-extension/`. Evidencia: 592 tests del frontend (eran 560), `tsc` y build en verde, y verificación manual en la app real. Sin migración ni cambios de backend. El PR ajusta el ejemplo de un test de C-33 en `mensajes.test.ts` (avisar a Juan Cruz)
 - **Responsable**: Enzo (avisa a Juan Cruz, dueño del backend de sobreturno y extensión)
 - **Scope**:
   - C-08 hizo el backend del sobreturno y de la extensión, pero ninguna pantalla lo usa: la agenda muestra la etiqueta "Sobreturno", pero el personal no puede cargar uno ni extender un turno desde la aplicación. Este change suma la interfaz sobre los endpoints que ya existen, sin cambiar su contrato.
@@ -866,7 +866,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `docs/discovery/sources/relevamiento-fuentes.md` §DentalTec, §DentalCore, §Dentalink
 
 ### [C-19] `presupuestos-y-cobertura`
-- **Estado**: `[ ]` KB propuesta el 2026-11-24 (dominio Presupuestos: RN-PR-01 a RN-PR-07, US-047 y DD-15; PA-23 a PA-28 respondidas: arma el odontólogo, la recepción lo ve sin pieza ni cara, cobertura solo por porcentaje, vence a los 30 días, el paciente ve los suyos, precio sin historial), en revisión con la líder; después va el propose
+- **Estado**: `[ ]` KB aprobada (2026-11-24, PR #108; dominio Presupuestos: RN-PR-01 a RN-PR-07, US-047 y DD-15; PA-23 a PA-28 respondidas: arma el odontólogo, la recepción lo ve sin pieza ni cara, cobertura solo por porcentaje, vence a los 30 días, el paciente ve los suyos, precio sin historial). Sigue el propose
 - **Responsable**: Juan Sebastián
 - **Scope**:
   - Presupuesto por paciente a partir de las prestaciones del odontograma, separando la parte que cubre la obra social y el copago. **Migración V13**.
