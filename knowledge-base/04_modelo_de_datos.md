@@ -188,12 +188,12 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
 - Constraints: `importe > 0`; si `anulado`, `anulado_por`, `anulado_en` y `motivo_anulacion` obligatorios (RN-CA-07). La suma de los cobros no anulados de un cargo no supera su `copago` (en el servicio, con bloqueo del cargo; RN-CA-04).
 - No se borra: se anula.
 
-### Liquidacion [2026-11-24, C-20, en revisión]
+### Liquidacion [2026-11-24, C-20]
 - `id` BIGINT identity, `obra_social_id` FK, `periodo` date (el día 1 del mes liquidado), `estado` enum (`BORRADOR`, `PRESENTADA`, `CERRADA`), `total_solicitado` y `total_cobrado` numeric(12,2), `generada_en`, `presentada_en` y `cerrada_en` timestamptz (las dos últimas nullable).
 - Constraints: `UNIQUE (obra_social_id, periodo)` (una liquidación por obra social y mes, RN-LQ-02) y `periodo` siempre el día 1.
 - No se borra. Una vez `PRESENTADA` sus líneas no cambian; solo se registra lo cobrado (RN-LQ-04, RN-LQ-06).
 
-### LiquidacionLinea [2026-11-24, C-20, en revisión]
+### LiquidacionLinea [2026-11-24, C-20]
 - `id` BIGINT identity, `liquidacion_id` FK, `turno_id` FK (único: un turno se liquida una sola vez), `paciente_id` FK, `plan_id` FK.
 - Copia del momento en que se generó (como DD-15): `fecha` (la del turno), nombre y DNI del paciente, `numero_afiliado`, nombre del plan, `nomenclador_id` y código, nombre de la prestación, `precio` y `porcentaje`, y `monto_solicitado` numeric(12,2).
 - Conciliación (RN-LQ-06): `monto_cobrado` numeric(12,2) nullable, `resultado` enum nullable (`COBRADA`, `PARCIAL`, `RECHAZADA`) y `motivo_rechazo` varchar(200) nullable.

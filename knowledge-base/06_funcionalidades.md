@@ -263,7 +263,7 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 - [ ] CA-7: el odontólogo y el paciente no acceden a la caja ni a la cuenta corriente.
 **Reglas relacionadas**: RN-CA-01 a RN-CA-08, RN-PR-01 a RN-PR-03, RN-AG-20
 
-### US-049: Liquidar a las obras sociales y conciliar lo cobrado [2026-11-24, C-20, en revisión]
+### US-049: Liquidar a las obras sociales y conciliar lo cobrado [2026-11-24, C-20]
 **Como** administrador **quiero** generar cada mes la liquidación de los turnos atendidos para cada obra social y registrar después lo que pagó, **para** saber cuánto cobré, cuánto me deben y qué rechazaron.
 **Criterios de aceptación**:
 - [ ] CA-1: elijo una obra social y un mes, y se genera una liquidación con los turnos atendidos de sus afiliados, agrupados por plan, con el monto de cada uno y el total.
