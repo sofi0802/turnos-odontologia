@@ -17,6 +17,11 @@
   min-width: 0;
 }
 
+/* Pantallas del paciente: fondo suave con tarjetas blancas (etapa C) */
+.cuerpo.fondo-suave {
+  background: var(--ds-superficie);
+}
+
 /* Encabezado azul */
 .cabecera {
   display: flex;
@@ -74,6 +79,7 @@
 
 .usuario-nombre {
   max-width: 11rem;
+  font-size: var(--ds-texto-sm);
   overflow: hidden;
   color: var(--ds-acento-texto);
   text-overflow: ellipsis;

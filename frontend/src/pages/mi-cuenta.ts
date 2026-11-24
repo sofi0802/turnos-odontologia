@@ -253,6 +253,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
 /** Cuenta del paciente (`#/mi-cuenta`): ingresar o crear la cuenta. Fuera del menú. */
 export const paginaMiCuenta: Pagina = {
   ruta: 'mi-cuenta',
+  fondoSuave: true,
   titulo: 'Mi cuenta',
   render: dibujar,
 };

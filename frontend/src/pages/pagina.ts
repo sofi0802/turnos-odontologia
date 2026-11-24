@@ -31,6 +31,8 @@ export interface Pagina {
   readonly acceso?: Acceso;
   /** Sin `menu`, la página no figura en el menú (por ejemplo, Mi cuenta). */
   readonly menu?: GrupoMenu;
+  /** La página se ve sobre el fondo suave de las pantallas del paciente, con tarjetas blancas (C-39, etapa C). */
+  readonly fondoSuave?: boolean;
   /** Ícono de la opción en la barra lateral (C-39). */
   readonly icono?: NombreIcono;
   render(contenedor: HTMLElement, contexto: ContextoPagina): void;

@@ -1,5 +1,6 @@
 import { aIsoConZona, fechaDeInstante, fechaLarga, formatearHora } from '../shared/fecha/zona.ts';
 import { crearCampo, crearEntrada, type Campo } from '../shared/ui/campos.ts';
+import { usarSelectorFecha } from '../shared/ui/selector-fecha.ts';
 import type { ClienteApi } from '../shared/api/cliente.ts';
 import type { Profesional } from './api.ts';
 import { crearSelectorHora, type SelectorHora } from './ui.ts';
@@ -153,12 +154,14 @@ export interface CamposPeriodo {
 
 export function crearCamposPeriodo(): CamposPeriodo {
   const fechaInicio = crearCampo('Desde el día', crearEntrada('date', 'inicio'));
+  usarSelectorFecha(fechaInicio);
   const horaInicio = crearSelectorHora('horaInicio', 'Hora de inicio', {
     valor: '08:00',
     textoVisible: 'a las',
     ariaMinutos: 'Minutos del inicio',
   });
   const fechaFin = crearCampo('Hasta el día', crearEntrada('date', 'fin'));
+  usarSelectorFecha(fechaFin);
   const horaFin = crearSelectorHora('horaFin', 'Hora de fin', {
     valor: '13:00',
     textoVisible: 'a las',

@@ -193,6 +193,7 @@ export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[], opcio
   return {
     contenido,
     mostrar(pagina) {
+      cuerpo.classList.toggle('fondo-suave', pagina.fondoSuave === true);
       for (const { enlace } of items) {
         if (enlace.dataset['ruta'] === pagina.ruta) {
           enlace.setAttribute('aria-current', 'page');

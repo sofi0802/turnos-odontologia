@@ -37,7 +37,7 @@
 .pagina-paciente {
   display: grid;
   gap: var(--ds-espacio-2);
-  max-width: 36rem;
+  max-width: 44rem;
   margin: 0 auto;
 }
 
@@ -123,7 +123,7 @@
 }
 
 .turno-anterior {
-  background: var(--ds-superficie);
+  background: transparent;
   box-shadow: none;
 }
 

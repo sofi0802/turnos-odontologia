@@ -90,6 +90,18 @@ Cada turno de la agenda del personal SHALL tener un borde izquierdo de 4 px con 
 - **THEN** los siete días están en orden de lunes a domingo
 - **AND** cada día queda debajo del anterior de su columna, sin dejar un hueco del alto del día más largo
 
+### Requirement: Pantallas del paciente con fondo suave y jerarquía de títulos
+Las pantallas del paciente (portada, Reservar turno, Mi cuenta, Mis turnos y Confirmar asistencia) SHALL verse sobre un fondo suave (`--ds-superficie`) con tarjetas blancas, y sus títulos SHALL seguir una jerarquía común: `h1` en `--ds-texto-xl`, `h2` en `--ds-texto-lg` y `h3` en `--ds-texto-base`. Su columna de contenido SHALL medir como máximo 44 rem.
+
+#### Scenario: Fondo suave en las pantallas del paciente
+- **GIVEN** cada pantalla del paciente abierta
+- **WHEN** se mira el contenedor de la página
+- **THEN** lleva el fondo suave, y las pantallas del personal todavía no
+
+#### Scenario: Jerarquía de títulos
+- **WHEN** se leen las reglas de los títulos
+- **THEN** `h1`, `h2` y `h3` usan los tamaños `--ds-texto-xl`, `--ds-texto-lg` y `--ds-texto-base`, con el interlineado de títulos
+
 ### Requirement: Estados vacíos y de carga
 Las listas sin elementos y las pantallas que están cargando datos SHALL mostrar un estado propio con una ilustración o un indicador SVG propio, un texto breve y, si corresponde, la acción siguiente; las ilustraciones decorativas MUST estar ocultas para los lectores de pantalla y la carga MUST anunciarse con `aria-busy`.
 

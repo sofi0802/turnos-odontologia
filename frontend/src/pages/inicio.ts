@@ -151,6 +151,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
 /** Portada (`#/inicio`): página inicial, pública y fuera del menú. */
 export const paginaInicio: Pagina = {
   ruta: 'inicio',
+  fondoSuave: true,
   titulo: NOMBRE_APLICACION,
   render: dibujar,
 };

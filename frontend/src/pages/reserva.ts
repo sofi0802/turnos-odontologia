@@ -17,6 +17,7 @@ import { ErrorNegocio, ErrorSesion } from '../shared/api/errores.ts';
 import { aIsoConZona, fechaDeInstante, fechaLarga, formatearHora, hoy, type Fecha } from '../shared/fecha/zona.ts';
 import { esPaciente, esPersonal } from '../shared/sesion/sesion.ts';
 import { crearAviso, crearBoton, crearCampo, crearEntrada } from '../shared/ui/campos.ts';
+import { usarSelectorFecha } from '../shared/ui/selector-fecha.ts';
 import { mensajeDeError } from '../shared/ui/mensajes.ts';
 import { crearSelectorBuscable } from '../shared/ui/selector-buscable.ts';
 import { crearTitulo, type ContextoPagina, type Pagina } from './pagina.ts';
@@ -331,6 +332,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
     entrada.min = hoy();
     entrada.value = eleccion.fecha;
     const dia = crearCampo('Día', entrada);
+    usarSelectorFecha(dia);
     const ayuda = document.createElement('p');
     ayuda.className = 'ayuda';
     ayuda.textContent = fechaLargaDeFecha(eleccion.fecha);
@@ -602,6 +604,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
 /** Reserva online del paciente (`#/reserva`), pública: un paso por pantalla. */
 export const paginaReserva: Pagina = {
   ruta: 'reserva',
+  fondoSuave: true,
   titulo: 'Reservar turno',
   menu: 'paciente',
   icono: 'reservar',

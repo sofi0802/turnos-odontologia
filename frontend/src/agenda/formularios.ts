@@ -14,6 +14,7 @@ import {
 import { abrirDialogo as abrirDialogoUniforme } from '../shared/ui/dialogo.ts';
 import { mensajeDeError, mensajeDeReprogramacion } from '../shared/ui/mensajes.ts';
 import { crearCalendario } from '../shared/ui/calendario.ts';
+import { usarSelectorFecha } from '../shared/ui/selector-fecha.ts';
 import { crearBuscadorPacientes, MENSAJE_PACIENTE_OBLIGATORIO } from './buscador-pacientes.ts';
 import { nombreDe, type Catalogos, type ItemCatalogo } from './catalogos.ts';
 import { crearBuscadorHorariosNuevoTurno } from './nuevo-turno.ts';
@@ -385,6 +386,7 @@ export function abrirReprogramacion(control: ControlAgenda, turno: TurnoAgenda):
   const [dni, numero] = camposDeIdentidad();
   const profesional = selector('Profesional', 'profesionalId', [{ valor: '', texto: 'Sin cambios' }]);
   const fecha = entrada('Fecha', 'date', 'fecha', fechaDeInstante(turno.inicio));
+  usarSelectorFecha(fecha);
   const sillon = selector('Sillón', 'sillonId', opcionesActivas(catalogos.sillones, 'Sin cambios'));
   const dialogo = abrirDialogo(
     'Reprogramar turno',

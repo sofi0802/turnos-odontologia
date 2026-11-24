@@ -130,7 +130,7 @@ describe('Páginas del paciente en el celular (C-12)', () => {
     expect(regla(reglasDeCelular(), '.opciones')).toMatch(/display:\s*grid/);
     expect(regla(reglasDeCelular(), '.opciones')).not.toMatch(/grid-template-columns/);
     expect(regla(reglasDeCelular(), '.acciones')).toMatch(/flex-direction:\s*column-reverse/);
-    expect(regla(reglasDeCelular(), '.pagina-paciente')).toMatch(/max-width:\s*36rem/);
+    expect(regla(reglasDeCelular(), '.pagina-paciente')).toMatch(/max-width:\s*44rem/);
     // Ningún ancho fijo en píxeles mayor a 320 (sin desplazamiento horizontal).
     const anchosFijos = [...estilos.matchAll(/(?<!-)width:\s*(\d+)px/g)].map((m) => Number(m[1]));
     expect(anchosFijos.filter((ancho) => ancho > 320)).toEqual([]);

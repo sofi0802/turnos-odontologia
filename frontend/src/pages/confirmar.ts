@@ -105,6 +105,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
 /** Confirmación de asistencia desde el link del recordatorio (`#/confirmar`), pública y fuera del menú. */
 export const paginaConfirmar: Pagina = {
   ruta: 'confirmar',
+  fondoSuave: true,
   titulo: 'Confirmar asistencia',
   render: dibujar,
 };
