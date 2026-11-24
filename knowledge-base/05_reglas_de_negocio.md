@@ -83,7 +83,7 @@ Cada regla tiene un código `RN-{DOMINIO}-{NN}`. Entre paréntesis va el código
   - **Severo**: pérdida de inserción máxima de 5 mm o más.
   - Una pieza ausente no tiene estado. El estado es **orientativo** y no reemplaza el diagnóstico del profesional (DD-13).
 
-## Dominio: Coberturas (RN-OS) [2026-11-24, C-18, en revisión]
+## Dominio: Coberturas (RN-OS) [2026-11-24, C-18]
 
 - **RN-OS-01**: **catálogo de obras sociales, planes y nomenclador**.
   - Solo el `ADMIN` los da de alta, los edita y los activa o desactiva. No se borran, para no perder el historial de las afiliaciones.
@@ -107,7 +107,7 @@ Cada regla tiene un código `RN-{DOMINIO}-{NN}`. Entre paréntesis va el código
 - **RN-OS-06**: **no se afilia a lo inactivo**. No se puede crear una afiliación con un plan inactivo ni con un plan de una obra social inactiva. Las afiliaciones que ya existen no cambian si después se desactiva el plan o la obra social.
 - **RN-OS-07**: **privacidad de la cobertura**. La obra social y el número de afiliado son datos personales del paciente (Ley 25.326).
   - No se incluyen en recordatorios, mensajes ni logs (RN-NO-01).
-  - Solo los ve el personal, según la matriz de `03_actores_y_roles.md`.
+  - La ve el personal, según la matriz de `03_actores_y_roles.md`, y el propio paciente en "Mi cuenta" (PA-21). Un paciente nunca ve la cobertura de otro.
 
 ## Dominio: Excepciones globales
 
