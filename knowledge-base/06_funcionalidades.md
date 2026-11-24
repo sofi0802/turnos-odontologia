@@ -168,6 +168,23 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 **Criterios de aceptación**:
 - [ ] CA-1: el turno pasa a `AUSENTE` y el tiempo restante queda libre desde ese momento.
 - [ ] CA-2: la ausencia queda en la ficha del paciente.
+- [ ] CA-3: no se puede marcar antes de los 15 minutos del inicio ni si el turno tiene la llegada registrada [2026-11-24].
+- [ ] CA-4: si la recepción deshizo la ausencia, la ficha lo muestra con la fecha y quién lo hizo [2026-11-24].
+**Reglas relacionadas**: RN-AG-17
+
+### US-043: Registrar la llegada del paciente [2026-11-24]
+**Como** recepcionista **quiero** marcar en la agenda que el paciente llegó **para** que el turno quede como atendido sin que nadie tenga que acordarse después.
+**Criterios de aceptación**:
+- [ ] CA-1: "Llegó" se puede usar hasta que el turno termina, aunque el paciente llegue tarde, y el turno sigue ocupando el profesional y el sillón.
+- [ ] CA-2: al terminar el horario, el turno con la llegada registrada pasa a `ATENDIDO` sin que nadie lo marque.
+- [ ] CA-3: un turno que terminó sin registrar se puede corregir después registrando la llegada o la ausencia.
+**Reglas relacionadas**: RN-AG-20
+
+### US-044: Marcar y deshacer la ausencia desde la agenda [2026-11-24]
+**Como** recepcionista **quiero** marcar ausente a un paciente que no vino, y deshacerlo si llega tarde, **para** liberar el horario sin perder al paciente que finalmente llegó.
+**Criterios de aceptación**:
+- [ ] CA-1: "Ausente" se habilita recién 15 minutos después del inicio.
+- [ ] CA-2: "Deshacer ausencia" vuelve a activar el turno solo si su horario sigue libre; si se ocupó, se avisa y se le da otro turno al paciente.
 **Reglas relacionadas**: RN-AG-17
 
 ## Backlog: v1.x y posteriores (fuera del MVP)

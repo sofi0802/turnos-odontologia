@@ -74,8 +74,8 @@ Como el margen es configurable (con mínimo 10), se guarda la columna `fin_con_m
 **Trade-offs aceptados**: la sesión vive en el servidor, y para escalar a varias instancias habría que compartirla (por ejemplo, Spring Session con la base). No aplica en v1.
 
 ### DD-11: Ausencias del profesional y del paciente
-**Decisión**: (a) los turnos afectados por la ausencia o licencia de un profesional se **reasignan** a otro profesional habilitado o se reprograman, **avisando al paciente** (RN-AG-16). (b) El odontólogo marca la **ausencia del paciente desde la ficha clínica**, y el tiempo restante del turno queda libre (RN-AG-17).
-**Contexto**: PA-17 y PA-19, decididas por la líder el 2026-11-21.
+**Decisión**: (a) los turnos afectados por la ausencia o licencia de un profesional se **reasignan** a otro profesional habilitado o se reprograman, **avisando al paciente** (RN-AG-16). (b) La **ausencia del paciente** la marcan el odontólogo desde la ficha clínica o la recepción desde la agenda, a partir de los 15 minutos del inicio, y el tiempo restante del turno queda libre; solo la recepción la deshace, si el horario sigue libre (RN-AG-17). (c) La recepción registra la **llegada**, y al terminar el horario el turno pasa a `ATENDIDO` (RN-AG-20).
+**Contexto**: PA-17 y PA-19, decididas por la líder el 2026-11-21. Los puntos (b) y (c) se ampliaron el 2026-11-24 (C-43): los turnos pasados quedaban como "Reservado" porque nadie registraba la asistencia. La llegada no pasa el turno a `ATENDIDO` en el momento porque eso liberaría el horario mientras el paciente se atiende (las restricciones `EXCLUDE` solo cuentan los turnos activos, DD-03).
 
 ### DD-12: Identificadores BIGINT en todo el proyecto (no UUID)
 **Decisión**: todas las tablas usan `id BIGINT GENERATED ALWAYS AS IDENTITY`, y el código Java usa `Long`. El id lo asigna la base al insertar; un `Turno` nuevo no tiene id hasta que se guarda.
