@@ -69,7 +69,7 @@ El motivo está en proposal.md (Why) y los requisitos, en los deltas de `specs/`
 
 - Design system revision: 3 (ver `design-system/README.md`)
 - Decision: yes (2026-11-24, política `system-and-mockups`)
-- Mockups: pendientes en `openspec/changes/registro-asistencia/mockups/`: la agenda del día de la recepción con los estados "Llegó", "Sin registrar", "Ausente" (con "Deshacer ausencia") y "Atendido", el botón "Ausente" deshabilitado antes de la tolerancia, y la misma agenda vista por el odontólogo, a 390 y 1440 px
-- Approval: pending
-- Preview: pending
+- Mockups: `openspec/changes/registro-asistencia/mockups/` (ver su README): la agenda de la recepción con un turno en cada estado de asistencia, el rechazo al deshacer con el horario ocupado y la agenda de la odontóloga
+- Approval: approved (2026-11-24, by user: Sofia Indovino aprobó los mockups de la revisión 1)
+- Preview: rendered (2026-11-24, `mockups/previews/` a 390x844 y 1440x900)
 - Visual verify: pending

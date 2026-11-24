@@ -704,7 +704,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `openspec/changes/frontend-uniformidad-visual/` (etapa C: pantallas del paciente)
 
 ### [C-43] `registro-asistencia`
-- **Estado**: `[ ]` en propuesta: KB aprobada por la líder el 2026-11-24; proposal, specs, design y tasks en `openspec/changes/registro-asistencia/`. Faltan la revisión de la propuesta y los mockups antes del apply.
+- **Estado**: `[ ]` en propuesta: KB aprobada por la líder el 2026-11-24; proposal, specs, design y tasks en `openspec/changes/registro-asistencia/`. Propuesta y mockups aprobados por la líder el 2026-11-24; listo para el apply.
 - **Responsable**: Sofia Indovino
 - **Scope**:
   - **Cambio de regla de negocio**: la ausencia del paciente la marcan la recepción desde la agenda o el odontólogo desde la ficha, a partir de los 15 minutos del inicio (tolerancia fija), y nunca el sistema. Solo la recepción la deshace, si el horario sigue libre; si no, le da otro turno (RN-AG-17). La recepción registra la **llegada**, el turno sigue activo y, al terminar su horario, pasa a `ATENDIDO` (RN-AG-20).

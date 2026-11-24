@@ -1,0 +1,24 @@
+/* Lo que cambia en las pantallas del personal (agenda, Nuevo turno y Configuración):
+   1. Fondo suave con tarjetas blancas, como en las pantallas del paciente (`.cuerpo.fondo-suave`, que ya existe).
+   2. La tarjeta del turno pasa a blanca y el nombre del paciente deja de ser una caja: en la aplicación hoy
+      reutiliza `.turno-paciente`, la tarjeta de "Mis turnos"; pasa a su propia clase, `.turno-persona`.
+   3. "Cancelar turno" es un botón de peligro (rojo) y "Reprogramar" uno secundario, con sus estados de hover y foco. */
+.turno {
+  background: var(--ds-fondo);
+  box-shadow: var(--ds-sombra-1);
+}
+
+.turno-horario {
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-acento-700);
+}
+
+.turno-persona {
+  font-size: var(--ds-texto-lg);
+  font-weight: var(--ds-peso-fuerte);
+  line-height: var(--ds-interlineado-titulo);
+}
+
+.turno-acciones {
+  margin-top: var(--ds-espacio-2);
+}
