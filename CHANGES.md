@@ -705,7 +705,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `openspec/changes/frontend-uniformidad-visual/` (etapa C: pantallas del paciente)
 
 ### [C-43] `registro-asistencia`
-- **Estado**: `[x]` implementado (2026-11-24, PR pendiente de merge; KB, propuesta y mockups aprobados por la líder). Change `openspec/changes/registro-asistencia/`. Migración V22. Evidencia: `docs/evidencia/c43-backend.txt` (504 tests y 528 de integración), 517 tests del frontend y verificación contra el backend de desarrollo en `mockups/verify/`
+- **Estado**: `[x]` completo (2026-11-24, PR #88 apply y PR del archive). Specs: `openspec/specs/agenda-turnos/`, `agenda-api/`, `auditoria-turnos/`, `ficha-clinica/` y `frontend-agenda-personal/` (actualizados); change archivado en `openspec/changes/archive/2026-11-24-registro-asistencia/`. Reglas RN-AG-17 y RN-AG-20 en la KB. Migración V22. Mockups aprobados y verificación en `mockups/verify/`. Evidencia: `docs/evidencia/c43-backend.txt`; tras el merge con master, 605 tests y 568 de integración en el backend y 547 en el frontend
 - **Responsable**: Sofia Indovino
 - **Scope**:
   - **Cambio de regla de negocio**: la ausencia del paciente la marcan la recepción desde la agenda o el odontólogo desde la ficha, a partir de los 15 minutos del inicio (tolerancia fija), y nunca el sistema. Solo la recepción la deshace, si el horario sigue libre; si no, le da otro turno (RN-AG-17). La recepción registra la **llegada**, el turno sigue activo y, al terminar su horario, pasa a `ATENDIDO` (RN-AG-20).
