@@ -82,6 +82,18 @@ Cada regla tiene un código `RN-{DOMINIO}-{NN}`. Entre paréntesis va el código
   - **Moderado**: pérdida de inserción máxima de 3 a 4 mm.
   - **Severo**: pérdida de inserción máxima de 5 mm o más.
   - Una pieza ausente no tiene estado. El estado es **orientativo** y no reemplaza el diagnóstico del profesional (DD-13).
+- **RN-CL-07**: **imágenes y estudios del paciente** [2026-11-24, C-26]. El odontólogo carga archivos del paciente:
+  - **Categoría**: `RADIOGRAFIA`, `FOTOGRAFIA` o `ESTUDIO`.
+  - **Fecha de la toma**: obligatoria y no futura.
+  - **Pieza**: opcional, en notación FDI, permanente o temporal.
+  - **Descripción**: opcional, de hasta 200 caracteres.
+  - **Tipos y tamaño**: solo **JPEG, PNG y PDF de hasta 10 MB**. El tipo se reconoce por el contenido del archivo, no por la extensión.
+  - **Registro**: se guarda quién lo cargó y cuándo, y un hash SHA-256 del contenido para verificar que no cambió.
+  - **Acceso**: el de RN-CL-01. El odontólogo carga, ve y anula; el administrador solo ve; la recepción y el paciente no acceden.
+- **RN-CL-08**: **las imágenes no se borran** [2026-11-24, C-26]. Una imagen cargada no se modifica ni se borra (historia clínica, Ley 26.529). Si se cargó por error, el odontólogo la **anula con un motivo**:
+  - queda registrado quién la anuló y cuándo;
+  - la anulación es una sola vez y no se deshace;
+  - una imagen anulada no aparece en el listado salvo que se pida, pero sigue disponible para auditoría.
 
 ## Dominio: Coberturas (RN-OS) [2026-11-24, C-18]
 

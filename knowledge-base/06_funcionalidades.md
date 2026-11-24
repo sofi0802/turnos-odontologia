@@ -199,6 +199,16 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 - [ ] CA-5: el administrador lo ve sin poder cargarlo, y la recepción no accede.
 **Reglas relacionadas**: RN-CL-01, RN-CL-04, RN-CL-05, RN-CL-06
 
+### US-048: Guardar imágenes y radiografías del paciente [2026-11-24, C-26 backend y C-47 pantalla]
+**Como** odontólogo **quiero** guardar las radiografías, fotos y estudios del paciente en su historia clínica **para** tenerlos a mano en cada consulta sin depender de archivos sueltos.
+**Criterios de aceptación**:
+- [ ] CA-1: cargo un JPEG, PNG o PDF de hasta 10 MB con su categoría, la fecha de la toma y, si corresponde, la pieza y una descripción.
+- [ ] CA-2: un archivo de otro tipo, más grande, vacío, con fecha futura o con una pieza inexistente se rechaza con un error claro y no se guarda.
+- [ ] CA-3: veo las imágenes del paciente de la más nueva a la más vieja, puedo filtrarlas por pieza y abrir o descargar cada una.
+- [ ] CA-4: si cargué una imagen por error, la anulo con un motivo; no se borra y sigue disponible para auditoría.
+- [ ] CA-5: el administrador las ve sin poder cargarlas ni anularlas, y la recepción y el paciente no acceden.
+**Reglas relacionadas**: RN-CL-01, RN-CL-07, RN-CL-08
+
 ## Épica 7: Coberturas (post-MVP)
 
 ### US-046: Registrar obras sociales y la cobertura del paciente [2026-11-24, C-18]
@@ -254,7 +264,7 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 | US-207 | Caja diaria, cobros y cuenta corriente del paciente | Posterior | C-22 | Roadmap (Ajustar de la líder, 2026-11-21); base de C-23 y C-24 |
 | US-202 | Señas con Mercado Pago | Posterior | C-23 | Informe, D.3 |
 | US-201 | Facturación electrónica ARCA | Posterior | C-24 | Informe, D.3 |
-| US-203 | Imágenes y radiografías (el periodontograma pasó a US-045 el 2026-11-24) | Posterior | C-26 | Informe, D.3 |
+| US-203 | ~~Imágenes y radiografías~~ (pasó a US-048 el 2026-11-24; el periodontograma, a US-045) | Posterior | C-26, C-47 | Informe, D.3 |
 | US-208 | Consentimiento informado con firma electrónica | Posterior | C-27 | Informe, D.3; relevamiento: Bilog (Ley 25.506) |
 | US-204 | Asistente con IA, multisucursal, exportación HL7 FHIR | Posterior | C-28, C-29, C-31 | Informe, D.3 |
 | US-209 | Sincronización de la agenda del profesional con Google Calendar | Posterior | C-30 | Roadmap (Ajustar de la líder, 2026-11-21) |

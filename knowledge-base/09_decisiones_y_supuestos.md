@@ -133,6 +133,20 @@ Como el margen es configurable (con mínimo 10), se guarda la columna `fin_con_m
 **Trade-offs aceptados**: los reportes dependen del formato del actor online. Si un change futuro lo cambia, tiene que mantener un prefijo reconocible o actualizar RN-RE-05. Los turnos sin registro de creación se informan como "sin dato".
 **Impacto**: RN-RE-05, RN-RE-07, la corrección de `Turno` en 04 y la métrica de origen de 01.
 
+### DD-17: Los archivos clínicos van a un almacén detrás de un puerto, con un adaptador en disco [2026-11-24, C-26]
+**Decisión**: el contenido de las imágenes y los estudios no se guarda en PostgreSQL.
+- Va a un **almacén de archivos detrás de un puerto**. En este change el único adaptador escribe en una carpeta del disco, configurada con `IMAGENES_DIRECTORIO`.
+- La base guarda los metadatos, el tamaño, el hash SHA-256 y una clave de almacén generada por el servidor, sin datos del paciente.
+**Contexto**: CHANGES.md pedía para C-26 un almacenamiento "local o S3 compatible". El proyecto ya pone las integraciones externas detrás de puertos (DD-04).
+**Alternativas consideradas**:
+1. Guardar el contenido en PostgreSQL (`bytea`): es transaccional, pero agranda la base y los respaldos.
+2. Hacer ya un adaptador S3: suma una dependencia y un servicio para los tests sin necesidad en el TP.
+**Justificación**: con el puerto, pasar a S3 es agregar un adaptador sin tocar el dominio ni la API. El disco local alcanza para un despliegue de una sola instancia (DD-05).
+**Trade-offs aceptados**:
+- El respaldo tiene que incluir la carpeta de imágenes además de la base.
+- Una caída entre el guardado del archivo y el de la fila puede dejar un archivo huérfano, invisible para la API.
+**Impacto**: RN-CL-07, la entidad `ImagenClinica` (migración V17) y la variable `IMAGENES_DIRECTORIO` en `08_arquitectura_propuesta.md`.
+
 ## Supuestos inferidos
 
 ### ~~SU-07: Todos los profesionales pueden hacer todas las prestaciones~~ (refutado)

@@ -5,7 +5,7 @@
 | Actor | Descripción | Cómo interactúa |
 |---|---|---|
 | **Recepcionista o secretaria** (`RECEPCIONISTA`) | Personal administrativo del consultorio | Panel web: carga, mueve y cancela turnos; carga sobreturnos; registra la llegada y la ausencia de los pacientes (RN-AG-17, RN-AG-20); administra los datos de contacto de los pacientes |
-| **Odontólogo** (`ODONTOLOGO`) | Profesional que atiende | Panel web: ve **solo** su agenda (RN-AG-18), bloquea horarios, carga sobreturnos, registra la ficha, el odontograma y el periodontograma |
+| **Odontólogo** (`ODONTOLOGO`) | Profesional que atiende | Panel web: ve **solo** su agenda (RN-AG-18), bloquea horarios, carga sobreturnos, registra la ficha, el odontograma, el periodontograma y las imágenes |
 | **Administrador del consultorio** (`ADMIN`) | Dueño o encargado (puede ser el mismo odontólogo) | Panel web: configura profesionales, sillones, prestaciones y usuarios |
 | **Paciente** (`PACIENTE`, cuenta propia, no es personal) | Persona que se atiende | Con **su cuenta**: reserva, ve sus turnos, cancela o reprograma con el número de reserva (RN-AG-07, RN-RO-08). Sin cuenta: confirma desde el link del recordatorio o llama al consultorio, que valida DNI y número de reserva |
 | **Sistema de notificaciones** (actor técnico) | Tarea programada | Envía recordatorios por WhatsApp o email y procesa las confirmaciones |
@@ -36,6 +36,7 @@ C = crear, R = leer, U = modificar, D = eliminar o desactivar. "Propio" = solo s
 | Paciente (datos de contacto) | CRUD | CRUD | R | R/U propio (al reservar) |
 | Ficha clínica y odontograma | R | **—** | CRUD | — |
 | Periodontograma (RN-CL-04) [2026-11-24] | R | **—** | C y R (cada carga es una versión nueva; no se edita ni se borra) | — |
+| Imágenes y radiografías (RN-CL-07, RN-CL-08) [2026-11-24, C-26] | R | **—** | C, R y anular con motivo (no se edita ni se borra) | — |
 | Obras sociales, planes y nomenclador (RN-OS-01) [2026-11-24, C-18] | CRUD (sin borrar) | R | R | — |
 | Afiliación del paciente (RN-OS-02) [2026-11-24, C-18] | CRUD (sin borrar) | CRUD (sin borrar; la carga al dar de alta o al atender al paciente) | R | R propia, en "Mi cuenta" (PA-21) |
 | Aranceles y cobertura por plan (RN-PR-01, RN-PR-02) [2026-11-24, C-19] | CRUD (sin borrar) | R | R | — |
