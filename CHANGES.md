@@ -36,7 +36,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `backend/.../notificaciones/` | Juan Cruz | V7 |
 | `backend/.../clinica/` | Emanuel | V8 |
 | `frontend/` | Enzo | — |
-| **Ajustes del MVP (C-33 a C-40)** | | |
+| **Ajustes del MVP (C-33 a C-42)** | | |
 | `frontend/` agenda: reprogramación (C-33) | Juan Cruz (avisa a Enzo) | — |
 | `frontend/` página Configuración (C-34) | Emanuel (avisa a Enzo) | — |
 | `backend/.../agenda/api` y `frontend/` agenda propia del odontólogo (C-35) | Sofia (avisa a Juan Sebastián y a Enzo) | — |
@@ -46,6 +46,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `frontend/` barra lateral, colores y estilo uniforme (C-39) | Juan Cruz (avisa a Enzo) | — |
 | `frontend/` agenda: nuevo turno guiado por prestación (C-40) | Enzo (si la disponibilidad necesita filtrar por sillón, avisa a Juan Sebastián) | — |
 | `backend/.../usuarios/`, `shared/security/` y `frontend/` pestaña Usuarios: cuentas del personal (C-41) | Enzo (avisa a Juan Sebastián, dueño de `usuarios/` y `shared/security/`) | V21 |
+| `frontend/` Mis turnos: turnos sin registrar (C-42) | Sofia (avisa a Enzo) | — |
 | **Post-MVP** | | |
 | `backend/.../agenda/` lista de espera, `configuracion/` política de cancelación | Sofia (C-16 avisa a Emanuel) | V9, V10 |
 | `backend/.../notificaciones/` consentimiento | Juan Cruz | V11 |
@@ -88,6 +89,7 @@ C-01 crear-turno-sin-solapamientos  [Sofia · OPSX]      ← tarea 1 = scaffoldi
   │
   │  Ajustes del MVP, cuentas del personal (2026-11-24: la matriz RBAC lo promete y ningún change lo hacía)
   │     C-05 + C-34 + C-35 ── C-41 cuentas-del-personal [Enzo]   ← avisa a Juan Sebastián (usuarios/ y security/)
+  │     C-12 + C-39 ──────── C-42 frontend-turnos-sin-registrar [Sofia]   ← detectado al revisar C-39
   │
 C-02 frontend-base-ts  [Enzo]                            ← independiente: carpeta frontend/
   │
@@ -176,7 +178,11 @@ GATE 5e: C-05 ✓ + C-34 archivado ✓ + C-35 ✓ (2026-11-24)        ← en par
   (CRÍTICO: la líder aprueba proposal, specs, design y tasks antes del apply. Suma una pestaña a Configuración,
    que la etapa D de C-39 reestiliza: coordinar el orden de los PR con Juan Cruz)
 
-GATE 6: changes de la entrega ✓ (incluye C-33 a C-41)
+GATE 5f: C-12 ✓ + etapa C de C-39 ✓ (2026-11-24)
+  → C-42 frontend-turnos-sin-registrar      [Agente A · Sofia]
+  (Mis turnos del paciente: mockups aprobados por la líder antes del apply)
+
+GATE 6: changes de la entrega ✓ (incluye C-33 a C-42)
   → C-14 entrega-readme-y-evidencia          [Agente A · Sofia]
 
 ──────────── POST-MVP ────────────
@@ -223,7 +229,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 | Bloque | Changes | Origen |
 |---|---|---|
 | **MVP v1.0** (fases 1 a 6) | C-01 a C-14 | Sección D.3 del informe, lista "imprescindible" |
-| **Ajustes del MVP** (fase 5b) | C-33 a C-41 | Prueba y revisión de la aplicación del 2026-11-23 (C-41: 2026-11-24) |
+| **Ajustes del MVP** (fase 5b) | C-33 a C-42 | Prueba y revisión de la aplicación del 2026-11-23 (C-41 y C-42: 2026-11-24) |
 | **Post-MVP v1.x** (fase 7) | C-15 a C-17 | Sección D.3, lista "diferenciador" |
 | **Post-MVP: etapas posteriores** (fases 8 a 10) | C-18 a C-32 | Sección D.3, lista "etapas posteriores" |
 
@@ -254,7 +260,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 
 | Integrante | MVP | Post-MVP (sugerido, por afinidad con su módulo) |
 |---|---|---|
-| **Sofia Indovino** (líder) | **C-01** (OPSX), C-06, C-35, C-14 + revisión de todos los PR | C-15, C-16, C-29 |
+| **Sofia Indovino** (líder) | **C-01** (OPSX), C-06, C-35, C-42, C-14 + revisión de todos los PR | C-15, C-16, C-29 |
 | **Juan Cruz** | C-03, C-08, C-11, C-33, C-37, C-38, C-39 | C-17, C-30, C-31 |
 | **Emanuel** | C-04, C-07, C-13, C-12, C-34 | C-25, C-26, C-27, C-28 |
 | **Juan Sebastián** | C-05, C-10, C-36 | C-18, C-19, C-20, C-21 |
@@ -675,6 +681,22 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/08_arquitectura_propuesta.md` §Seguridad
   - `openspec/specs/seguridad-autenticacion/spec.md`, `seguridad-autorizacion/spec.md` y `frontend-configuracion-consultorio/spec.md`
 
+
+### [C-42] `frontend-turnos-sin-registrar`
+- **Estado**: `[x]` implementado (2026-11-24, PR pendiente de merge; mockups revisión 2 aprobados por la líder). Change `openspec/changes/frontend-turnos-sin-registrar/`. Evidencia: 495 tests y verificación contra el backend de desarrollo en `mockups/verify/`. Sin migración ni cambios de backend
+- **Responsable**: Sofia Indovino
+- **Scope**:
+  - En "Mis turnos" del paciente, un turno `RESERVADO` o `CONFIRMADO` cuyo horario ya terminó se muestra como **"Sin registrar"**, con el texto "El consultorio todavía no registró la asistencia.". Hoy queda como "Reservado" para siempre, porque nadie registra la asistencia.
+  - "Sin registrar" es solo una etiqueta del frontend, calculada con el fin del turno: no es un estado nuevo, no cambia la API ni la base, y no libera ningún horario. La agenda del personal sigue mostrando el estado real (decisiones de la líder, 2026-11-23). Se llamaba "Vencido" en la primera versión.
+  - Fuera de alcance: un estado `VENCIDO` en el backend y el paso automático a `AUSENTE` (contradice RN-AG-17). El registro de la asistencia por el personal es C-43.
+  - Cambio visual: mockups aprobados por la líder antes del apply.
+  - Tests: turno pasado sin registrar, turno en curso y turnos ya registrados; los de C-12 siguen pasando.
+- **Dependencias**: `C-12`, etapa C de `C-39`
+- **Governance**: MEDIO (lo que ve el paciente sobre sus turnos)
+- **Leer antes**:
+  - `knowledge-base/05_reglas_de_negocio.md` §Dominio: Agenda (RN-AG-17)
+  - `openspec/specs/frontend-turnos-paciente/spec.md`
+  - `openspec/changes/frontend-uniformidad-visual/` (etapa C: pantallas del paciente)
 ---
 
 ## FASE 6: Entrega
@@ -686,7 +708,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `README.md` reproducible: requisitos (Java 21, opcional Docker o PostgreSQL), cómo correr `./gradlew test` (tests de dominio sin base) y los tests de integración.
   - Verificación final: suite en verde, ningún secreto en el repo, `.env.example` completo.
   - Evidencias: informe de Discovery en PDF, estado del orquestador, consulta a Engram para el video.
-- **Dependencias**: `C-01` (mínimo); los demás changes que se hayan completado, incluidos los ajustes C-33 a C-41
+- **Dependencias**: `C-01` (mínimo); los demás changes que se hayan completado, incluidos los ajustes C-33 a C-42
 - **Governance**: BAJO
 - **Leer antes**:
   - `knowledge-base/README.md`

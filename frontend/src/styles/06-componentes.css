@@ -120,6 +120,12 @@
   background: var(--ds-turno-ausente-fondo);
 }
 
+/* C-42: turno pasado que nadie registró. Reusa los tokens neutros de "Cancelado"; se distingue por el texto. */
+.e-sin-registrar {
+  color: var(--ds-turno-cancelado);
+  background: var(--ds-turno-cancelado-fondo);
+}
+
 .pasos {
   display: flex;
   gap: var(--ds-espacio-0);
