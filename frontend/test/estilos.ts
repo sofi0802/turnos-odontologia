@@ -23,6 +23,7 @@ import configuracion from '../src/styles/12-configuracion.css?raw';
 import layout from '../src/styles/13-layout.css?raw';
 import estados from '../src/styles/14-estados.css?raw';
 import estadosVacios from '../src/styles/15-estados-vacios.css?raw';
+import cuentas from '../src/styles/16-cuentas.css?raw';
 
 const MODULOS: Readonly<Record<string, string>> = {
   '01-base.css': base,
@@ -40,6 +41,7 @@ const MODULOS: Readonly<Record<string, string>> = {
   '13-layout.css': layout,
   '14-estados.css': estados,
   '15-estados-vacios.css': estadosVacios,
+  '16-cuentas.css': cuentas,
 };
 
 /** Archivos que hay en `src/styles/`, ordenados (el prefijo numérico fija el orden). Solo los nombres, sin leerlos. */

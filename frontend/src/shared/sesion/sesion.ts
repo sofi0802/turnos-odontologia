@@ -12,6 +12,8 @@ export interface Sesion {
   readonly rol: Rol | null;
   /** Profesional del odontólogo (RN-AG-18, C-35); no existe para los otros roles. */
   readonly profesionalId?: number;
+  /** La cuenta del personal entró con una contraseña temporal y tiene que cambiarla (C-41). Solo existe si es `true`. */
+  readonly debeCambiarContrasena?: true;
 }
 
 export const SIN_SESION: Sesion = { autenticado: false, username: null, rol: null };
@@ -32,10 +34,23 @@ function leerSesion(cuerpo: unknown): Sesion {
     return SIN_SESION;
   }
   const profesionalId: unknown = Reflect.get(cuerpo, 'profesionalId');
-  if (rol === 'ODONTOLOGO' && typeof profesionalId === 'number' && Number.isInteger(profesionalId) && profesionalId > 0) {
-    return { autenticado: true, username, rol, profesionalId };
-  }
-  return { autenticado: true, username, rol };
+  const conProfesional =
+    rol === 'ODONTOLOGO' && typeof profesionalId === 'number' && Number.isInteger(profesionalId) && profesionalId > 0
+      ? { profesionalId }
+      : {};
+  const conTemporal =
+    esPersonal(rol) && Reflect.get(cuerpo, 'debeCambiarContrasena') === true ? { debeCambiarContrasena: true as const } : {};
+  return { autenticado: true, username, rol, ...conProfesional, ...conTemporal };
+}
+
+/** La sesión del personal tiene una contraseña temporal que cambiar antes de seguir (C-41). */
+export function debeCambiarContrasena(sesion: Sesion | null): boolean {
+  return sesion?.debeCambiarContrasena === true;
+}
+
+/** Cambia la contraseña de la cuenta de la sesión (`POST /cuenta/contrasena`, C-41). */
+export async function cambiarContrasena(api: ClienteApi, actual: string, nueva: string): Promise<void> {
+  await api.crear<unknown>('/cuenta/contrasena', { actual, nueva });
 }
 
 export async function consultarSesion(api: ClienteApi): Promise<Sesion> {

@@ -1,5 +1,5 @@
 import type { GrupoMenu, Pagina } from '../../pages/pagina.ts';
-import { esPersonal, type Sesion } from '../sesion/sesion.ts';
+import { debeCambiarContrasena, esPersonal, type Sesion } from '../sesion/sesion.ts';
 import { crearIcono } from './iconos.ts';
 import { crearLogo, NOMBRE_APLICACION } from './marca.ts';
 
@@ -28,6 +28,7 @@ export const RUTA_INICIO = 'inicio';
 
 /** Ruta de la reserva, que el encabezado ofrece a quien no tiene sesión. */
 const RUTA_RESERVA = 'reserva';
+const RUTA_CAMBIAR_CONTRASENA = 'cambiar-contrasena';
 
 /** Grupo del menú que ve una sesión: el personal ve el suyo; sin sesión o con paciente, el del paciente. */
 export function grupoDeSesion(sesion: Sesion | null): GrupoMenu {
@@ -68,6 +69,14 @@ export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[], opcio
   avatar.setAttribute('aria-hidden', 'true');
   const nombre = document.createElement('span');
   nombre.className = 'usuario-nombre';
+  // El usuario del personal es un enlace a "Mi contraseña" (C-41); para un paciente es solo texto.
+  const usuarioEnlace = document.createElement('a');
+  usuarioEnlace.className = 'usuario-enlace';
+  usuarioEnlace.href = `#/${RUTA_CAMBIAR_CONTRASENA}`;
+  usuarioEnlace.title = 'Cambiar mi contraseña';
+  const usuarioTexto = document.createElement('span');
+  usuarioTexto.className = 'usuario-enlace';
+  usuarioTexto.append(avatar, nombre);
   const salir = document.createElement('button');
   salir.type = 'button';
   salir.className = 'btn-sobre-azul';
@@ -81,7 +90,7 @@ export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[], opcio
   ingresar.className = 'btn-sobre-azul';
   ingresar.href = `#/${RUTA_MI_CUENTA}`;
   ingresar.textContent = 'Ingresar';
-  acciones.append(avatar, nombre, salir, reservar, ingresar);
+  acciones.append(usuarioEnlace, usuarioTexto, salir, reservar, ingresar);
 
   encabezado.append(boton, marca, acciones);
 
@@ -104,6 +113,12 @@ export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[], opcio
   const menu = document.createElement('nav');
   menu.setAttribute('aria-label', 'Principal');
   const lista = document.createElement('ul');
+  // "Mi contraseña" y otras opciones de la cuenta van aparte, debajo de las páginas (C-41).
+  const menuCuenta = document.createElement('nav');
+  menuCuenta.className = 'lateral-cuenta';
+  menuCuenta.setAttribute('aria-label', 'Tu cuenta');
+  const listaCuenta = document.createElement('ul');
+  menuCuenta.append(listaCuenta);
   const items = paginas
     .filter((pagina) => pagina.menu !== undefined)
     .map((pagina) => {
@@ -117,12 +132,12 @@ export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[], opcio
       const item = document.createElement('li');
       item.dataset['grupo'] = pagina.menu;
       item.append(enlace);
-      lista.append(item);
+      (pagina.seccionMenu === 'cuenta' ? listaCuenta : lista).append(item);
       // Las páginas que exigen sesión de paciente (Mis turnos) no se ofrecen al visitante.
       return { item, enlace, conSesion: pagina.acceso === 'paciente' };
     });
   menu.append(lista);
-  lateral.append(cajonCabecera, menu);
+  lateral.append(cajonCabecera, menu, menuCuenta);
 
   const velo = document.createElement('div');
   velo.className = 'velo';
@@ -170,11 +185,18 @@ export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[], opcio
   function mostrarSesion(sesion: Sesion | null): void {
     const grupo = grupoDeSesion(sesion);
     const conSesion = sesion !== null;
+    // Con la contraseña temporal pendiente no hay menú: solo el cambio de contraseña y "Salir" (C-41).
+    const conMenu = conSesion && !debeCambiarContrasena(sesion);
     for (const { item, conSesion: soloConSesion } of items) {
       item.hidden = item.dataset['grupo'] !== grupo || (soloConSesion && !conSesion);
     }
-    lateral.hidden = !conSesion;
-    boton.hidden = !conSesion;
+    menuCuenta.hidden = ![...listaCuenta.children].some((li) => !(li as HTMLElement).hidden);
+    lateral.hidden = !conMenu;
+    boton.hidden = !conMenu;
+    const comoEnlace = conMenu && sesion !== null && esPersonal(sesion.rol);
+    (comoEnlace ? usuarioEnlace : usuarioTexto).append(avatar, nombre);
+    usuarioEnlace.hidden = !comoEnlace;
+    usuarioTexto.hidden = comoEnlace || !conSesion;
     avatar.hidden = !conSesion;
     nombre.hidden = !conSesion;
     salir.hidden = !conSesion;
@@ -182,8 +204,8 @@ export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[], opcio
     ingresar.hidden = conSesion;
     nombre.textContent = sesion?.username ?? '';
     avatar.textContent = sesion?.username == null ? '' : iniciales(sesion.username);
-    cuerpo.classList.toggle('con-lateral', conSesion);
-    if (!conSesion) {
+    cuerpo.classList.toggle('con-lateral', conMenu);
+    if (!conMenu) {
       abrirMenu(false);
     }
   }

@@ -5,7 +5,17 @@
 
 const NS = 'http://www.w3.org/2000/svg';
 
-export type NombreIcono = 'reservar' | 'turnos' | 'agenda' | 'configuracion' | 'menu' | 'cerrar';
+export type NombreIcono =
+  | 'reservar'
+  | 'turnos'
+  | 'agenda'
+  | 'configuracion'
+  | 'menu'
+  | 'cerrar'
+  | 'llave'
+  | 'reloj'
+  | 'copiar'
+  | 'volver';
 
 type Trazo = readonly [etiqueta: 'path' | 'rect' | 'circle', atributos: Readonly<Record<string, string>>];
 
@@ -32,6 +42,11 @@ const TRAZOS: Readonly<Record<NombreIcono, readonly Trazo[]>> = {
   ],
   menu: [['path', { d: 'M4 6h16M4 12h16M4 18h16' }]],
   cerrar: [['path', { d: 'M6 6l12 12M18 6L6 18' }]],
+  // C-41: "Mi contraseña", contraseña temporal pendiente, copiar y volver.
+  llave: [['circle', { cx: '8', cy: '15', r: '4' }], ['path', { d: 'M10.8 12.2L20 3M16 7l3 3M14 9l2 2' }]],
+  reloj: [['circle', { cx: '12', cy: '12', r: '9' }], ['path', { d: 'M12 7v5l3 2' }]],
+  copiar: [['rect', { x: '9', y: '9', width: '12', height: '12', rx: '2' }], ['path', { d: 'M5 15V5a2 2 0 0 1 2-2h10' }]],
+  volver: [['path', { d: 'M15 18l-6-6 6-6' }]],
 };
 
 export function crearIcono(nombre: NombreIcono): SVGElement {

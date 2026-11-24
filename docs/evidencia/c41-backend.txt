@@ -1,0 +1,80 @@
+C-41 cuentas-del-personal: evidencia del backend
+================================================
+
+Fecha: 2026-11-24, rama change/C-41-cuentas-del-personal.
+Comando, desde backend/ y con las variables de ../.env cargadas:
+  gradlew.bat build integrationTest
+Resultado: BUILD SUCCESSFUL in 3m 46s.
+Captura: active-stack evidence-capture, corrida b75beada551b88699e7e8f9c9165ea46,
+salida redactada sha256 916e29e93c660d481a467ecb90067932ab71c52bee711e36e5ce3d6e2707f615.
+
+Resultados (build/test-results, sin fallas, errores ni tests salteados):
+  test             578 tests  0 fallas  (477 antes de C-41)
+  integrationTest  527 tests  0 fallas  (487 antes de C-41; PostgreSQL real, @Tag("integration"))
+
+Tests nuevos de C-41:
+  GeneradorContrasenaTemporalTest (unitario, design D2)
+    - Tiene 14 caracteres del alfabeto sin confusos y cumple la política (50 repeticiones)
+    - Lleva al menos una mayúscula, una minúscula y un dígito (50 repeticiones)
+    - Dos llamadas dan contraseñas distintas
+  ContrasenaTemporalPersistenciaIntegrationTest (migración V21, design D5)
+    - Una cuenta que ya existía queda sin contraseña temporal
+    - Una cuenta guardada con contraseña temporal conserva la marca
+  CuentasPersonalIntegrationTest (spec cuentas-personal)
+    Operaciones de cuentas solo para el administrador
+    - Recepción intenta crear una cuenta
+    - Un odontólogo intenta listar las cuentas
+    - Pedido sin sesión
+    Lista de las cuentas del personal
+    - Listar las cuentas
+    Alta de una cuenta con contraseña temporal
+    - Alta de una recepcionista
+    - La contraseña temporal no se vuelve a mostrar
+    - Usuario normalizado
+    Vínculo de la cuenta con un profesional
+    - Alta de un odontólogo vinculado
+    - Odontólogo sin profesional
+    - Recepcionista con profesional
+    - Profesional que ya tiene cuenta
+    - Profesional inactivo
+    - Profesional inexistente
+    - Administrador que también atiende
+    Validación del alta
+    - Rol de paciente
+    - Rol desconocido
+    - Usuario repetido
+    - Usuario demasiado corto
+    Desactivar y reactivar una cuenta
+    - Desactivar una cuenta
+    - Reactivar una cuenta
+    - Cuenta de un paciente
+    - Cuenta inexistente
+    Restablecer la contraseña de una cuenta
+    - Restablecer la contraseña de un odontólogo
+    Protección de la propia cuenta
+    - El administrador intenta desactivarse
+    - El administrador intenta restablecer su contraseña
+    - Un administrador desactiva a otro
+    Contraseñas fuera de los logs
+    - Alta registrada sin contraseña
+  SesionContrasenaTemporalIntegrationTest
+    Sesión con contraseña temporal (seguridad-autenticacion)
+    - Login con contraseña temporal
+    - Operación bloqueada hasta cambiar la contraseña
+    - Salir con la contraseña pendiente
+    - Cuenta sin contraseña temporal
+    Cambio de la propia contraseña (seguridad-autenticacion)
+    - Cambio después del primer ingreso
+    - Contraseña actual incorrecta
+    - Contraseña nueva demasiado corta
+    - Contraseña nueva igual a la actual
+    - Un paciente no usa este cambio
+    Cierre de las sesiones de una cuenta (cuentas-personal)
+    - Sesión abierta de una cuenta desactivada
+    - Sesión abierta de una cuenta restablecida
+
+Test existente ajustado (módulo clinica, dueño Emanuel; se le avisa en el PR):
+  OdontogramaIntegrationTest "Odontólogo sin profesional vinculado" inyectaba un principal con el id 999, que no
+  existe. El filtro nuevo de C-41 (design D3) cierra la sesión de una cuenta inexistente y el pedido respondía 401
+  en vez de llegar al servicio. El principal ahora apunta a la cuenta real de ana.ejemplo sin su profesional; la
+  aserción (403 ACCESO_DENEGADO y ningún registro) no cambió.

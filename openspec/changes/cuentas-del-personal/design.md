@@ -1,5 +1,7 @@
 # Design
 
+> **Aprobación (governance CRÍTICO)**: proposal, specs, design y tasks aprobados por Sofia Indovino, la líder, el 2026-11-24 con el merge del PR #81 (confirmado por Enzo).
+
 ## Context
 
 El motivo está en `proposal.md`, sección Why.
@@ -48,6 +50,8 @@ Un filtro de `shared/security`, ubicado después de la carga del contexto:
 3. Si no, refresca `debeCambiarContrasena` en el principal.
 
 Así, desactivar una cuenta y restablecer su contraseña cierran todas sus sesiones sin llevar un registro de sesiones. Cuando el usuario cambia su propia contraseña, el endpoint reemplaza el principal en la sesión actual con el hash nuevo, así que esa sesión sigue abierta.
+
+**Nota del apply (2026-11-24):** el principal borra el hash de la contraseña después del login (`eraseCredentials`, C-05), así que no se compara el hash. Al autenticarse, el principal guarda una huella SHA-256 del hash, y el filtro compara esa huella con la del hash actual de la base. El comportamiento es el mismo y el hash no queda en la sesión. El filtro también cierra la sesión si la cuenta ya no existe.
 
 **Alternativa descartada: `SessionRegistry` y `expireNow()`.** El login es manual, así que habría que registrar cada sesión a mano y publicar los eventos de sesión. Además, el registro vive en memoria y no ve los cambios hechos directo en la base.
 
@@ -125,5 +129,6 @@ Desactivar lo hace siempre un `ADMIN` activo, y nunca sobre su propia cuenta, as
   - el detalle del profesional con "Dar acceso";
   - `#/cambiar-contrasena`, obligatoria, voluntaria y con errores;
   - "Mi contraseña" en el menú del celular.
-- Approval: pending.
+- Approval: approved (2026-11-24, by Sofia Indovino, la líder; PR #81, confirmado por Enzo).
 - Preview: rendered (2026-11-24): capturas en `mockups/previews/` a 390 × 844 y 1440 × 900, sin desplazamiento horizontal ni errores de consola.
+- Visual verify: passed (2026-11-24): contra el backend de desarrollo, con diferencias menores anotadas en `mockups/verify/README.md` (una corregida). Las capturas tapan los datos no ficticios de la base local.
