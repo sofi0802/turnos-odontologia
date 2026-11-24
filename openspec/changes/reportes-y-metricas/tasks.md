@@ -38,8 +38,8 @@ Acceptance criteria: los escenarios de los deltas `reportes`, `frontend-reportes
 
 - [x] 5.1 Verificar que cada escenario de los tres deltas tiene un test con su nombre (`grep`), sin duplicados
 - [x] 5.2 `npx tsc --noEmit`, `npm test` y `npm run build` en verde; la cantidad de tests no baja
-- [ ] 5.3 Verificación visual contra el mockup aprobado, a 390 y 1440 px, con el backend de desarrollo y datos ficticios; capturas en `mockups/verify/` y resultado en `design.md`
-- [ ] 5.4 `openspec validate reportes-y-metricas --strict` en verde, C-32 marcado en `CHANGES.md` y, en el PR, aviso a Sofia, Emanuel y Juan Sebastián (design, Impact de la propuesta)
+- [x] 5.3 Verificación visual contra el mockup aprobado, a 390 y 1440 px, con el backend de desarrollo y datos ficticios; capturas en `mockups/verify/` y resultado en `design.md`. Hecha a mano por Enzo el 2026-11-24 (sin capturas automatizadas; ver `Visual verify` en `design.md`)
+- [x] 5.4 `openspec validate reportes-y-metricas --strict` en verde, C-32 marcado en `CHANGES.md` y, en el PR, aviso a Sofia, Emanuel y Juan Sebastián (design, Impact de la propuesta)
 
 ## Workflow follow-up
 
