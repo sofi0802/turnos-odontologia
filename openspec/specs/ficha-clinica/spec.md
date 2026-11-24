@@ -109,12 +109,17 @@ El sistema SHALL devolver el estado vigente del odontograma de un paciente, es d
 - **THEN** la respuesta tiene dos entradas: pieza 16, cara `O` con `OBTURADO`, y pieza 26, cara `M` con `A_TRATAR`
 
 ### Requirement: Ausencias en la ficha
-La ficha de un paciente SHALL mostrar los turnos en los que el paciente fue marcado como ausente, con su fecha y hora, y el profesional del turno.
+La ficha de un paciente SHALL mostrar los turnos en los que el paciente fue marcado como ausente, con su fecha y hora, y el profesional del turno. Si la recepción deshizo una ausencia, la ficha SHALL mostrarla como deshecha, con el momento y el usuario que la deshizo, en lugar de una ausencia vigente.
 
 #### Scenario: La ficha muestra la ausencia
 - **GIVEN** un turno de "Paciente Uno" con la Dra. Ana Ejemplo el 2026-12-01 a las 10:00, marcado como `AUSENTE`
 - **WHEN** `ana.ejemplo` consulta la ficha de "Paciente Uno"
 - **THEN** la ficha incluye una ausencia del 2026-12-01 a las 10:00 con la Dra. Ana Ejemplo
+
+#### Scenario: La ficha muestra la ausencia deshecha
+- **GIVEN** un turno de "Paciente Uno" con la Dra. Ana Ejemplo el 2026-12-01 a las 10:00, marcado como ausente y después deshecho por `recepcion` a las 10:22
+- **WHEN** `ana.ejemplo` consulta la ficha de "Paciente Uno"
+- **THEN** la ficha incluye esa ausencia del 2026-12-01 a las 10:00 como deshecha por `recepcion` a las 10:22
 
 ### Requirement: Acceso del odontólogo y del administrador
 Un usuario `ODONTOLOGO` SHALL leer y modificar la ficha y el odontograma de cualquier paciente. Un usuario `ADMIN` SHALL poder leerlos, y MUST recibir `403` con el código `ACCESO_DENEGADO` si intenta modificarlos.
