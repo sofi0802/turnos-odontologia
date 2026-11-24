@@ -15,6 +15,12 @@ server:
         http-only: true
         same-site: lax
         secure: ${SESSION_COOKIE_SECURE:false}
+# C-18 (RN-OS-07): Hibernate vuelca en el log el detalle de PostgreSQL ante una violación de restricción, que incluye
+# los valores de la fila (por ejemplo el número de afiliado de una EXCLUDE). Los errores de negocio ya se traducen en
+# la API, así que se apaga ese registro para que ningún dato de cobertura (ni de otro módulo) llegue a los logs.
+logging:
+  level:
+    org.hibernate.engine.jdbc.spi.SqlExceptionHelper: "OFF"
 app:
   seguridad:
     cors-origenes: ${APP_CORS_ORIGENES:http://localhost:5173}

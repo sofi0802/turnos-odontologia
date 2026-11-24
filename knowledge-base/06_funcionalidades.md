@@ -199,7 +199,7 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 - [ ] CA-5: el administrador lo ve sin poder cargarlo, y la recepción no accede.
 **Reglas relacionadas**: RN-CL-01, RN-CL-04, RN-CL-05, RN-CL-06
 
-### US-047: Guardar imágenes y radiografías del paciente [2026-11-24, C-26 backend y C-47 pantalla]
+### US-048: Guardar imágenes y radiografías del paciente [2026-11-24, C-26 backend y C-47 pantalla]
 **Como** odontólogo **quiero** guardar las radiografías, fotos y estudios del paciente en su historia clínica **para** tenerlos a mano en cada consulta sin depender de archivos sueltos.
 **Criterios de aceptación**:
 - [ ] CA-1: cargo un JPEG, PNG o PDF de hasta 10 MB con su categoría, la fecha de la toma y, si corresponde, la pieza y una descripción.
@@ -222,6 +222,33 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 - [ ] CA-6: como paciente veo en "Mi cuenta" mi obra social, mi plan, mi número de afiliado y la vigencia, o que me atiendo como particular. No puedo cambiarla ni ver la de otro paciente (PA-21).
 **Reglas relacionadas**: RN-OS-01 a RN-OS-07
 
+### US-047: Armar un presupuesto con cobertura y copago [2026-11-24, C-19]
+**Como** odontólogo **quiero** armar el presupuesto del paciente con las prestaciones de su tratamiento, **para** que sepa cuánto cubre su obra social y cuánto paga él.
+**Criterios de aceptación**:
+- [ ] CA-1: como `ADMIN` cargo el precio particular de cada prestación y el porcentaje que cubre cada plan por código del nomenclador.
+- [ ] CA-2: al armar el presupuesto veo sugeridas las piezas y caras del odontograma marcadas `A_TRATAR` o `CARIES`, y elijo la prestación de cada una.
+- [ ] CA-3: cada ítem muestra el importe, la cobertura y el copago, y el presupuesto muestra los totales y la cobertura que se usó, o "Particular".
+- [ ] CA-4: un paciente sin cobertura vigente paga el importe completo como copago.
+- [ ] CA-5: si después cambian los precios o la cobertura del plan, el presupuesto emitido no cambia.
+- [ ] CA-6: el presupuesto pasa de pendiente a aceptado o rechazado, y no se borra.
+- [ ] CA-7: el presupuesto vence a los 30 días; uno vencido ya no se puede aceptar.
+- [ ] CA-8: la recepción ve los presupuestos sin pieza ni cara, y el paciente ve los suyos en "Mi cuenta".
+**Reglas relacionadas**: RN-PR-01 a RN-PR-07, RN-OS-04
+
+## Épica 8: Reportes (post-MVP)
+
+### US-210: Ver la ocupación, el origen, las ausencias y las cancelaciones [2026-11-24, C-32, en revisión]
+**Como** administrador o recepcionista **quiero** ver cifras del consultorio en un período **para** saber cuánto se usa la agenda, cuántos pacientes reservan solos y cuántos turnos se pierden.
+**Criterios de aceptación**:
+- [ ] CA-1: elijo un período de hasta 92 días (por defecto, la semana en curso) y, si quiero, un profesional.
+- [ ] CA-2: veo la ocupación en porcentaje por profesional y por sillón, con los minutos ocupados y los de atención; "Sin horario" cuando no hay minutos de atención.
+- [ ] CA-3: veo cuántos turnos fueron online, cuántos del consultorio y cuántos sin dato.
+- [ ] CA-4: veo los turnos ausentes y la tasa de ausentismo, los turnos sin registrar aparte, y las ausencias y licencias de los profesionales.
+- [ ] CA-5: veo las cancelaciones separadas en "por el paciente", "por el consultorio" y "por reprogramación".
+- [ ] CA-6: no aparece ningún nombre, DNI ni dato de salud de un paciente.
+- [ ] CA-7: el odontólogo no ve Reportes y el paciente recibe `403`.
+**Reglas relacionadas**: RN-RE-01 a RN-RE-07
+
 ## Backlog: v1.x y posteriores (fuera del MVP)
 
 > Cada fila se vincula con su change de `CHANGES.md`. Las reglas detalladas se escriben en esta KB **antes de empezar** el change, cuando el MVP esté completo.
@@ -232,13 +259,13 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 | US-101 | Política de cancelación configurable por consultorio | v1.x | C-16 | Informe, C.4 |
 | US-102 | Registro de consentimiento para comunicaciones con una pantalla propia | v1.x | C-17 | Informe, D.3 |
 | US-200 | Obras sociales y prepagas (planes, nomencladores, liquidaciones; el catálogo y la afiliación pasaron a US-046 el 2026-11-24) | Posterior | C-18, C-20 | Informe, D.3 |
-| US-205 | Presupuestos con cobertura y copago | Posterior | C-19 | Informe, A.3 |
+| US-205 | Presupuestos con cobertura y copago (pasó a US-047 el 2026-11-24) | Posterior | C-19 | Informe, A.3 |
 | US-206 | Validación online de la cobertura con la obra social | Posterior | C-21 | Informe, C.2 (DentalTec) |
 | US-207 | Caja diaria, cobros y cuenta corriente del paciente | Posterior | C-22 | Roadmap (Ajustar de la líder, 2026-11-21); base de C-23 y C-24 |
 | US-202 | Señas con Mercado Pago | Posterior | C-23 | Informe, D.3 |
 | US-201 | Facturación electrónica ARCA | Posterior | C-24 | Informe, D.3 |
-| US-203 | ~~Imágenes y radiografías~~ (pasó a US-047 el 2026-11-24; el periodontograma, a US-045) | Posterior | C-26, C-47 | Informe, D.3 |
+| US-203 | ~~Imágenes y radiografías~~ (pasó a US-048 el 2026-11-24; el periodontograma, a US-045) | Posterior | C-26, C-47 | Informe, D.3 |
 | US-208 | Consentimiento informado con firma electrónica | Posterior | C-27 | Informe, D.3; relevamiento: Bilog (Ley 25.506) |
 | US-204 | Asistente con IA, multisucursal, exportación HL7 FHIR | Posterior | C-28, C-29, C-31 | Informe, D.3 |
 | US-209 | Sincronización de la agenda del profesional con Google Calendar | Posterior | C-30 | Roadmap (Ajustar de la líder, 2026-11-21) |
-| US-210 | Reportes de ocupación, ausencias y cancelaciones | Posterior | C-32 | `01_vision_y_objetivos.md` §Métricas de éxito |
+| US-210 | Reportes de ocupación, ausencias y cancelaciones (detallada en la Épica 8 el 2026-11-24) | Posterior | C-32 | `01_vision_y_objetivos.md` §Métricas de éxito |

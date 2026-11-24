@@ -2,7 +2,7 @@
 
 ## Why
 
-La ficha clínica (C-13 y C-44) registra la ficha básica, el odontograma y, desde C-25, el periodontograma. Pero el odontólogo no tiene dónde guardar las radiografías, las fotos intraorales ni los estudios del paciente, y hoy los conserva fuera del sistema. C-26 es el siguiente change de clínica avanzada del post-MVP. Las reglas que faltaban en la KB (solo existía la línea US-203 del backlog) las fijó Emanuel el 2026-11-24 y van en este mismo PR para que la líder las revise: RN-CL-07, RN-CL-08, US-047 y DD-15.
+La ficha clínica (C-13 y C-44) registra la ficha básica, el odontograma y, desde C-25, el periodontograma. Pero el odontólogo no tiene dónde guardar las radiografías, las fotos intraorales ni los estudios del paciente, y hoy los conserva fuera del sistema. C-26 es el siguiente change de clínica avanzada del post-MVP. Las reglas que faltaban en la KB (solo existía la línea US-203 del backlog) las fijó Emanuel el 2026-11-24 y van en este mismo PR para que la líder las revise: RN-CL-07, RN-CL-08, US-048 y DD-17.
 
 ## What Changes
 
@@ -13,7 +13,7 @@ La ficha clínica (C-13 y C-44) registra la ficha básica, el odontograma y, des
   
   El sistema guarda quién la cargó y cuándo (RN-CL-07).
 - **Archivos permitidos**: JPEG, PNG y PDF de hasta **10 MB**. El tipo se reconoce por el contenido del archivo, no por la extensión ni por el tipo que declara el navegador. Un archivo vacío, de otro tipo o más grande se rechaza con un código estable y sin guardar nada.
-- **Almacenamiento detrás de un puerto**: el contenido va a un almacén de archivos y la base guarda solo los metadatos, el tamaño y el hash SHA-256 (DD-15).
+- **Almacenamiento detrás de un puerto**: el contenido va a un almacén de archivos y la base guarda solo los metadatos, el tamaño y el hash SHA-256 (DD-17).
   - El único adaptador de este change escribe en una carpeta del disco, configurable por variable de entorno.
   - Un adaptador compatible con S3 queda como extensión futura.
 - **Consulta**:
@@ -58,8 +58,8 @@ La ficha clínica (C-13 y C-44) registra la ficha básica, el odontograma y, des
 - **KB**: se actualizan
   - `03_actores_y_roles.md` (fila de imágenes en la matriz de permisos);
   - `05_reglas_de_negocio.md` (RN-CL-07 y RN-CL-08);
-  - `06_funcionalidades.md` (US-047 reemplaza la línea US-203 del backlog);
+  - `06_funcionalidades.md` (US-048 reemplaza la línea US-203 del backlog);
   - `04_modelo_de_datos.md` (entidad `ImagenClinica`);
-  - `09_decisiones_y_supuestos.md` (DD-15, almacén de archivos);
+  - `09_decisiones_y_supuestos.md` (DD-17, almacén de archivos);
   - `08_arquitectura_propuesta.md` (variable de entorno).
 - **Roadmap**: `CHANGES.md` registra C-47 y marca C-26 en curso.

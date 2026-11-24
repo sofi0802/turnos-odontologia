@@ -75,4 +75,4 @@ turnos-odontologia/
 | `WHATSAPP_API_TOKEN` | Token del proveedor (no se usa en el TP) | `(vacío)` | **Y** |
 | `SMTP_HOST` / `SMTP_PORT` | Servidor de email (de desarrollo) | `localhost` / `1025` | N |
 | `VITE_API_BASE_URL` | URL de la API para el frontend | `http://localhost:8080/api/v1` | N |
-| `IMAGENES_DIRECTORIO` | Carpeta del almacén de imágenes clínicas (C-26, DD-15). Contiene datos de salud: permisos solo para el proceso e incluirla en los respaldos | `./data/imagenes` | N |
+| `IMAGENES_DIRECTORIO` | Carpeta del almacén de imágenes clínicas (C-26, DD-17). Contiene datos de salud: permisos solo para el proceso e incluirla en los respaldos | `./data/imagenes` | N |

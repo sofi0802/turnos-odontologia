@@ -42,7 +42,7 @@ Hoy, en los consultorios chicos, los turnos llegan por WhatsApp y por teléfono,
 | Métrica | Meta orientativa | Cómo se mide |
 |---|---|---|
 | Turnos en conflicto creados | **0** (fuera de los sobreturnos) | Tests por escenario y restricción en la base de datos |
-| Turnos reservados por el paciente online | Medir la línea base | Origen del turno (`ONLINE` o `STAFF`) |
-| Ausentismo | Medir la línea base; no hay dato propio | Turnos en estado `AUSENTE` sobre el total (ver pregunta abierta sobre el registro de ausentismo) |
+| Turnos reservados por el paciente online | Medir la línea base | Origen del turno, deducido de la auditoría (RN-RE-05); se ve en Reportes (C-32) |
+| Ausentismo | Medir la línea base; no hay dato propio | Turnos `AUSENTE` sobre los atendidos más los ausentes (RN-RE-06); se ve en Reportes (C-32) |
 
 Las cifras de los competidores ("−90 % de ausencias", "−40 % de ausentismo") **no se usan como meta**: no tienen metodología publicada (informe, resumen ejecutivo).

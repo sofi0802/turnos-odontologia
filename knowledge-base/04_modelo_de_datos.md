@@ -9,7 +9,7 @@
 | **Pacientes** | Datos de contacto y preferencia de canal |
 | **Notificaciones** | Recordatorios y confirmaciones por WhatsApp o email |
 | **Clínica** | Ficha básica, odontograma y periodontograma (C-25) |
-| **Coberturas** | Obras sociales y prepagas, sus planes, el nomenclador de prácticas y la afiliación de cada paciente (C-18) |
+| **Coberturas** | Obras sociales y prepagas, sus planes, el nomenclador de prácticas y la afiliación de cada paciente (C-18); aranceles, cobertura por plan y presupuestos con copago (C-19) |
 | **Seguridad y auditoría** | Usuarios del personal, roles, registro de cambios en turnos |
 
 Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
@@ -25,7 +25,7 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
                     ├──1─ Sillon
                     ├──1─ Paciente ─1──0..1─ FichaClinica ─1──*─ OdontogramaRegistro
                     │              ├─1──*─ PeriodontogramaVersion ─1──*─ PeriodontogramaPieza ─1──*─ PeriodontogramaSitio
-                    │              └─1──*─ ImagenClinica   (C-26; el archivo va al almacén, DD-15)
+                    │              └─1──*─ ImagenClinica   (C-26; el archivo va al almacén, DD-17)
                     ├──*─ Notificacion
                     └──*─ TurnoAuditoria
 
@@ -36,6 +36,9 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
  Profesional ─*──0..1─ Sillon    (sillón habitual)
  ObraSocial ─1──*─ Plan ─1──*─ AfiliacionPaciente ─*──1─ Paciente   (C-18)
  Nomenclador ─*──0..1─ Prestacion   (código de la práctica, C-18)
+ Prestacion ─1──0..1─ Arancel   (precio particular, C-19)
+ Plan ─1──*─ CoberturaPlan ─*──1─ Nomenclador   (porcentaje cubierto, C-19)
+ Paciente ─1──*─ Presupuesto ─1──*─ PresupuestoItem ─*──1─ Prestacion   (C-19)
  Usuario(PACIENTE) ─1──1─ Paciente
 ```
 
@@ -76,9 +79,9 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
 - `es_sobreturno` boolean, `motivo_sobreturno` varchar(255). **Obligatorio** si `es_sobreturno = true` (RN-AG-06; CHECK en la base).
 - `extendido` boolean, `motivo_extension` varchar(255) (RN-AG-14)
 - `llegada_en` timestamptz (nullable): momento en que la recepción registró la llegada del paciente (RN-AG-20) [2026-11-24]. No cambia el estado: el turno sigue activo hasta que termina y el sistema lo pasa a `ATENDIDO`. Quién la registró queda en la auditoría del turno, igual que la ausencia y su deshacer (RN-AG-17).
-- `origen` enum: `STAFF`, `ONLINE`
+- ~~`origen` enum: `STAFF`, `ONLINE`~~ *(corregido el 2026-11-24, C-32)*: la tabla `turno` no tiene esta columna. El origen se deduce de la auditoría del turno (RN-RE-05, DD-16).
 - `codigo_reserva` varchar(12) (único; para cancelar o reprogramar online)
-- `creado_por` (usuario o "paciente-online"), `creado_en`, `cancelado_en`, `motivo_cancelacion`
+- ~~`creado_por`, `creado_en`, `cancelado_en`, `motivo_cancelacion`~~ *(corregido el 2026-11-24, C-32)*: tampoco son columnas de `turno`. Quién creó o canceló un turno, y cuándo, queda en `turno_auditoria` (`accion`, `actor`, `fecha`); las operaciones online del paciente usan el actor `paciente-online:<id>`, sin email, nombre ni DNI.
 - `version` int (bloqueo optimista)
 - **Constraints**:
   - `fin > inicio`.
@@ -122,7 +125,7 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
 - **Identidad y autoría**: `id` BIGINT identity, `paciente_id` FK, `profesional_id` FK (quién la cargó), `registrada_en` timestamptz.
 - **Datos de la imagen**: `categoria` enum (`RADIOGRAFIA`, `FOTOGRAFIA`, `ESTUDIO`), `pieza` smallint nullable (FDI, permanente o temporal), `tomada_el` date, `descripcion` varchar(200) nullable.
 - **Archivo**: `tipo_contenido` (`image/jpeg`, `image/png`, `application/pdf`), `tamano_bytes` (1 a 10 485 760), `sha256` char(64), `clave_almacen` varchar única.
-  - `clave_almacen` es la ubicación en el almacén de archivos, generada por el servidor y sin datos del paciente (DD-15).
+  - `clave_almacen` es la ubicación en el almacén de archivos, generada por el servidor y sin datos del paciente (DD-17).
 - **Anulación**: `anulada_en` timestamptz, `anulada_por` FK a profesional, `motivo_anulacion` varchar(200). Las tres son nulas o están todas.
 - No se borra ni se modifica. Lo único que se registra después de la carga es la anulación, una sola vez (RN-CL-08). Cuelga del paciente, como el odontograma y el periodontograma.
 
@@ -145,6 +148,28 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
   - Un mismo paciente no tiene dos afiliaciones con vigencias superpuestas (RN-OS-02). Se garantiza con `EXCLUDE USING gist (paciente_id WITH =, daterange(vigente_desde, vigente_hasta, '[]') WITH &&)`, con `btree_gist`, igual que las garantías de la agenda.
   - `numero_afiliado` es único por obra social (RN-OS-03), validado en el dominio y en la base.
 - No se borra. Una afiliación que termina se cierra con `vigente_hasta` y queda como historial (RN-OS-02).
+
+### Arancel [2026-11-24, C-19]
+- `id` BIGINT identity, `prestacion_id` FK (único), `precio` numeric(12,2), `actualizado_en` timestamptz.
+- Es el **precio particular** de cada prestación, en pesos argentinos. Constraint: `precio > 0`.
+- Hay un solo precio vigente por prestación. Cambiarlo no modifica los presupuestos ya emitidos, porque cada presupuesto guarda una copia de los valores (RN-PR-04).
+
+### CoberturaPlan [2026-11-24, C-19]
+- `id` BIGINT identity, `plan_id` FK, `nomenclador_id` FK, `porcentaje` smallint.
+- Constraints: `porcentaje BETWEEN 0 AND 100`, y `UNIQUE (plan_id, nomenclador_id)`.
+- Indica qué parte del precio particular cubre un plan para un código del nomenclador. Si no hay fila, el plan no cubre ese código (0 %).
+
+### Presupuesto [2026-11-24, C-19]
+- `id` BIGINT identity, `paciente_id` FK, `profesional_id` FK, `fecha` date, `vence_el` date (`fecha` + 30 días, RN-PR-05), `afiliacion_id` FK nullable, `estado` enum (`PENDIENTE`, `ACEPTADO`, `RECHAZADO`), `total_precio`, `total_cobertura` y `total_copago` numeric(12,2), `creado_en` timestamptz.
+- `afiliacion_id` es la afiliación vigente del paciente en la `fecha` del presupuesto, o nulo si es particular (RN-OS-04).
+- Constraints: `total_precio = total_cobertura + total_copago` y `vence_el = fecha + 30`.
+- "Vencido" no es un estado guardado: un `PENDIENTE` con `vence_el` anterior a hoy (en `America/Argentina/Buenos_Aires`) se informa como vencido.
+- No se borra. Su contenido no cambia después de emitirlo; solo cambia el estado (RN-PR-05).
+
+### PresupuestoItem [2026-11-24, C-19]
+- `id` BIGINT identity, `presupuesto_id` FK, `prestacion_id` FK, `nomenclador_id` FK nullable, `pieza` smallint nullable (FDI, como el odontograma), `cara` varchar(1) nullable, `cantidad` int, `precio_unitario` numeric(12,2), `porcentaje_cobertura` smallint, `importe`, `cobertura` y `copago` numeric(12,2).
+- Constraints: `cantidad ≥ 1`, `porcentaje_cobertura BETWEEN 0 AND 100`, `importe = precio_unitario × cantidad`, `importe = cobertura + copago`, y la pieza y la cara con los mismos valores válidos que `OdontogramaRegistro` (RN-CL-03).
+- Guarda una **copia** del precio y del porcentaje del momento en que se emitió (RN-PR-04).
 
 ### Usuario
 - `id` BIGINT identity, `username` (único), `password_hash`, `rol` enum (`ADMIN`, `RECEPCIONISTA`, `ODONTOLOGO`, `PACIENTE`), `profesional_id` FK nullable, `paciente_id` FK nullable, `activo`.
@@ -172,4 +197,5 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
 | Prestaciones | Consulta o control (30 min), Limpieza (profilaxis) (45 min), Tratamiento de conducto (60 min), Extracción simple (30 min) |
 | Usuarios | `admin`, `recepcion`, `ana.ejemplo` (contraseñas solo en el seed de desarrollo, nunca en producción) |
 | Coberturas (C-18) | Obras sociales ficticias: "Obra Social Ejemplo" (`OSE`, tipo obra social) con los planes "Plan Base" y "Plan Integral", y "Prepaga Prueba" (tipo prepaga) con el plan "Plan Oro". Nomenclador ficticio: `N-0101` Consulta (vinculado a Consulta o control), `N-0201` Limpieza (vinculado a Limpieza) y `N-0301` Extracción simple. Afiliaciones: un paciente ficticio con "Plan Base" vigente y el número `OSE-000001`, y otro sin cobertura (particular) |
+| Aranceles y cobertura (C-19) | Precios particulares ficticios: Consulta o control $15.000, Limpieza $25.000, Tratamiento de conducto $90.000 y Extracción simple $30.000. Cobertura: "Plan Base" cubre `N-0101` al 100 % y `N-0201` al 50 %; "Plan Integral" cubre `N-0101` y `N-0201` al 100 % y `N-0301` al 70 %; "Plan Oro" cubre los tres códigos al 80 % |
 | Pacientes | 3 pacientes ficticios con DNI de la forma `99000001` y emails `@example.com`; uno con cuenta de paciente (`paciente.demo`) |

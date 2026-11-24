@@ -121,6 +121,60 @@ Cada regla tiene un código `RN-{DOMINIO}-{NN}`. Entre paréntesis va el código
   - No se incluyen en recordatorios, mensajes ni logs (RN-NO-01).
   - La ve el personal, según la matriz de `03_actores_y_roles.md`, y el propio paciente en "Mi cuenta" (PA-21). Un paciente nunca ve la cobertura de otro.
 
+## Dominio: Presupuestos (RN-PR) [2026-11-24, C-19]
+
+- **RN-PR-01**: **aranceles**. Cada prestación puede tener un **precio particular** en pesos, mayor que cero y con dos decimales.
+  - Solo el `ADMIN` lo carga y lo cambia.
+  - Una prestación sin arancel no se puede presupuestar: se rechaza con un error claro.
+- **RN-PR-02**: **cobertura por plan**. Para cada plan y cada código del nomenclador, el `ADMIN` carga el **porcentaje** del precio particular que cubre el plan, un entero de 0 a 100.
+  - Si no hay porcentaje cargado, el plan no cubre ese código (0 %).
+  - Los topes, las autorizaciones y la validación con la obra social no son parte de C-19 (C-21).
+- **RN-PR-03**: **cálculo de cada ítem**.
+  - Importe = precio particular × cantidad.
+  - Cobertura = importe × porcentaje / 100, redondeado a centavos hacia arriba desde 0,5 (*half up*). El porcentaje sale de la afiliación vigente del paciente en la fecha del presupuesto y del código del nomenclador del ítem.
+  - Copago = importe − cobertura. Es lo que paga el paciente.
+  - Si la prestación tiene un solo código activo, se usa ese. Si tiene varios (RN-OS-05), el ítem indica cuál. Si no tiene ninguno, el ítem es particular (0 %).
+  - Un paciente **particular** (sin afiliación vigente) paga todo: la cobertura es 0 y el copago es el importe.
+- **RN-PR-04**: **el presupuesto es una foto**. Al emitirlo se guardan en cada ítem el precio, el porcentaje y los importes calculados, y la afiliación usada. Si después cambian los aranceles, la cobertura del plan o la afiliación del paciente, el presupuesto emitido no cambia. Para tener los valores nuevos se emite otro presupuesto.
+- **RN-PR-05**: **estados y vencimiento**.
+  - Un presupuesto nace `PENDIENTE` y pasa a `ACEPTADO` o `RECHAZADO`. Un presupuesto aceptado o rechazado no cambia de estado.
+  - **Vence a los 30 días** de su fecha (PA-26). Un presupuesto `PENDIENTE` cuya fecha de vencimiento ya pasó se muestra como **vencido** y no se puede aceptar; sí se puede rechazar.
+  - Los presupuestos no se borran ni se editan. Para corregir uno, o para renovar uno vencido, se emite otro.
+- **RN-PR-06**: **a partir del odontograma**. Lo arma el **odontólogo** (PA-23).
+  - Cada ítem es una prestación con una pieza y una cara opcionales, en notación FDI (RN-CL-03).
+  - Al armarlo, el sistema **sugiere** las piezas y caras cuyo último estado en el odontograma es `A_TRATAR` o `CARIES`. Es solo una sugerencia: el odontólogo elige la prestación de cada una y puede sumar o quitar ítems.
+  - Un presupuesto tiene al menos un ítem.
+- **RN-PR-07**: **privacidad del presupuesto**. Las piezas y caras son datos de salud (Ley 26.529) y los importes y la cobertura, datos personales (Ley 25.326).
+  - No se incluyen en recordatorios, mensajes ni logs (RN-NO-01).
+  - Solo los ven los roles de la matriz de `03_actores_y_roles.md`.
+
+## Dominio: Reportes (RN-RE) [2026-11-24, C-32, en revisión]
+
+- **RN-RE-01**: **quién los ve**. La pantalla de **Reportes** es para el `ADMIN` y la `RECEPCIONISTA`, y los dos ven todo el consultorio (PA-29).
+  - El `ODONTOLOGO` no la ve. Su agenda propia sigue siendo la de RN-AG-18.
+  - El `PACIENTE` recibe `403`, igual que en cualquier dato del consultorio.
+- **RN-RE-02**: **solo cifras agregadas**. Los reportes muestran cantidades, minutos y porcentajes por profesional, por sillón o del consultorio.
+  - No muestran nombres, DNI ni contactos de pacientes, ni datos de salud: ni prestaciones de un paciente, ni piezas, ni motivos (RN-CL-01, Ley 25.326).
+  - Los motivos de sobreturnos, extensiones, ausencias y licencias tampoco se muestran.
+- **RN-RE-03**: **período**. Cada reporte es de un período de fechas del consultorio (`America/Argentina/Buenos_Aires`), con el primer y el último día incluidos.
+  - Un turno cuenta en el período si su **inicio** cae dentro.
+  - El período tiene **como máximo 92 días**; uno más largo se rechaza con `422`. Por defecto, la semana en curso.
+  - Se puede filtrar por un profesional. Sin filtro, el reporte es de todo el consultorio.
+- **RN-RE-04**: **ocupación** (PA-31). Mide qué parte del horario de atención quedó tomada por turnos.
+  - **Minutos ocupados**: la suma de `fin − inicio` de los turnos **no cancelados** del período (`RESERVADO`, `CONFIRMADO`, `ATENDIDO` y `AUSENTE`), sobreturnos incluidos. El margen de limpieza no se cuenta.
+  - **Minutos de atención del profesional**: sus horarios de trabajo en los días del período (RN-AG-13), menos sus ausencias, licencias (RN-AG-16) y bloqueos de agenda (RN-AG-10).
+  - **Ocupación** = minutos ocupados / minutos de atención, en porcentaje entero, redondeado hacia arriba desde 0,5. Con sobreturnos puede superar el 100 %. Sin minutos de atención, se muestra "Sin horario" en lugar de un porcentaje.
+  - **Ocupación de un sillón**: minutos ocupados por los turnos de ese sillón sobre los minutos de atención de los profesionales que lo tienen como **sillón habitual** (RN-RO-09). Un sillón que no es habitual de nadie muestra sus minutos ocupados y "Sin horario".
+- **RN-RE-05**: **origen de los turnos** (PA-30, DD-16). Cada turno del período se cuenta como:
+  - **Online**: lo creó el paciente desde su cuenta. En la auditoría, la creación tiene un actor `paciente-online:<id>`.
+  - **Del consultorio**: lo creó el personal, incluidos los sobreturnos.
+  - Un turno nacido de una **reprogramación** (RN-AG-08) toma el origen de quien reprogramó.
+  - Un turno sin registro de creación en la auditoría se cuenta como **sin dato**.
+- **RN-RE-06**: **ausencias**.
+  - **De pacientes**: los turnos `AUSENTE` del período y la **tasa de ausentismo** = `AUSENTE` / (`ATENDIDO` + `AUSENTE`), en porcentaje entero. Los turnos que ya terminaron sin registro de asistencia ("Sin registrar") se informan aparte y no entran en la tasa.
+  - **De profesionales**: las ausencias y licencias (RN-AG-16) que se superponen con el período, por profesional y por tipo, con los días o las horas que caen dentro del período.
+- **RN-RE-07**: **cancelaciones**. Los turnos `CANCELADO` del período, separados por quién canceló, según el actor de la cancelación en la auditoría: **el paciente** (actor `paciente-online:<id>`) o **el consultorio** (cualquier otro). Los turnos cancelados por una **reprogramación** (en la auditoría, la acción `REPROGRAMAR` en lugar de `CANCELAR`; RN-AG-08) se informan aparte, porque el paciente no perdió el turno.
+
 ## Dominio: Excepciones globales
 
 - **RN-GL-01**: **solo datos ficticios** en el repositorio, los seeds, los tests, los ejemplos y las capturas.

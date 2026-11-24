@@ -57,7 +57,7 @@ La clave la genera el servidor con un UUID aleatorio, partido en dos niveles de 
 - El adaptador rechaza una clave que no cumpla el formato o cuya ruta resuelta salga del directorio base. Así se evita el *path traversal*, aunque la clave nunca venga del cliente.
 - Escribe primero a un archivo temporal en la misma carpeta y después lo mueve con `ATOMIC_MOVE`, para que una caída no deje un archivo a medias con el nombre final.
 
-**Alternativa descartada: `bytea` en PostgreSQL.** Es más simple y transaccional, pero agranda la base y los respaldos, y no prepara el camino a S3 que pide CHANGES.md. Queda registrado en DD-15.
+**Alternativa descartada: `bytea` en PostgreSQL.** Es más simple y transaccional, pero agranda la base y los respaldos, y no prepara el camino a S3 que pide CHANGES.md. Queda registrado en DD-17.
 
 **Alternativa descartada: hacer ya el adaptador S3.** Suma una dependencia y un MinIO para los tests sin necesidad en el TP. El puerto alcanza para agregarlo después.
 

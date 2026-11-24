@@ -39,7 +39,9 @@ C = crear, R = leer, U = modificar, D = eliminar o desactivar. "Propio" = solo s
 | Imágenes y radiografías (RN-CL-07, RN-CL-08) [2026-11-24, C-26] | R | **—** | C, R y anular con motivo (no se edita ni se borra) | — |
 | Obras sociales, planes y nomenclador (RN-OS-01) [2026-11-24, C-18] | CRUD (sin borrar) | R | R | — |
 | Afiliación del paciente (RN-OS-02) [2026-11-24, C-18] | CRUD (sin borrar) | CRUD (sin borrar; la carga al dar de alta o al atender al paciente) | R | R propia, en "Mi cuenta" (PA-21) |
-| Estadísticas o dashboard | R | R (operativas) | R (propias) | **—** |
+| Aranceles y cobertura por plan (RN-PR-01, RN-PR-02) [2026-11-24, C-19] | CRUD (sin borrar) | R | R | — |
+| Presupuesto (RN-PR-04 a RN-PR-06) [2026-11-24, C-19] | R | R, sin pieza ni cara (PA-24) | C y R, y cambia el estado | R propios, en "Mi cuenta" (PA-27) |
+| Reportes: ocupación, origen, ausencias y cancelaciones (RN-RE-01) [2026-11-24, C-32, en revisión] | R (todo el consultorio) | R (todo el consultorio; PA-29) | **—** (su agenda sigue en RN-AG-18) | **—** |
 
 > **Lección de la verificación de fuentes:** en la demo de VecDent, un rol "paciente" armado a mano veía el dashboard con estadísticas de la clínica y el menú de configuración (informe, verificación de fuentes, fila 5). El paciente **no es un rol del personal con menos permisos**: solo accede a endpoints públicos y a sus propios turnos.
 

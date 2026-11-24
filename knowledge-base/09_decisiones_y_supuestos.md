@@ -108,7 +108,32 @@ Como el margen es configurable (con mínimo 10), se guarda la columna `fin_con_m
 **Trade-offs aceptados**: un paciente con doble cobertura se carga solo con la principal. La líder lo confirmó el 2026-11-24 (PA-20).
 **Impacto**: RN-OS-01 a RN-OS-07, US-046, dos filas de la matriz de 03 y las entidades `ObraSocial`, `Plan`, `Nomenclador` y `AfiliacionPaciente` (migración V12).
 
-### DD-15: Los archivos clínicos van a un almacén detrás de un puerto, con un adaptador en disco [2026-11-24, C-26]
+### DD-15: El presupuesto guarda una foto del cálculo [2026-11-24, C-19]
+**Decisión**: C-19 guarda en cada ítem del presupuesto el precio, el porcentaje de cobertura y los importes calculados en el momento de emitirlo, además de la afiliación usada (RN-PR-04). El presupuesto no se recalcula después.
+**Contexto**: el relevamiento muestra que los sistemas del mercado tienen presupuestos con convenios, planes y aranceles, y una "simulación de presupuesto" (Dentalink, verificación de Juan Cruz; DentalSoft, DentalCore y AgendaPro afirman presupuestos). No publica cómo calculan la cobertura. Las reglas RN-PR son una propuesta del responsable de C-19 para que la revise la líder.
+**Alternativas consideradas**:
+1. Calcular el presupuesto en el momento de mostrarlo, con los precios y la cobertura actuales.
+2. Llevar un historial de aranceles con vigencias y recalcular con el precio de la fecha del presupuesto.
+**Justificación**:
+- Lo que se le informa al paciente no puede cambiar solo porque después se actualizó un precio.
+- La foto es más simple que un historial de aranceles y alcanza para la liquidación de C-20, que necesita los importes de cada ítem.
+**Trade-offs aceptados**: hay datos copiados en cada ítem. Para actualizar un presupuesto con precios nuevos se rechaza y se emite otro.
+**Impacto**: RN-PR-01 a RN-PR-07, US-047, dos filas de la matriz de 03 y las entidades `Arancel`, `CoberturaPlan`, `Presupuesto` y `PresupuestoItem` (migración V13).
+
+### DD-16: El origen y quién canceló salen de la auditoría [2026-11-24, C-32, en revisión]
+**Decisión**: C-32 deduce el origen de cada turno y quién lo canceló a partir de `turno_auditoria`: un actor `paciente-online:<id>` es el paciente desde su cuenta; cualquier otro actor es el personal (RN-RE-05, RN-RE-07). No se agrega una columna `origen` al turno.
+**Contexto**: la KB describía `origen`, `creado_por` y `cancelado_en` en `Turno` (04), pero ningún change los creó. La auditoría, en cambio, registra cada creación y cancelación con su actor desde C-06, y la reserva online usa un actor propio sin datos personales desde C-10.
+**Alternativas consideradas**:
+1. Una migración que agregue `turno.origen` y lo complete desde la auditoría para los turnos existentes.
+2. Pedirle al personal que indique el origen al cargar cada turno.
+**Justificación**:
+- La auditoría ya tiene el dato, para todos los turnos y sin migración.
+- No toca `agenda/` (de Sofia) ni pide un número de migración reservado.
+- Respeta el actor sin datos personales de la reserva online.
+**Trade-offs aceptados**: los reportes dependen del formato del actor online. Si un change futuro lo cambia, tiene que mantener un prefijo reconocible o actualizar RN-RE-05. Los turnos sin registro de creación se informan como "sin dato".
+**Impacto**: RN-RE-05, RN-RE-07, la corrección de `Turno` en 04 y la métrica de origen de 01.
+
+### DD-17: Los archivos clínicos van a un almacén detrás de un puerto, con un adaptador en disco [2026-11-24, C-26]
 **Decisión**: el contenido de las imágenes y los estudios no se guarda en PostgreSQL.
 - Va a un **almacén de archivos detrás de un puerto**. En este change el único adaptador escribe en una carpeta del disco, configurada con `IMAGENES_DIRECTORIO`.
 - La base guarda los metadatos, el tamaño, el hash SHA-256 y una clave de almacén generada por el servidor, sin datos del paciente.
