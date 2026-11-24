@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pacientes · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="ficha.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="admin" data-rol="ADMIN" data-activa="pacientes">
+  <div class="pagina-ficha">
+    <h1 tabindex="-1">Pacientes</h1>
+
+    <section class="panel ficha-paciente" aria-labelledby="paciente-nombre">
+      <div class="ficha-paciente-datos">
+        <div>
+          <h2 class="ficha-paciente-nombre" id="paciente-nombre">Paciente Uno</h2>
+          <p class="ficha-paciente-dni">DNI 99000001</p>
+        </div>
+        <button type="button" class="btn">Cambiar de paciente</button>
+      </div>
+      <p class="aviso aviso-info">Solo lectura: la ficha clínica la edita el odontólogo.</p>
+    </section>
+
+    <section class="panel ficha-seccion" aria-labelledby="t-odonto">
+      <div class="ficha-seccion-cabecera">
+        <h2 id="t-odonto">Odontograma</h2>
+        <div class="grupo-botones" role="group" aria-label="Dentición"><button type="button" aria-pressed="true">Permanentes</button><button type="button" aria-pressed="false">Temporales</button></div>
+      </div>
+      <div class="odontograma" data-solo-lectura data-denticion="permanente"
+           data-vigente='{"16":{"O":"OBTURADO","M":"CARIES"},"26":{"M":"A_TRATAR"},"36":{"completa":"AUSENTE"},"46":{"completa":"CORONA"},"11":{"V":"OBTURADO"},"24":{"completa":"ENDODONCIA"},"47":{"O":"SANO"}}'>
+        <ul class="leyenda" aria-label="Estados"></ul>
+      </div>
+      <details class="ficha-desplegable">
+        <summary>Estado vigente en texto (7 piezas con registros)</summary>
+      </details>
+    </section>
+
+    <div class="ficha-columnas">
+      <section class="panel ficha-seccion" aria-labelledby="t-ficha">
+        <h2 id="t-ficha">Ficha básica</h2>
+        <p class="firma">Actualizada por ana.ejemplo el 01/12/2026 a las 10:18</p>
+        <dl class="ficha-dato">
+          <dt>Antecedentes</dt><dd>Hipertensión controlada.</dd>
+          <dt>Alergias</dt><dd>Penicilina.</dd>
+          <dt>Medicación</dt><dd>Enalapril 10 mg por día.</dd>
+        </dl>
+      </section>
+
+      <div class="ficha-seccion">
+        <section class="panel ficha-seccion" aria-labelledby="t-ausencias">
+          <h2 id="t-ausencias">Ausencias</h2>
+          <ul class="lista-ficha">
+            <li><span>05/11/2026 · 11:00<br /><span class="detalle">Dr. Bruno Prueba</span></span><span class="etiqueta etiqueta-ausente">Ausente</span></li>
+            <li class="deshecha"><span>20/10/2026 · 09:00<br /><span class="detalle">Dra. Ana Ejemplo</span></span><span class="detalle">Deshecha por recepcion el 20/10/2026 a las 09:22</span></li>
+          </ul>
+        </section>
+        <section class="panel ficha-seccion" aria-labelledby="t-historial">
+          <details class="ficha-desplegable">
+            <summary id="t-historial">Historial del odontograma</summary>
+          </details>
+        </section>
+      </div>
+    </div>
+
+    <p class="nota-mockup"><b>Mockup C-44.</b> La misma ficha vista por <code>admin</code>: todo en solo lectura, sin campos, sin el panel de edición del odontograma y sin "Marcar ausente" (RN-CL-01). El historial está cerrado y se pide recién al abrirlo. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

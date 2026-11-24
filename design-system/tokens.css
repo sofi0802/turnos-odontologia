@@ -1,4 +1,4 @@
-/* Design system — tokens (Revision 2).
+/* Design system — tokens (Revision 4).
    Fuente única de valores visuales. Conserva las decisiones de la UI existente
    (frontend/src/styles.css de C-09): acento #0b6e8a, fuente del sistema, radio 0.5rem,
    objetivos táctiles de 44px. Revision 2 (C-39): todos los nombres son --ds-*; ya no hay alias. */
@@ -45,6 +45,18 @@
   --ds-turno-atendido-fondo: #f2f0fb;
   --ds-turno-cancelado: #5b6770;
   --ds-turno-cancelado-fondo: #f1f3f5;
+
+  /* ---- Color: estados del odontograma (Revision 4, C-44). Relleno de la cara; todos ≥ 5.8:1 sobre blanco,
+     y el texto blanco encima también. Nunca solos: la pantalla muestra además la letra y el nombre del estado. ---- */
+  --ds-odonto-sano: var(--ds-ok);
+  --ds-odonto-caries: var(--ds-error);
+  --ds-odonto-obturado: var(--ds-info);
+  --ds-odonto-a-tratar: var(--ds-alerta);
+  --ds-odonto-ausente: var(--ds-turno-cancelado);
+  --ds-odonto-corona: #4b3f8a;       /* 8.8:1 */
+  --ds-odonto-endodoncia: #8a2f6b;   /* 7.8:1 */
+  --ds-odonto-sin-estado: var(--ds-fondo);
+  --ds-odonto-trazo: var(--ds-borde-fuerte);
 
   /* ---- Tipografía (sin fuentes remotas) ---- */
   --ds-fuente: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;

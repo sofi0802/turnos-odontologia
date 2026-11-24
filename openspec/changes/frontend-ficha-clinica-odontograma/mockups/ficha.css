@@ -1,0 +1,477 @@
+/* Mockups de C-44: propuesta de frontend/src/styles/17-ficha.css. Solo variables --ds-* (design system Revision 4).
+   La base es la de la aplicación: los mockups cargan frontend/src/styles.css tal como está en master. */
+
+/* ---- Página y cabecera del paciente ---- */
+.pagina-ficha {
+  display: grid;
+  gap: var(--ds-espacio-3);
+}
+
+.pagina-ficha h1 {
+  margin-bottom: 0;
+}
+
+.ficha-paciente {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.ficha-paciente-datos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1) var(--ds-espacio-2);
+}
+
+.ficha-paciente-nombre {
+  margin: 0;
+  font-size: var(--ds-texto-xl);
+  line-height: var(--ds-interlineado-titulo);
+}
+
+.ficha-paciente-dni {
+  margin: 0;
+  color: var(--ds-texto-suave);
+  font-family: var(--ds-fuente-mono);
+}
+
+.ficha-turno {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1) var(--ds-espacio-2);
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  background: var(--ds-turno-reservado-fondo);
+  border-radius: var(--ds-radio);
+}
+
+.ficha-turno p {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+}
+
+.ficha-turno .icono {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  color: var(--ds-turno-reservado);
+}
+
+.ficha-turno .ayuda-boton {
+  display: block;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+  text-align: right;
+}
+
+/* ---- Secciones ---- */
+.ficha-seccion {
+  display: grid;
+  gap: var(--ds-espacio-2);
+  align-content: start;
+}
+
+.ficha-seccion-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1);
+}
+
+.ficha-seccion-cabecera h2 {
+  margin: 0;
+}
+
+.ficha-columnas {
+  display: grid;
+  gap: var(--ds-espacio-3);
+}
+
+@media (min-width: 64rem) {
+  .ficha-columnas {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+  }
+}
+
+.firma {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.ficha-dato {
+  display: grid;
+  gap: var(--ds-espacio-0);
+}
+
+.ficha-dato dt {
+  font-weight: var(--ds-peso-medio);
+}
+
+.ficha-dato dd {
+  margin: 0 0 var(--ds-espacio-1);
+  white-space: pre-line;
+}
+
+.ficha-dato dd.vacio-dato {
+  color: var(--ds-texto-suave);
+  font-style: italic;
+}
+
+.campo textarea {
+  font: inherit;
+  min-height: 5.5rem;
+  resize: vertical;
+}
+
+.contador {
+  margin: 0;
+  font-size: var(--ds-texto-xs);
+  color: var(--ds-texto-suave);
+  text-align: right;
+}
+
+/* ---- Odontograma ---- */
+.odontograma {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.odontograma-dibujo {
+  overflow-x: auto;
+  padding: var(--ds-espacio-1) 0;
+}
+
+.odontograma svg {
+  display: block;
+  width: 100%;
+  margin: 0 auto;
+  height: auto;
+}
+
+.odontograma-dibujo {
+  display: grid;
+  gap: var(--ds-espacio-1);
+}
+
+.odontograma-lado {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-texto-suave);
+}
+
+.odontograma .cara {
+  fill: var(--ds-odonto-sin-estado);
+  stroke: var(--ds-odonto-trazo);
+  stroke-width: 1;
+  cursor: pointer;
+}
+
+.odontograma[data-solo-lectura] .cara {
+  cursor: default;
+}
+
+.odontograma .cara:hover {
+  fill: var(--ds-acento-50);
+}
+
+.odontograma .cara:focus-visible {
+  outline: none;
+  stroke: var(--ds-foco-color);
+  stroke-width: 3;
+}
+
+.odontograma .cara[data-estado='SANO'] { fill: var(--ds-odonto-sano); }
+.odontograma .cara[data-estado='CARIES'] { fill: var(--ds-odonto-caries); }
+.odontograma .cara[data-estado='OBTURADO'] { fill: var(--ds-odonto-obturado); }
+.odontograma .cara[data-estado='A_TRATAR'] { fill: var(--ds-odonto-a-tratar); }
+.odontograma .cara[data-estado='AUSENTE'],
+.odontograma .cara[data-estado='CORONA'],
+.odontograma .cara[data-estado='ENDODONCIA'] { fill: var(--ds-superficie-2); }
+
+.odontograma .cara.pendiente {
+  stroke: var(--ds-texto);
+  stroke-width: 2;
+  stroke-dasharray: 3 2;
+}
+
+.odontograma .cara.elegida {
+  stroke: var(--ds-acento-500);
+  stroke-width: 3;
+}
+
+.odontograma .letra {
+  font: var(--ds-peso-fuerte) 9px var(--ds-fuente);
+  fill: var(--ds-acento-texto);
+  text-anchor: middle;
+  dominant-baseline: central;
+  pointer-events: none;
+}
+
+.odontograma .numero {
+  font: var(--ds-peso-medio) 11px var(--ds-fuente);
+  fill: var(--ds-texto-suave);
+  text-anchor: middle;
+}
+
+.odontograma .numero.elegida {
+  fill: var(--ds-acento-500);
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.odontograma .marca-ausente { stroke: var(--ds-odonto-ausente); stroke-width: 3; stroke-linecap: round; }
+.odontograma .marca-corona { fill: none; stroke: var(--ds-odonto-corona); stroke-width: 3; }
+.odontograma .marca-endodoncia { stroke: var(--ds-odonto-endodoncia); stroke-width: 3; stroke-linecap: round; }
+.odontograma .linea-media { stroke: var(--ds-borde-fuerte); stroke-dasharray: 2 3; }
+
+.leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1) var(--ds-espacio-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--ds-texto-sm);
+}
+
+.leyenda li {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-0);
+}
+
+.muestra {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.5rem;
+  height: 1.5rem;
+  padding: 0 0.2rem;
+  font-size: var(--ds-texto-xs);
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-acento-texto);
+  border-radius: var(--ds-radio-sm);
+}
+
+.muestra[data-estado='SANO'] { background: var(--ds-odonto-sano); }
+.muestra[data-estado='CARIES'] { background: var(--ds-odonto-caries); }
+.muestra[data-estado='OBTURADO'] { background: var(--ds-odonto-obturado); }
+.muestra[data-estado='A_TRATAR'] { background: var(--ds-odonto-a-tratar); }
+.muestra[data-estado='AUSENTE'] { background: var(--ds-odonto-ausente); }
+.muestra[data-estado='CORONA'] { background: var(--ds-odonto-corona); }
+.muestra[data-estado='ENDODONCIA'] { background: var(--ds-odonto-endodoncia); }
+
+/* ---- Panel de edición ---- */
+.editor-pieza {
+  display: grid;
+  gap: var(--ds-espacio-2);
+  padding: var(--ds-espacio-2);
+  background: var(--ds-superficie);
+  border-radius: var(--ds-radio);
+}
+
+.editor-pieza h3 {
+  margin: 0;
+  font-size: var(--ds-texto-base);
+}
+
+.editor-fila {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+@media (min-width: 64rem) {
+  .editor-fila {
+    grid-template-columns: minmax(14rem, 1fr) 2fr;
+  }
+}
+
+.opciones-caras {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1);
+}
+
+.opciones-caras .opcion {
+  min-height: var(--ds-alto-control);
+}
+
+.opciones-estados {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+  gap: var(--ds-espacio-1);
+}
+
+.opciones-estados .opcion {
+  min-height: var(--ds-alto-control);
+}
+
+.selector-pieza {
+  max-width: 12rem;
+}
+
+.pendientes {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pendientes li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1);
+  padding: var(--ds-espacio-0) var(--ds-espacio-1);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) dashed var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio);
+}
+
+.pendientes li span {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+}
+
+.acciones-odontograma {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--ds-espacio-1);
+}
+
+/* ---- Vigentes, ausencias e historial ---- */
+.lista-ficha {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lista-ficha li {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--ds-espacio-0) var(--ds-espacio-2);
+  padding: var(--ds-espacio-1) 0;
+  border-bottom: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.lista-ficha li:last-child {
+  border-bottom: 0;
+}
+
+.lista-ficha .etiqueta {
+  align-self: center;
+  white-space: nowrap;
+}
+
+.lista-ficha .detalle {
+  color: var(--ds-texto-suave);
+  font-size: var(--ds-texto-sm);
+}
+
+.deshecha {
+  color: var(--ds-texto-suave);
+}
+
+.ficha-desplegable > summary {
+  min-height: var(--ds-alto-control);
+  display: flex;
+  align-items: center;
+  font-weight: var(--ds-peso-medio);
+  cursor: pointer;
+}
+
+.ficha-desplegable > summary::before {
+  content: '▸';
+  width: 1.25rem;
+  color: var(--ds-acento-500);
+}
+
+.ficha-desplegable[open] > summary::before {
+  content: '▾';
+}
+
+.tabla-historial {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--ds-texto-sm);
+}
+
+.tabla-historial th,
+.tabla-historial td {
+  padding: var(--ds-espacio-1);
+  text-align: left;
+  border-bottom: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.tabla-historial th {
+  color: var(--ds-texto-suave);
+  font-weight: var(--ds-peso-medio);
+}
+
+@media (max-width: 47.99rem) {
+  .tabla-historial thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+
+  .tabla-historial tr {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0 var(--ds-espacio-1);
+    padding: var(--ds-espacio-1) 0;
+    border-bottom: var(--ds-borde-ancho) solid var(--ds-borde);
+  }
+
+  .tabla-historial td {
+    padding: 0;
+    border: 0;
+  }
+
+  .tabla-historial td:first-child {
+    grid-column: 1 / -1;
+    color: var(--ds-texto-suave);
+  }
+}
+
+/* ---- Solo para los mockups ---- */
+.nota-mockup {
+  margin: 0;
+  font-size: var(--ds-texto-xs);
+  color: var(--ds-texto-suave);
+  max-width: 48rem;
+}
+
+.nota-mockup b {
+  color: var(--ds-alerta);
+}
+
+.rotulo-estado {
+  margin: var(--ds-espacio-3) 0 var(--ds-espacio-1);
+  font-size: var(--ds-texto-sm);
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-alerta);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.dialogo-estatico {
+  position: static;
+  display: block;
+  margin: 0;
+  box-shadow: var(--ds-sombra-3);
+}
