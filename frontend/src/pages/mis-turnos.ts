@@ -6,6 +6,8 @@ import { cancelarTurno, ESTADOS, listarMisTurnos, reprogramarTurno, separarTurno
 import { ErrorNegocio, ErrorSesion } from '../shared/api/errores.ts';
 import { fechaDeInstante, fechaLarga, formatearHora, hoy } from '../shared/fecha/zona.ts';
 import { crearAviso, crearBoton, crearCampo, crearEntrada, crearSelector, type Opcion } from '../shared/ui/campos.ts';
+import { abrirDialogo } from '../shared/ui/dialogo.ts';
+import { crearCargando, crearEstadoVacio } from '../shared/ui/estado-vacio.ts';
 import { mensajeDeError } from '../shared/ui/mensajes.ts';
 import { crearTitulo, type ContextoPagina, type Pagina } from './pagina.ts';
 
@@ -29,6 +31,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   const listas = document.createElement('div');
   listas.className = 'pila';
   listas.setAttribute('aria-busy', 'true');
+  listas.append(crearCargando());
   const pagina = document.createElement('div');
   pagina.className = 'pagina-paciente';
   pagina.append(crearTitulo('Mis turnos'), avisoOk, avisoError, listas);
@@ -45,6 +48,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
     consulta += 1;
     const esta = consulta;
     listas.setAttribute('aria-busy', 'true');
+    listas.replaceChildren(crearCargando());
     try {
       const turnos = await listarMisTurnos(contexto.api);
       if (esta === consulta && vigente()) {
@@ -66,14 +70,9 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   function dibujarListas(turnos: readonly TurnoPaciente[]): void {
     listas.removeAttribute('aria-busy');
     if (turnos.length === 0) {
-      const vacio = document.createElement('p');
-      vacio.className = 'vacio';
-      vacio.textContent = MENSAJE_SIN_TURNOS;
-      const reservar = document.createElement('a');
-      reservar.className = 'btn btn-principal';
-      reservar.href = '#/reserva';
-      reservar.textContent = 'Reservar turno';
-      listas.replaceChildren(vacio, reservar);
+      listas.replaceChildren(
+        crearEstadoVacio({ texto: MENSAJE_SIN_TURNOS, accion: { texto: 'Reservar turno', ruta: 'reserva' } }),
+      );
       return;
     }
     const { proximos, anteriores } = separarTurnos(turnos, new Date());
@@ -167,34 +166,18 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
 
   // ---------- Cancelar ----------
   function abrirCancelacion(turno: TurnoPaciente, origen: HTMLButtonElement): void {
-    const dialogo = document.createElement('dialog');
-    dialogo.className = 'dialogo';
-    dialogo.setAttribute('aria-labelledby', 'titulo-cancelar');
-    const titulo = document.createElement('h2');
-    titulo.id = 'titulo-cancelar';
-    titulo.textContent = '¿Cancelar el turno?';
-    const resumen = document.createElement('p');
-    resumen.className = 'dialogo-resumen';
-    resumen.textContent = `${fechaLarga(turno.inicio)} a las ${formatearHora(turno.inicio)} con ${turno.profesional.nombre}.`;
-    const volver = boton('Volver');
-    const confirmar = boton('Sí, cancelar turno', 'btn btn-peligro');
-    const botones = document.createElement('div');
-    botones.className = 'dialogo-acciones';
-    botones.append(volver, confirmar);
-    dialogo.append(titulo, resumen, botones);
-    pagina.append(dialogo);
+    const { formulario, principal: confirmar, cerrar } = abrirDialogo({
+      titulo: '¿Cancelar el turno?',
+      resumen: `${fechaLarga(turno.inicio)} a las ${formatearHora(turno.inicio)} con ${turno.profesional.nombre}.`,
+      textoDescartar: 'Volver',
+      textoPrincipal: 'Sí, cancelar turno',
+      peligro: true,
+      contenedor: pagina,
+      alCerrar: () => origen.focus(),
+    });
 
-    function cerrar(): void {
-      if (dialogo.open) {
-        dialogo.close();
-      }
-      dialogo.remove();
-      origen.focus();
-    }
-
-    volver.addEventListener('click', cerrar);
-    dialogo.addEventListener('cancel', cerrar);
-    confirmar.addEventListener('click', () => {
+    formulario.addEventListener('submit', (evento) => {
+      evento.preventDefault();
       confirmar.disabled = true;
       cancelarTurno(contexto.api, turno.numeroReserva)
         .then(() => {
@@ -208,7 +191,6 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
           mostrarRechazo(error);
         });
     });
-    dialogo.showModal();
   }
 
   // ---------- Cambiar horario ----------
@@ -363,5 +345,6 @@ export const paginaMisTurnos: Pagina = {
   titulo: 'Mis turnos',
   acceso: 'paciente',
   menu: 'paciente',
+  icono: 'turnos',
   render: dibujar,
 };

@@ -227,5 +227,6 @@ export const paginaAgenda: Pagina = {
   titulo: 'Agenda',
   acceso: 'personal',
   menu: 'personal',
+  icono: 'agenda',
   render: dibujar,
 };

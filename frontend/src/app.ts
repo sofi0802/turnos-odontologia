@@ -2,7 +2,7 @@ import { borrarReservaPendiente } from './paciente/reserva.ts';
 import { paginaAgenda } from './pages/agenda.ts';
 import { paginaConfiguracion } from './pages/configuracion.ts';
 import { paginaConfirmar } from './pages/confirmar.ts';
-import { NOMBRE_APLICACION, paginaInicio } from './pages/inicio.ts';
+import { paginaInicio } from './pages/inicio.ts';
 import { paginaMiCuenta } from './pages/mi-cuenta.ts';
 import { paginaMisTurnos } from './pages/mis-turnos.ts';
 import { crearTitulo, type ContextoPagina, type Pagina } from './pages/pagina.ts';
@@ -18,6 +18,7 @@ import {
 } from './shared/sesion/sesion.ts';
 import { mensajeDeError } from './shared/ui/mensajes.ts';
 import { crearLayout } from './shared/ui/layout.ts';
+import { NOMBRE_APLICACION } from './shared/ui/marca.ts';
 import { crearRouter, type Router } from './shared/ui/router.ts';
 
 export const PAGINAS: readonly Pagina[] = [

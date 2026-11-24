@@ -136,15 +136,6 @@
   border-color: var(--ds-acento-500);
 }
 
-.vacio {
-  margin: 0;
-  padding: var(--ds-espacio-3) var(--ds-espacio-2);
-  text-align: center;
-  color: var(--ds-texto-suave);
-  border: 1px dashed var(--ds-borde-fuerte);
-  border-radius: var(--ds-radio);
-}
-
 .resumen {
   margin: 0;
   padding: var(--ds-espacio-2);

@@ -1,5 +1,6 @@
 import type { ClienteApi } from '../shared/api/cliente.ts';
 import type { Sesion } from '../shared/sesion/sesion.ts';
+import type { NombreIcono } from '../shared/ui/iconos.ts';
 
 /** Lo que la aplicación le da a una página al dibujarla. */
 export interface ContextoPagina {
@@ -30,11 +31,8 @@ export interface Pagina {
   readonly acceso?: Acceso;
   /** Sin `menu`, la página no figura en el menú (por ejemplo, Mi cuenta). */
   readonly menu?: GrupoMenu;
-  /**
-   * Texto que el encabezado usa, sin sesión, en lugar de "Ingresar" (la portada pide "Acceso personal", C-37).
-   * Con este texto el encabezado queda sin menú: la portada trae sus propios botones.
-   */
-  readonly textoIngreso?: string;
+  /** Ícono de la opción en la barra lateral (C-39). */
+  readonly icono?: NombreIcono;
   render(contenedor: HTMLElement, contexto: ContextoPagina): void;
 }
 

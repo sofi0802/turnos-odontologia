@@ -1,4 +1,5 @@
 import { diaDeLaSemana, fechaDeInstante, formatearHora, type Fecha } from '../shared/fecha/zona.ts';
+import { crearEstadoVacio } from '../shared/ui/estado-vacio.ts';
 import { nombreDe, type Catalogos } from './catalogos.ts';
 import type { TurnoAgenda } from './consulta.ts';
 import { diasDe, type Periodo } from './periodo.ts';
@@ -26,7 +27,8 @@ function nombrePaciente(turno: TurnoAgenda): string {
 
 function elementoTurno(turno: TurnoAgenda, catalogos: Catalogos, acciones: AccionesTurno): HTMLLIElement {
   const item = document.createElement('li');
-  item.className = 'turno';
+  // El borde izquierdo lleva el color del estado; un sobreturno se distingue por encima del estado (C-39).
+  item.className = `turno turno-${turno.esSobreturno ? 'sobreturno' : turno.estado.toLowerCase()}`;
   item.dataset['id'] = String(turno.id);
 
   const horario = document.createElement('p');
@@ -79,11 +81,10 @@ function listaDeTurnos(turnos: readonly TurnoAgenda[], catalogos: Catalogos, acc
   return lista;
 }
 
-function mensajeVacio(textoMensaje: string): HTMLParagraphElement {
-  const parrafo = document.createElement('p');
-  parrafo.className = 'agenda-vacia';
-  parrafo.textContent = textoMensaje;
-  return parrafo;
+function mensajeVacio(textoMensaje: string): HTMLElement {
+  const vacio = crearEstadoVacio({ texto: textoMensaje, chico: true });
+  vacio.classList.add('agenda-vacia');
+  return vacio;
 }
 
 /** Dibuja los turnos del período: una lista para el día o un grupo por día para la semana. */
@@ -94,6 +95,7 @@ export function dibujarAgenda(
   catalogos: Catalogos,
   acciones: AccionesTurno,
 ): void {
+  contenedor.classList.toggle('semana', periodo.vista === 'semana');
   if (periodo.vista === 'dia') {
     contenedor.replaceChildren(
       turnos.length === 0 ? mensajeVacio('No hay turnos para este día.') : listaDeTurnos(turnos, catalogos, acciones),

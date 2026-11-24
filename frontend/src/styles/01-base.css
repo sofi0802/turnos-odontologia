@@ -23,8 +23,8 @@ a {
 }
 
 :focus-visible {
-  outline: 3px solid var(--ds-acento-500);
-  outline-offset: 2px;
+  outline: var(--ds-foco-ancho) solid var(--ds-foco-color);
+  outline-offset: var(--ds-foco-separacion);
 }
 
 button {
@@ -76,83 +76,6 @@ select[aria-invalid='true'] {
 
 .boton-secundario {
   background: var(--ds-superficie);
-}
-
-.encabezado {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--ds-espacio-1);
-  padding: var(--ds-espacio-1) var(--ds-espacio-2);
-  background: var(--ds-superficie);
-  border-bottom: 1px solid var(--ds-borde);
-}
-
-.marca {
-  font-weight: 700;
-}
-
-.menu-boton {
-  min-height: 44px;
-  padding: 0 var(--ds-espacio-2);
-  font: inherit;
-  color: var(--ds-texto);
-  background: var(--ds-fondo);
-  border: 1px solid var(--ds-borde);
-  border-radius: var(--ds-radio);
-  cursor: pointer;
-}
-
-.menu {
-  display: none;
-  width: 100%;
-}
-
-.menu.abierto {
-  display: block;
-}
-
-.menu ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.menu a {
-  display: block;
-  min-height: 44px;
-  padding: 0.625rem var(--ds-espacio-1);
-  color: var(--ds-texto);
-  text-decoration: none;
-  border-radius: var(--ds-radio);
-}
-
-.menu a:hover {
-  background: var(--ds-fondo);
-}
-
-.menu a[aria-current='page'] {
-  font-weight: 700;
-  color: var(--ds-acento-500);
-  background: var(--ds-fondo);
-}
-
-.usuario {
-  display: flex;
-  align-items: center;
-  gap: var(--ds-espacio-1);
-  width: 100%;
-  justify-content: space-between;
-}
-
-.usuario[hidden] {
-  display: none;
-}
-
-.usuario-nombre {
-  color: var(--ds-texto-suave);
-  overflow-wrap: anywhere;
 }
 
 .contenido {

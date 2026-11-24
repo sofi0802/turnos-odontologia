@@ -247,6 +247,7 @@ body { background: var(--ds-superficie); }
 .btn-peligro:hover, .btn-peligro.es-hover { background: var(--ds-error-fondo); }
 .btn:active:not(.btn-principal), .btn.es-activo:not(.btn-principal) { background: var(--ds-superficie-2); }
 .btn:focus-visible, .btn.es-foco, .chip.es-foco, .opcion.es-foco { outline: var(--ds-foco-ancho) solid var(--ds-foco-color); outline-offset: var(--ds-foco-separacion); }
+.btn-peligro:focus-visible, .btn-peligro.es-foco { outline-color: var(--ds-error); }
 .chip { transition: background var(--ds-duracion-rapida) var(--ds-curva), border-color var(--ds-duracion-rapida) var(--ds-curva); }
 .chip:hover, .chip.es-hover { background: var(--ds-acento-50); border-color: var(--ds-acento-500); }
 .chip:active, .chip.es-activo { background: var(--ds-acento-100); }

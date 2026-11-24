@@ -1,0 +1,110 @@
+/* Estados de los botones (C-39, etapa B; mockups aprobados): hover, presionado, foco visible y deshabilitado.
+   Va al final para que valga sobre las reglas de cada pantalla. Solo --ds-*. */
+.btn,
+.boton-principal,
+.boton-secundario,
+.chip,
+.opcion,
+.btn-sobre-azul,
+.enlace-sobre-azul,
+.lateral a,
+.cajon-cabecera .cerrar {
+  transition:
+    background var(--ds-duracion-rapida) var(--ds-curva),
+    border-color var(--ds-duracion-rapida) var(--ds-curva),
+    color var(--ds-duracion-rapida) var(--ds-curva);
+}
+
+/* Hover */
+.btn:hover:not(:disabled),
+.boton-secundario:hover:not(:disabled) {
+  background: var(--ds-superficie);
+}
+
+.btn-principal:hover:not(:disabled),
+.boton-principal:hover:not(:disabled) {
+  background: var(--ds-acento-600);
+  border-color: var(--ds-acento-600);
+}
+
+.btn-fantasma:hover:not(:disabled) {
+  background: var(--ds-acento-50);
+}
+
+.btn-peligro:hover:not(:disabled) {
+  background: var(--ds-error-fondo);
+}
+
+.chip:hover:not(:disabled),
+.opcion:hover {
+  background: var(--ds-acento-50);
+  border-color: var(--ds-acento-500);
+}
+
+.btn-sobre-azul:hover:not(:disabled),
+.enlace-sobre-azul:hover {
+  background: var(--ds-acento-600);
+}
+
+.lateral a:hover,
+.cajon-cabecera .cerrar:hover {
+  color: var(--ds-texto);
+  background: var(--ds-superficie);
+}
+
+.lateral a[aria-current='page']:hover {
+  color: var(--ds-acento-700);
+  background: var(--ds-acento-50);
+}
+
+/* Presionado */
+.btn:active:not(:disabled) {
+  background: var(--ds-superficie-2);
+}
+
+.btn-principal:active:not(:disabled),
+.boton-principal:active:not(:disabled) {
+  background: var(--ds-acento-700);
+  border-color: var(--ds-acento-700);
+}
+
+.btn-peligro:active:not(:disabled) {
+  background: var(--ds-error-fondo);
+}
+
+.chip:active:not(:disabled) {
+  background: var(--ds-acento-100);
+}
+
+.btn-sobre-azul:active:not(:disabled) {
+  background: var(--ds-acento-700);
+}
+
+/* Foco visible con el teclado: el anillo del design system (en rojo para el botón de peligro) */
+.btn:focus-visible,
+.boton-principal:focus-visible,
+.boton-secundario:focus-visible,
+.chip:focus-visible,
+.lateral a:focus-visible,
+.opcion:has(input:focus-visible) {
+  outline: var(--ds-foco-ancho) solid var(--ds-foco-color);
+  outline-offset: var(--ds-foco-separacion);
+}
+
+.btn-peligro:focus-visible {
+  outline-color: var(--ds-error);
+}
+
+.cabecera .btn-sobre-azul:focus-visible,
+.cabecera .enlace-sobre-azul:focus-visible,
+.cabecera .marca:focus-visible {
+  outline-color: var(--ds-acento-texto);
+}
+
+/* Deshabilitado */
+.btn:disabled,
+.boton-principal:disabled,
+.boton-secundario:disabled,
+.chip:disabled {
+  cursor: not-allowed;
+}

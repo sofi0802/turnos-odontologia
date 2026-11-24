@@ -69,6 +69,24 @@
   opacity: 0.6;
 }
 
+.agenda-lista.semana {
+  column-gap: var(--ds-espacio-2);
+  column-width: 18rem;
+}
+
+.agenda-dia {
+  break-inside: avoid;
+}
+
+/* En columnas, el primer día de cada una arranca a la misma altura que los demás. */
+.agenda-lista.semana .agenda-dia {
+  margin-bottom: var(--ds-espacio-2);
+}
+
+.agenda-lista.semana .agenda-dia h2 {
+  margin-top: 0;
+}
+
 .agenda-dia h2 {
   margin: var(--ds-espacio-2) 0 var(--ds-espacio-1);
   font-size: 1rem;
@@ -92,7 +110,28 @@
   padding: var(--ds-espacio-1) var(--ds-espacio-2);
   background: var(--ds-superficie);
   border: 1px solid var(--ds-borde);
+  border-left: 4px solid var(--ds-turno-reservado);
   border-radius: var(--ds-radio);
+}
+
+.turno-confirmado {
+  border-left-color: var(--ds-turno-confirmado);
+}
+
+.turno-sobreturno {
+  border-left-color: var(--ds-turno-sobreturno);
+}
+
+.turno-atendido {
+  border-left-color: var(--ds-turno-atendido);
+}
+
+.turno-ausente {
+  border-left-color: var(--ds-turno-ausente);
+}
+
+.turno-cancelado {
+  border-left-color: var(--ds-turno-cancelado);
 }
 
 .turno p {

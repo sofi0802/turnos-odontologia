@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { estilos } from './estilos.ts';
+import { estilos, textoDeModulo } from './estilos.ts';
 import { abrirApp, boton, campo, escribir, json, ServidorFalso, turno, type AppDePrueba } from './apoyo.ts';
 
 // jsdom no aplica media queries ni calcula el diseño: estos tests comprueban la
@@ -63,9 +63,9 @@ describe('Agenda usable en el celular', () => {
   });
 
   it('Agenda en la computadora', () => {
-    // Desde 768 px, filtros en fila y los días de la semana en columnas que se ajustan al ancho.
+    // Desde 768 px, filtros en fila y los días de la semana en columnas que se ajustan al ancho y se acomodan sin huecos.
     expect(regla(reglasDeEscritorio(), '.agenda-filtros')).toMatch(/flex-direction:\s*row/);
-    expect(regla(reglasDeEscritorio(), '.agenda-lista')).toMatch(/grid-template-columns:\s*repeat\(auto-fill, minmax\(/);
+    expect(regla(textoDeModulo('03-agenda.css'), '.agenda-lista.semana')).toMatch(/column-width:\s*18rem/);
     expect(regla(estilos, '.contenido')).toMatch(/max-width:\s*var\(--ds-ancho-maximo\)/);
   });
 });
@@ -246,7 +246,8 @@ describe('Configuración usable en el celular (C-34)', () => {
   it('Las listas de Configuración se apilan en el celular y van en columnas en la computadora', () => {
     expect(regla(estilos, '.lista-config > li')).toMatch(/display:\s*grid/);
     expect(regla(estilos, '.lista-config > li')).not.toMatch(/grid-template-columns/);
-    const escritorio = estilos.slice(estilos.lastIndexOf('@media (min-width: 768px)'));
+    const configuracion = textoDeModulo('12-configuracion.css');
+    const escritorio = configuracion.slice(configuracion.lastIndexOf('@media (min-width: 768px)'));
     expect(regla(escritorio, '.lista-config > li')).toMatch(/grid-template-columns:\s*1fr auto/);
   });
 
@@ -264,7 +265,8 @@ describe('Configuración usable en el celular (C-34)', () => {
   it('los días y las horas de las franjas se apilan en el celular y van en fila en la computadora', () => {
     expect(regla(estilos, '.dias-semana')).toMatch(/grid-template-columns:\s*repeat\(2,\s*1fr\)/);
     expect(regla(estilos, '.hora-5')).toMatch(/display:\s*flex/);
-    const escritorio = estilos.slice(estilos.lastIndexOf('@media (min-width: 768px)'));
+    const configuracion = textoDeModulo('12-configuracion.css');
+    const escritorio = configuracion.slice(configuracion.lastIndexOf('@media (min-width: 768px)'));
     expect(regla(escritorio, '.dias-semana')).toMatch(/repeat\(7,\s*auto\)/);
   });
 
@@ -291,7 +293,7 @@ describe('Portada usable en el celular (C-37)', () => {
   it('La portada en el celular', () => {
     const celular = reglasMobileFirstDePortada();
     const alto = /min-height:\s*var\(--ds-alto-control\)/;
-    expect(regla(celular, '.btn-acceso')).toMatch(alto);
+    expect(regla(textoDeModulo('13-layout.css'), '.btn-sobre-azul')).toMatch(alto);
     expect(regla(celular, '.hero-acciones .btn')).toMatch(alto);
     expect(regla(celular, '.hero')).toMatch(/grid-template-columns:\s*minmax\(0,\s*1fr\)/);
     expect(regla(celular, '.tarjetas-pasos')).toMatch(/grid-template-columns:\s*minmax\(0,\s*1fr\)/);

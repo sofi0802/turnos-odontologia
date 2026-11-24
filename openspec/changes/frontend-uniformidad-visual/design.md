@@ -79,9 +79,9 @@ Este change modifica `frontend-navegacion`, que también modifican `ingreso-unic
 - Design system revision: 1 al proponer; **2 desde la etapa A** (2026-11-23, solo quita los alias y suma `--ds-capa-modal`; sin cambio visual; aprobación pendiente de renovar por la líder).
 - Decision: yes, 2026-11-23. El modo del proyecto es `system-and-mockups`.
 - Mockups: se crean por etapa en `openspec/changes/frontend-uniformidad-visual/mockups/<etapa>/` (B: barra lateral, encabezado, pie, componentes y diálogos; C: pantallas del paciente; D: pantallas del personal). Fuente de referencia: `design-system/components.html` y los mockups de C-12, C-33, C-37 y C-38.
-- Approval: pending (por etapa: A no lleva mockups; B, C y D pending). Etapa B: mockups creados el 2026-11-23, pendientes de aprobación.
+- Approval: pending (por etapa: A no lleva mockups; B, C y D pending). Etapa B: mockups aprobados por la líder (2026-11-23), con dos ajustes pedidos en la revisión: el foco de los botones de peligro es rojo y el logo ya no lleva el rótulo "placeholder".
 - Preview: etapa B rendered (2026-11-23), capturas en `mockups/B/previews/` a 390 × 844 y 1440 × 900 (y a 320 px), sin desplazamiento horizontal ni errores en la consola; C y D pending.
-- Visual verify: pending (por etapa).
+- Visual verify: etapa B differences (2026-11-23): sin blockers ni majors; 3 diferencias menores (fondo de la página, aviso del diálogo sin error y estado vacío no provocado), en `mockups/B/verify/README.md`; C y D pending.
 
 ## Risks / Trade-offs
 
