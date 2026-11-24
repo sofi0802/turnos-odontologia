@@ -1,7 +1,7 @@
 # turnos-odontologia
 
-Sistema de gestión de turnos y agenda de pacientes para consultorios odontológicos (mercado argentino).
-Trabajo Global de Integración de **Desarrollo de Software**: del Discovery al primer change, con Spec-Driven Development (OpenSpec) y Active Stack.
+Sistema de gestión de turnos y agenda de pacientes para consultorios odontológicos chicos de Argentina. Su diferencial es **impedir que se superpongan los turnos por profesional y por sillón**, con un margen configurable de 10 minutos o más.
+Trabajo Global de Integración de **Desarrollo de Software**: del Discovery a la entrega del MVP, con Spec-Driven Development (OpenSpec) y Active Stack.
 
 ## Equipo
 
@@ -26,18 +26,28 @@ Trabajo Global de Integración de **Desarrollo de Software**: del Discovery al p
 | 1. `/active-orchestrator` + `openspec init` | Hecho |
 | 2. Discovery | Hecho: 5 fuentes verificadas por el equipo y [PDF](docs/discovery/informe-discovery.pdf) |
 | 3. Base de conocimiento (`knowledge-base/`) | Hecho |
-| 4. Roadmap (`CHANGES.md`) | Hecho: 32 changes (MVP C-01 a C-14) |
-| 5. Skills y reglas del agente (`AGENTS.md`, `CLAUDE.md`) | Hecho: 5 skills en el repo, [registro](.atl/skill-registry.md) y 10 reglas duras |
+| 4. Roadmap (`CHANGES.md`) | Hecho: 40 changes en 10 fases. MVP: C-01 a C-14 y los ajustes C-33 a C-43 |
+| 5. Skills y reglas del agente (`AGENTS.md`, `CLAUDE.md`) | Hecho: skills en el repo, [registro](.atl/skill-registry.md) y 10 reglas duras |
 | 6. Ciclo OPSX sobre un change | Hecho: C-01 `crear-turno-sin-solapamientos` (explore → propose → apply → verify → archive), 12 escenarios con su test. [Evidencia](docs/evidencia/etapa-6-c01-tests.txt) |
-| 7. Memoria del agente (Engram) | Hecho: 13 memorias y consulta real ([evidencia y guion del video](docs/evidencia/etapa-7-engram.md)) |
+| 7. Memoria del agente (Engram) | Hecho: memorias y consulta real ([evidencia y guion del video](docs/evidencia/etapa-7-engram.md)) |
+| 8. MVP y entrega (C-14) | Hecho: los changes del MVP están mergeados; [verificación final](docs/evidencia/c14-entrega.md) |
 
-El estado detallado de la fundación está en [`.active-orchestrator-state.json`](.active-orchestrator-state.json).
+El estado detallado de la fundación está en [`.active-orchestrator-state.json`](.active-orchestrator-state.json). El estado de cada change está en [CHANGES.md](CHANGES.md): algunos changes mergeados todavía no se archivaron en OpenSpec (C-33, C-37, C-38, C-39, C-40, C-41, C-42 e `ingreso-unico-mi-cuenta`).
+
+## Qué hace el MVP
+
+- **Agenda sin solapamientos**: validación en el dominio con códigos de error estables (`SOLAPAMIENTO_PROFESIONAL`, `SOLAPAMIENTO_SILLON`, `MARGEN_INSUFICIENTE`) y restricciones `EXCLUDE USING gist` de PostgreSQL por sillón y por profesional.
+- **Personal** (recepción, odontólogos y administración): agenda por día y semana, nuevo turno guiado, reprogramar, cancelar, sobreturnos, llegada y ausencia del paciente, ficha clínica, buscador de pacientes, configuración del consultorio y cuentas del personal.
+- **Pacientes**: reserva online, Mis turnos, confirmar, cancelar o reprogramar desde el link del recordatorio.
+- **Recordatorios** simulados (WhatsApp y email detrás de puertos), sin datos de salud.
 
 ## Documentos principales
 
 - [Instrucciones para agentes y reglas duras](AGENTS.md).
 - [Roadmap de changes](CHANGES.md).
 - [Base de conocimiento](knowledge-base/README.md).
+- [Specs vigentes](openspec/specs/) y [changes archivados](openspec/changes/archive/).
+- [Design system](design-system/README.md).
 - [Informe de Discovery](docs/discovery/informe-discovery.md) ([PDF](docs/discovery/informe-discovery.pdf)): 16 sistemas, matriz ponderada y MVP recomendado.
 - [Verificación de fuentes del equipo](docs/discovery/verificacion/README.md).
 - [Checklist de Discovery (11 puntos)](docs/discovery/discovery.md): problema, usuarios, reglas de negocio RN-01 a RN-09.
@@ -45,59 +55,135 @@ El estado detallado de la fundación está en [`.active-orchestrator-state.json`
 
 ## Stack
 
-- Backend: Spring Boot + Gradle + PostgreSQL
-- Frontend: TypeScript vanilla, diseño responsivo
+| Capa | Tecnologías |
+|---|---|
+| Backend | Java 21, Spring Boot 3 (Web, Validation, Data JPA, Security), Gradle (wrapper en el repo) |
+| Base de datos | PostgreSQL 16 con `btree_gist`, migraciones con Flyway |
+| Frontend | TypeScript vanilla con Vite y Vitest, responsivo, sin framework |
+| Seguridad | Sesión de Spring Security con cookie `HttpOnly`, CSRF activo y acceso por rol |
 
 ## Cómo trabajamos (Git)
 
-1. Cada tarea o change se hace en su propia rama, que sale de `master` (por ejemplo, `verificacion/<nombre>` o `change/<nombre>`).
+1. Cada tarea o change se hace en su propia rama, que sale de `master` (por ejemplo, `change/C-NN-<nombre>` o `fix/<nombre>`).
 2. Cada integrante commitea con **su propio nombre y email de GitHub** (`git config user.name` / `git config user.email`).
 3. Se abre un Pull Request a `master` y la líder lo revisa y lo mergea.
 4. Nunca se suben datos reales de pacientes ni claves o credenciales.
 
-## Instalación y tests
+## Instalación
 
-Requisito: Java 21. Si no lo tenés, Gradle lo descarga solo la primera vez. No hace falta instalar Gradle ni Docker para C-01.
+### Requisitos
+
+| Herramienta | Versión | Para qué |
+|---|---|---|
+| Java (JDK) | 21 | Backend. Si no lo tenés, el toolchain de Gradle lo descarga la primera vez |
+| Node.js | 20.19 o más | Frontend |
+| Docker | Cualquiera con `docker compose` | PostgreSQL para correr la aplicación y los tests de integración. Alternativa: un PostgreSQL 15 o más instalado, con la extensión `btree_gist` |
+
+No hace falta instalar Gradle: el repo trae el wrapper (`gradlew` y `gradlew.bat`).
+
+### 1. Variables de entorno
+
+Copiá `.env.example` a `.env` en la raíz del repo y completá los valores. El `.env` no se sube al repo.
+
+| Variable | Obligatoria | Uso |
+|---|---|---|
+| `DB_USER`, `DB_PASSWORD` | Sí | Usuario y contraseña de PostgreSQL. `docker compose` crea el usuario con estos valores |
+| `DB_URL` | Sí | Base de desarrollo: `jdbc:postgresql://localhost:5432/turnos` |
+| `DB_TEST_URL` | Para los tests de integración | Base de los tests: `jdbc:postgresql://localhost:5432/turnos_test`. **Nunca** la apuntes a `turnos`: los tests vacían las tablas |
+| `APP_ADMIN_USERNAME`, `APP_ADMIN_PASSWORD` | Para el primer ingreso | Crean la cuenta ADMIN inicial al arrancar, solo si todavía no hay ningún administrador. La contraseña tiene que cumplir la política de contraseñas |
+| `APP_CORS_ORIGENES` | No (por defecto `http://localhost:5173`) | Origen del frontend |
+| `SESSION_TIMEOUT`, `SESSION_COOKIE_SECURE` | No (por defecto `30m` y `false`) | Duración de la sesión. En producción, la cookie va con `true` (HTTPS) |
+| `NOTIFICACIONES_ACTIVO`, `NOTIFICACIONES_INTERVALO_MS` | No (por defecto `true` y 5 minutos) | Tarea de recordatorios simulados |
+| `NOTIFICACIONES_BASE_URL`, `NOTIFICACIONES_RUTA_CANCELAR`, `NOTIFICACIONES_RUTA_REPROGRAMAR` | No | Links de los recordatorios hacia el frontend |
+| `AGENDA_ASISTENCIA_ACTIVO`, `AGENDA_ASISTENCIA_INTERVALO_MS` | No (por defecto `true` y 5 minutos) | Tarea que pasa a ATENDIDO los turnos con llegada registrada que ya terminaron |
+| `CONSULTORIO_NOMBRE`, `CONSULTORIO_DIRECCION` | No | Datos del consultorio que muestran los mensajes |
+| `VITE_API_BASE_URL` | Sí, para el frontend | Dirección de la API: `http://localhost:8080/api/v1`. Vite la lee de la terminal o de `frontend/.env.local` |
+
+### 2. Base de datos
+
+Desde la raíz del repo:
+
+```bash
+docker compose up -d
+```
+
+La primera vez que se crea el volumen, `docker/initdb/01-crear-turnos-test.sql` crea las dos bases (`turnos` y `turnos_test`). Flyway crea las tablas al arrancar el backend o los tests. La base queda expuesta solo en `127.0.0.1`, no en la red local.
+
+**Si ya tenías el contenedor de antes** (el volumen ya existía), `turnos_test` no se crea sola. Creala una vez, con el usuario de tu `.env`:
+
+```bash
+docker exec turnos-postgres psql -U <DB_USER> -c "CREATE DATABASE turnos_test;"
+```
+
+### 3. Cargar el `.env` en la terminal
+
+El backend lee las variables del entorno, no del archivo. Antes de correr Gradle, cargalas en la terminal desde `backend/`:
 
 ```bash
 cd backend
-./gradlew test        # en Windows: gradlew.bat test
+set -a; . ../.env; set +a      # Git Bash, Linux o macOS
 ```
 
-Corre los 14 tests del backend. Los 12 escenarios de `openspec/specs/agenda-turnos/spec.md` están en `CrearTurnoTest` y `MargenTest`, y cada test tiene el mismo nombre que su escenario. La guía completa de instalación (PostgreSQL y frontend) llega con C-14.
+En PowerShell:
 
-### Base de datos y tests de integración
+```powershell
+cd backend
+Get-Content ..\.env | ForEach-Object { if ($_ -match '^\s*([^#=\s]+)\s*=\s*(.*)$') { [Environment]::SetEnvironmentVariable($Matches[1], $Matches[2], 'Process') } }
+```
 
-`./gradlew test` no necesita base de datos. Los tests de integración (`./gradlew integrationTest`, que **no** forma parte de `build`) usan PostgreSQL real, con la extensión `btree_gist` (H2 no la soporta). Hace falta Docker.
+## Correr la aplicación
 
-1. Copiá `.env.example` a `.env` en la raíz del repo y completá `DB_USER` y `DB_PASSWORD` con valores tuyos (el `.env` no se sube al repo). Las URL son:
-   - `DB_URL=jdbc:postgresql://localhost:5432/turnos`: base de desarrollo.
-   - `DB_TEST_URL=jdbc:postgresql://localhost:5432/turnos_test`: base de los tests.
-2. Levantá PostgreSQL desde la raíz del repo:
-
-   ```bash
-   docker compose up -d
-   ```
-
-   La primera vez que se crea el volumen, `docker/initdb/01-crear-turnos-test.sql` crea las dos bases (`turnos` y `turnos_test`). Flyway crea las tablas.
-3. **Si ya tenías el contenedor de antes** (el volumen ya existía), `turnos_test` no se crea sola. Creala una vez, con el usuario de tu `.env`:
+1. **Backend** (en la terminal con el `.env` cargado, desde `backend/`):
 
    ```bash
-   docker exec turnos-postgres psql -U <DB_USER> -c "CREATE DATABASE turnos_test;"
+   ./gradlew bootRun        # en Windows: .\gradlew.bat bootRun
    ```
 
-4. Cargá las variables de `.env` en la terminal y corré los tests desde `backend/`:
+   Arranca en `http://localhost:8080` con el perfil `dev`, que carga el seed ficticio (profesionales, sillones, prestaciones y horarios). La API está en `/api/v1`.
+
+2. **Frontend** (en otra terminal, desde `frontend/`):
 
    ```bash
-   cd backend
-   set -a; . ../.env; set +a      # Git Bash
-   ./gradlew integrationTest
+   npm ci
+   VITE_API_BASE_URL=http://localhost:8080/api/v1 npm run dev
    ```
 
-   En PowerShell, en lugar de la línea `set -a`:
+   En PowerShell:
 
    ```powershell
-   Get-Content ..\.env | ForEach-Object { if ($_ -match '^\s*([^#=\s]+)\s*=\s*(.*)$') { [Environment]::SetEnvironmentVariable($Matches[1], $Matches[2], 'Process') } }
+   $env:VITE_API_BASE_URL='http://localhost:8080/api/v1'; npm run dev
    ```
 
-Cuidado: los tests de integración **vacían las tablas** de la base que indica `DB_TEST_URL`. Nunca la apuntes a `turnos`. La base queda expuesta solo en `127.0.0.1`, no en la red local.
+   Abrí `http://localhost:5173`. Ingresá con la cuenta ADMIN inicial desde **Mi cuenta** y creá desde **Configuración** las cuentas de recepción y de los odontólogos. Los pacientes crean su cuenta desde Mi cuenta. Usá solo datos ficticios.
+
+Para un jar (`./gradlew bootJar`), pasá la zona horaria canónica: `java -Duser.timezone=America/Argentina/Buenos_Aires -jar build/libs/<jar>.jar`. En Windows, Java usa un alias viejo de la zona que PostgreSQL 16 rechaza; `bootRun` y los tests ya la fijan.
+
+## Tests
+
+### Backend: tests de dominio (sin base de datos)
+
+```bash
+cd backend
+./gradlew test        # en Windows: .\gradlew.bat test
+```
+
+No necesitan PostgreSQL ni el `.env`. Cada escenario GIVEN/WHEN/THEN de las specs tiene su test con el mismo nombre. Por ejemplo, los 12 escenarios de C-01 en `openspec/specs/agenda-turnos/spec.md` están en `CrearTurnoTest` y `MargenTest`. `./gradlew build` compila y corre estos mismos tests.
+
+### Backend: tests de integración (PostgreSQL real)
+
+Llevan `@Tag("integration")` y usan PostgreSQL real, porque H2 no soporta `btree_gist`. **No** forman parte de `build`. Con la base levantada (paso 2) y el `.env` cargado (paso 3):
+
+```bash
+./gradlew integrationTest
+```
+
+Usan la base `DB_TEST_URL` y **vacían sus tablas**. Para correr todo junto: `./gradlew build integrationTest`.
+
+### Frontend
+
+```bash
+cd frontend
+npm ci
+npm test              # Vitest con jsdom
+npm run build         # tsc --noEmit (strict) y build de Vite
+```
