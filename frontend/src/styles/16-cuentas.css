@@ -121,7 +121,11 @@
   color: var(--ds-texto-suave);
 }
 
-/* Diálogo de la contraseña temporal. */
+/* Diálogo de la contraseña temporal. El usuario se muestra tal cual (08-paciente pone en mayúscula la primera letra de los dd). */
+.detalle-lista dd.dato-literal::first-letter {
+  text-transform: none;
+}
+
 .contrasena-caja {
   display: flex;
   flex-wrap: wrap;

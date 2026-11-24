@@ -11,6 +11,7 @@ export function mostrarContrasenaTemporal(username: string, contrasena: string, 
   const dt = document.createElement('dt');
   dt.textContent = 'Usuario';
   const dd = document.createElement('dd');
+  dd.className = 'dato-literal';
   dd.textContent = username;
   datos.append(dt, dd);
 

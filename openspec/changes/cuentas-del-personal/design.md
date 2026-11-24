@@ -131,3 +131,4 @@ Desactivar lo hace siempre un `ADMIN` activo, y nunca sobre su propia cuenta, as
   - "Mi contraseña" en el menú del celular.
 - Approval: approved (2026-11-24, by Sofia Indovino, la líder; PR #81, confirmado por Enzo).
 - Preview: rendered (2026-11-24): capturas en `mockups/previews/` a 390 × 844 y 1440 × 900, sin desplazamiento horizontal ni errores de consola.
+- Visual verify: passed (2026-11-24): contra el backend de desarrollo, con diferencias menores anotadas en `mockups/verify/README.md` (una corregida). Las capturas tapan los datos no ficticios de la base local.

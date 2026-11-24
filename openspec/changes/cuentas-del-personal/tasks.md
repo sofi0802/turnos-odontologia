@@ -51,8 +51,8 @@ Cada escenario de la spec tiene un test con el mismo nombre. Los tests de integr
 
 ## 6. Verificación integrada
 
-- [ ] 6.1 Con PostgreSQL, el backend y Vite locales, recorrer el flujo completo: `admin` da acceso a Ana Ejemplo, ella ingresa con la temporal y la cambia, `admin` la desactiva con la sesión de ella abierta y su siguiente pedido la manda al ingreso. Comparar cada pantalla con su mockup aprobado a 390 × 844 y 1440 × 900, guardar las capturas en `mockups/verify/` y registrar `Visual verify` en `design.md`. Verificar que no hay errores de consola ni pedidos fallidos inesperados
-- [ ] 6.2 Marcar C-41 en `CHANGES.md` con el PR y la evidencia. Verificar que la ficha dice el estado real
+- [x] 6.1 Con PostgreSQL, el backend y Vite locales, recorrer el flujo completo: `admin` da acceso a Ana Ejemplo, ella ingresa con la temporal y la cambia, `admin` la desactiva con la sesión de ella abierta y su siguiente pedido la manda al ingreso. Comparar cada pantalla con su mockup aprobado a 390 × 844 y 1440 × 900, guardar las capturas en `mockups/verify/` y registrar `Visual verify` en `design.md`. Verificar que no hay errores de consola ni pedidos fallidos inesperados *(2026-11-24: passed, ver `mockups/verify/README.md`; se corrigió una diferencia menor, el usuario en mayúscula en el diálogo de la temporal)*
+- [x] 6.2 Marcar C-41 en `CHANGES.md` con el PR y la evidencia. Verificar que la ficha dice el estado real
 
 ## Workflow follow-up
 

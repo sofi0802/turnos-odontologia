@@ -654,7 +654,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `openspec/changes/frontend-reprogramacion-agenda/`, `openspec/changes/buscador-pacientes/` y `openspec/changes/agenda-propia-odontologo/` (lo que se reusa o ya cambió en la agenda)
 
 ### [C-41] `cuentas-del-personal`
-- **Estado**: `[ ]` propuesta lista y mockups creados (2026-11-24, `openspec/changes/cuentas-del-personal/`); falta que la líder apruebe la propuesta y los mockups
+- **Estado**: `[x]` completo (2026-11-24; propuesta y mockups aprobados en el PR #81, apply en un PR aparte). Change `openspec/changes/cuentas-del-personal/`. Evidencia: `docs/evidencia/c41-backend.txt` (578 unitarios y 527 de integración), 512 tests del frontend y verificación visual en `mockups/verify/`. Migración V21. El PR del apply incluye el fix `fix/calendario-utf8` (el build del frontend fallaba en `master`) y ajusta un test de odontograma (avisar a Emanuel)
 - **Responsable**: Enzo (avisa a Juan Sebastián, dueño de `usuarios/` y `shared/security/`)
 - **Scope**:
   - Hoy solo existe el admin inicial del `.env` (C-05): no hay forma de dar acceso a un odontólogo ni a una recepcionista sin tocar la base. La matriz RBAC de `03_actores_y_roles.md` ya dice que el `ADMIN` hace el CRUD de los usuarios del personal.
