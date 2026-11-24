@@ -4,7 +4,7 @@
 
 ## 1. Preparación
 
-- [ ] 1.1 Avisar a Emanuel (dueño de `clinica/`) que C-25 toca su módulo y que va a revisar el PR; verificar que el aviso quede registrado en la descripción del PR
+- [x] 1.1 Avisar a Emanuel (dueño de `clinica/`) que C-25 toca su módulo y que va a revisar el PR; verificar que el aviso quede registrado en la descripción del PR
 - [x] 1.2 Corregir `knowledge-base/04_modelo_de_datos.md` para que `PeriodontogramaVersion` cuelgue de `paciente_id` y no de `ficha_id` (design D2), y el ERD; verificar con `git diff knowledge-base/` que no cambie nada más
 
 ## 2. Dominio y cálculo del estado
@@ -33,7 +33,7 @@
 
 - [x] 6.1 Correr `./gradlew clean build integrationTest` con PostgreSQL 16 y verificar que todo pase sin fallas ni tests omitidos
 - [x] 6.2 Buscar en el código nuevo que ningún log ni mensaje de error escriba valores del periodontograma (regla dura 6) y verificar con `git grep -n "log\." -- backend/src/main/java/ar/turnos/odontologia/clinica` que no haya logs nuevos con datos
-- [ ] 6.3 Marcar C-25 en `CHANGES.md` como mergeado pendiente de archive y abrir el PR a `master` con Emanuel como revisor del módulo
+- [x] 6.3 Marcar C-25 en `CHANGES.md` como mergeado pendiente de archive y abrir el PR a `master` con Emanuel como revisor del módulo
 
 ## Workflow follow-up
 
