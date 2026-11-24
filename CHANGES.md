@@ -852,7 +852,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 > **Antes de empezar esta fase, ampliar la KB**: reglas de obras sociales y prepagas (nomencladores, coberturas, copagos), caja y facturación. Hoy solo están en el backlog. Referencias de mercado: DentalTec, DentalCore y el módulo de Dentalink para Argentina (informe, sección A).
 
 ### [C-18] `obras-sociales-y-planes`
-- **Estado**: `[ ]` KB aprobada (2026-11-24, PR #103; PA-20 a PA-22 respondidas por la líder: una sola cobertura vigente, el paciente ve la suya, nomenclador a mano). Sigue el propose
+- **Estado**: `[x]` completo (2026-11-24, solo backend). KB en los PR #103 y #104, propuesta en el PR #105 y apply en el PR #106. Specs: `openspec/specs/catalogo-coberturas/` y `afiliaciones-pacientes/` (nuevos); change archivado en `openspec/changes/archive/2026-11-24-obras-sociales-y-planes/`. Migración V12 y seed dev V12_1. Las pantallas (Configuración, ficha del paciente y Mi cuenta) van en una ficha de frontend aparte
 - **Responsable**: Juan Sebastián
 - **Scope**:
   - Entidades `ObraSocial`, `Plan`, `Nomenclador`, `AfiliacionPaciente` (número de afiliado, plan). **Migración V12**.
