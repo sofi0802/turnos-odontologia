@@ -24,7 +24,8 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
                     │ *
                     ├──1─ Sillon
                     ├──1─ Paciente ─1──0..1─ FichaClinica ─1──*─ OdontogramaRegistro
-                    │              └─1──*─ PeriodontogramaVersion ─1──*─ PeriodontogramaPieza ─1──*─ PeriodontogramaSitio
+                    │              ├─1──*─ PeriodontogramaVersion ─1──*─ PeriodontogramaPieza ─1──*─ PeriodontogramaSitio
+                    │              └─1──*─ ImagenClinica   (C-26; el archivo va al almacén, DD-15)
                     ├──*─ Notificacion
                     └──*─ TurnoAuditoria
 
@@ -116,6 +117,14 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
 ### PeriodontogramaSitio [2026-11-24, C-25]
 - `id` BIGINT identity, `pieza_id` FK, `sitio` enum (`MV`, `V`, `DV`, `ML`, `L`, `DL`), `profundidad_sondaje` smallint (0–15), `recesion` smallint (−5–15), `sangrado` boolean, `placa` boolean.
 - Única por (`pieza_id`, `sitio`). El estado periodontal no se guarda: se calcula al leer (RN-CL-06).
+
+### ImagenClinica [2026-11-24, C-26]
+- **Identidad y autoría**: `id` BIGINT identity, `paciente_id` FK, `profesional_id` FK (quién la cargó), `registrada_en` timestamptz.
+- **Datos de la imagen**: `categoria` enum (`RADIOGRAFIA`, `FOTOGRAFIA`, `ESTUDIO`), `pieza` smallint nullable (FDI, permanente o temporal), `tomada_el` date, `descripcion` varchar(200) nullable.
+- **Archivo**: `tipo_contenido` (`image/jpeg`, `image/png`, `application/pdf`), `tamano_bytes` (1 a 10 485 760), `sha256` char(64), `clave_almacen` varchar única.
+  - `clave_almacen` es la ubicación en el almacén de archivos, generada por el servidor y sin datos del paciente (DD-15).
+- **Anulación**: `anulada_en` timestamptz, `anulada_por` FK a profesional, `motivo_anulacion` varchar(200). Las tres son nulas o están todas.
+- No se borra ni se modifica. Lo único que se registra después de la carga es la anulación, una sola vez (RN-CL-08). Cuelga del paciente, como el odontograma y el periodontograma.
 
 ### ObraSocial [2026-11-24, C-18]
 - `id` BIGINT identity, `nombre` varchar(120) (único, sin distinguir mayúsculas), `sigla` varchar(20) (nullable), `tipo` enum (`OBRA_SOCIAL`, `PREPAGA`), `activa` boolean.

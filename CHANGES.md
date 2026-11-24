@@ -57,6 +57,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `backend/.../caja/`, `pagos/`, `facturacion/`, `reportes/` | Enzo | V15 |
 | `backend/.../clinica/` periodontograma, imágenes, consentimientos, FHIR | Emanuel | V16, V17, V18 |
 | `frontend/` periodontograma en la ficha clínica (C-46) | Sofia (avisa a Enzo, dueño de `frontend/`) | — |
+| `frontend/` imágenes y radiografías en la ficha clínica (C-47) | Emanuel (avisa a Enzo, dueño de `frontend/`) | — |
 | `backend/.../sucursales/` (transversal) | Sofia | V19 |
 | `backend/.../integraciones/` Google Calendar, asistente IA | Juan Cruz | — |
 
@@ -122,6 +123,7 @@ Clínica avanzada (todas desde C-13)
   C-13 ──┬── C-25 periodontograma                  [Sofia]
          │     └── C-46 frontend-periodontograma   [Sofia]   ← C-25 hizo solo el backend
          ├── C-26 imagenes-y-radiografias          [Emanuel]
+         │     └── C-47 frontend-imagenes-y-radiografias [Emanuel]   ← + C-44; C-26 hace solo el backend
          ├── C-27 consentimientos-firma-electronica [Emanuel]
          └── C-28 exportacion-hl7-fhir             [Emanuel]
 
@@ -222,6 +224,7 @@ GATE 8: primera tanda post-MVP ✓                              ← FORK
   → C-23 senas-mercado-pago                  [Agente C · Enzo — si C-22 ✓]
   → C-26 imagenes-y-radiografias             [Agente B · Emanuel]
   → C-46 frontend-periodontograma            [Agente C · Sofia — si C-25 ✓]
+  → C-47 frontend-imagenes-y-radiografias    [Agente C · Emanuel — si C-26 ✓]
 
 GATE 9: C-19 ✓ + C-22 ✓                                       ← FORK
   → C-29 multisucursal                       [Agente A · Sofia]
@@ -283,7 +286,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 |---|---|---|
 | **Sofia Indovino** (líder) | **C-01** (OPSX), C-06, C-35, C-42, C-43, C-14 + revisión de todos los PR | C-15, C-16, C-25, C-29, C-46 |
 | **Juan Cruz** | C-03, C-08, C-11, C-33, C-37, C-38, C-39 | C-17, C-30, C-31 |
-| **Emanuel** | C-04, C-07, C-13, C-12, C-34, C-44 | C-26, C-27, C-28 |
+| **Emanuel** | C-04, C-07, C-13, C-12, C-34, C-44 | C-26, C-47, C-27, C-28 |
 | **Juan Sebastián** | C-05, C-10, C-36 | C-18, C-19, C-20, C-21 |
 | **Enzo** | C-02, C-09, C-40, C-41, C-45 | C-22, C-23, C-24, C-32 (backend y pantallas de administración) |
 
@@ -977,7 +980,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/README.md` y `design-system/components.html`
 
 ### [C-26] `imagenes-y-radiografias`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[~]` propuesta en revisión (2026-11-24, SDD; `openspec/changes/imagenes-y-radiografias/`). Decisiones de Emanuel del 2026-11-24, en la KB para que la líder las revise: solo backend, almacén en disco detrás de un puerto, JPEG, PNG y PDF de hasta 10 MB, anulación con motivo en lugar de borrado (RN-CL-07, RN-CL-08, US-047, DD-15)
 - **Responsable**: Emanuel
 - **Scope**:
   - Carga de imágenes y radiografías por paciente, pieza y fecha, con almacenamiento detrás de un puerto (local o S3 compatible). **Migración V17**.
@@ -987,6 +990,29 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 - **Leer antes**:
   - `knowledge-base/05_reglas_de_negocio.md` §RN-CL-01
   - `knowledge-base/08_arquitectura_propuesta.md` §Seguridad
+
+### [C-47] `frontend-imagenes-y-radiografias`
+- **Estado**: `[ ]` pendiente
+- **Responsable**: Emanuel (avisa a Enzo, dueño de `frontend/`)
+- **Scope**:
+  - C-26 hace el backend de las imágenes, pero ninguna pantalla lo usa. Este change suma la interfaz sobre `/api/v1/pacientes/{id}/imagenes`, sin cambiar su contrato.
+  - **Ubicación**: una sección "Imágenes y estudios" en la ficha clínica de C-44 (`#/pacientes`). Sin entrada nueva en la barra lateral.
+  - **Carga** (solo `ODONTOLOGO`): archivo, categoría, fecha de la toma, pieza opcional y descripción.
+    - Valida el tipo y el tamaño antes de enviar.
+    - Muestra los errores de la API (`TIPO_ARCHIVO_NO_PERMITIDO`, `ARCHIVO_DEMASIADO_GRANDE`, `PIEZA_INVALIDA`, `DATOS_INVALIDOS`).
+  - **Listado** de la más nueva a la más vieja, con filtro por pieza y la opción de ver las anuladas.
+  - **Visualización y descarga**: las imágenes se ven en la página. Los PDF se abren en un `<iframe sandbox>` o se descargan (design de C-26, Riesgos).
+  - **Anulación con motivo** (solo `ODONTOLOGO`), con confirmación.
+  - **Acceso**: el administrador solo ve y la recepción no ve la ficha (RN-CL-01). Ningún dato de salud en la URL, en `localStorage` ni en la consola (regla dura 6).
+  - Sin cambios de backend ni migraciones.
+  - Cambio visual: modo `system-and-mockups`, con mockups a 390 y 1440 px aprobados antes del apply.
+- **Dependencias**: `C-26`, `C-44`
+- **Governance**: ALTO (datos de salud)
+- **Leer antes**:
+  - `knowledge-base/05_reglas_de_negocio.md` §Clínica (RN-CL-01, RN-CL-07, RN-CL-08)
+  - `knowledge-base/06_funcionalidades.md` §US-047
+  - `openspec/changes/imagenes-y-radiografias/specs/imagenes-clinicas/spec.md` (después del archive, `openspec/specs/imagenes-clinicas/spec.md`) y `openspec/specs/frontend-ficha-clinica/spec.md`
+  - `design-system/README.md` y `design-system/components.html`
 
 ### [C-27] `consentimientos-firma-electronica`
 - **Estado**: `[ ]` pendiente
