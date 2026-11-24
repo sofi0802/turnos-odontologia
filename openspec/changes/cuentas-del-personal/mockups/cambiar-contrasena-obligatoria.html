@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cambiar mi contraseña · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body class="sin-menu">
+  <div class="app">
+  <header class="cabecera">
+    <button class="btn-sobre-azul menu-boton" type="button" aria-controls="menu-principal" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"/></svg>Menú</button>
+    <a class="marca" href="#"><img src="../../../../design-system/assets/logo.svg?v=3" alt="Turnos odontología" /></a>
+    <div class="acciones-cabecera"><span class="avatar" aria-hidden="true">A</span><span class="usuario-nombre">ana.ejemplo</span><button class="btn-sobre-azul" type="button">Salir</button></div>
+  </header>
+  <div class="cuerpo">
+    <main class="contenido-app">
+      <div class="pagina pagina-angosta">
+        <h1>Cambiar mi contraseña</h1>
+        <div class="aviso aviso-info" role="status"><span><strong>Antes de seguir, elegí una contraseña nueva.</strong> Ingresaste con una contraseña temporal que te dio el administrador.</span></div>
+        <form class="formulario" style="margin-top:var(--ds-espacio-3)">
+          <div class="campo"><label for="actual">Contraseña temporal</label><input class="control" id="actual" type="password" autocomplete="current-password" /></div>
+          <div class="campo"><label for="nueva">Contraseña nueva</label><input class="control" id="nueva" type="password" autocomplete="new-password" /><span class="ayuda">Al menos 8 caracteres y distinta de la actual.</span></div>
+          <div class="campo"><label for="repetir">Repetí la contraseña nueva</label><input class="control" id="repetir" type="password" autocomplete="new-password" /></div>
+          <div class="acciones" style="margin-top:var(--ds-espacio-1)"><button class="btn btn-principal btn-ancho" type="submit">Guardar contraseña</button></div>
+        </form>
+        <p class="nota-mockup" style="padding:0;margin-top:var(--ds-espacio-3)"><b>Mockup C-41.</b> Primer ingreso con contraseña temporal: sin menú ni otras páginas, solo el formulario y "Salir".</p>
+      </div>
+    </main>
+  </div>
+  <footer class="pie"><span data-brand-name>Turnos odontología</span></footer>
+  </div>
+
+<script>/* Como en la app: la pestaña elegida queda a la vista en la barra que se desplaza. */
+document.querySelectorAll(".pestanas-config").forEach((b) => { const e = b.querySelector("[aria-selected=true]"); if (e) b.scrollLeft = e.offsetLeft + e.offsetWidth - b.clientWidth + 16; });</script>
+</body>
+</html>

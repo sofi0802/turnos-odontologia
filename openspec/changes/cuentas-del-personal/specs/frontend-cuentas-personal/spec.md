@@ -118,7 +118,7 @@ Si la sesión informa `debeCambiarContrasena` en `true`, la aplicación SHALL ll
 - **AND** no se pide `GET /api/v1/turnos`
 
 ### Requirement: Formulario de cambio de contraseña
-`#/cambiar-contrasena` SHALL pedir la contraseña actual, la nueva y su repetición, y enviar `POST /api/v1/cuenta/contrasena`. Si la nueva y su repetición no coinciden o la nueva tiene menos de 8 caracteres, MUST avisarlo sin enviar. Al responder `204` muestra "Tu contraseña se cambió." y lleva a `#/agenda`. Cualquier usuario del personal SHALL llegar a esta página desde su usuario en el encabezado.
+`#/cambiar-contrasena` SHALL pedir la contraseña actual, la nueva y su repetición, y enviar `POST /api/v1/cuenta/contrasena`. Si la nueva y su repetición no coinciden o la nueva tiene menos de 8 caracteres, MUST avisarlo sin enviar. Al responder `204` muestra "Tu contraseña se cambió." y lleva a `#/agenda`. El personal SHALL llegar acá desde "Mi contraseña" en el menú y, donde se ve, desde su usuario en el encabezado.
 
 #### Scenario: Cambio correcto
 - **GIVEN** una sesión de `ana.ejemplo` en `#/cambiar-contrasena`
@@ -138,7 +138,13 @@ Si la sesión informa `debeCambiarContrasena` en `true`, la aplicación SHALL ll
 - **THEN** se muestra "La contraseña actual no es correcta."
 - **AND** se vacían los tres campos
 
-#### Scenario: Cambio voluntario
+#### Scenario: Cambio voluntario desde el menú
 - **GIVEN** una sesión de `recepcion` sin contraseña temporal
-- **WHEN** usa su usuario en el encabezado
+- **WHEN** usa "Mi contraseña" en el menú
 - **THEN** se muestra `#/cambiar-contrasena` con el formulario y un enlace para volver a la agenda
+- **AND** "Mi contraseña" queda marcada como la página actual
+
+#### Scenario: Cambio voluntario desde el encabezado
+- **GIVEN** una sesión de `recepcion` sin contraseña temporal, en una pantalla donde el encabezado muestra el usuario
+- **WHEN** usa su usuario en el encabezado
+- **THEN** se muestra `#/cambiar-contrasena`
