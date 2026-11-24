@@ -23,6 +23,10 @@ export interface ClienteApi {
   crear<T>(ruta: string, cuerpo?: unknown): Promise<T | undefined>;
   actualizar<T>(ruta: string, cuerpo?: unknown): Promise<T | undefined>;
   borrar<T>(ruta: string): Promise<T | undefined>;
+  /** POST multipart (C-47, D3): no fija `Content-Type`, para que el navegador agregue el límite del multipart. */
+  enviarFormulario<T>(ruta: string, datos: FormData): Promise<T | undefined>;
+  /** GET de un recurso binario, entregado como `Blob` con su tipo de contenido (C-47, D3). */
+  obtenerArchivo(ruta: string): Promise<Blob>;
 }
 
 function normalizarBase(urlBase: string): string {
@@ -66,6 +70,7 @@ async function traducirError(respuesta: Response): Promise<Error> {
     case 403:
     case 404:
     case 409:
+    case 413:
     case 422:
       break;
     default:
@@ -82,7 +87,7 @@ async function traducirError(respuesta: Response): Promise<Error> {
     case 409:
       return new ErrorNegocio(problema.codigo ?? CODIGO_CONFLICTO_SIN_CODIGO, problema.detail, problema.alternativas);
     default:
-      return new ErrorValidacion(problema.detail, problema.codigo, problema.errores);
+      return new ErrorValidacion(problema.detail, problema.codigo, problema.errores, respuesta.status);
   }
 }
 
@@ -93,10 +98,11 @@ export function crearClienteApi(
 ): ClienteApi {
   const base = normalizarBase(urlBase);
 
-  async function solicitar<T>(metodo: MetodoHttp, ruta: string, cuerpo?: unknown): Promise<T | undefined> {
-    const encabezados = new Headers({ Accept: 'application/json' });
-    if (cuerpo !== undefined) {
-      encabezados.set('Content-Type', 'application/json');
+  /** Hace el pedido con la sesión y el token CSRF; una respuesta no exitosa se traduce a su error. */
+  async function pedir(metodo: MetodoHttp, ruta: string, aceptar: string, cuerpo: BodyInit | null, tipoCuerpo?: string): Promise<Response> {
+    const encabezados = new Headers({ Accept: aceptar });
+    if (tipoCuerpo !== undefined) {
+      encabezados.set('Content-Type', tipoCuerpo);
     }
     if (METODOS_QUE_MODIFICAN.has(metodo)) {
       const token = leerCookie(COOKIE_CSRF);
@@ -111,7 +117,7 @@ export function crearClienteApi(
         method: metodo,
         credentials: 'include',
         headers: encabezados,
-        body: cuerpo === undefined ? null : JSON.stringify(cuerpo),
+        body: cuerpo,
       });
     } catch {
       throw new ErrorGenerico(null);
@@ -120,6 +126,17 @@ export function crearClienteApi(
     if (!respuesta.ok) {
       throw await traducirError(respuesta);
     }
+    return respuesta;
+  }
+
+  async function solicitar<T>(metodo: MetodoHttp, ruta: string, cuerpo?: unknown): Promise<T | undefined> {
+    const respuesta = await pedir(
+      metodo,
+      ruta,
+      'application/json',
+      cuerpo === undefined ? null : JSON.stringify(cuerpo),
+      cuerpo === undefined ? undefined : 'application/json',
+    );
     return (await leerCuerpo(respuesta)) as T | undefined;
   }
 
@@ -129,6 +146,9 @@ export function crearClienteApi(
     crear: <T>(ruta: string, cuerpo?: unknown) => solicitar<T>('POST', ruta, cuerpo),
     actualizar: <T>(ruta: string, cuerpo?: unknown) => solicitar<T>('PUT', ruta, cuerpo),
     borrar: <T>(ruta: string) => solicitar<T>('DELETE', ruta),
+    enviarFormulario: async <T>(ruta: string, datos: FormData) =>
+      (await leerCuerpo(await pedir('POST', ruta, 'application/json', datos))) as T | undefined,
+    obtenerArchivo: async (ruta: string) => (await pedir('GET', ruta, '*/*', null)).blob(),
   };
 }
 

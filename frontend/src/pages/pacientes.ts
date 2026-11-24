@@ -11,6 +11,8 @@ import {
 import { crearFichaBasica } from '../ficha/ficha-basica.ts';
 import { rangoDelTurno } from '../ficha/formato.ts';
 import { crearHistorial } from '../ficha/historial.ts';
+import { crearImagenes, MENSAJE_DESCARTAR_IMAGEN, type SeccionImagenes } from '../ficha/imagenes.ts';
+import { anularImagen, cargarImagen, descargarArchivo, listarImagenes } from '../ficha/imagenes-api.ts';
 import { crearOdontograma, type Odontograma } from '../ficha/odontograma.ts';
 import { crearPeriodontograma, MENSAJE_DESCARTAR_PERIODONTOGRAMA, type SeccionPeriodontograma } from '../ficha/periodontograma.ts';
 import { listarVersiones, obtenerVersion, registrarVersion } from '../ficha/periodontograma-api.ts';
@@ -60,6 +62,7 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
 
   let odontograma: Odontograma | null = null;
   let periodontograma: SeccionPeriodontograma | null = null;
+  let imagenes: SeccionImagenes | null = null;
 
   function sesionVencida(causa: unknown): boolean {
     if (causa instanceof ErrorSesion) {
@@ -72,6 +75,8 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
   function mostrarBuscador(): void {
     odontograma = null;
     periodontograma = null;
+    imagenes?.destruir();
+    imagenes = null;
     const panel = document.createElement('section');
     panel.className = 'panel ficha-seccion';
     const titulo = document.createElement('h2');
@@ -92,15 +97,22 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
     const pendientes = [
       odontograma !== null && odontograma.pendientes() > 0 ? MENSAJE_DESCARTAR : null,
       periodontograma?.sinGuardar() === true ? MENSAJE_DESCARTAR_PERIODONTOGRAMA : null,
+      // C-47: también pregunta si hay una imagen sin cargar.
+      imagenes?.sinGuardar() === true ? MENSAJE_DESCARTAR_IMAGEN : null,
     ].filter((m): m is string => m !== null);
     if (pendientes.length === 0) {
       exito.textContent = '';
       mostrarBuscador();
       return;
     }
-    const soloPeriodontograma = pendientes.length === 1 && pendientes[0] === MENSAJE_DESCARTAR_PERIODONTOGRAMA;
+    const solo = pendientes.length === 1 ? pendientes[0] : undefined;
     const dialogo = abrirDialogo({
-      titulo: soloPeriodontograma ? '¿Descartar el periodontograma?' : '¿Descartar los cambios?',
+      titulo:
+        solo === MENSAJE_DESCARTAR_PERIODONTOGRAMA
+          ? '¿Descartar el periodontograma?'
+          : solo === MENSAJE_DESCARTAR_IMAGEN
+            ? '¿Descartar la imagen?'
+            : '¿Descartar los cambios?',
       resumen: pendientes.join(' '),
       textoDescartar: 'Seguir editando',
       textoPrincipal: 'Descartar',
@@ -197,6 +209,8 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
 
   function mostrarFicha(seleccion: SeleccionFicha, limpiarAvisos = true): void {
     const pacienteId = seleccion.paciente.id;
+    imagenes?.destruir();
+    imagenes = null;
     if (limpiarAvisos) {
       exito.textContent = '';
     }
@@ -236,13 +250,24 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
           mensajeDeError: (causa) => (sesionVencida(causa) ? '' : mensajeDeError(causa)),
           vigente,
         });
+        // C-47: las imágenes y estudios también se cargan aparte, con su propio error y "Reintentar" (design D4).
+        imagenes = crearImagenes({
+          editable,
+          nombrePaciente: `${seleccion.paciente.nombre} ${seleccion.paciente.apellido}`.trim(),
+          listar: (filtro) => listarImagenes(contexto.api, pacienteId, filtro),
+          anular: (imagenId, motivo) => anularImagen(contexto.api, pacienteId, imagenId, motivo),
+          cargar: (carga) => cargarImagen(contexto.api, pacienteId, carga),
+          obtenerArchivo: (imagenId, descarga) => descargarArchivo(contexto.api, pacienteId, imagenId, descarga),
+          mensajeDeError: (causa) => (sesionVencida(causa) ? '' : mensajeDeError(causa)),
+          vigente,
+        });
         const columnas = document.createElement('div');
         columnas.className = 'ficha-columnas';
         const derecha = document.createElement('div');
         derecha.className = 'ficha-seccion';
         derecha.append(crearAusencias(ficha.ausencias), historial.elemento);
         columnas.append(basica, derecha);
-        cuerpo.replaceChildren(cabeceraDelPaciente(seleccion), odontograma.elemento, periodontograma.contenedor, columnas);
+        cuerpo.replaceChildren(cabeceraDelPaciente(seleccion), odontograma.elemento, periodontograma.contenedor, imagenes.contenedor, columnas);
       } catch (causa) {
         if (!vigente() || sesionVencida(causa)) {
           return;

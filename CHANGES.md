@@ -992,7 +992,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/08_arquitectura_propuesta.md` §Seguridad
 
 ### [C-47] `frontend-imagenes-y-radiografias`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[~]` implementado (2026-11-24, SDD; propuesta y mockups en el PR #119, aprobados por Emanuel; apply en su PR; `openspec/changes/frontend-imagenes-y-radiografias/`). 949 tests del frontend y verificación visual en `mockups/verify/`. Falta la revisión de la líder y de Enzo, el merge y el archive
 - **Responsable**: Emanuel (avisa a Enzo, dueño de `frontend/`)
 - **Scope**:
   - C-26 hace el backend de las imágenes, pero ninguna pantalla lo usa. Este change suma la interfaz sobre `/api/v1/pacientes/{id}/imagenes`, sin cambiar su contrato.

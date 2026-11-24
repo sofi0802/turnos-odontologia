@@ -63,6 +63,10 @@ export const MENSAJES_POR_CODIGO: Readonly<Record<string, string>> = {
   // Periodontograma (C-46).
   SITIOS_INCOMPLETOS: 'Cada pieza cargada necesita sus 6 sitios y la movilidad.',
   FURCACION_NO_APLICA: 'La furcación solo se carga en molares y en las piezas 14 y 24.',
+  // Imágenes clínicas (C-47).
+  TIPO_ARCHIVO_NO_PERMITIDO: 'Solo se aceptan archivos JPEG, PNG o PDF.',
+  ARCHIVO_DEMASIADO_GRANDE: 'El archivo supera los 10 MB.',
+  IMAGEN_YA_ANULADA: 'La imagen ya estaba anulada.',
 };
 
 export const MENSAJE_SIN_PERMISO = 'No tenés permiso para esta acción.';

@@ -143,3 +143,15 @@ Sin migraciones ni cambios de backend. Rollback: revertir el PR deja la ficha si
 - Mockups: `openspec/changes/frontend-imagenes-y-radiografias/mockups/` (ver su `README.md`).
 - Approval: approved (2026-11-24, by user: Emanuel). Falta la revisión de la líder en el PR #119.
 - Preview: rendered (2026-11-24). Capturas en `mockups/previews/`, a 390 × 844 y 1440 × 900, sin desplazamiento horizontal ni errores de consola.
+- Visual verify: differences (2026-11-24, menores). Contra el backend de desarrollo con C-26 (migración V17), con Playwright, como `ana.ejemplo` y como `admin`, con un PNG y un PDF de prueba generados y el paciente ficticio "Paciente Dos". Capturas en `mockups/verify/`.
+  - **Revisado**: lista vacía, diálogo de carga abierto y completo, carga real (201), listado con la radiografía y el PDF (sin "Ver"), visor con el archivo real, anulación con motivo (200), admin con "Mostrar anuladas" sin "Cargar imagen" ni "Anular", listado a 390 px sin desplazamiento horizontal.
+  - **Consola y red**: sin errores ni advertencias; todos los pedidos a `/api/v1` respondieron 200 o 201. La dirección quedó en `#/pacientes` y `localStorage` y `sessionStorage` vacíos.
+  - **No revisado en el navegador** (cubierto por tests): errores de validación y de la API en la carga, falla del listado con "Reintentar", filtro sin resultados, descartar una carga, falla del visor, 409 `IMAGEN_YA_ANULADA`, el visor y la carga a 390 px.
+  - **Diferencias**:
+    - Menor: el visor usa `abrirDialogo` (lo exige `test/dialogo.test.ts`), así que queda "Cerrar" secundario y "Descargar" principal, al revés que el mockup.
+    - Menor: la sección va entre el periodontograma y la ficha básica; el mockup no muestra lo que viene después.
+- Desvíos del apply respecto de este design:
+  - D3: un 413 sin cuerpo da `ErrorValidacion` sin código, como pide el spec; `ErrorValidacion.estado` permite que el diálogo diga igual "El archivo supera los 10 MB.".
+  - D8: `DATOS_INVALIDOS` no tiene mensaje propio en `MENSAJES_POR_CODIGO` (C-44 no lo sumó); se muestra el `detail` de la API.
+  - D4: el cliente no admite `AbortController`; las respuestas viejas se descartan con un contador de pedidos.
+  - Filtros con solo anuladas (corregido el 2026-11-24, a pedido de Emanuel): el listado sin filtros pide solo las vigentes; si viene vacío, la sección pregunta una vez por las anuladas (`incluirAnuladas=true`). Si hay, muestra los filtros y "No hay imágenes vigentes. Para ver las anuladas, marcá "Mostrar anuladas"."; si no hay o la pregunta falla, queda como sin imágenes. Es un pedido extra solo para los pacientes sin imágenes vigentes. Escenario nuevo en el spec: "Paciente con solo imágenes anuladas".

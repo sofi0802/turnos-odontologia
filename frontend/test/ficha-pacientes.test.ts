@@ -52,6 +52,8 @@ function responderFicha(ficha: object = FICHA_CARGADA, registros: unknown[] = []
   servidor.responder('GET /pacientes/{id}/odontograma', () => json(200, registros));
   // C-46: la ficha también pide el periodontograma; acá el paciente no tiene ninguno.
   servidor.responder('GET /pacientes/{id}/periodontograma', () => json(200, []));
+  // C-47: y las imágenes; acá el paciente no tiene ninguna.
+  servidor.responder('GET /pacientes/{id}/imagenes', () => json(200, []));
 }
 
 function abrir(hash = '#/pacientes'): void {
