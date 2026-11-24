@@ -189,7 +189,7 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 
 ## Épica 6: Clínica avanzada (post-MVP)
 
-### US-045: Registrar el periodontograma [2026-11-24, C-25]
+### US-045: Registrar el periodontograma [2026-11-24, C-25 backend y C-46 pantalla]
 **Como** odontólogo **quiero** cargar el sondaje periodontal de cada pieza en cada visita **para** seguir la evolución de la enfermedad periodontal del paciente.
 **Criterios de aceptación**:
 - [ ] CA-1: por cada pieza permanente cargada registro los 6 sitios (profundidad, recesión, sangrado y placa), la movilidad y, si es multirradicular, la furcación; o la marco ausente.

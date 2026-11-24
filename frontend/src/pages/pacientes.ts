@@ -12,6 +12,8 @@ import { crearFichaBasica } from '../ficha/ficha-basica.ts';
 import { rangoDelTurno } from '../ficha/formato.ts';
 import { crearHistorial } from '../ficha/historial.ts';
 import { crearOdontograma, type Odontograma } from '../ficha/odontograma.ts';
+import { crearPeriodontograma, MENSAJE_DESCARTAR_PERIODONTOGRAMA, type SeccionPeriodontograma } from '../ficha/periodontograma.ts';
+import { listarVersiones, obtenerVersion, registrarVersion } from '../ficha/periodontograma-api.ts';
 import { tomarSeleccion, type SeleccionFicha } from '../ficha/seleccion.ts';
 import { ErrorNoEncontrado, ErrorPermiso, ErrorSesion } from '../shared/api/errores.ts';
 import { crearAviso, crearBoton } from '../shared/ui/campos.ts';
@@ -57,6 +59,7 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
   contenedor.replaceChildren(pagina);
 
   let odontograma: Odontograma | null = null;
+  let periodontograma: SeccionPeriodontograma | null = null;
 
   function sesionVencida(causa: unknown): boolean {
     if (causa instanceof ErrorSesion) {
@@ -68,6 +71,7 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
 
   function mostrarBuscador(): void {
     odontograma = null;
+    periodontograma = null;
     const panel = document.createElement('section');
     panel.className = 'panel ficha-seccion';
     const titulo = document.createElement('h2');
@@ -84,14 +88,20 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
   }
 
   function cambiarDePaciente(): void {
-    if (odontograma === null || odontograma.pendientes() === 0) {
+    // C-46: también pregunta si hay un periodontograma sin guardar.
+    const pendientes = [
+      odontograma !== null && odontograma.pendientes() > 0 ? MENSAJE_DESCARTAR : null,
+      periodontograma?.sinGuardar() === true ? MENSAJE_DESCARTAR_PERIODONTOGRAMA : null,
+    ].filter((m): m is string => m !== null);
+    if (pendientes.length === 0) {
       exito.textContent = '';
       mostrarBuscador();
       return;
     }
+    const soloPeriodontograma = pendientes.length === 1 && pendientes[0] === MENSAJE_DESCARTAR_PERIODONTOGRAMA;
     const dialogo = abrirDialogo({
-      titulo: '¿Descartar los cambios?',
-      resumen: MENSAJE_DESCARTAR,
+      titulo: soloPeriodontograma ? '¿Descartar el periodontograma?' : '¿Descartar los cambios?',
+      resumen: pendientes.join(' '),
       textoDescartar: 'Seguir editando',
       textoPrincipal: 'Descartar',
       peligro: true,
@@ -217,13 +227,22 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
           guardar: (datos) => guardarFicha(contexto.api, pacienteId, datos),
           mensajeDeError: (causa) => (sesionVencida(causa) ? '' : mensajeDeError(causa)),
         });
+        // C-46: el periodontograma se carga aparte, con su propio error y "Reintentar" (design D2).
+        periodontograma = crearPeriodontograma({
+          editable,
+          listar: () => listarVersiones(contexto.api, pacienteId),
+          obtener: (versionId) => obtenerVersion(contexto.api, pacienteId, versionId),
+          registrar: (pedido) => registrarVersion(contexto.api, pacienteId, pedido),
+          mensajeDeError: (causa) => (sesionVencida(causa) ? '' : mensajeDeError(causa)),
+          vigente,
+        });
         const columnas = document.createElement('div');
         columnas.className = 'ficha-columnas';
         const derecha = document.createElement('div');
         derecha.className = 'ficha-seccion';
         derecha.append(crearAusencias(ficha.ausencias), historial.elemento);
         columnas.append(basica, derecha);
-        cuerpo.replaceChildren(cabeceraDelPaciente(seleccion), odontograma.elemento, columnas);
+        cuerpo.replaceChildren(cabeceraDelPaciente(seleccion), odontograma.elemento, periodontograma.contenedor, columnas);
       } catch (causa) {
         if (!vigente() || sesionVencida(causa)) {
           return;

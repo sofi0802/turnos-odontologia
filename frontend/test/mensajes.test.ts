@@ -22,6 +22,9 @@ describe('Mensajes por código', () => {
     ['AGENDA_BLOQUEADA', 'La agenda del profesional está bloqueada en ese horario.'],
     ['SIN_SILLON_DISPONIBLE', 'No hay ningún sillón libre en ese horario. Probá con otra hora.'],
     ['TURNO_NO_EXTENSIBLE', 'Un sobreturno no se puede extender.'],
+    // C-46: rechazos del periodontograma.
+    ['SITIOS_INCOMPLETOS', 'Cada pieza cargada necesita sus 6 sitios y la movilidad.'],
+    ['FURCACION_NO_APLICA', 'La furcación solo se carga en molares y en las piezas 14 y 24.'],
   ])('%s tiene su mensaje propio', (codigo, mensaje) => {
     expect(mensajeDeError(new ErrorNegocio(codigo, 'detalle del servidor'))).toBe(mensaje);
     expect(MENSAJES_POR_CODIGO[codigo]).toBe(mensaje);

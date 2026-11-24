@@ -56,6 +56,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `backend/.../coberturas/` (obras sociales, presupuestos, liquidaciones) | Juan Sebastián | V12, V13, V14 |
 | `backend/.../caja/`, `pagos/`, `facturacion/`, `reportes/` | Enzo | V15 |
 | `backend/.../clinica/` periodontograma, imágenes, consentimientos, FHIR | Emanuel | V16, V17, V18 |
+| `frontend/` periodontograma en la ficha clínica (C-46) | Sofia (avisa a Enzo, dueño de `frontend/`) | — |
 | `backend/.../sucursales/` (transversal) | Sofia | V19 |
 | `backend/.../integraciones/` Google Calendar, asistente IA | Juan Cruz | — |
 
@@ -119,6 +120,7 @@ Obras sociales, cobros y facturación
 
 Clínica avanzada (todas desde C-13)
   C-13 ──┬── C-25 periodontograma                  [Sofia]
+         │     └── C-46 frontend-periodontograma   [Sofia]   ← C-25 hizo solo el backend
          ├── C-26 imagenes-y-radiografias          [Sofia]
          ├── C-27 consentimientos-firma-electronica [Emanuel]
          └── C-28 exportacion-hl7-fhir             [Emanuel]
@@ -219,6 +221,7 @@ GATE 8: primera tanda post-MVP ✓                              ← FORK
   → C-21 validacion-online-obras-sociales    [Agente B · Juan Sebastián — después de C-19]
   → C-23 senas-mercado-pago                  [Agente C · Enzo — si C-22 ✓]
   → C-26 imagenes-y-radiografias             [Agente B · Sofia]
+  → C-46 frontend-periodontograma            [Agente C · Sofia — si C-25 ✓]
 
 GATE 9: C-19 ✓ + C-22 ✓                                       ← FORK
   → C-29 multisucursal                       [Agente A · Sofia]
@@ -278,7 +281,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 
 | Integrante | MVP | Post-MVP (sugerido, por afinidad con su módulo) |
 |---|---|---|
-| **Sofia Indovino** (líder) | **C-01** (OPSX), C-06, C-35, C-42, C-43, C-14 + revisión de todos los PR | C-15, C-16, C-25, C-26, C-29 |
+| **Sofia Indovino** (líder) | **C-01** (OPSX), C-06, C-35, C-42, C-43, C-14 + revisión de todos los PR | C-15, C-16, C-25, C-26, C-29, C-46 |
 | **Juan Cruz** | C-03, C-08, C-11, C-33, C-37, C-38, C-39 | C-17, C-30, C-31 |
 | **Emanuel** | C-04, C-07, C-13, C-12, C-34, C-44 | C-27, C-28 |
 | **Juan Sebastián** | C-05, C-10, C-36 | C-18, C-19, C-20, C-21 |
@@ -953,6 +956,25 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `docs/discovery/verificacion/sofia.md` (periodontograma verificado en VecDent)
   - `knowledge-base/05_reglas_de_negocio.md` §Clínica (RN-CL-04 a RN-CL-06, agregadas el 2026-11-24)
   - `knowledge-base/06_funcionalidades.md` §US-045, `knowledge-base/04_modelo_de_datos.md` §Periodontograma y `knowledge-base/09_decisiones_y_supuestos.md` §DD-13
+
+### [C-46] `frontend-periodontograma`
+- **Estado**: `[~]` implementado (2026-11-24, SDD; `openspec/changes/frontend-periodontograma/`, design system Revision 5). PR pendiente, después del de C-25; después falta archivarlo
+- **Responsable**: Sofia Indovino (avisa a Enzo, dueño de `frontend/`, y a Emanuel por la ficha clínica)
+- **Scope**:
+  - C-25 hizo el backend del periodontograma, pero ninguna pantalla lo usa. Este change suma la interfaz sobre `POST/GET /api/v1/pacientes/{id}/periodontograma` y `GET .../{versionId}`, sin cambiar su contrato.
+  - **Ubicación** (decisión de la líder): una sección "Periodontograma" en la ficha clínica de C-44 (`#/pacientes`), debajo del odontograma. Sin entrada nueva en la barra lateral.
+  - **Consulta**: muestra la última versión con fecha y profesional, las 32 piezas permanentes con sus 6 sitios y el estado calculado de cada pieza (sano, leve, moderado o severo; el estado no depende solo del color). Un selector abre cualquier versión anterior en solo lectura (decisión de la líder; sin comparación entre versiones).
+  - **Nueva versión** (solo `ODONTOLOGO`): el formulario arranca con los datos de la última versión (decisión de la líder) o vacío si no hay ninguna. Explica en la pantalla la convención de la recesión negativa (RN-CL-06). Valida los rangos antes de enviar y muestra los errores de la API (`SITIOS_INCOMPLETOS`, `FURCACION_NO_APLICA`, `PIEZA_INVALIDA`, `DATOS_INVALIDOS`). Pregunta antes de descartar una carga sin guardar.
+  - Acceso: el administrador solo lee; la recepción no ve la ficha (RN-CL-01). Ningún dato de salud en la URL, en `localStorage` ni en la consola (regla dura 6).
+  - Sin cambios de backend ni migraciones.
+  - Cambio visual: modo `system-and-mockups`, mockups a 390 y 1440 px aprobados por la líder antes del apply.
+- **Dependencias**: `C-25`, `C-44`
+- **Governance**: ALTO (datos de salud)
+- **Leer antes**:
+  - `knowledge-base/05_reglas_de_negocio.md` §Clínica (RN-CL-01, RN-CL-04 a RN-CL-06)
+  - `knowledge-base/06_funcionalidades.md` §US-045
+  - `openspec/changes/periodontograma/specs/periodontograma/spec.md` (después del archive, `openspec/specs/periodontograma/spec.md`) y `openspec/specs/frontend-ficha-clinica/spec.md`
+  - `design-system/README.md` y `design-system/components.html`
 
 ### [C-26] `imagenes-y-radiografias`
 - **Estado**: `[ ]` pendiente

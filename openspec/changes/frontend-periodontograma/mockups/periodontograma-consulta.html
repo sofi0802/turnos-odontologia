@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pacientes · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="periodontograma.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="ana.ejemplo" data-rol="ODONTOLOGO" data-activa="pacientes">
+  <div class="pagina-ficha">
+    <h1 tabindex="-1">Pacientes</h1>
+
+    <section class="panel ficha-paciente" aria-labelledby="paciente-nombre">
+      <div class="ficha-paciente-datos">
+        <div>
+          <h2 class="ficha-paciente-nombre" id="paciente-nombre">Paciente Uno</h2>
+          <p class="ficha-paciente-dni">DNI 99000001</p>
+        </div>
+        <button type="button" class="btn">Cambiar de paciente</button>
+      </div>
+    </section>
+
+    <section class="panel ficha-seccion" aria-labelledby="t-odonto">
+      <div class="ficha-seccion-cabecera">
+        <h2 id="t-odonto">Odontograma</h2>
+      </div>
+      <div class="nota-contexto">Odontograma de C-44, sin cambios (en el mockup no se dibuja).</div>
+    </section>
+
+    <section class="panel ficha-seccion" aria-labelledby="t-perio">
+      <div class="ficha-seccion-cabecera">
+        <h2 id="t-perio">Periodontograma</h2>
+        <div class="perio-cabecera-acciones">
+          <div class="campo">
+            <label for="perio-version">Versión</label>
+            <select id="perio-version">
+              <option selected>01/12/2026 09:00 · Bruno Prueba (la más nueva)</option>
+              <option>20/11/2026 10:30 · Ana Ejemplo</option>
+              <option>14/08/2026 16:15 · Ana Ejemplo</option>
+            </select>
+          </div>
+          <button type="button" class="btn btn-principal">Nueva versión</button>
+        </div>
+      </div>
+      <p class="perio-firma">Versión del 01/12/2026 a las 09:00 · Bruno Prueba · 30 piezas cargadas</p>
+
+      <div class="perio-mapa" data-elegida="16" data-sitios='{"16":[[4,0,true,false],[4,0,false,false],[3,-1,false,true],[3,0,true,false],[2,-1,false,false],[3,0,false,true]]}' data-piezas='{"18":"AUSENTE","17":"LEVE","16":"MODERADO","15":"SANO","14":"SANO","13":"SANO","12":"SANO","11":"SANO","21":"SANO","22":"SANO","23":"SANO","24":"LEVE","25":"SANO","26":"MODERADO","27":"LEVE","47":"LEVE","46":"SEVERO","45":"SANO","44":"SANO","43":"SANO","42":"SANO","41":"LEVE","31":"LEVE","32":"SANO","33":"SANO","34":"SANO","35":"SANO","36":"MODERADO","37":"LEVE","38":"AUSENTE"}'></div>
+      <ul class="perio-leyenda" aria-label="Estados del periodontograma"></ul>
+
+      <div class="perio-detalle" aria-labelledby="t-pieza">
+        <div class="perio-detalle-cabecera">
+          <h3 id="t-pieza">Pieza 16</h3>
+          <span class="perio-chip" data-estado="MODERADO">Moderado</span>
+        </div>
+        <dl class="perio-datos-pieza">
+          <div><dt>Movilidad</dt><dd>1</dd></div>
+          <div><dt>Furcación</dt><dd>1</dd></div>
+          <div><dt>Pérdida de inserción máxima</dt><dd>4 mm (mesiovestibular y vestibular)</dd></div>
+        </dl>
+        <div class="perio-vistas" data-pieza="16" data-estado="MODERADO" data-sitios='[[4,0,true,false],[4,0,false,false],[3,-1,false,true],[3,0,true,false],[2,-1,false,false],[3,0,false,true]]'></div>
+        <table class="perio-tabla" data-pieza="16"
+               data-sitios='[[4,0,true,false],[4,0,false,false],[3,-1,false,true],[3,0,true,false],[2,-1,false,false],[3,0,false,true]]'></table>
+      </div>
+      <p class="nota-mockup"><b>El estado es orientativo</b> y no reemplaza el diagnóstico (DD-13). Lo calcula el sistema por la pérdida de inserción del peor sitio.</p>
+    </section>
+
+    <p class="nota-mockup"><b>Mockup C-46.</b> Ficha de "Paciente Uno" vista por la odontóloga Ana Ejemplo. La sección "Periodontograma" va debajo del odontograma de C-44 y arriba de la ficha básica, las ausencias y el historial, que no cambian (acá no se muestran). Se ve la versión más nueva y la pieza 16 elegida. Cada pieza es un dibujo del diente con el margen de la encía (rojo) y el fondo de la bolsa (azul), y dice su estado con texto, no solo con color. Arriba de la tabla, la pieza elegida en grande por vestibular y por palatino, con grilla de 1 mm. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+<script src="perio-mockup.js"></script>
+</body>
+</html>
