@@ -18,4 +18,10 @@ class PruebaSeguridadController {
     String soloAdmin() {
         return "ok";
     }
+
+    /** Falla con un error no controlado cuyo mensaje es ficticio (spec seguridad-autorizacion, error interno). */
+    @GetMapping("/falla")
+    String falla() {
+        throw new IllegalStateException("detalle-interno-ficticio");
+    }
 }

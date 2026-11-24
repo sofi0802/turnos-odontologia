@@ -1,6 +1,7 @@
 package ar.turnos.odontologia.shared.security;
 
 import ar.turnos.odontologia.usuarios.domain.Rol;
+import jakarta.servlet.DispatcherType;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -98,6 +99,8 @@ public class SecurityConfig {
                         .deleteCookies("JSESSIONID")
                         .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler(HttpStatus.NO_CONTENT)))
                 .authorizeHttpRequests(reglas -> reglas
+                        // Despacho interno de error: sin esto un 404 o 500 real termina en denyAll como 403 (fix de C-05)
+                        .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         .requestMatchers("/api/v1/public/**").permitAll()
                         // /api/v1/logout lo atiende LogoutFilter, antes de llegar acá, para cualquier rol
                         .requestMatchers("/api/v1/paciente/**").hasRole(Rol.PACIENTE.name())
