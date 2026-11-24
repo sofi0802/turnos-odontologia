@@ -26,6 +26,8 @@ const REGLAS_POR_MODULO: Readonly<Record<string, string>> = {
   '17-ficha.css': '.odontograma .cara {',
   // C-45: sobreturno y extensión.
   '18-sobreturno.css': '.aviso-choque {',
+  // C-46: periodontograma.
+  '19-periodontograma.css': '.perio-linea-margen,',
 };
 
 function importaciones(): string[] {

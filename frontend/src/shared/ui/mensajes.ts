@@ -60,6 +60,9 @@ export const MENSAJES_POR_CODIGO: Readonly<Record<string, string>> = {
   TURNO_TERMINADO: 'El turno ya terminó.',
   PIEZA_INVALIDA: 'La pieza no existe en la notación FDI.',
   CARA_INVALIDA: 'Hay una cara que no corresponde a esa pieza.',
+  // Periodontograma (C-46).
+  SITIOS_INCOMPLETOS: 'Cada pieza cargada necesita sus 6 sitios y la movilidad.',
+  FURCACION_NO_APLICA: 'La furcación solo se carga en molares y en las piezas 14 y 24.',
 };
 
 export const MENSAJE_SIN_PERMISO = 'No tenés permiso para esta acción.';

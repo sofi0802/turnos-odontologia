@@ -1,0 +1,548 @@
+/*
+ * Mockups de C-46: propuesta del módulo frontend/src/styles/19-periodontograma.css (design D3, D4 y D8).
+ * Los tokens --ds-perio-* son la propuesta de la Revision 5 del design system (design D7): en el apply pasan a
+ * design-system/tokens.css y este bloque :root desaparece.
+ */
+:root {
+  --ds-perio-sano: var(--ds-ok);
+  --ds-perio-sano-fondo: var(--ds-ok-fondo);
+  --ds-perio-leve: var(--ds-alerta);
+  --ds-perio-leve-fondo: var(--ds-alerta-fondo);
+  --ds-perio-moderado: #9a3412;        /* 7.3:1 sobre blanco, 6.6:1 sobre su fondo */
+  --ds-perio-moderado-fondo: #fdf1ea;
+  --ds-perio-severo: var(--ds-error);
+  --ds-perio-severo-fondo: var(--ds-error-fondo);
+}
+
+.perio-cabecera-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--ds-espacio-3);
+}
+
+.perio-cabecera-acciones .campo {
+  margin: 0;
+  min-width: 16rem;
+}
+
+.perio-firma {
+  margin: 0 0 var(--ds-espacio-4);
+  color: var(--ds-texto-suave);
+  font-size: var(--ds-texto-sm);
+}
+
+/* ---- Mapa de piezas (design D3) ---- */
+
+.perio-mapa {
+  display: grid;
+  gap: var(--ds-espacio-3);
+}
+
+.perio-arcada {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--ds-espacio-2);
+}
+
+.perio-arcada-titulo {
+  grid-column: 1 / -1;
+  margin: 0;
+  font-size: var(--ds-texto-xs);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-texto-suave);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.perio-cuadrante {
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: var(--ds-espacio-1);
+}
+
+.perio-cuadrante + .perio-cuadrante {
+  border-left: 2px solid var(--ds-borde-fuerte);
+  padding-left: var(--ds-espacio-2);
+}
+
+.perio-pieza {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 2px;
+  min-height: 7.5rem;
+  padding: var(--ds-espacio-1) 0;
+  border: var(--ds-borde-ancho) solid var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio-sm, 0.375rem);
+  background: var(--ds-fondo);
+  color: var(--ds-texto);
+  font: inherit;
+  cursor: pointer;
+}
+
+.perio-pieza:hover {
+  border-color: var(--ds-acento-500);
+}
+
+.perio-pieza:focus-visible {
+  outline: var(--ds-foco-ancho) solid var(--ds-foco-color);
+  outline-offset: var(--ds-foco-separacion);
+}
+
+.perio-pieza[aria-pressed='true'] {
+  border-width: 2px;
+  border-color: var(--ds-acento-500);
+  box-shadow: 0 0 0 2px var(--ds-acento-500) inset;
+}
+
+.perio-num {
+  font-weight: var(--ds-peso-fuerte);
+  font-size: var(--ds-texto-sm);
+  font-variant-numeric: tabular-nums;
+}
+
+.perio-estado {
+  font-size: 0.65rem;
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.perio-pieza[data-estado='SANO'] { background: var(--ds-perio-sano-fondo); color: var(--ds-perio-sano); border-color: var(--ds-perio-sano); }
+.perio-pieza[data-estado='LEVE'] { background: var(--ds-perio-leve-fondo); color: var(--ds-perio-leve); border-color: var(--ds-perio-leve); }
+.perio-pieza[data-estado='MODERADO'] { background: var(--ds-perio-moderado-fondo); color: var(--ds-perio-moderado); border-color: var(--ds-perio-moderado); }
+.perio-pieza[data-estado='SEVERO'] { background: var(--ds-perio-severo-fondo); color: var(--ds-perio-severo); border-color: var(--ds-perio-severo); }
+.perio-pieza[data-estado='AUSENTE'] { background: var(--ds-turno-cancelado-fondo); color: var(--ds-odonto-ausente); }
+.perio-pieza[data-estado='SIN_CARGAR'] { border-style: dashed; color: var(--ds-texto-suave); }
+.perio-pieza[data-estado='CARGANDO'] { border-style: solid; color: var(--ds-texto); }
+
+.perio-pieza .perio-num { color: var(--ds-texto); }
+
+.perio-pieza[data-error] {
+  border: 2px solid var(--ds-error);
+  box-shadow: 0 0 0 2px var(--ds-error-fondo);
+}
+
+/* ---- Dientes dibujados (design D3): corona y raíces por tipo, con el margen de la encía y el fondo de la bolsa ---- */
+
+[data-estado='SANO'] { --perio-trazo: var(--ds-perio-sano); }
+[data-estado='LEVE'] { --perio-trazo: var(--ds-perio-leve); }
+[data-estado='MODERADO'] { --perio-trazo: var(--ds-perio-moderado); }
+[data-estado='SEVERO'] { --perio-trazo: var(--ds-perio-severo); }
+[data-estado='AUSENTE'] { --perio-trazo: var(--ds-odonto-ausente); }
+[data-estado='SIN_CARGAR'],
+[data-estado='CARGANDO'] { --perio-trazo: var(--ds-texto-suave); }
+
+.perio-diente {
+  display: block;
+  overflow: visible;
+}
+
+.perio-corona,
+.perio-raiz {
+  fill: var(--ds-fondo);
+  stroke: var(--perio-trazo, var(--ds-texto-suave));
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.perio-raiz {
+  fill: var(--ds-superficie);
+}
+
+[data-estado='SIN_CARGAR'] .perio-corona,
+[data-estado='SIN_CARGAR'] .perio-raiz {
+  stroke-dasharray: 3 2;
+}
+
+[data-estado='AUSENTE'] .perio-corona,
+[data-estado='AUSENTE'] .perio-raiz {
+  fill: none;
+  stroke-dasharray: 2 2;
+}
+
+.perio-lac {
+  stroke: var(--ds-texto-suave);
+  stroke-width: 1;
+  stroke-dasharray: 3 2;
+  vector-effect: non-scaling-stroke;
+}
+
+.perio-linea-margen,
+.perio-linea-fondo {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.perio-linea-margen { stroke: var(--ds-error); }
+.perio-linea-fondo { stroke: var(--ds-info); }
+
+.perio-grilla {
+  stroke: var(--ds-borde);
+  stroke-width: 0.5;
+  vector-effect: non-scaling-stroke;
+}
+
+.perio-grilla.fuerte {
+  stroke: var(--ds-borde-fuerte);
+}
+
+.perio-cruz-svg {
+  fill: none;
+  stroke: var(--ds-odonto-ausente);
+  stroke-width: 2;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+/* Vistas grandes de la pieza elegida: vestibular y palatina o lingual, con grilla de 1 mm. */
+.perio-vistas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-4);
+  margin: 0 0 var(--ds-espacio-3);
+}
+
+.perio-vista {
+  margin: 0;
+  padding: var(--ds-espacio-2) var(--ds-espacio-3);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-sm, 0.375rem);
+  background: var(--ds-fondo);
+}
+
+.perio-vista figcaption {
+  margin-bottom: var(--ds-espacio-1);
+  font-size: var(--ds-texto-xs);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-texto-suave);
+  text-align: center;
+}
+
+/* ---- Leyenda ---- */
+
+.perio-leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-2) var(--ds-espacio-4);
+  margin: var(--ds-espacio-3) 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--ds-texto-sm);
+}
+
+.perio-leyenda li {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-2);
+}
+
+.perio-muestra {
+  display: inline-flex;
+}
+
+.perio-trazo {
+  display: inline-block;
+  width: 1.5rem;
+  border-top: 2px solid;
+}
+
+.perio-trazo.margen { border-color: var(--ds-error); }
+.perio-trazo.fondo { border-color: var(--ds-info); }
+.perio-trazo.lac { border-top: 1px dashed var(--ds-texto-suave); }
+
+/* ---- Detalle y formulario de la pieza (design D4) ---- */
+
+.perio-detalle {
+  margin-top: var(--ds-espacio-4);
+  padding: var(--ds-espacio-4);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio, 0.5rem);
+  background: var(--ds-superficie);
+}
+
+.perio-detalle-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-3);
+  margin-bottom: var(--ds-espacio-3);
+}
+
+.perio-detalle-cabecera h3 {
+  margin: 0;
+  font-size: var(--ds-texto-lg);
+}
+
+.perio-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  padding: 2px var(--ds-espacio-2);
+  border-radius: 999px;
+  font-size: var(--ds-texto-sm);
+  font-weight: var(--ds-peso-medio);
+  border: 1px solid currentColor;
+}
+
+.perio-chip[data-estado='SANO'] { color: var(--ds-perio-sano); background: var(--ds-perio-sano-fondo); }
+.perio-chip[data-estado='LEVE'] { color: var(--ds-perio-leve); background: var(--ds-perio-leve-fondo); }
+.perio-chip[data-estado='MODERADO'] { color: var(--ds-perio-moderado); background: var(--ds-perio-moderado-fondo); }
+.perio-chip[data-estado='SEVERO'] { color: var(--ds-perio-severo); background: var(--ds-perio-severo-fondo); }
+
+.perio-datos-pieza {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-2) var(--ds-espacio-5, 1.5rem);
+  margin: 0 0 var(--ds-espacio-3);
+}
+
+.perio-datos-pieza div {
+  display: flex;
+  gap: var(--ds-espacio-2);
+  align-items: baseline;
+}
+
+.perio-datos-pieza dt {
+  color: var(--ds-texto-suave);
+  font-size: var(--ds-texto-sm);
+}
+
+.perio-datos-pieza dd {
+  margin: 0;
+  font-weight: var(--ds-peso-medio);
+}
+
+.perio-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--ds-fondo);
+  font-variant-numeric: tabular-nums;
+}
+
+.perio-tabla th,
+.perio-tabla td {
+  padding: var(--ds-espacio-2);
+  border-bottom: var(--ds-borde-ancho) solid var(--ds-borde);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.perio-tabla thead th {
+  font-size: var(--ds-texto-xs);
+  color: var(--ds-texto-suave);
+  font-weight: var(--ds-peso-medio);
+}
+
+.perio-tabla tbody th {
+  font-weight: var(--ds-peso-medio);
+}
+
+.perio-tabla .perio-cara {
+  display: block;
+  font-size: var(--ds-texto-xs);
+  color: var(--ds-texto-suave);
+  font-weight: var(--ds-peso-normal);
+}
+
+.perio-tabla input[type='number'] {
+  width: 4.5rem;
+  min-height: var(--ds-alto-control);
+}
+
+.perio-tabla input[type='checkbox'] {
+  width: 1.375rem;
+  height: 1.375rem;
+}
+
+.perio-tabla .campo-error {
+  display: block;
+  margin-top: 2px;
+}
+
+.perio-ayuda {
+  margin: 0 0 var(--ds-espacio-3);
+  padding: var(--ds-espacio-2) var(--ds-espacio-3);
+  border-left: 4px solid var(--ds-info);
+  background: var(--ds-info-fondo);
+  font-size: var(--ds-texto-sm);
+}
+
+.perio-controles-pieza {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-3) var(--ds-espacio-5, 1.5rem);
+  align-items: end;
+  margin-bottom: var(--ds-espacio-3);
+}
+
+.perio-controles-pieza .campo {
+  margin: 0;
+  min-width: 9rem;
+}
+
+.perio-casilla {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-2);
+  min-height: var(--ds-alto-control);
+}
+
+.perio-casilla input {
+  width: 1.375rem;
+  height: 1.375rem;
+}
+
+.perio-acciones-version {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--ds-espacio-2);
+  margin-top: var(--ds-espacio-4);
+}
+
+.perio-vacio-pieza {
+  margin: 0;
+  color: var(--ds-texto-suave);
+}
+
+.perio-resumen-carga {
+  margin: 0 0 var(--ds-espacio-3);
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+/* ---- 390 px: cuadrantes de a uno por fila y una tarjeta por sitio ---- */
+
+@media (max-width: 47.99rem) {
+  .perio-arcada {
+    grid-template-columns: 1fr;
+  }
+
+  /* Cuatro piezas por fila: cada botón mide unos 75 px y el estado entra completo. */
+  .perio-cuadrante {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--ds-espacio-2);
+  }
+
+  .perio-estado {
+    font-size: var(--ds-texto-xs);
+  }
+
+  .perio-cuadrante + .perio-cuadrante {
+    border-left: 0;
+    padding-left: 0;
+    border-top: 2px solid var(--ds-borde-fuerte);
+    padding-top: var(--ds-espacio-2);
+  }
+
+  .perio-tabla thead {
+    display: none;
+  }
+
+  .perio-tabla,
+  .perio-tabla tbody,
+  .perio-tabla tr,
+  .perio-tabla th,
+  .perio-tabla td {
+    display: block;
+  }
+
+  .perio-tabla tr {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--ds-espacio-1) var(--ds-espacio-3);
+    padding: var(--ds-espacio-3);
+    border-bottom: var(--ds-borde-ancho) solid var(--ds-borde);
+  }
+
+  .perio-tabla tbody th {
+    grid-column: 1 / -1;
+  }
+
+  .perio-tabla th,
+  .perio-tabla td {
+    border: 0;
+    padding: 0;
+  }
+
+  .perio-tabla td::before {
+    content: attr(data-rotulo);
+    display: block;
+    font-size: var(--ds-texto-xs);
+    color: var(--ds-texto-suave);
+  }
+
+  .perio-tabla input[type='number'] {
+    width: 100%;
+  }
+
+  .perio-cabecera-acciones,
+  .perio-cabecera-acciones .campo {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .perio-cabecera-acciones .btn {
+    width: 100%;
+  }
+}
+
+.nota-mockup {
+  margin: 0;
+  font-size: var(--ds-texto-xs);
+  color: var(--ds-texto-suave);
+  max-width: 48rem;
+}
+
+.nota-mockup b {
+  color: var(--ds-alerta);
+}
+
+/* Solo mockups: lugar del odontograma de C-44, que no cambia. */
+.nota-contexto {
+  min-height: 8rem;
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio);
+  color: var(--ds-texto-suave);
+  font-size: var(--ds-texto-sm);
+  text-align: center;
+  padding: var(--ds-espacio-3);
+}
+
+/* Solo mockups: rótulos de la página de estados y diálogo dibujado en el flujo (copiados de los mockups de C-44). */
+.rotulo-estado {
+  margin: var(--ds-espacio-3) 0 var(--ds-espacio-1);
+  font-size: var(--ds-texto-sm);
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-alerta);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.dialogo-estatico {
+  position: static;
+  display: block;
+  margin: 0;
+  box-shadow: var(--ds-sombra-3);
+}
+
+.perio-acciones-inicio {
+  justify-content: flex-start;
+}
+
+.perio-separado {
+  margin-top: var(--ds-espacio-3);
+}
+
+.perio-campo-corto {
+  max-width: 12rem;
+}

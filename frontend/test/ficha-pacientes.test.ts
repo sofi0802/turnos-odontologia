@@ -50,6 +50,8 @@ function conSesion(sesion: object): void {
 function responderFicha(ficha: object = FICHA_CARGADA, registros: unknown[] = []): void {
   servidor.responder('GET /pacientes/{id}/ficha', () => json(200, ficha));
   servidor.responder('GET /pacientes/{id}/odontograma', () => json(200, registros));
+  // C-46: la ficha también pide el periodontograma; acá el paciente no tiene ninguno.
+  servidor.responder('GET /pacientes/{id}/periodontograma', () => json(200, []));
 }
 
 function abrir(hash = '#/pacientes'): void {

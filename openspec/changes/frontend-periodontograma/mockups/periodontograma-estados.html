@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pacientes · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="periodontograma.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="ana.ejemplo" data-rol="ODONTOLOGO" data-activa="pacientes">
+  <div class="pagina-ficha">
+    <h1 tabindex="-1">Pacientes</h1>
+
+    <p class="rotulo-estado">1 · Paciente sin periodontograma</p>
+    <section class="panel ficha-seccion" aria-labelledby="t-vacio">
+      <div class="ficha-seccion-cabecera">
+        <h2 id="t-vacio">Periodontograma</h2>
+        <div class="perio-cabecera-acciones"><button type="button" class="btn btn-principal">Nueva versión</button></div>
+      </div>
+      <div class="estado-vacio chico">
+        <p class="estado-vacio-texto">Todavía no hay periodontogramas de este paciente.</p>
+      </div>
+    </section>
+
+    <p class="rotulo-estado">2 · Primera versión, sin piezas cargadas</p>
+    <section class="panel ficha-seccion" aria-labelledby="t-primera">
+      <div class="ficha-seccion-cabecera"><h2 id="t-primera">Periodontograma · nueva versión</h2></div>
+      <div class="perio-mapa" data-elegida="16" data-piezas='{}'></div>
+      <div class="perio-detalle" aria-labelledby="t-p16">
+        <div class="perio-detalle-cabecera"><h3 id="t-p16">Pieza 16</h3></div>
+        <p class="perio-vacio-pieza">Esta pieza no está en la versión.</p>
+        <div class="perio-acciones-version perio-acciones-inicio"><button type="button" class="btn btn-principal">Cargar pieza</button><button type="button" class="btn">Cargar como ausente</button></div>
+      </div>
+      <p class="perio-resumen-carga perio-separado">Elegí una pieza para cargarla.</p>
+    </section>
+
+    <p class="rotulo-estado">3 · Guardada</p>
+    <section class="panel ficha-seccion" aria-label="Guardada">
+      <p role="status" class="aviso aviso-ok">Periodontograma guardado.</p>
+      <p class="perio-firma">Versión del 01/12/2026 a las 10:42 · Ana Ejemplo · 31 piezas cargadas. Es la primera del selector.</p>
+    </section>
+
+    <p class="rotulo-estado">4 · Rechazos de validación y del servidor</p>
+    <section class="panel ficha-seccion" aria-label="Errores">
+      <p role="alert" class="aviso aviso-error">Cargá al menos una pieza.</p>
+      <div class="campo perio-campo-corto"><label for="e1">Profundidad (mm)</label><input id="e1" type="number" value="16" aria-invalid="true" aria-describedby="e1-e" /><p class="campo-error" id="e1-e">Entre 0 y 15 mm.</p></div>
+      <div class="campo perio-campo-corto"><label for="e2">Recesión (mm)</label><input id="e2" type="number" value="-6" aria-invalid="true" aria-describedby="e2-e" /><p class="campo-error" id="e2-e">Entre −5 y 15 mm.</p></div>
+      <p role="alert" class="aviso aviso-error">La furcación solo se carga en molares y en las piezas 14 y 24.</p>
+      <p role="alert" class="aviso aviso-error">Cada pieza cargada necesita sus 6 sitios y la movilidad.</p>
+    </section>
+
+    <p class="rotulo-estado">5 · Falla la carga del periodontograma (el resto de la ficha se sigue viendo)</p>
+    <section class="panel ficha-seccion" aria-labelledby="t-falla">
+      <h2 id="t-falla">Periodontograma</h2>
+      <p role="alert" class="aviso aviso-error">No pudimos cargar el periodontograma. Revisá la conexión e intentá de nuevo.</p>
+      <div><button type="button" class="btn btn-principal">Reintentar</button></div>
+    </section>
+
+    <p class="rotulo-estado">6 · Cancelar o cambiar de paciente con una carga sin guardar</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="d-titulo">
+      <h2 id="d-titulo">¿Descartar el periodontograma?</h2>
+      <p class="dialogo-resumen">Hay un periodontograma sin guardar. ¿Descartarlo?</p>
+      <div class="dialogo-acciones"><button type="button" class="btn">Seguir editando</button><button type="button" class="btn btn-peligro">Descartar</button></div>
+    </dialog>
+
+    <p class="nota-mockup"><b>Mockup C-46.</b> Estados de la sección en una sola página para revisarlos juntos. En la aplicación cada uno se ve por separado. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+<script src="perio-mockup.js"></script>
+</body>
+</html>
