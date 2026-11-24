@@ -905,7 +905,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `docs/discovery/sources/relevamiento-fuentes.md` §DentalTec
 
 ### [C-22] `caja-y-cobros`
-- **Estado**: `[ ]` KB propuesta el 2026-11-24 (dominio Caja: RN-CA-01 a RN-CA-08, US-207 y DD-18; PA-32 a PA-37 respondidas: la recepción cobra y el admin anula, se cobra el copago con pagos parciales, cuatro medios de pago, una caja por día, la deuda nace al quedar atendido el turno, nada se borra), en revisión con la líder; después va el propose. Governance CRÍTICO: no se escribe código sin aprobación explícita
+- **Estado**: `[ ]` en propuesta (KB aprobada en el PR #118; propose y mockups en la rama `change/C-22-caja-y-cobros`, pendientes de aprobación explícita por governance CRÍTICO). Change `openspec/changes/caja-y-cobros/`: capabilities nuevas `caja`, `cobros-pacientes` y `frontend-caja`, y delta de `frontend-navegacion`. Migración V15
 - **Responsable**: Enzo
 - **Scope**:
   - Caja diaria (apertura, cierre, arqueo), cobros por turno y cuenta corriente del paciente. **Migración V15**.
