@@ -2,7 +2,7 @@
 
 Mode: system-and-mockups
 Revision: 4
-Approval: pending (Revision 1 aprobada el 2026-11-22, by user; las revisiones 2 y 3 no cambian ningún valor de los tokens: la 2 quita alias y la 3 cambia el texto del logo provisorio; la 4 suma los colores del odontograma de C-44; falta que la líder las renueve)
+Approval: approved (2026-11-24, by Sofia Indovino). La líder renovó la aprobación de las revisiones 2, 3 y 4 al mergear el PR #94, que la pedía. La Revision 1 se aprobó el 2026-11-22.
 Revisiones: ver "Historial de revisiones" al final.
 Decisión: Sofia Indovino (líder), 2026-11-22. Reemplaza la política `off` del 2026-11-18 a pedido explícito de la líder.
 
@@ -50,6 +50,6 @@ Abrir `design-system/components.html` con doble clic en el navegador (no requier
 | Revisión | Fecha | Qué cambió | Aprobación |
 |---|---|---|---|
 | 1 | 2026-11-22 | Sistema inicial: tokens, marca, componentes y vistas previas. | Aprobada por la líder (2026-11-22) |
-| 2 | 2026-11-23 | C-39 etapa A: se quitan los alias `--color-*`, `--espacio-*`, `--radio` y `--ancho-maximo` de `tokens.css` (el frontend usa solo `--ds-*`) y se suma `--ds-capa-modal` (la capa detrás de los diálogos, antes escrita a mano con el mismo valor). **No cambia ningún valor ni el aspecto de ninguna pantalla** (capturas de antes y después idénticas, ver `openspec/changes/frontend-uniformidad-visual/mockups/`). | Pendiente de renovar |
-| 3 | 2026-11-23 | C-39 etapa B: el logo provisorio (`assets/logo.svg`) dice "Turnos odontología" en lugar de "LOGO PROVISORIO", sin el rótulo "placeholder · (TBD)", y el encabezado de la aplicación deja de repetir el nombre al lado del logo. Sin cambios en `tokens.css`. | Pendiente de renovar |
-| 4 | 2026-11-24 | C-44 `frontend-ficha-clinica-odontograma`: se suman los tokens `--ds-odonto-*` para los siete estados del odontograma, más "sin estado" y el trazo, y la sección "Odontograma" en `components.html`. Cinco reusan colores existentes; corona (`#4b3f8a`) y endodoncia (`#8a2f6b`) son nuevos, con contraste AA. **No cambia ningún valor existente** ni el aspecto de las pantallas actuales. | Pendiente (se pide con los mockups de C-44) |
+| 2 | 2026-11-23 | C-39 etapa A: se quitan los alias `--color-*`, `--espacio-*`, `--radio` y `--ancho-maximo` de `tokens.css` (el frontend usa solo `--ds-*`) y se suma `--ds-capa-modal` (la capa detrás de los diálogos, antes escrita a mano con el mismo valor). **No cambia ningún valor ni el aspecto de ninguna pantalla** (capturas de antes y después idénticas, ver `openspec/changes/frontend-uniformidad-visual/mockups/`). | Aprobada por la líder al mergear el PR #94 (2026-11-24) |
+| 3 | 2026-11-23 | C-39 etapa B: el logo provisorio (`assets/logo.svg`) dice "Turnos odontología" en lugar de "LOGO PROVISORIO", sin el rótulo "placeholder · (TBD)", y el encabezado de la aplicación deja de repetir el nombre al lado del logo. Sin cambios en `tokens.css`. | Aprobada por la líder al mergear el PR #94 (2026-11-24) |
+| 4 | 2026-11-24 | C-44 `frontend-ficha-clinica-odontograma`: se suman los tokens `--ds-odonto-*` para los siete estados del odontograma, más "sin estado" y el trazo, y la sección "Odontograma" en `components.html`. Cinco reusan colores existentes; corona (`#4b3f8a`) y endodoncia (`#8a2f6b`) son nuevos, con contraste AA. **No cambia ningún valor existente** ni el aspecto de las pantallas actuales. | Aprobada por la líder al mergear el PR #94 (2026-11-24) |

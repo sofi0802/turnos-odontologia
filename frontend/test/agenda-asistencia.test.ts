@@ -262,6 +262,7 @@ describe('etiquetaDeAsistencia y accionesDeAsistencia', () => {
   function turnoAgenda(datos: Partial<TurnoAgenda> = {}): TurnoAgenda {
     return {
       id: 7,
+      pacienteId: 1,
       pacienteNombre: 'Paciente',
       pacienteApellido: 'Uno',
       profesionalId: 1,

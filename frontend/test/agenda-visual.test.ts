@@ -13,6 +13,7 @@ const ACCIONES = { cancelar: () => undefined, reprogramar: () => undefined };
 function turno(id: number, dia: string, datos: Partial<TurnoAgenda> = {}): TurnoAgenda {
   return {
     id,
+    pacienteId: 1,
     pacienteNombre: 'Paciente',
     pacienteApellido: 'Uno',
     profesionalId: 1,

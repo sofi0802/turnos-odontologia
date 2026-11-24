@@ -61,14 +61,15 @@
 - **Estado vigente:** se arma un mapa `pieza → { completa?: estado, caras: Map<cara, estado> }` con la respuesta de `GET /odontograma`, que ya trae solo el último registro de cada pieza y cara.
   - Para decidir qué tapa a qué, se compara `registradoEn`: si la pieza completa es más nueva que una cara, la pieza completa manda.
   - `AUSENTE` se dibuja con una cruz sobre la pieza; `CORONA`, con un contorno grueso; `ENDODONCIA`, con una línea vertical. Los demás estados pintan la cara.
+  - Ajuste del apply (pedido por Emanuel al probar, 2026-11-24): las caras de esas tres piezas llevan además un tinte suave del color del estado (`color-mix` al 22 % sobre `--ds-superficie`, sin tokens nuevos), porque solo con la marca no se distinguían de un vistazo.
 - **Estados:** la etiqueta de cada uno es "Sano", "Caries", "Obturado", "A tratar", "Ausente", "Corona" y "Endodoncia". Además del color, la cara elegida y la leyenda muestran la letra del estado, así el estado no depende solo del color.
 - **Teclado:**
   - cada pieza es un grupo con `role="group"` y `aria-label="Pieza 16"`;
   - cada cara es un elemento enfocable (`tabindex` en roving por pieza), con `role="button"` y el nombre de su estado;
   - las flechas recorren las caras y las piezas; Enter o Espacio la elige.
 - **Ancho:**
-  - Desde 48 rem, la boca entera va en un solo SVG, que escala con `viewBox`. Su ancho máximo da piezas de 56 px como mucho, para que las temporales (10 por fila) no se estiren.
-  - En pantallas más angostas se dibujan dos SVG, "Lado derecho del paciente" (18 a 11 y 48 a 41) y "Lado izquierdo del paciente" (21 a 28 y 31 a 38). Así, en 390 px cada cara mide unos 35 px en lugar de 17 (lo comprobaron los mockups).
+  - Siempre se dibujan dos SVG, "Lado derecho del paciente" (18 a 11 y 48 a 41) y "Lado izquierdo del paciente" (21 a 28 y 31 a 38), que escalan con `viewBox`. En pantallas angostas van uno debajo del otro: en 390 px cada cara mide unos 35 px en lugar de 17 (lo comprobaron los mockups). Desde 48 rem, `17-ficha.css` los pone lado a lado y se ve la boca entera. Un ancho máximo por SVG evita que las temporales se estiren.
+  - Ajuste del apply: los mockups usaban un solo SVG en escritorio. Dibujar siempre las dos mitades da el mismo resultado sin depender de `matchMedia` (que jsdom no tiene) ni redibujar al cambiar el ancho.
   - El área táctil de 44 px la da el panel de edición (D5).
 - **Texto además del dibujo:** un desplegable "Estado vigente en texto" lista cada pieza y cara con su estado, para quien no distingue los colores.
 - **Alternativa descartada:** una tabla de piezas con un selector por cara. Es más simple, pero no se parece a un odontograma y el odontólogo pierde la vista de conjunto.
@@ -79,12 +80,14 @@
 - Los estados son botones de opción, cada uno con su color y su nombre, más "Sumar cambio". El panel tiene controles de 44 px, así sirve en el celular aunque las caras sean chicas.
 - La lista de pendientes muestra cada cambio, con "Quitar", y "Guardar cambios (n)". Los pendientes se ven en el dibujo con un borde punteado hasta guardarlos.
 - Si se suma otro cambio para la misma pieza y cara, reemplaza al pendiente anterior en lugar de duplicarlo.
+- Ajuste del apply: `AUSENTE`, `CORONA` y `ENDODONCIA` son de toda la pieza. Al elegir uno de ellos, la cara pasa sola a "Pieza completa" y el cambio se envía sin cara; si después se elige una cara, ese estado se desmarca. Antes, elegirlos para una sola cara la dejaba gris y parecía que no se había pintado.
 - La validación de caras por maxilar se hace en el frontend con la misma regla del backend (el primer dígito decide el maxilar), así no se envía un pedido que va a fallar. El `422` del backend igual se muestra (escenario "El servidor rechaza un cambio").
-- Al guardar, se reemplaza el estado vigente con la respuesta del `PUT` y se vacía la lista. Si el historial está abierto, se vuelve a pedir.
+- Al guardar, se reemplaza el estado vigente con la respuesta del `PUT`, que devuelve el estado vigente completo (no hace falta otro `GET`), y se vacía la lista. Si el historial está abierto, se vuelve a pedir.
 - **Salir con pendientes:** si se cambia de paciente con cambios sin guardar, se confirma con el diálogo común: "Hay cambios sin guardar en el odontograma. ¿Descartarlos?".
 
 ### D6. Ficha básica
 - Para el `ODONTOLOGO`: tres `<textarea>` con `maxlength` de 4000 y un contador. "Guardar ficha" valida el largo antes de enviar.
+- Ajuste del apply (2026-11-24): Emanuel pidió otra forma para los campos y eligió la opción B de `mockups/ficha-basica-opciones.html` ("campos suaves") entre cuatro. Cada campo tiene fondo gris claro sin borde duro y esquinas redondeadas, el contador a la derecha del rótulo y un texto de ejemplo ("Ej.: penicilina, látex, anestesia local"). Al enfocarlo, el fondo pasa a blanco con el borde de acento. El texto de ejemplo no es un dato: es igual para todos los pacientes.
 - Para el `ADMIN`: los mismos datos como texto (`<p>`, que conserva los saltos de línea).
 - La firma se muestra en la hora de Buenos Aires, como el resto de la aplicación (`shared/fecha/zona.ts`).
 
@@ -152,7 +155,7 @@
 
 ## UI Mockups
 
-- Design system revision: 4 (`design-system/README.md`). C-44 suma los tokens `--ds-odonto-*` (D10): corona `#4b3f8a` y endodoncia `#8a2f6b`; los demás reusan colores existentes. La aprobación de las revisiones 2 a 4 sigue pendiente con la líder.
+- Design system revision: 4 (`design-system/README.md`). C-44 suma los tokens `--ds-odonto-*` (D10): corona `#4b3f8a` y endodoncia `#8a2f6b`; los demás reusan colores existentes. La líder aprobó las revisiones 2 a 4 al mergear el PR #94 (2026-11-24).
 - Decision: yes (2026-11-24). Modo `system-and-mockups`.
 - Mockups: `openspec/changes/frontend-ficha-clinica-odontograma/mockups/`. El brief, las decisiones y la tabla de pantallas con sus requisitos están en `mockups/README.md`.
   - `pacientes-buscar.html`
@@ -160,6 +163,14 @@
   - `ficha-admin.html`
   - `ficha-estados.html`
   - `agenda-ver-ficha.html`
-- Approval: approved (2026-11-24, by Emanuel) para los mockups de esta revisión. La revisión 4 del design system sigue esperando que Sofia la renueve.
+- Approval: approved (2026-11-24, by Emanuel) para los mockups de esta revisión. La revisión 4 del design system la aprobó Sofia al mergear el PR #94 (2026-11-24).
 - Preview: rendered (2026-11-24). Capturas en `mockups/previews/`, a 390 y 1440 px, sin desplazamiento horizontal ni errores de consola.
-- Visual verify: pending.
+- Visual verify: passed (2026-11-24). Contra el backend de desarrollo con datos ficticios, como `ana.ejemplo` y como `admin`, a 1440 × 900 y 390 × 844. Capturas en `mockups/verify/`:
+  - `agenda-ver-ficha-1440.png`: "Ver ficha" en los turnos de la agenda del odontólogo (también aparece para `admin`).
+  - `ficha-odontologo-1440.png` y `ficha-odontologo-390.png`: ficha abierta desde un turno, con "Marcar ausente".
+  - `ficha-pendientes-1440.png` y `ficha-guardada-1440.png`: la ficha básica guardada, dos cambios pendientes (pieza 16 oclusal con caries, pieza 36 ausente) y, después de guardarlos, el odontograma y el historial con los dos registros.
+  - `ficha-admin-1440.png` y `ficha-admin-390.png`: el administrador ve la ficha como texto, sin campos ni "Guardar", con el aviso de solo lectura.
+  - `ficha-basica-campos-1440.png` y `ficha-basica-campos-390.png`: la ficha básica con los campos de la opción B, con "Alergias" enfocado.
+  - `odontograma-estados-pieza-1440.png`: piezas 32 (corona), 41 (endodoncia) y 36 (ausente) con su marca y el tinte del estado.
+  - Se comprobó: sin errores ni advertencias en la consola, `localStorage` y `sessionStorage` vacíos, la dirección queda en `#/pacientes`, "Salir" quita la ficha de la página y no hay desplazamiento horizontal a 390 px. Diferencias con los mockups: solo las dos de abajo (mitades del odontograma y anillo de foco), ninguna bloqueante.
+- Ajuste del apply en los estilos: en `17-ficha.css` la cara enfocada lleva el anillo de foco del sistema (`--ds-foco-ancho` y `--ds-foco-color`) en vez de `outline: none`, porque el test del sistema visual no permite quitar el anillo.

@@ -9,6 +9,8 @@ export interface Filtros {
 /** Turno de `GET /turnos` (capacidad `agenda-api`): sin número de reserva ni datos de salud. */
 export interface TurnoAgenda {
   readonly id: number;
+  /** C-44: para abrir la ficha del paciente desde el turno; `null` si la API no lo envía. */
+  readonly pacienteId: number | null;
   readonly pacienteNombre: string;
   readonly pacienteApellido: string;
   readonly profesionalId: number;
@@ -67,6 +69,7 @@ function leerTurno(elemento: unknown): TurnoAgenda | null {
   }
   return {
     id,
+    pacienteId: numero(elemento, 'pacienteId'),
     pacienteNombre: cadena(elemento, 'pacienteNombre') ?? '',
     pacienteApellido: cadena(elemento, 'pacienteApellido') ?? '',
     profesionalId,
