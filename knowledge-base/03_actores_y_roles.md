@@ -41,6 +41,7 @@ C = crear, R = leer, U = modificar, D = eliminar o desactivar. "Propio" = solo s
 | Afiliación del paciente (RN-OS-02) [2026-11-24, C-18] | CRUD (sin borrar) | CRUD (sin borrar; la carga al dar de alta o al atender al paciente) | R | R propia, en "Mi cuenta" (PA-21) |
 | Aranceles y cobertura por plan (RN-PR-01, RN-PR-02) [2026-11-24, C-19] | CRUD (sin borrar) | R | R | — |
 | Presupuesto (RN-PR-04 a RN-PR-06) [2026-11-24, C-19] | R | R, sin pieza ni cara (PA-24) | C y R, y cambia el estado | R propios, en "Mi cuenta" (PA-27) |
+| Liquidación a obras sociales y conciliación (RN-LQ-02 a RN-LQ-06) [2026-11-24, C-20, en revisión] | CRUD (sin borrar) y descarga | — (PA-39) | — | — |
 | Reportes: ocupación, origen, ausencias y cancelaciones (RN-RE-01) [2026-11-24, C-32, en revisión] | R (todo el consultorio) | R (todo el consultorio; PA-29) | **—** (su agenda sigue en RN-AG-18) | **—** |
 | Caja, cobros y cuenta corriente del paciente (RN-CA-01) [2026-11-24, C-22, en revisión] | R, y anula cobros con motivo (RN-CA-07) | C y R: abre la caja, cobra y la cierra (PA-32) | **—** | **—** |
 

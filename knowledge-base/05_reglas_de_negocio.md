@@ -212,6 +212,33 @@ Cada regla tiene un código `RN-{DOMINIO}-{NN}`. Entre paréntesis va el código
   - No se incluyen en recordatorios, mensajes ni logs (RN-NO-01).
   - Solo los ven los roles de la matriz de `03_actores_y_roles.md`: ni el odontólogo ni otros pacientes.
 
+## Dominio: Liquidaciones (RN-LQ) [2026-11-24, C-20, en revisión]
+
+- **RN-LQ-01**: **qué se liquida**. Se liquidan los **turnos atendidos** (estado `ATENDIDO`), cada uno con su prestación (DD-19). Un turno entra en la liquidación de una obra social si:
+  - el paciente tenía una afiliación vigente a un plan de esa obra social en la fecha del turno (RN-OS-02);
+  - la prestación tiene un código del nomenclador (RN-OS-05) y el plan cubre ese código con más de 0 % (RN-PR-02);
+  - su fecha es anterior o igual al último día del período, en `America/Argentina/Buenos_Aires`;
+  - todavía no está en ninguna otra liquidación. Así, un turno que se marcó atendido tarde entra en la liquidación del mes siguiente, con su fecha real.
+- **RN-LQ-02**: **una liquidación por obra social y mes**. El `ADMIN` la genera para una obra social y un mes cerrado. En el detalle, las líneas se agrupan por plan con su subtotal.
+- **RN-LQ-03**: **monto de cada línea**. Monto solicitado = precio particular de la prestación × porcentaje del plan para su código / 100, redondeado a centavos *half up* (igual que RN-PR-03).
+  - Si el turno ya tiene su **cargo** de caja (RN-CA-03, C-22), la línea usa el precio, el porcentaje y la cobertura de ese cargo. Así lo que paga el paciente (copago) más lo que se pide a la obra social da siempre el precio (PA-40).
+  - Si todavía no hay cargo, se usan el precio y el porcentaje **vigentes al generar** la liquidación.
+  - En los dos casos la línea guarda una copia (como DD-15).
+- **RN-LQ-04**: **estados**.
+  - `BORRADOR`: se puede volver a generar (se agregan los turnos nuevos y se recalculan los montos) y se pueden quitar líneas. Una línea quitada vuelve a quedar libre para otra liquidación.
+  - `PRESENTADA`: ya se envió a la obra social. Las líneas y los montos solicitados no cambian.
+  - `CERRADA`: todas las líneas tienen su resultado de conciliación. Ya no cambia nada.
+  - Las liquidaciones no se borran.
+- **RN-LQ-05**: **exportación**. Una liquidación presentada o cerrada se descarga en **CSV**: una fila por línea con fecha, paciente (nombre y DNI), número de afiliado, plan, código, prestación y monto solicitado, más los totales. La descarga es solo para el `ADMIN`.
+- **RN-LQ-06**: **conciliación**. Con lo que paga la obra social, el `ADMIN` registra por línea el **monto cobrado**, entre 0 y el monto solicitado:
+  - igual al solicitado: `COBRADA`;
+  - mayor que 0 y menor: `PARCIAL`;
+  - 0: `RECHAZADA`, con un motivo obligatorio.
+  - Se puede conciliar por partes: las líneas sin resultado quedan pendientes. El total cobrado y la diferencia con lo solicitado se calculan con las líneas conciliadas.
+  - Cuando todas las líneas tienen resultado, la liquidación se puede cerrar.
+- **RN-LQ-07**: **lo que no cubre la obra social**. La diferencia entre lo solicitado y lo cobrado no se le cobra automáticamente al paciente: los cobros al paciente son de C-22. La facturación electrónica (ARCA) tampoco es parte de C-20.
+- **RN-LQ-08**: **privacidad**. Una liquidación tiene datos personales (nombre, DNI y número de afiliado) y de salud (la prestación). No se incluye en mensajes ni logs (RN-NO-01), y solo la maneja el `ADMIN` (PA-39).
+
 ## Dominio: Excepciones globales
 
 - **RN-GL-01**: **solo datos ficticios** en el repositorio, los seeds, los tests, los ejemplos y las capturas.

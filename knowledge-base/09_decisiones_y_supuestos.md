@@ -160,6 +160,16 @@ Como el margen es configurable (con mínimo 10), se guarda la columna `fin_con_m
 **Trade-offs aceptados**: el paso a `ATENDIDO` lo hace la agenda (`agenda/`, de Sofia), así que C-22 necesita enterarse de ese cambio; el propose define cómo, sin que `agenda/` dependa de `caja/`. Un turno atendido sin arancel no genera deuda hasta que se carga el precio.
 **Impacto**: RN-CA-01 a RN-CA-08, US-207, una fila de la matriz de 03 y las entidades `Caja`, `Cargo` y `Cobro` (migración V15).
 
+### DD-19: Se liquidan los turnos atendidos [2026-11-24, C-20, en revisión]
+**Decisión**: C-20 arma la liquidación mensual de cada obra social con los **turnos atendidos** de sus afiliados, uno por línea, con la prestación del turno, su código del nomenclador y el porcentaje del plan (RN-LQ-01). Elegido por el responsable de C-20 el 2026-11-24.
+**Contexto**: el sistema no tiene un registro de "práctica realizada". Tiene turnos con estado `ATENDIDO` y su prestación, y presupuestos aceptados (C-19). En el relevamiento, Dentalink concilia por "paciente, prestación realizada, obra social, monto solicitado y estado" (verificación de Juan Cruz), y DentiClick liquida con nomenclador y exporta a CSV y PDF.
+**Alternativas consideradas**:
+1. Liquidar los ítems de los presupuestos aceptados. Es simple, pero aceptado no quiere decir que la práctica se hizo.
+2. Un registro nuevo de práctica realizada (prestación, pieza y fecha) cargado por el odontólogo. Es lo más exacto, pero suma una entidad y una pantalla.
+**Justificación**: el turno atendido ya prueba que la prestación se hizo, con fecha y profesional, y no hace falta cargar nada más.
+**Trade-offs aceptados**: un turno es una sola prestación. Si en un turno se hacen varias prácticas, hoy se liquida solo la del turno; si hace falta, se agrega después el registro de práctica realizada.
+**Impacto**: RN-LQ-01 a RN-LQ-08, US-049, una fila de la matriz de 03 y las entidades `Liquidacion` y `LiquidacionLinea` (migración V14).
+
 ## Supuestos inferidos
 
 ### ~~SU-07: Todos los profesionales pueden hacer todas las prestaciones~~ (refutado)
