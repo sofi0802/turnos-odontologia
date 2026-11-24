@@ -212,7 +212,7 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 - [ ] CA-6: como paciente veo en "Mi cuenta" mi obra social, mi plan, mi número de afiliado y la vigencia, o que me atiendo como particular. No puedo cambiarla ni ver la de otro paciente (PA-21).
 **Reglas relacionadas**: RN-OS-01 a RN-OS-07
 
-### US-047: Armar un presupuesto con cobertura y copago [2026-11-24, C-19, en revisión]
+### US-047: Armar un presupuesto con cobertura y copago [2026-11-24, C-19]
 **Como** odontólogo **quiero** armar el presupuesto del paciente con las prestaciones de su tratamiento, **para** que sepa cuánto cubre su obra social y cuánto paga él.
 **Criterios de aceptación**:
 - [ ] CA-1: como `ADMIN` cargo el precio particular de cada prestación y el porcentaje que cubre cada plan por código del nomenclador.
