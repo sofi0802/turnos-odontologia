@@ -32,7 +32,7 @@
 ## 6. Verificación
 
 - [x] 6.1 Correr `npm test` y `npm run build` y verificar que todo pase, incluidos los tests de C-44
-- [ ] 6.2 Verificación visual contra el backend de desarrollo con datos ficticios, como `ana.ejemplo` y como `admin`, a 390 × 844 y 1440 × 900: comparar cada pantalla con su mockup, revisar la consola y los pedidos fallidos, guardar las capturas en `mockups/verify/` y anotar las diferencias en el design
+- [x] 6.2 Verificación visual contra el backend de desarrollo con datos ficticios, como `ana.ejemplo` y como `admin`, a 390 × 844 y 1440 × 900: comparar cada pantalla con su mockup, revisar la consola y los pedidos fallidos, guardar las capturas en `mockups/verify/` y anotar las diferencias en el design
 - [ ] 6.3 Marcar C-46 en `CHANGES.md` y abrir el PR a `master` (después del de C-25), con Enzo y Emanuel como revisores
 
 ## Workflow follow-up

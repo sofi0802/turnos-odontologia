@@ -958,7 +958,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/06_funcionalidades.md` §US-045, `knowledge-base/04_modelo_de_datos.md` §Periodontograma y `knowledge-base/09_decisiones_y_supuestos.md` §DD-13
 
 ### [C-46] `frontend-periodontograma`
-- **Estado**: `[~]` implementado (2026-11-24, SDD; `openspec/changes/frontend-periodontograma/`, design system Revision 5). PR pendiente, después del de C-25; falta la verificación visual de la vista del administrador y después archivarlo
+- **Estado**: `[~]` implementado (2026-11-24, SDD; `openspec/changes/frontend-periodontograma/`, design system Revision 5). PR pendiente, después del de C-25; después falta archivarlo
 - **Responsable**: Sofia Indovino (avisa a Enzo, dueño de `frontend/`, y a Emanuel por la ficha clínica)
 - **Scope**:
   - C-25 hizo el backend del periodontograma, pero ninguna pantalla lo usa. Este change suma la interfaz sobre `POST/GET /api/v1/pacientes/{id}/periodontograma` y `GET .../{versionId}`, sin cambiar su contrato.
