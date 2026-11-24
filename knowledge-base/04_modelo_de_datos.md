@@ -23,7 +23,7 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
                     │ *
                     ├──1─ Sillon
                     ├──1─ Paciente ─1──0..1─ FichaClinica ─1──*─ OdontogramaRegistro
-                    │                            └─1──*─ PeriodontogramaVersion ─1──*─ PeriodontogramaPieza ─1──*─ PeriodontogramaSitio
+                    │              └─1──*─ PeriodontogramaVersion ─1──*─ PeriodontogramaPieza ─1──*─ PeriodontogramaSitio
                     ├──*─ Notificacion
                     └──*─ TurnoAuditoria
 
@@ -103,8 +103,8 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
 - Historial: se agrega un registro nuevo en lugar de sobrescribir el anterior (trazabilidad).
 
 ### PeriodontogramaVersion [2026-11-24, C-25]
-- `id` BIGINT identity, `ficha_id` FK, `profesional_id` FK, `registrado_en` timestamptz.
-- Una fila por cada vez que se guarda el periodontograma (RN-CL-04). No se actualiza ni se borra.
+- `id` BIGINT identity, `paciente_id` FK, `profesional_id` FK, `registrado_en` timestamptz.
+- Una fila por cada vez que se guarda el periodontograma (RN-CL-04). No se actualiza ni se borra. Cuelga del paciente y no de la ficha, igual que el odontograma de C-13: no exige que exista la ficha básica.
 
 ### PeriodontogramaPieza [2026-11-24, C-25]
 - `id` BIGINT identity, `version_id` FK, `pieza` smallint (FDI 11–48, solo permanentes), `ausente` boolean, `movilidad` smallint nullable (0–3), `furcacion` smallint nullable (0–3, solo piezas multirradiculares).

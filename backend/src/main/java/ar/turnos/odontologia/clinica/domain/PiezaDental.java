@@ -25,6 +25,17 @@ public record PiezaDental(int numero) {
         return numero / 10;
     }
 
+    /** Cuadrantes 1 a 4: dentición permanente (C-25, RN-CL-05). */
+    public boolean esPermanente() {
+        return cuadrante() <= 4;
+    }
+
+    /** Molares permanentes y primeros premolares superiores (14 y 24): las piezas con furcación (RN-CL-05). */
+    public boolean esMultirradicular() {
+        int posicion = numero % 10;
+        return esPermanente() && (posicion >= 6 || numero == 14 || numero == 24);
+    }
+
     /** Cuadrantes 1, 2, 5 y 6: maxilar superior. */
     public boolean esSuperior() {
         int cuadrante = cuadrante();

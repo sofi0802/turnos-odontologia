@@ -942,7 +942,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 > Los cuatro changes pueden ir en paralelo con el MVP completo. Todos tocan `clinica/` (dueño: Emanuel).
 
 ### [C-25] `periodontograma`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[~]` implementado (2026-11-24, SDD; `openspec/changes/periodontograma/`, migración V16). PR pendiente de merge; después falta archivarlo
 - **Responsable**: Sofia Indovino (reasignado desde Emanuel el 2026-11-24; `clinica/` sigue siendo módulo de Emanuel, que revisa los cambios)
 - **Scope**:
   - Sondaje de 6 puntos por pieza (MV, V, DV, ML, L, DL), recesión, sangrado, placa, movilidad y furcación, con versiones por visita. **Migración V16**.
