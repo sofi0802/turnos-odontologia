@@ -5,7 +5,7 @@ Acceptance criteria: los escenarios de los deltas `caja`, `cobros-pacientes`, `f
 ## 0. Mockups y aprobación (antes del apply)
 
 - [x] 0.1 Mockups de la pantalla Caja con los tokens de la Revision 5: sin caja (recepción y admin), caja abierta con pendientes y cobros, cobrar, cerrar con diferencia, cuenta corriente e historial, y la vista del admin con "Anular", a 390 y 1440 px; capturas en `mockups/previews/`
-- [ ] 0.2 Aprobación explícita de la propuesta y de los mockups registrada en `design.md` (`Approval: approved`) antes de empezar el grupo 1
+- [x] 0.2 Aprobación explícita de la propuesta y de los mockups registrada en `design.md` (`Approval: approved`) antes de empezar el grupo 1
 
 ## 1. Migración y dominio (backend)
 

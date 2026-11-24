@@ -142,6 +142,6 @@ Son records de `caja/api`, nunca entidades.
 - Design system revision: 5 (aprobada el 2026-11-24 por Sofia Indovino)
 - Decision: yes (2026-11-24, política `system-and-mockups`)
 - Mockups: `openspec/changes/caja-y-cobros/mockups/` (ver su README)
-- Approval: pending
+- Approval: approved (2026-11-24, by user: Enzo aprobó explícitamente la propuesta y los 6 mockups de la revisión 1; governance CRÍTICO)
 - Preview: rendered (2026-11-24, 6 pantallas en `mockups/previews/` a 390x844 y 1440x900, sin desplazamiento horizontal ni paneles desbordados)
 - Visual verify: pending

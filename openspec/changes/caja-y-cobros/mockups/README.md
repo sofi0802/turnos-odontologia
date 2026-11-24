@@ -1,6 +1,6 @@
 # Mockups de C-22 `caja-y-cobros`
 
-- **Approval: pending**
+- **Approval: approved (2026-11-24, by user: Enzo)**
 - Design system: Revision 5 (`design-system/README.md`)
 - Base: el encabezado y la barra lateral de los mockups de la etapa D de C-39, con los estilos actuales de `frontend/src/styles/` copiados en `mockups.css` (incluye los paneles y cifras de Reportes). Lo nuevo de C-22 está en `delta.css`.
 - Datos ficticios: "Paciente Uno" (DNI 99000001), "Paciente Dos" y "Paciente Tres"; aranceles del seed de C-19.
