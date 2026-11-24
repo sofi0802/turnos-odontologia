@@ -1,0 +1,4 @@
+/* C-42: estado "Sin registrar" de Mis turnos. Reusa los tokens neutros de "Cancelado" (sin token nuevo). */
+.e-sin-registrar { color: var(--ds-turno-cancelado); background: var(--ds-turno-cancelado-fondo); }
+.turno-paciente .turno-meta + .turno-meta { margin-top: var(--ds-espacio-0); }
+.lista-turnos { list-style: none; margin: 0; padding: 0; }
