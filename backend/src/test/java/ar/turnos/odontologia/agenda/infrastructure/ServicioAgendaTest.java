@@ -66,7 +66,8 @@ class ServicioAgendaTest {
     void armarServicio() {
         when(transacciones.getTransaction(any())).thenReturn(new SimpleTransactionStatus());
         servicio = new ServicioAgenda(crear, crearSobreturno, extender, cancelar, reprogramar,
-                confirmar, reasignar, marcarAusencia, consulta, auditoria, transacciones);
+                confirmar, reasignar, marcarAusencia, mock(CasosAsistencia.class), consulta, auditoria,
+                transacciones);
     }
 
     @Test

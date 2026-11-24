@@ -72,4 +72,4 @@ El motivo está en proposal.md (Why) y los requisitos, en los deltas de `specs/`
 - Mockups: `openspec/changes/registro-asistencia/mockups/` (ver su README): la agenda de la recepción con un turno en cada estado de asistencia, el rechazo al deshacer con el horario ocupado y la agenda de la odontóloga
 - Approval: approved (2026-11-24, by user: Sofia Indovino aprobó los mockups de la revisión 1)
 - Preview: rendered (2026-11-24, `mockups/previews/` a 390x844 y 1440x900)
-- Visual verify: pending
+- Visual verify: passed (2026-11-24, app real con el backend de desarrollo, V22 aplicada y datos ficticios; `mockups/verify/` a 390x844 y 1440x900 como recepción y como odontólogo. Se probaron en vivo "Deshacer ausencia" con el horario ocupado (409 y mensaje) y "Llegó" en un turno terminado (pasa a Atendido con auditoría LLEGADA y ATENDIDO). Sin errores de consola salvo el 409 esperado. Diferencia corregida: `.btn-llego` pasó a `06-componentes.css` para ganarle a `.btn`)

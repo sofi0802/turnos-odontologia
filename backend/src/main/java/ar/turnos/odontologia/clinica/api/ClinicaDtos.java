@@ -35,10 +35,13 @@ final class ClinicaDtos {
             @Size(max = 4000) String alergias,
             @Size(max = 4000) String medicacion) {}
 
-    record AusenciaVista(Long turnoId, OffsetDateTime inicio, Long profesionalId, String profesional) {
+    /** C-43: {@code deshechaEn} y {@code deshechaPor} son nulos mientras la ausencia está vigente. */
+    record AusenciaVista(Long turnoId, OffsetDateTime inicio, Long profesionalId, String profesional,
+                         OffsetDateTime deshechaEn, String deshechaPor) {
 
         static AusenciaVista de(Ausencia a, ZoneId zona) {
-            return new AusenciaVista(a.turnoId(), local(a.inicio(), zona), a.profesionalId(), a.profesional());
+            return new AusenciaVista(a.turnoId(), local(a.inicio(), zona), a.profesionalId(), a.profesional(),
+                    local(a.deshechaEn(), zona), a.deshechaPor());
         }
     }
 

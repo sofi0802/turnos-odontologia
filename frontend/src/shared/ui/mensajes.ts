@@ -41,6 +41,12 @@ export const MENSAJES_POR_CODIGO: Readonly<Record<string, string>> = {
   PERIODO_INVALIDO: 'El fin tiene que ser posterior al inicio.',
   TURNO_NO_AFECTADO: 'Ese turno ya no está afectado por ese período.',
   SILLON_HABITUAL_OCUPADO: 'Ese sillón ya es el habitual de otro profesional.',
+  // Asistencia en la agenda (C-43).
+  LLEGADA_REGISTRADA: 'El paciente ya tiene la llegada registrada.',
+  LLEGADA_ANTICIPADA: 'La llegada se registra el día del turno.',
+  AUSENCIA_ANTES_DE_TOLERANCIA: 'Todavía no pasaron 15 minutos desde el inicio del turno.',
+  TURNO_NO_AUSENTE: 'El turno no está marcado como ausente.',
+  TURNO_TERMINADO: 'El turno ya terminó.',
 };
 
 export const MENSAJE_SIN_PERMISO = 'No tenés permiso para esta acción.';
@@ -74,6 +80,22 @@ const MENSAJES_REPROGRAMACION: Readonly<Record<string, string>> = {
 export function mensajeDeReprogramacion(error: unknown): string {
   if (error instanceof ErrorNegocio) {
     return MENSAJES_REPROGRAMACION[error.codigo] ?? mensajeDeError(error);
+  }
+  return mensajeDeError(error);
+}
+
+/** C-43: al deshacer una ausencia, cualquier rechazo por superposición o margen dice lo mismo. */
+export const MENSAJE_HORARIO_OCUPADO = 'El horario ya se ocupó. Dale otro turno al paciente.';
+const CODIGOS_DE_HORARIO_OCUPADO: ReadonlySet<string> = new Set([
+  'SOLAPAMIENTO_PROFESIONAL',
+  'SOLAPAMIENTO_SILLON',
+  'MARGEN_INSUFICIENTE',
+]);
+
+/** Como {@link mensajeDeError}, con {@link MENSAJE_HORARIO_OCUPADO} para los rechazos de horario al deshacer. */
+export function mensajeDeDeshacerAusencia(error: unknown): string {
+  if (error instanceof ErrorNegocio && CODIGOS_DE_HORARIO_OCUPADO.has(error.codigo)) {
+    return MENSAJE_HORARIO_OCUPADO;
   }
   return mensajeDeError(error);
 }

@@ -38,6 +38,8 @@ public class TurnoEntity {
     @Column(columnDefinition = "text")
     private String motivoExtension;
     private String codigoReserva;
+    // C-43 (V22): hora de llegada del paciente; nula hasta que la recepción la registra.
+    private Instant llegadaEn;
 
     @Version
     private long version;
@@ -77,6 +79,9 @@ public class TurnoEntity {
         this.motivoExtension = motivo;
     }
 
+    /** C-43: registra la hora de llegada del paciente (el dominio ya verificó que se puede). */
+    public void cambiarLlegada(Instant llegada) { this.llegadaEn = llegada; }
+
     public ProfesionalEntity getProfesional() { return profesional; }
     public SillonEntity getSillon() { return sillon; }
     public PrestacionEntity getPrestacion() { return prestacion; }
@@ -92,4 +97,5 @@ public class TurnoEntity {
     public boolean isExtendido() { return extendido; }
     public String getMotivoExtension() { return motivoExtension; }
     public long getVersion() { return version; }
+    public Instant getLlegadaEn() { return llegadaEn; }
 }

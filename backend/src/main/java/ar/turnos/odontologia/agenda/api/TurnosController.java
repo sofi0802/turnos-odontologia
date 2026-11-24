@@ -4,6 +4,7 @@ import ar.turnos.odontologia.agenda.application.CancelarTurnoCommand;
 import ar.turnos.odontologia.agenda.application.CrearSobreturnoCommand;
 import ar.turnos.odontologia.agenda.application.CrearTurnoCommand;
 import ar.turnos.odontologia.agenda.application.ExtenderTurnoCommand;
+import ar.turnos.odontologia.agenda.application.MarcarAusenciaCommand;
 import ar.turnos.odontologia.agenda.application.ReprogramarTurnoCommand;
 import ar.turnos.odontologia.agenda.infrastructure.ServicioAgenda;
 import ar.turnos.odontologia.shared.security.UsuarioAutenticado;
@@ -95,6 +96,28 @@ class TurnosController {
                            @AuthenticationPrincipal UsuarioAutenticado usuario) {
         ExtenderTurnoCommand comando = new ExtenderTurnoCommand(id, pedido.fin().toInstant(), pedido.motivo());
         return TurnoResponse.de(agenda.extender(comando, usuario.getUsername()), zona);
+    }
+
+    /** C-43: la recepción registra la llegada del paciente (RN-AG-20). */
+    @PostMapping("/{id}/llegada")
+    @PreAuthorize("hasRole('RECEPCIONISTA')")
+    TurnoResponse registrarLlegada(@PathVariable Long id, @AuthenticationPrincipal UsuarioAutenticado usuario) {
+        return TurnoResponse.de(agenda.registrarLlegada(id, usuario.getUsername()), zona);
+    }
+
+    /** C-43: la recepción marca la ausencia desde la agenda, con la tolerancia de 15 minutos (RN-AG-17). */
+    @PostMapping("/{id}/ausencia")
+    @PreAuthorize("hasRole('RECEPCIONISTA')")
+    TurnoResponse marcarAusencia(@PathVariable Long id, @AuthenticationPrincipal UsuarioAutenticado usuario) {
+        return TurnoResponse.de(agenda.marcarAusencia(MarcarAusenciaCommand.deRecepcion(id), usuario.getUsername()),
+                zona);
+    }
+
+    /** C-43: la recepción deshace una ausencia antes del fin, si el horario sigue libre. */
+    @PostMapping("/{id}/deshacer-ausencia")
+    @PreAuthorize("hasRole('RECEPCIONISTA')")
+    TurnoResponse deshacerAusencia(@PathVariable Long id, @AuthenticationPrincipal UsuarioAutenticado usuario) {
+        return TurnoResponse.de(agenda.deshacerAusencia(id, usuario.getUsername()), zona);
     }
 
     /** {@code hasta} no es posterior a {@code desde}. */

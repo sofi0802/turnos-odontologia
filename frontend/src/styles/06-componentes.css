@@ -35,6 +35,12 @@
   border-color: var(--ds-error);
 }
 
+/* C-43: "Llegó" en la agenda de la recepción. Va después de `.btn` para que gane el color. */
+.btn-llego {
+  color: var(--ds-ok);
+  border-color: var(--ds-ok);
+}
+
 .btn:disabled {
   color: var(--ds-texto-deshabilitado);
   background: var(--ds-superficie);

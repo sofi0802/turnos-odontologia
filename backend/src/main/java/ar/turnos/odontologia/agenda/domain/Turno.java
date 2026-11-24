@@ -1,6 +1,8 @@
 package ar.turnos.odontologia.agenda.domain;
 
+import java.time.Duration;
 import java.time.Instant;
+import java.time.ZoneId;
 import java.util.Objects;
 
 /**
@@ -8,7 +10,8 @@ import java.util.Objects;
  *
  * <p>Los identificadores son {@code BIGINT} en la base (DD-12). Un turno recién creado no tiene
  * {@code id} hasta que se guarda: lo asigna la base al insertarlo. Los campos de sobreturno y
- * extensión son aditivos (C-08): las firmas usadas por C-01 y C-06 siguen disponibles.
+ * extensión son aditivos (C-08): las firmas usadas por C-01 y C-06 siguen disponibles. La hora de llegada
+ * ({@code llegadaEn}, C-43) también: es nula hasta que la recepción la registra.
  */
 public record Turno(
         Long id,
@@ -22,7 +25,19 @@ public record Turno(
         boolean esSobreturno,
         String motivoSobreturno,
         boolean extendido,
-        String motivoExtension) {
+        String motivoExtension,
+        Instant llegadaEn) {
+
+    /** C-43: la ausencia se marca recién cuando pasaron 15 minutos desde el inicio (RN-AG-17, fija). */
+    public static final Duration TOLERANCIA_AUSENCIA = Duration.ofMinutes(15);
+
+    /** Firma de C-08: un turno sin la llegada registrada. */
+    public Turno(Long id, Long pacienteId, Long profesionalId, Long sillonId, Long prestacionId,
+            Intervalo intervalo, EstadoTurno estado, NumeroReserva numeroReserva, boolean esSobreturno,
+            String motivoSobreturno, boolean extendido, String motivoExtension) {
+        this(id, pacienteId, profesionalId, sillonId, prestacionId, intervalo, estado, numeroReserva,
+                esSobreturno, motivoSobreturno, extendido, motivoExtension, null);
+    }
 
     /** Firma original: un turno normal, ni sobreturno ni extendido. */
     public Turno(Long id, Long pacienteId, Long profesionalId, Long sillonId, Long prestacionId,
@@ -60,13 +75,13 @@ public record Turno(
     public Turno conId(Long nuevoId) {
         return new Turno(Objects.requireNonNull(nuevoId, "nuevoId"), pacienteId, profesionalId,
                 sillonId, prestacionId, intervalo, estado, numeroReserva,
-                esSobreturno, motivoSobreturno, extendido, motivoExtension);
+                esSobreturno, motivoSobreturno, extendido, motivoExtension, llegadaEn);
     }
 
     /** El mismo turno en estado {@link EstadoTurno#CANCELADO}: deja de ocupar la agenda (RN-AG-08). */
     public Turno cancelado() {
         return new Turno(id, pacienteId, profesionalId, sillonId, prestacionId, intervalo,
-                EstadoTurno.CANCELADO, numeroReserva, esSobreturno, motivoSobreturno, extendido, motivoExtension);
+                EstadoTurno.CANCELADO, numeroReserva, esSobreturno, motivoSobreturno, extendido, motivoExtension, llegadaEn);
     }
 
     /**
@@ -81,7 +96,7 @@ public record Turno(
         verificarMotivo(motivo);
         return new Turno(id, pacienteId, profesionalId, sillonId, prestacionId,
                 new Intervalo(intervalo.inicio(), nuevoFin), estado, numeroReserva,
-                esSobreturno, motivoSobreturno, true, motivo);
+                esSobreturno, motivoSobreturno, true, motivo, llegadaEn);
     }
 
     private static void verificarMotivo(String motivo) {
@@ -101,16 +116,80 @@ public record Turno(
                     "El turno no está reservado: está " + estado);
         }
         return new Turno(id, pacienteId, profesionalId, sillonId, prestacionId, intervalo,
-                EstadoTurno.CONFIRMADO, numeroReserva, esSobreturno, motivoSobreturno, extendido, motivoExtension);
+                EstadoTurno.CONFIRMADO, numeroReserva, esSobreturno, motivoSobreturno, extendido, motivoExtension, llegadaEn);
     }
 
     /**
-     * C-13: el mismo turno en estado {@link EstadoTurno#AUSENTE}: el paciente no se presentó y el turno deja de
-     * ocupar la agenda (RN-AG-17). Conserva todos los campos, incluidos los de sobreturno y extensión de C-08.
+     * C-13 y C-43: el mismo turno en estado {@link EstadoTurno#AUSENTE}: el paciente no se presentó y el turno deja
+     * de ocupar la agenda (RN-AG-17). Solo un turno activo, sin la llegada registrada y cuando ya pasó la tolerancia
+     * de 15 minutos desde el inicio. Conserva todos los campos, incluidos los de sobreturno y extensión de C-08.
      */
-    public Turno ausente() {
-        return new Turno(id, pacienteId, profesionalId, sillonId, prestacionId, intervalo,
-                EstadoTurno.AUSENTE, numeroReserva, esSobreturno, motivoSobreturno, extendido, motivoExtension);
+    public Turno ausente(Instant ahora) {
+        verificarActivo();
+        if (llegadaEn != null) {
+            throw new TurnoRechazadoException(CodigoRechazo.LLEGADA_REGISTRADA,
+                    "El paciente ya llegó: no se puede marcar la ausencia");
+        }
+        if (ahora.isBefore(intervalo.inicio().plus(TOLERANCIA_AUSENCIA))) {
+            throw new TurnoRechazadoException(CodigoRechazo.AUSENCIA_ANTES_DE_TOLERANCIA,
+                    "La ausencia se marca a partir de los " + TOLERANCIA_AUSENCIA.toMinutes()
+                            + " minutos del inicio del turno");
+        }
+        return conEstado(EstadoTurno.AUSENTE);
+    }
+
+    /**
+     * C-43: el mismo turno con la llegada del paciente registrada en {@code ahora}. Sigue activo y ocupando la agenda
+     * hasta que pasa a {@link EstadoTurno#ATENDIDO} (RN-AG-20). Se acepta desde las 00:00 del día del turno en la zona
+     * del consultorio, aunque el paciente llegue tarde.
+     */
+    public Turno conLlegada(Instant ahora, ZoneId zona) {
+        verificarActivo();
+        if (llegadaEn != null) {
+            throw new TurnoRechazadoException(CodigoRechazo.LLEGADA_REGISTRADA, "La llegada ya está registrada");
+        }
+        Instant inicioDelDia = intervalo.inicio().atZone(zona).toLocalDate().atStartOfDay(zona).toInstant();
+        if (ahora.isBefore(inicioDelDia)) {
+            throw new TurnoRechazadoException(CodigoRechazo.LLEGADA_ANTICIPADA,
+                    "La llegada se registra desde el día del turno");
+        }
+        return new Turno(id, pacienteId, profesionalId, sillonId, prestacionId, intervalo, estado, numeroReserva,
+                esSobreturno, motivoSobreturno, extendido, motivoExtension, ahora);
+    }
+
+    /** C-43: el mismo turno en estado {@link EstadoTurno#ATENDIDO}; deja de ocupar la agenda y conserva la llegada. */
+    public Turno atendido() {
+        return conEstado(EstadoTurno.ATENDIDO);
+    }
+
+    /**
+     * C-43: deshace la ausencia y devuelve el turno al estado que tenía antes ({@code RESERVADO} o
+     * {@code CONFIRMADO}). Solo un turno {@code AUSENTE} y antes de su fin. La superposición la verifica el caso de
+     * uso, porque el turno vuelve a ocupar la agenda.
+     */
+    public Turno sinAusencia(EstadoTurno estadoPrevio, Instant ahora) {
+        if (estado != EstadoTurno.AUSENTE) {
+            throw new TurnoRechazadoException(CodigoRechazo.TURNO_NO_AUSENTE, "El turno no está ausente");
+        }
+        if (!ahora.isBefore(intervalo.fin())) {
+            throw new TurnoRechazadoException(CodigoRechazo.TURNO_TERMINADO,
+                    "El turno ya terminó: no se puede deshacer la ausencia");
+        }
+        if (!Objects.requireNonNull(estadoPrevio, "estadoPrevio").esActivo()) {
+            throw new IllegalArgumentException("El estado previo a la ausencia es activo: " + estadoPrevio);
+        }
+        return conEstado(estadoPrevio);
+    }
+
+    private void verificarActivo() {
+        if (!esActivo()) {
+            throw new TurnoRechazadoException(CodigoRechazo.TURNO_NO_ACTIVO, "El turno no está activo: está " + estado);
+        }
+    }
+
+    private Turno conEstado(EstadoTurno nuevo) {
+        return new Turno(id, pacienteId, profesionalId, sillonId, prestacionId, intervalo, nuevo, numeroReserva,
+                esSobreturno, motivoSobreturno, extendido, motivoExtension, llegadaEn);
     }
 
     public boolean esActivo() {

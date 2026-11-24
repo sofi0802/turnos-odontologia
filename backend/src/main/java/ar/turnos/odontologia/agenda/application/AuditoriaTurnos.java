@@ -8,5 +8,10 @@ public interface AuditoriaTurnos {
 
     void registrar(Long turnoId, Accion accion, String actor, Long turnoRelacionadoId);
 
-    enum Accion { CREAR, CANCELAR, REPROGRAMAR, SOBRETURNO, EXTENDER, CONFIRMAR, AUSENTE }
+    /** C-43: si el turno tiene algún registro con esa acción. Deshacer la ausencia lo usa para el estado previo. */
+    boolean registrada(Long turnoId, Accion accion);
+
+    /** {@code LLEGADA}, {@code ATENDIDO} y {@code DESHACER_AUSENCIA} son de C-43 (V22). */
+    enum Accion { CREAR, CANCELAR, REPROGRAMAR, SOBRETURNO, EXTENDER, CONFIRMAR, AUSENTE, LLEGADA, ATENDIDO,
+        DESHACER_AUSENCIA }
 }

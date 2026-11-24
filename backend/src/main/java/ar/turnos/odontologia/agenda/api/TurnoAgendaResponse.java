@@ -16,12 +16,14 @@ record TurnoAgendaResponse(
         OffsetDateTime inicio,
         OffsetDateTime fin,
         String estado,
-        boolean esSobreturno) {
+        boolean esSobreturno,
+        OffsetDateTime llegadaEn) {
 
     static TurnoAgendaResponse de(TurnoEnAgenda t, ZoneId zona) {
         return new TurnoAgendaResponse(t.id(), t.pacienteId(), t.pacienteNombre(), t.pacienteApellido(),
                 t.profesionalId(), t.sillonId(), t.prestacionId(),
                 t.inicio().atZone(zona).toOffsetDateTime(), t.fin().atZone(zona).toOffsetDateTime(),
-                t.estado().name(), t.esSobreturno());
+                t.estado().name(), t.esSobreturno(),
+                t.llegadaEn() == null ? null : t.llegadaEn().atZone(zona).toOffsetDateTime());
     }
 }

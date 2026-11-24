@@ -2,16 +2,24 @@ import { CATALOGOS_VACIOS, cargarCatalogos, type Catalogos } from '../agenda/cat
 import { consultarAgenda, type Filtros, type TurnoAgenda } from '../agenda/consulta.ts';
 import { abrirCancelacion, abrirNuevoTurno, abrirReprogramacion, type ControlAgenda } from '../agenda/formularios.ts';
 import { mover, periodoDe, type Periodo, type Vista } from '../agenda/periodo.ts';
-import { dibujarAgenda, fechaCorta } from '../agenda/vista.ts';
+import { registrarAsistencia, type AccionAsistencia } from '../agenda/asistencia.ts';
+import { dibujarAgenda, fechaCorta, type AccionesTurno } from '../agenda/vista.ts';
 import { ErrorSesion } from '../shared/api/errores.ts';
 import { hoy, sumarDias } from '../shared/fecha/zona.ts';
 import { cambiarOpciones, crearAviso, crearBoton, crearCampo, crearSelector, type Opcion } from '../shared/ui/campos.ts';
-import { mensajeDeError } from '../shared/ui/mensajes.ts';
+import { mensajeDeDeshacerAusencia, mensajeDeError } from '../shared/ui/mensajes.ts';
 import { crearTitulo, type ContextoPagina, type Pagina } from './pagina.ts';
 
 export const MENSAJE_SESION_TERMINADA = 'Tu sesión terminó. Ingresá de nuevo.';
 
 const TODOS: Opcion = { valor: '', texto: 'Todos' };
+
+/** C-43: aviso de cada acción de asistencia; solo el nombre del paciente, nunca datos de salud. */
+const MENSAJES_ASISTENCIA: Readonly<Record<AccionAsistencia, (paciente: string) => string>> = {
+  llegada: (paciente) => `Se registró la llegada de ${paciente}.`,
+  ausencia: (paciente) => `Se marcó la ausencia de ${paciente}.`,
+  'deshacer-ausencia': (paciente) => `Se deshizo la ausencia de ${paciente}.`,
+};
 
 function textoDelPeriodo(periodo: Periodo): string {
   return periodo.vista === 'dia'
@@ -129,9 +137,33 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
     },
   };
 
-  const acciones = {
+  let asistenciaEnCurso = false;
+
+  /** C-43: envía la acción de asistencia; con éxito o rechazo vuelve a pedir la agenda. */
+  async function registrar(turno: TurnoAgenda, accion: AccionAsistencia): Promise<void> {
+    if (asistenciaEnCurso) {
+      return;
+    }
+    asistenciaEnCurso = true;
+    lista.querySelectorAll<HTMLButtonElement>('.turno-asistencia button').forEach((b) => (b.disabled = true));
+    try {
+      await registrarAsistencia(contexto.api, turno.id, accion);
+      control.mostrarExito(MENSAJES_ASISTENCIA[accion](`${turno.pacienteNombre} ${turno.pacienteApellido}`.trim()));
+    } catch (causa) {
+      if (control.sesionVencida(causa)) {
+        return;
+      }
+      control.mostrarError(accion === 'deshacer-ausencia' ? mensajeDeDeshacerAusencia(causa) : mensajeDeError(causa));
+    } finally {
+      asistenciaEnCurso = false;
+    }
+    await cargarTurnos();
+  }
+
+  const acciones: AccionesTurno = {
     cancelar: (turno: TurnoAgenda) => abrirCancelacion(control, turno),
     reprogramar: (turno: TurnoAgenda) => abrirReprogramacion(control, turno),
+    asistencia: { rol: contexto.sesion.rol, registrar: (turno, accion) => void registrar(turno, accion) },
   };
 
   function filtrosActuales(): Filtros {

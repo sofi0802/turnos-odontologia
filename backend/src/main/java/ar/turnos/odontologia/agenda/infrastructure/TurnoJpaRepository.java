@@ -26,14 +26,14 @@ interface TurnoJpaRepository extends JpaRepository<TurnoEntity, Long> {
     @Query("select t from TurnoEntity t join fetch t.paciente where t.id = :id")
     Optional<TurnoEntity> paraModificar(@Param("id") Long id);
 
-    /** Turnos activos del período, con el paciente, para la agenda del personal. */
+    /** Turnos no cancelados del período, con el paciente, para la agenda del personal (C-43, design D7). */
     @Query("""
             select t from TurnoEntity t join fetch t.paciente
-            where t.estado in ('RESERVADO', 'CONFIRMADO')
+            where t.estado <> 'CANCELADO'
               and t.inicio < :hasta and t.fin > :desde
             order by t.inicio, t.id
             """)
-    List<TurnoEntity> activosDelPeriodo(@Param("desde") Instant desde, @Param("hasta") Instant hasta);
+    List<TurnoEntity> deAgendaDelPeriodo(@Param("desde") Instant desde, @Param("hasta") Instant hasta);
 
     boolean existsByCodigoReserva(String codigoReserva);
 }

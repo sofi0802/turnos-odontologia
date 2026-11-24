@@ -181,3 +181,51 @@
   color: var(--ds-turno-sobreturno);
 }
 
+
+/* C-43: asistencia en la agenda del personal. Solo tokens existentes del design system (Revision 3). */
+.etiqueta-atendido {
+  color: var(--ds-turno-atendido);
+}
+
+.etiqueta-ausente {
+  color: var(--ds-turno-ausente);
+}
+
+.etiqueta-llegada {
+  color: var(--ds-ok);
+  background: var(--ds-ok-fondo);
+}
+
+.etiqueta-sin-registrar {
+  color: var(--ds-alerta);
+  background: var(--ds-alerta-fondo);
+}
+
+.turno-sin-registrar {
+  border-left-color: var(--ds-alerta);
+}
+
+.turno-llego {
+  border-left-color: var(--ds-ok);
+}
+
+.turno-horario .etiqueta + .etiqueta {
+  margin-left: var(--ds-espacio-0);
+}
+
+.turno-asistencia {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  margin-top: var(--ds-espacio-2);
+}
+
+.turno-asistencia + .turno-acciones {
+  margin-top: var(--ds-espacio-1);
+}
+
+.turno-pista {
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}

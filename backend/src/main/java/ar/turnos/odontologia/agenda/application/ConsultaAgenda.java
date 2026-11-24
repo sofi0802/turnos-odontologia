@@ -8,10 +8,11 @@ import java.util.List;
 public interface ConsultaAgenda {
 
     /**
-     * Turnos activos cuyo intervalo se cruza con {@code [desde, hasta)}, ordenados por inicio.
-     * {@code profesionalId} y {@code sillonId} son filtros opcionales (nulos = sin filtro).
+     * Turnos no cancelados (activos, {@code ATENDIDO} y {@code AUSENTE}, C-43) cuyo intervalo se cruza con
+     * {@code [desde, hasta)}, ordenados por inicio. {@code profesionalId} y {@code sillonId} son filtros opcionales
+     * (nulos = sin filtro).
      */
-    List<TurnoEnAgenda> turnosActivos(Instant desde, Instant hasta, Long profesionalId, Long sillonId);
+    List<TurnoEnAgenda> turnosDeAgenda(Instant desde, Instant hasta, Long profesionalId, Long sillonId);
 
     /** Turno tal como lo ve el personal en la agenda: sin número de reserva ni DNI. */
     record TurnoEnAgenda(
@@ -25,5 +26,6 @@ public interface ConsultaAgenda {
             Instant inicio,
             Instant fin,
             EstadoTurno estado,
-            boolean esSobreturno) {}
+            boolean esSobreturno,
+            Instant llegadaEn) {}
 }
