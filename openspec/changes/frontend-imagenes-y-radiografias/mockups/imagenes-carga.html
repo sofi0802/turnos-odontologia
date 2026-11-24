@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pacientes · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="imagenes.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="ana.ejemplo" data-rol="ODONTOLOGO" data-activa="pacientes">
+  <div class="pagina-ficha">
+    <h1 tabindex="-1">Pacientes</h1>
+
+    <p class="rotulo-estado">1 · "Cargar imagen" recién abierto</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="c1-titulo">
+      <h2 id="c1-titulo">Cargar imagen</h2>
+      <p class="dialogo-resumen">Paciente Uno. La imagen queda en su historia clínica y no se puede borrar: si te equivocás, la podés anular.</p>
+      <form class="img-form" novalidate>
+        <div class="img-archivo">
+          <span data-icono="subir"></span>
+          <label for="c1-archivo" class="btn">Elegir archivo</label>
+          <input id="c1-archivo" type="file" accept="image/jpeg,image/png,application/pdf" class="solo-lectores" aria-describedby="c1-ayuda" />
+          <p class="img-archivo-ayuda" id="c1-ayuda">JPEG, PNG o PDF de hasta 10 MB.</p>
+        </div>
+        <div class="img-form-fila">
+          <div class="campo">
+            <label for="c1-categoria">Categoría</label>
+            <select id="c1-categoria"><option>Radiografía</option><option>Fotografía</option><option>Estudio</option></select>
+          </div>
+          <div class="campo">
+            <label for="c1-fecha">Fecha de la toma</label>
+            <input id="c1-fecha" type="date" value="2026-12-01" max="2026-12-01" />
+          </div>
+        </div>
+        <div class="campo">
+          <label for="c1-pieza">Pieza (opcional)</label>
+          <input id="c1-pieza" type="text" inputmode="numeric" placeholder="Ej.: 36" aria-describedby="c1-pieza-ayuda" />
+          <p class="ayuda" id="c1-pieza-ayuda">Notación FDI, permanente o temporal. Vacío si la imagen no es de una pieza.</p>
+        </div>
+        <div class="campo-suave">
+          <div class="campo-suave-cabecera"><label for="c1-desc">Descripción (opcional)</label><span class="contador">0/200</span></div>
+          <textarea id="c1-desc" rows="3" placeholder="Ej.: control de la endodoncia"></textarea>
+        </div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Cargar</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">2 · Con un archivo elegido y los datos completos</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="c2-titulo">
+      <h2 id="c2-titulo">Cargar imagen</h2>
+      <form class="img-form" novalidate>
+        <div class="img-archivo">
+          <p class="img-archivo-elegido"><span data-icono="imagen"></span>radiografia-control.jpg · 312 KB</p>
+          <label for="c2-archivo" class="btn">Cambiar archivo</label>
+          <input id="c2-archivo" type="file" class="solo-lectores" />
+        </div>
+        <div class="img-form-fila">
+          <div class="campo"><label for="c2-categoria">Categoría</label><select id="c2-categoria"><option>Radiografía</option></select></div>
+          <div class="campo"><label for="c2-fecha">Fecha de la toma</label><input id="c2-fecha" type="date" value="2026-11-30" max="2026-12-01" /></div>
+        </div>
+        <div class="campo"><label for="c2-pieza">Pieza (opcional)</label><input id="c2-pieza" type="text" inputmode="numeric" value="36" /></div>
+        <div class="campo-suave">
+          <div class="campo-suave-cabecera"><label for="c2-desc">Descripción (opcional)</label><span class="contador">24/200</span></div>
+          <textarea id="c2-desc" rows="3">Control de la endodoncia</textarea>
+        </div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Cargar</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">3 · Validación antes de enviar</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="c3-titulo">
+      <h2 id="c3-titulo">Cargar imagen</h2>
+      <p role="alert" class="aviso aviso-error">Revisá los datos marcados.</p>
+      <form class="img-form" novalidate>
+        <div class="img-archivo con-error">
+          <p class="img-archivo-elegido"><span data-icono="documento"></span>animacion.gif · 48 KB</p>
+          <label for="c3-archivo" class="btn">Cambiar archivo</label>
+          <input id="c3-archivo" type="file" class="solo-lectores" aria-invalid="true" aria-describedby="c3-archivo-e" />
+          <p class="campo-error" id="c3-archivo-e">Solo se aceptan archivos JPEG, PNG o PDF.</p>
+        </div>
+        <div class="img-form-fila">
+          <div class="campo"><label for="c3-categoria">Categoría</label><select id="c3-categoria"><option>Fotografía</option></select></div>
+          <div class="campo"><label for="c3-fecha">Fecha de la toma</label><input id="c3-fecha" type="date" value="2026-12-01" max="2026-12-01" /></div>
+        </div>
+        <div class="campo"><label for="c3-pieza">Pieza (opcional)</label><input id="c3-pieza" type="text" inputmode="numeric" value="19" aria-invalid="true" aria-describedby="c3-pieza-e" /><p class="campo-error" id="c3-pieza-e">La pieza no existe en la notación FDI.</p></div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Cargar</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">4 · Otros mensajes del archivo y del servidor</p>
+    <section class="panel ficha-seccion" aria-label="Mensajes">
+      <p class="campo-error">Elegí un archivo.</p>
+      <p class="campo-error">El archivo supera los 10 MB.</p>
+      <p role="alert" class="aviso aviso-error">El archivo supera los 10 MB.</p>
+      <p role="alert" class="aviso aviso-error">Solo se aceptan archivos JPEG, PNG o PDF.</p>
+      <p class="ayuda">Mientras se envía, el botón dice "Cargando…" y queda deshabilitado.</p>
+    </section>
+
+    <p class="nota-mockup"><b>Mockup C-47.</b> El diálogo de carga, solo para el odontólogo. La fecha arranca en hoy y no deja elegir una futura. Si el servidor rechaza la carga, el diálogo queda abierto con los datos. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pacientes · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="imagenes.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="ana.ejemplo" data-rol="ODONTOLOGO" data-activa="pacientes">
+  <div class="pagina-ficha">
+    <h1 tabindex="-1">Pacientes</h1>
+
+    <p class="rotulo-estado">1 · Paciente sin imágenes</p>
+    <section class="panel ficha-seccion" aria-labelledby="t-vacio">
+      <div class="ficha-seccion-cabecera">
+        <h2 id="t-vacio">Imágenes y estudios</h2>
+        <div class="img-cabecera-acciones"><button type="button" class="btn btn-principal" data-icono="subir">Cargar imagen</button></div>
+      </div>
+      <div class="estado-vacio chico">
+        <p class="estado-vacio-texto">Todavía no hay imágenes ni estudios cargados.</p>
+      </div>
+    </section>
+
+    <p class="rotulo-estado">2 · Cargando</p>
+    <section class="panel ficha-seccion" aria-labelledby="t-cargando">
+      <h2 id="t-cargando">Imágenes y estudios</h2>
+      <p class="cargando" role="status">Cargando imágenes…</p>
+    </section>
+
+    <p class="rotulo-estado">3 · Falla la carga del listado (el resto de la ficha se sigue viendo)</p>
+    <section class="panel ficha-seccion" aria-labelledby="t-falla">
+      <h2 id="t-falla">Imágenes y estudios</h2>
+      <p role="alert" class="aviso aviso-error">No pudimos cargar las imágenes. Revisá la conexión e intentá de nuevo.</p>
+      <div><button type="button" class="btn btn-principal">Reintentar</button></div>
+    </section>
+
+    <p class="rotulo-estado">4 · Filtro sin resultados</p>
+    <section class="panel ficha-seccion" aria-labelledby="t-filtro">
+      <h2 id="t-filtro">Imágenes y estudios</h2>
+      <div class="img-filtros" role="group" aria-label="Filtros de las imágenes">
+        <div class="campo"><label for="f4">Pieza</label><select id="f4"><option>21</option></select></div>
+        <label class="img-check"><input type="checkbox" /> Mostrar anuladas</label>
+      </div>
+      <div class="estado-vacio chico"><p class="estado-vacio-texto">No hay imágenes de la pieza 21.</p></div>
+    </section>
+
+    <p class="rotulo-estado">5 · Anular: pide el motivo</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="a-titulo">
+      <h2 id="a-titulo">¿Anular la radiografía?</h2>
+      <p class="dialogo-resumen">Radiografía de la pieza 36 del 30/11/2026. La imagen no se borra: queda en la historia clínica como anulada, con tu nombre y el motivo.</p>
+      <form class="img-form" novalidate>
+        <div class="campo-suave">
+          <div class="campo-suave-cabecera"><label for="a-motivo">Motivo</label><span class="contador">0/200</span></div>
+          <textarea id="a-motivo" rows="3" aria-invalid="true" aria-describedby="a-motivo-e" placeholder="Ej.: se cargó en el paciente equivocado"></textarea>
+          <p class="campo-error" id="a-motivo-e">Escribí el motivo de la anulación.</p>
+        </div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Volver</button><button type="submit" class="btn btn-peligro">Anular</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">6 · Avisos después de anular</p>
+    <section class="panel ficha-seccion" aria-label="Avisos de la anulación">
+      <p role="status" class="aviso aviso-ok">Imagen anulada.</p>
+      <p role="alert" class="aviso aviso-error">La imagen ya estaba anulada.</p>
+    </section>
+
+    <p class="rotulo-estado">7 · Cancelar la carga o cambiar de paciente con una imagen sin cargar</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="d-titulo">
+      <h2 id="d-titulo">¿Descartar la imagen?</h2>
+      <p class="dialogo-resumen">Hay una imagen sin cargar. ¿Descartarla?</p>
+      <div class="dialogo-acciones"><button type="button" class="btn">Seguir editando</button><button type="button" class="btn btn-peligro">Descartar</button></div>
+    </dialog>
+
+    <p class="rotulo-estado">8 · Falla al abrir el archivo en el visor</p>
+    <dialog class="dialogo dialogo-estatico img-visor" open aria-labelledby="v-titulo">
+      <h2 id="v-titulo">Radiografía · pieza 36</h2>
+      <div class="img-visor-marco"><p role="alert" class="aviso aviso-error">No pudimos abrir el archivo. Intentá de nuevo más tarde.</p></div>
+      <div class="dialogo-acciones"><button type="button" class="btn btn-principal">Cerrar</button></div>
+    </dialog>
+
+    <p class="nota-mockup"><b>Mockup C-47.</b> Estados de la sección en una sola página para revisarlos juntos. En la aplicación cada uno se ve por separado. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>
