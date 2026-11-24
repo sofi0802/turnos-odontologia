@@ -1,0 +1,179 @@
+/* C-22: pantalla Caja (mockups aprobados en openspec/changes/caja-y-cobros/mockups/). Reusa .panel y .reporte-cifras.
+   Solo variables --ds-*. */
+
+.caja-grilla {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.caja-grilla .panel {
+  align-content: start;
+}
+
+.caja-encabezado {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: start;
+  gap: var(--ds-espacio-1);
+}
+
+.caja-vacia {
+  font-weight: var(--ds-peso-medio);
+}
+
+.caja-apertura {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  max-width: 22rem;
+}
+
+.caja-lista {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.caja-fila {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  padding: var(--ds-espacio-1) 0;
+  border-bottom: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.caja-fila p {
+  margin: 0;
+}
+
+.caja-fila-titulo {
+  font-weight: var(--ds-peso-medio);
+}
+
+.caja-fila-monto {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-2);
+}
+
+.caja-saldo,
+.caja-cobro-importe,
+.caja-saldo-total {
+  font-weight: var(--ds-peso-fuerte);
+  font-variant-numeric: tabular-nums;
+}
+
+.caja-aviso {
+  color: var(--ds-texto-suave);
+  font-size: var(--ds-texto-sm);
+}
+
+.caja-cobro {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--ds-espacio-1) var(--ds-espacio-2);
+  padding: var(--ds-espacio-1) 0;
+  border-bottom: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.caja-cobro .btn,
+.caja-cobro .etiqueta {
+  grid-column: 2 / -1;
+  justify-self: end;
+}
+
+.caja-cobro-hora {
+  color: var(--ds-texto-suave);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Cobro anulado: tachado y con la etiqueta "Anulado", no solo con color. */
+.caja-cobro.anulado .caja-cobro-paciente,
+.caja-cobro.anulado .caja-cobro-importe {
+  text-decoration: line-through;
+  color: var(--ds-texto-suave);
+}
+
+.etiqueta-anulado {
+  color: var(--ds-error);
+  border-color: var(--ds-error);
+}
+
+.caja-estado .reporte-numero {
+  font-size: var(--ds-texto-lg);
+  white-space: nowrap;
+}
+
+.caja-estado .reporte-cifras {
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+}
+
+.reporte-cifra.destacada {
+  background: var(--ds-acento-50);
+}
+
+.caja-diferencia {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Una diferencia distinta de cero lleva el texto con su motivo y, además, el color de alerta. */
+.caja-diferencia.con-diferencia,
+.caja-diferencia-viva.con-diferencia {
+  color: var(--ds-error);
+  font-weight: var(--ds-peso-medio);
+}
+
+.caja-diferencia-viva {
+  margin: 0;
+}
+
+.caja-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+.caja-tabla th,
+.caja-tabla td {
+  padding: var(--ds-espacio-1);
+  border-bottom: var(--ds-borde-ancho) solid var(--ds-borde);
+  text-align: left;
+}
+
+.caja-tabla th {
+  color: var(--ds-texto-suave);
+  font-weight: var(--ds-peso-medio);
+  font-size: var(--ds-texto-sm);
+}
+
+.caja-saldo-total {
+  margin: 0;
+  text-align: right;
+}
+
+/* En el celular la tabla de la cuenta corriente se desplaza dentro de su contenedor, no la página. */
+.caja-tabla-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.caja-tabla td:nth-child(n + 3),
+.caja-tabla th:nth-child(n + 3) {
+  text-align: right;
+  white-space: nowrap;
+}
+
+@media (min-width: 1024px) {
+  .caja-grilla {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .caja-estado {
+    grid-column: 1 / -1;
+  }
+}

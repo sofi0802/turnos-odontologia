@@ -30,6 +30,8 @@ const REGLAS_POR_MODULO: Readonly<Record<string, string>> = {
   '19-periodontograma.css': '.perio-linea-margen,',
   // C-32: pantalla Reportes.
   '20-reportes.css': '.medidor-relleno {',
+  // C-22: caja y cobros.
+  '21-caja.css': '.caja-grilla {',
 };
 
 function importaciones(): string[] {

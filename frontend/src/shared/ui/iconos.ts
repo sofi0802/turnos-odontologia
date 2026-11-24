@@ -17,7 +17,8 @@ export type NombreIcono =
   | 'copiar'
   | 'volver'
   | 'pacientes'
-  | 'reportes';
+  | 'reportes'
+  | 'caja';
 
 type Trazo = readonly [etiqueta: 'path' | 'rect' | 'circle', atributos: Readonly<Record<string, string>>];
 
@@ -60,6 +61,8 @@ const TRAZOS: Readonly<Record<NombreIcono, readonly Trazo[]>> = {
   ],
   // C-32: "Reportes", barras de un gráfico.
   reportes: [['path', { d: 'M4 20V10M10 20V4M16 20v-7M21 20H3' }]],
+  // C-22: "Caja", una caja registradora.
+  caja: [['rect', { x: '3', y: '7', width: '18', height: '13', rx: '2' }], ['path', { d: 'M3 11h18M8 7V4h8v3M12 15h.01' }]],
 };
 
 export function crearIcono(nombre: NombreIcono): SVGElement {

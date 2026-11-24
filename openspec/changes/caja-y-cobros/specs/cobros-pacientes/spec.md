@@ -82,7 +82,7 @@ Un cobro mayor que el saldo del cargo MUST responder `409 IMPORTE_SUPERA_SALDO`,
 - **WHEN** `recepcion` lo cobra con `importe` `6000.00`
 - **THEN** la respuesta es `409` con el código `IMPORTE_SUPERA_SALDO`
 
-#### Scenario: Sin caja abierta
+#### Scenario: Cobro sin caja abierta
 - **GIVEN** que no hay ninguna caja abierta
 - **WHEN** `recepcion` cobra un cargo
 - **THEN** la respuesta es `409` con el código `SIN_CAJA_ABIERTA`
