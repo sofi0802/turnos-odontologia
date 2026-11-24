@@ -30,7 +30,7 @@
 
 ## C. Pantallas del paciente
 
-- [ ] C.1 Mockups de la etapa C en `mockups/C/` (portada, Reservar turno en los tres pasos, Mis turnos, Mi cuenta y confirmación de asistencia, con los componentes de B), capturas a 390 × 844 y 1440 × 900 y `README.md`. Verificar abriendo las capturas
+- [x] C.1 Mockups de la etapa C en `mockups/C/` (portada, Reservar turno en los tres pasos, Mis turnos, Mi cuenta y confirmación de asistencia, con los componentes de B), capturas a 390 × 844 y 1440 × 900 y `README.md`. Verificar abriendo las capturas
 - [ ] C.2 Presentar los mockups de C y registrar la aprobación de la líder en `design.md`. No empezar el apply de C sin esto
 - [ ] C.3 Aplicar los componentes y estilos de B a las pantallas del paciente sin cambiar su comportamiento: los tests de C-12, C-33, C-37 y C-38 siguen pasando; escribir los tests de las reglas de CSS nuevas (espaciado, tarjetas, jerarquía) y verlos fallar antes. Verificar con `npm test`
 - [ ] C.4 Verificación visual contra los mockups de C (capturas en `mockups/C/verify/`, diferencias por prioridad, consola, red y teclado), `npm test`, `npm run build` y PR de la etapa C

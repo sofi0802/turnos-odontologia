@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Inicio · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <div class="app">
+  <header class="cabecera">
+    <button class="btn-sobre-azul menu-boton" type="button" aria-controls="menu-principal" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"/></svg>Menú</button>
+    <a class="marca" href="c-inicio-sin-sesion.html"><img src="../../../../../../design-system/assets/logo.svg?v=5" alt="Turnos odontología" /></a>
+    <div class="acciones-cabecera"><span class="avatar" aria-hidden="true">PU</span><span class="usuario-nombre">paciente.uno@example.com</span><button class="btn-sobre-azul" type="button">Salir</button></div>
+  </header>
+  <div class="cuerpo">
+    <aside class="lateral" id="menu-principal">
+      <div class="cajon-cabecera"><span>Menú</span><button class="cerrar" type="button" aria-label="Cerrar el menú"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+      <nav aria-label="Principal"><a href="c-reserva-paso1.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/><path d="M12 13v5M9.5 15.5h5"/></svg>Reservar turno</a><a href="c-mis-turnos.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg>Mis turnos</a></nav>
+    </aside>
+    <div class="velo" aria-hidden="true"></div>
+    <main class="contenido-app">
+      <div class="inicio">
+    <section class="hero" aria-labelledby="titulo-inicio">
+      <div>
+        <p class="eyebrow">Consultorio odontológico</p>
+        <h1 id="titulo-inicio">Tu turno odontológico, sin llamadas ni esperas</h1>
+        <p class="hero-lead">Reservá un turno nuevo o revisá los que ya tenés.</p>
+        <div class="hero-acciones">
+          <a class="btn btn-principal" href="#">Reservar turno</a>
+          <a class="btn" href="#">Mis turnos</a>
+        </div>
+      </div>
+      <div class="hero-ilustracion"><svg viewBox="0 0 320 270" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+  <circle cx="165" cy="140" r="118" fill="var(--ds-acento-100)" opacity=".55"/>
+  <circle cx="60" cy="48" r="9" fill="var(--ds-acento-100)"/>
+  <circle cx="288" cy="214" r="12" fill="var(--ds-acento-100)"/>
+  <path d="M290 40l4 10 10 4-10 4-4 10-4-10-10-4 10-4z" fill="var(--ds-acento-500)" opacity=".55"/>
+  <!-- calendario -->
+  <g transform="translate(150 50)">
+    <rect width="136" height="132" rx="16" fill="var(--ds-fondo)" stroke="var(--ds-acento-100)" stroke-width="3"/>
+    <path d="M0 16a16 16 0 0 1 16-16h104a16 16 0 0 1 16 16v26H0z" fill="var(--ds-acento-500)"/>
+    <rect x="30" y="-10" width="10" height="24" rx="5" fill="var(--ds-acento-700)"/>
+    <rect x="96" y="-10" width="10" height="24" rx="5" fill="var(--ds-acento-700)"/>
+    <g fill="var(--ds-superficie-2)">
+      <circle cx="30" cy="68" r="8"/><circle cx="68" cy="68" r="8"/><circle cx="106" cy="68" r="8"/>
+      <circle cx="30" cy="96" r="8"/><circle cx="106" cy="96" r="8"/>
+      <circle cx="30" cy="120" r="0"/>
+    </g>
+    <circle cx="68" cy="96" r="12" fill="var(--ds-acento-500)"/>
+    <path d="M62 96l5 5 9-10" fill="none" stroke="#fff" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <!-- muela -->
+  <g transform="translate(18 76)">
+    <path d="M62 8C40 0 14 12 14 44c0 24 14 34 16 60 2 22 8 40 20 40 12 0 12-22 22-22s10 22 22 22c12 0 18-18 20-40 2-26 16-36 16-60 0-32-26-44-48-36-6 2-12 2-20 0z"
+          fill="var(--ds-fondo)" stroke="var(--ds-acento-500)" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M34 36c4-10 14-14 22-12" fill="none" stroke="var(--ds-acento-100)" stroke-width="6" stroke-linecap="round"/>
+  </g>
+  <!-- brillos -->
+  <path d="M30 218l3 8 8 3-8 3-3 8-3-8-8-3 8-3z" fill="var(--ds-acento-500)" opacity=".7"/>
+</svg></div>
+    </section>
+    <section class="seccion-pasos" aria-labelledby="como-funciona">
+      <h2 id="como-funciona">Cómo funciona</h2>
+      <ol class="tarjetas-pasos">
+        <li class="tarjeta-paso"><span class="paso-icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg></span><h3><span>1.</span>Elegí la prestación</h3><p>Consulta, limpieza, extracción y más. Te mostramos solo los profesionales que la hacen.</p></li>
+        <li class="tarjeta-paso"><span class="paso-icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/><path d="M12 14v3l2 1"/></svg></span><h3><span>2.</span>Elegí día y horario</h3><p>Mirá los horarios libres antes de decidir, sin registrarte.</p></li>
+        <li class="tarjeta-paso"><span class="paso-icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg></span><h3><span>3.</span>Confirmá tu turno</h3><p>Ingresá o creá tu cuenta en un minuto y guardá tu número de reserva.</p></li>
+      </ol>
+    </section>
+  </div>
+
+    </main>
+  </div>
+  <footer class="pie"><span data-brand-name>Turnos odontología</span></footer>
+  </div>
+
+</body>
+</html>
