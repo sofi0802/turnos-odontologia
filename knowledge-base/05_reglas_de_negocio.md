@@ -74,6 +74,14 @@ Cada regla tiene un código `RN-{DOMINIO}-{NN}`. Entre paréntesis va el código
 - **RN-CL-01**: la ficha clínica y el odontograma solo los ve y los edita el rol `ODONTOLOGO` (y `ADMIN` en modo lectura). La recepción no accede (Ley 26.529, datos sensibles).
 - **RN-CL-02**: los cambios en el odontograma se registran como **historial** (quién, cuándo, qué pieza y cara). No se sobrescribe un registro anterior.
 - **RN-CL-03**: el odontograma usa la **notación FDI** e incluye dientes temporales (estándar de mercado según el informe, C.1).
+- **RN-CL-04**: **periodontograma por visita** [2026-11-24]. Cada vez que el odontólogo guarda un periodontograma se crea una **versión nueva** con la fecha, la hora y el profesional; las versiones anteriores quedan de solo lectura y no se sobrescriben (igual que RN-CL-02). Para corregir, se guarda otra versión. Se pueden ver todas las versiones del paciente, de la más nueva a la más vieja. El acceso es el de RN-CL-01: el odontólogo lo carga y lo ve, el administrador solo lo ve y la recepción no accede.
+- **RN-CL-05**: **datos del periodontograma** [2026-11-24]. Solo piezas **permanentes** (FDI 11–48). Por pieza se registra si está **ausente**, la **movilidad** (grado 0 a 3) y, en las piezas multirradiculares (molares y primeros premolares superiores 14 y 24), la **furcación** (grado 0 a 3). Por cada uno de los **6 sitios** de la pieza (mesiovestibular `MV`, vestibular `V`, distovestibular `DV`, mesiolingual o mesiopalatino `ML`, lingual o palatino `L`, distolingual o distopalatino `DL`) se registran la **profundidad de sondaje** (0 a 15 mm, entero), la **recesión** (−5 a 15 mm, entero; negativa si el margen de la encía está por encima del límite amelocementario), el **sangrado** al sondaje y la **placa** (sí o no). Una pieza ausente no lleva sitios, movilidad ni furcación. Una versión puede tener solo algunas piezas cargadas; cada pieza cargada lleva sus 6 sitios completos.
+- **RN-CL-06**: **estado periodontal de cada pieza** [2026-11-24]. El sistema lo calcula; nadie lo carga a mano. Por sitio, la **pérdida de inserción** es profundidad de sondaje + recesión. Se toma el peor sitio de la pieza:
+  - **Sano**: pérdida de inserción 0 o menos, profundidad de sondaje de 3 mm o menos en todos los sitios y sin sangrado.
+  - **Leve**: pérdida de inserción máxima de 1 a 2 mm, o pérdida 0 con sangrado o con alguna profundidad mayor de 3 mm.
+  - **Moderado**: pérdida de inserción máxima de 3 a 4 mm.
+  - **Severo**: pérdida de inserción máxima de 5 mm o más.
+  - Una pieza ausente no tiene estado. El estado es **orientativo** y no reemplaza el diagnóstico del profesional (DD-13).
 
 ## Dominio: Excepciones globales
 

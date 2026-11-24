@@ -8,7 +8,7 @@
 | **Agenda** | Turnos, bloqueos, sobreturnos y la verificación de solapamiento con margen |
 | **Pacientes** | Datos de contacto y preferencia de canal |
 | **Notificaciones** | Recordatorios y confirmaciones por WhatsApp o email |
-| **Clínica** | Ficha básica y odontograma |
+| **Clínica** | Ficha básica, odontograma y periodontograma (C-25) |
 | **Seguridad y auditoría** | Usuarios del personal, roles, registro de cambios en turnos |
 
 Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
@@ -23,6 +23,7 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
                     │ *
                     ├──1─ Sillon
                     ├──1─ Paciente ─1──0..1─ FichaClinica ─1──*─ OdontogramaRegistro
+                    │                            └─1──*─ PeriodontogramaVersion ─1──*─ PeriodontogramaPieza ─1──*─ PeriodontogramaSitio
                     ├──*─ Notificacion
                     └──*─ TurnoAuditoria
 
@@ -100,6 +101,18 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
 ### OdontogramaRegistro
 - `id` BIGINT identity, `ficha_id` FK, `pieza` smallint (notación FDI: 11–48 permanentes, 51–85 temporales), `cara` enum (`O`, `M`, `D`, `V`, `L`/`P`), `estado` varchar(40) (por ejemplo `CARIES`, `OBTURADO`, `AUSENTE`, `A_TRATAR`), `profesional_id`, `registrado_en`.
 - Historial: se agrega un registro nuevo en lugar de sobrescribir el anterior (trazabilidad).
+
+### PeriodontogramaVersion [2026-11-24, C-25]
+- `id` BIGINT identity, `ficha_id` FK, `profesional_id` FK, `registrado_en` timestamptz.
+- Una fila por cada vez que se guarda el periodontograma (RN-CL-04). No se actualiza ni se borra.
+
+### PeriodontogramaPieza [2026-11-24, C-25]
+- `id` BIGINT identity, `version_id` FK, `pieza` smallint (FDI 11–48, solo permanentes), `ausente` boolean, `movilidad` smallint nullable (0–3), `furcacion` smallint nullable (0–3, solo piezas multirradiculares).
+- Única por (`version_id`, `pieza`). Si `ausente`, `movilidad` y `furcacion` son nulas y la pieza no tiene sitios (RN-CL-05).
+
+### PeriodontogramaSitio [2026-11-24, C-25]
+- `id` BIGINT identity, `pieza_id` FK, `sitio` enum (`MV`, `V`, `DV`, `ML`, `L`, `DL`), `profundidad_sondaje` smallint (0–15), `recesion` smallint (−5–15), `sangrado` boolean, `placa` boolean.
+- Única por (`pieza_id`, `sitio`). El estado periodontal no se guarda: se calcula al leer (RN-CL-06).
 
 ### Usuario
 - `id` BIGINT identity, `username` (único), `password_hash`, `rol` enum (`ADMIN`, `RECEPCIONISTA`, `ODONTOLOGO`, `PACIENTE`), `profesional_id` FK nullable, `paciente_id` FK nullable, `activo`.

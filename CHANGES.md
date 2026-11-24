@@ -951,7 +951,8 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 - **Governance**: ALTO (datos de salud)
 - **Leer antes**:
   - `docs/discovery/verificacion/sofia.md` (periodontograma verificado en VecDent)
-  - `knowledge-base/05_reglas_de_negocio.md` §Clínica
+  - `knowledge-base/05_reglas_de_negocio.md` §Clínica (RN-CL-04 a RN-CL-06, agregadas el 2026-11-24)
+  - `knowledge-base/06_funcionalidades.md` §US-045, `knowledge-base/04_modelo_de_datos.md` §Periodontograma y `knowledge-base/09_decisiones_y_supuestos.md` §DD-13
 
 ### [C-26] `imagenes-y-radiografias`
 - **Estado**: `[ ]` pendiente
