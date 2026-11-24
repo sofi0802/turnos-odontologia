@@ -118,8 +118,8 @@ Obras sociales, cobros y facturación
                    └── C-24 facturacion-electronica-arca [Enzo]
 
 Clínica avanzada (todas desde C-13)
-  C-13 ──┬── C-25 periodontograma                  [Emanuel]
-         ├── C-26 imagenes-y-radiografias          [Emanuel]
+  C-13 ──┬── C-25 periodontograma                  [Sofia]
+         ├── C-26 imagenes-y-radiografias          [Sofia]
          ├── C-27 consentimientos-firma-electronica [Emanuel]
          └── C-28 exportacion-hl7-fhir             [Emanuel]
 
@@ -210,7 +210,7 @@ GATE 7: MVP completo (C-01 a C-14) ✓ + KB ampliada            ← FORK (los 5 
   → C-17 consentimiento-comunicaciones       [Agente B · Juan Cruz]
   → C-18 obras-sociales-y-planes             [Agente B · Juan Sebastián]
   → C-22 caja-y-cobros                       [Agente C · Enzo]
-  → C-25 periodontograma                     [Agente B · Emanuel]
+  → C-25 periodontograma                     [Agente B · Sofia]
 
 GATE 8: primera tanda post-MVP ✓                              ← FORK
   → C-16 politica-cancelacion-configurable   [Agente A · Sofia]
@@ -218,7 +218,7 @@ GATE 8: primera tanda post-MVP ✓                              ← FORK
   → C-19 presupuestos-y-cobertura            [Agente B · Juan Sebastián — si C-18 ✓]
   → C-21 validacion-online-obras-sociales    [Agente B · Juan Sebastián — después de C-19]
   → C-23 senas-mercado-pago                  [Agente C · Enzo — si C-22 ✓]
-  → C-26 imagenes-y-radiografias             [Agente B · Emanuel]
+  → C-26 imagenes-y-radiografias             [Agente B · Sofia]
 
 GATE 9: C-19 ✓ + C-22 ✓                                       ← FORK
   → C-29 multisucursal                       [Agente A · Sofia]
@@ -278,9 +278,9 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 
 | Integrante | MVP | Post-MVP (sugerido, por afinidad con su módulo) |
 |---|---|---|
-| **Sofia Indovino** (líder) | **C-01** (OPSX), C-06, C-35, C-42, C-43, C-14 + revisión de todos los PR | C-15, C-16, C-29 |
+| **Sofia Indovino** (líder) | **C-01** (OPSX), C-06, C-35, C-42, C-43, C-14 + revisión de todos los PR | C-15, C-16, C-25, C-26, C-29 |
 | **Juan Cruz** | C-03, C-08, C-11, C-33, C-37, C-38, C-39 | C-17, C-30, C-31 |
-| **Emanuel** | C-04, C-07, C-13, C-12, C-34, C-44 | C-25, C-26, C-27, C-28 |
+| **Emanuel** | C-04, C-07, C-13, C-12, C-34, C-44 | C-27, C-28 |
 | **Juan Sebastián** | C-05, C-10, C-36 | C-18, C-19, C-20, C-21 |
 | **Enzo** | C-02, C-09, C-40, C-41, C-45 | C-22, C-23, C-24, C-32 (backend y pantallas de administración) |
 
@@ -942,8 +942,8 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 > Los cuatro changes pueden ir en paralelo con el MVP completo. Todos tocan `clinica/` (dueño: Emanuel).
 
 ### [C-25] `periodontograma`
-- **Estado**: `[ ]` pendiente
-- **Responsable**: Emanuel
+- **Estado**: `[~]` implementado (2026-11-24, SDD; `openspec/changes/periodontograma/`, migración V16). PR pendiente de merge; después falta archivarlo
+- **Responsable**: Sofia Indovino (reasignado desde Emanuel el 2026-11-24; `clinica/` sigue siendo módulo de Emanuel, que revisa los cambios)
 - **Scope**:
   - Sondaje de 6 puntos por pieza (MV, V, DV, ML, L, DL), recesión, sangrado, placa, movilidad y furcación, con versiones por visita. **Migración V16**.
   - Tests: carga completa por pieza; cálculo del estado (sano, leve, moderado, severo).
@@ -951,11 +951,12 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 - **Governance**: ALTO (datos de salud)
 - **Leer antes**:
   - `docs/discovery/verificacion/sofia.md` (periodontograma verificado en VecDent)
-  - `knowledge-base/05_reglas_de_negocio.md` §Clínica
+  - `knowledge-base/05_reglas_de_negocio.md` §Clínica (RN-CL-04 a RN-CL-06, agregadas el 2026-11-24)
+  - `knowledge-base/06_funcionalidades.md` §US-045, `knowledge-base/04_modelo_de_datos.md` §Periodontograma y `knowledge-base/09_decisiones_y_supuestos.md` §DD-13
 
 ### [C-26] `imagenes-y-radiografias`
 - **Estado**: `[ ]` pendiente
-- **Responsable**: Emanuel
+- **Responsable**: Sofia Indovino (reasignado desde Emanuel el 2026-11-24; `clinica/` sigue siendo módulo de Emanuel, que revisa los cambios)
 - **Scope**:
   - Carga de imágenes y radiografías por paciente, pieza y fecha, con almacenamiento detrás de un puerto (local o S3 compatible). **Migración V17**.
   - Tests: tipos y tamaños permitidos; acceso solo para el odontólogo.

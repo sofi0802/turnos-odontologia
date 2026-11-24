@@ -88,6 +88,14 @@ Como el margen es configurable (con mínimo 10), se guarda la columna `fin_con_m
 **Trade-offs aceptados**: los ids son correlativos y se pueden adivinar. Por eso la API nunca debe autorizar solo por el id: siempre por sesión y rol (DD-10, regla dura 8).
 **Impacto**: el dominio de C-01 pasó de `UUID` a `Long`, sin cambios en el spec `agenda-turnos`, que no menciona el tipo de id. El design archivado de C-01 (D6) dice UUID y queda como registro histórico.
 
+### DD-13: Estado periodontal por pérdida de inserción [2026-11-24]
+**Decisión**: el periodontograma (C-25) calcula el estado de cada pieza (sano, leve, moderado o severo) por la **pérdida de inserción** del peor sitio (profundidad de sondaje + recesión), con los cortes de RN-CL-06. Cada carga es una versión nueva e inmutable (RN-CL-04).
+**Contexto**: la líder tomó C-25 el 2026-11-24 (antes de Emanuel). La KB solo nombraba el periodontograma en el backlog, sin un criterio para el estado. VecDent calcula el estado de la pieza (`docs/discovery/verificacion/sofia.md`).
+**Alternativas consideradas**: clasificar solo por la profundidad de sondaje (sano hasta 3 mm, leve 4 mm, moderado 5–6 mm, severo 7 mm o más).
+**Justificación**: la pérdida de inserción es el dato que usan los estadios de la clasificación AAP/EFP 2017, mientras que la profundidad sola no muestra la recesión. Los cortes 1–2, 3–4 y 5 o más mm siguen esa clasificación.
+**Trade-offs aceptados**: es una simplificación por pieza; no calcula el estadio ni el grado del paciente, que dependen también de radiografías, de las piezas perdidas y de la historia clínica. Por eso el estado es orientativo y no reemplaza el diagnóstico.
+**Impacto**: RN-CL-04 a RN-CL-06, US-045, la fila del periodontograma en la matriz de 03 y las entidades `PeriodontogramaVersion`, `PeriodontogramaPieza` y `PeriodontogramaSitio` (migración V16).
+
 ## Supuestos inferidos
 
 ### ~~SU-07: Todos los profesionales pueden hacer todas las prestaciones~~ (refutado)

@@ -187,6 +187,18 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 - [ ] CA-2: "Deshacer ausencia" vuelve a activar el turno solo si su horario sigue libre; si se ocupó, se avisa y se le da otro turno al paciente.
 **Reglas relacionadas**: RN-AG-17
 
+## Épica 6: Clínica avanzada (post-MVP)
+
+### US-045: Registrar el periodontograma [2026-11-24, C-25]
+**Como** odontólogo **quiero** cargar el sondaje periodontal de cada pieza en cada visita **para** seguir la evolución de la enfermedad periodontal del paciente.
+**Criterios de aceptación**:
+- [ ] CA-1: por cada pieza permanente cargada registro los 6 sitios (profundidad, recesión, sangrado y placa), la movilidad y, si es multirradicular, la furcación; o la marco ausente.
+- [ ] CA-2: al guardar se crea una versión nueva con fecha y profesional; las anteriores no cambian y las puedo consultar.
+- [ ] CA-3: cada pieza muestra su estado calculado (sano, leve, moderado o severo) a partir del peor sitio.
+- [ ] CA-4: un dato fuera de rango, una pieza temporal, una furcación en una pieza que no es multirradicular o una pieza con sitios incompletos se rechazan con un error claro.
+- [ ] CA-5: el administrador lo ve sin poder cargarlo, y la recepción no accede.
+**Reglas relacionadas**: RN-CL-01, RN-CL-04, RN-CL-05, RN-CL-06
+
 ## Backlog: v1.x y posteriores (fuera del MVP)
 
 > Cada fila se vincula con su change de `CHANGES.md`. Las reglas detalladas se escriben en esta KB **antes de empezar** el change, cuando el MVP esté completo.
@@ -202,7 +214,7 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 | US-207 | Caja diaria, cobros y cuenta corriente del paciente | Posterior | C-22 | Roadmap (Ajustar de la líder, 2026-11-21); base de C-23 y C-24 |
 | US-202 | Señas con Mercado Pago | Posterior | C-23 | Informe, D.3 |
 | US-201 | Facturación electrónica ARCA | Posterior | C-24 | Informe, D.3 |
-| US-203 | Periodontograma, imágenes y radiografías | Posterior | C-25, C-26 | Informe, D.3 |
+| US-203 | Imágenes y radiografías (el periodontograma pasó a US-045 el 2026-11-24) | Posterior | C-26 | Informe, D.3 |
 | US-208 | Consentimiento informado con firma electrónica | Posterior | C-27 | Informe, D.3; relevamiento: Bilog (Ley 25.506) |
 | US-204 | Asistente con IA, multisucursal, exportación HL7 FHIR | Posterior | C-28, C-29, C-31 | Informe, D.3 |
 | US-209 | Sincronización de la agenda del profesional con Google Calendar | Posterior | C-30 | Roadmap (Ajustar de la líder, 2026-11-21) |

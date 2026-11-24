@@ -5,7 +5,7 @@
 | Actor | Descripción | Cómo interactúa |
 |---|---|---|
 | **Recepcionista o secretaria** (`RECEPCIONISTA`) | Personal administrativo del consultorio | Panel web: carga, mueve y cancela turnos; carga sobreturnos; registra la llegada y la ausencia de los pacientes (RN-AG-17, RN-AG-20); administra los datos de contacto de los pacientes |
-| **Odontólogo** (`ODONTOLOGO`) | Profesional que atiende | Panel web: ve **solo** su agenda (RN-AG-18), bloquea horarios, carga sobreturnos, registra la ficha y el odontograma |
+| **Odontólogo** (`ODONTOLOGO`) | Profesional que atiende | Panel web: ve **solo** su agenda (RN-AG-18), bloquea horarios, carga sobreturnos, registra la ficha, el odontograma y el periodontograma |
 | **Administrador del consultorio** (`ADMIN`) | Dueño o encargado (puede ser el mismo odontólogo) | Panel web: configura profesionales, sillones, prestaciones y usuarios |
 | **Paciente** (`PACIENTE`, cuenta propia, no es personal) | Persona que se atiende | Con **su cuenta**: reserva, ve sus turnos, cancela o reprograma con el número de reserva (RN-AG-07, RN-RO-08). Sin cuenta: confirma desde el link del recordatorio o llama al consultorio, que valida DNI y número de reserva |
 | **Sistema de notificaciones** (actor técnico) | Tarea programada | Envía recordatorios por WhatsApp o email y procesa las confirmaciones |
@@ -35,6 +35,7 @@ C = crear, R = leer, U = modificar, D = eliminar o desactivar. "Propio" = solo s
 | Deshacer la ausencia del paciente (RN-AG-17) [2026-11-24] | — | U (si el horario sigue libre) | — (ve en la ficha que se deshizo) | — |
 | Paciente (datos de contacto) | CRUD | CRUD | R | R/U propio (al reservar) |
 | Ficha clínica y odontograma | R | **—** | CRUD | — |
+| Periodontograma (RN-CL-04) [2026-11-24] | R | **—** | C y R (cada carga es una versión nueva; no se edita ni se borra) | — |
 | Estadísticas o dashboard | R | R (operativas) | R (propias) | **—** |
 
 > **Lección de la verificación de fuentes:** en la demo de VecDent, un rol "paciente" armado a mano veía el dashboard con estadísticas de la clínica y el menú de configuración (informe, verificación de fuentes, fila 5). El paciente **no es un rol del personal con menos permisos**: solo accede a endpoints públicos y a sus propios turnos.
