@@ -1,11 +1,11 @@
 # Marca
 
-Revision: 1. Todo lo marcado **(TBD)** es provisorio y se ve como tal en las vistas previas.
+Revision: 3. Todo lo marcado **(TBD)** es provisorio y se ve como tal en las vistas previas.
 
 | Elemento | Valor actual | Fuente | Estado |
 |---|---|---|---|
 | Nombre del producto | "Turnos odontología" | `frontend/index.html` (`<title>`) y encabezado de C-09 | **(TBD)**: nombre descriptivo, no una marca elegida |
-| Logo | `assets/logo.svg`, rotulado "LOGO PROVISORIO" | Creado para este sistema | **(TBD)** |
+| Logo | `assets/logo.svg`, con el nombre "Turnos odontología" y rotulado "placeholder · (TBD)" | Creado para este sistema | **(TBD)** |
 | Imágenes / fotos | Ninguna | — | **(TBD)**: si se usan, solo de banco libre y sin pacientes reales (RN-GL-01) |
 | Color de acento | `#0b6e8a` (verde azulado clínico) | `frontend/src/styles.css` de C-09 | Se conserva |
 | Tipografía | Fuente del sistema (`system-ui`) | `frontend/src/styles.css` de C-09 | Se conserva: sin fuentes remotas |

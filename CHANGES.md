@@ -603,7 +603,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/components.html` (secciones "Reserva online" y "Formularios y avisos")
 
 ### [C-39] `frontend-uniformidad-visual`
-- **Estado**: `[ ]` en curso, en cuatro etapas, cada una con su PR: **A tokens y CSS modular (hecha en la rama `change/C-39-frontend-uniformidad-visual`, 2026-11-23; falta el PR y la renovación de la aprobación del design system, Revision 2)**, B barra lateral y componentes, C pantallas del paciente, D pantallas del personal. Proposal, specs, design y tasks en `openspec/changes/frontend-uniformidad-visual/`
+- **Estado**: `[ ]` en curso, en cuatro etapas, cada una con su PR: **A tokens y CSS modular (hecha, PR #74, 2026-11-23; mergeada, falta la renovación de la aprobación del design system, Revision 2)**, **B barra lateral y componentes (mockups creados el 2026-11-23, falta su aprobación)**, C pantallas del paciente, D pantallas del personal. Proposal, specs, design y tasks en `openspec/changes/frontend-uniformidad-visual/`
 - **Responsable**: Juan Cruz (avisa a Enzo)
 - **Scope**:
   - **Barra lateral desplegable** con los botones del menú ("Reservar turno", "Mis turnos", "Agenda", "Configuración"), que muestra solo las opciones del rol que ingresó. En el celular es un cajón con un botón de menú. Sin sesión se mantiene un encabezado simple con "Acceso personal" arriba a la derecha.

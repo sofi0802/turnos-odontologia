@@ -67,7 +67,7 @@ Un módulo `shared/ui/iconos.ts` crea íconos SVG con el DOM (como `pages/inicio
 Un ayudante `shared/ui/dialogo.ts` arma el diálogo: título, lugar del aviso debajo del título, cuerpo y fila de botones (descarta a la izquierda y principal a la derecha en la computadora; apilados con el principal arriba en el celular). Los siete diálogos lo usan. El texto de los botones y los mensajes no cambian, y se informa cada test que depende del orden de los botones.
 
 ### D9. Archive
-Este change modifica `frontend-navegacion`, que también modifican `ingreso-unico-mi-cuenta` y `frontend-portada-y-acceso` (requisitos distintos, pero el mismo archivo de spec), y crea `frontend-sistema-visual`. Se archiva **al final de la etapa D**, después de los archives pendientes de esos dos changes. El delta valida hoy contra los specs vigentes porque solo modifica los requisitos "Menú adaptable a pantallas chicas" y "Menú según la sesión", que ninguno de los dos toca.
+Este change modifica `frontend-navegacion`, que también modifican `ingreso-unico-mi-cuenta` y `frontend-portada-y-acceso` (requisitos distintos, pero el mismo archivo de spec), y crea `frontend-sistema-visual`. Se archiva **al final de la etapa D**. El equipo acordó (2026-11-23) que el apply de las etapas **no espera** el archive de `ingreso-unico-mi-cuenta`; el archive de C-39 sí va después de los de esos dos changes, para que los specs queden en orden. El delta valida hoy contra los specs vigentes porque solo modifica los requisitos "Menú adaptable a pantallas chicas" y "Menú según la sesión", que ninguno de los dos toca.
 
 ### D10. Decisiones de la líder (2026-11-23)
 - **Un solo botón de ingreso**: "Acceso personal" (portada) e "Ingresar" (demás páginas) se unifican en "Ingresar", arriba a la derecha, sin sesión y en todas las páginas. Cambia lo que dejó C-37 (requisito "Acceso del personal" de `frontend-portada`, todavía sin archivar): en la etapa B, cuando `frontend-portada-y-acceso` esté archivado, se agrega al change el delta que modifica ese requisito y sus dos escenarios ("El personal entra desde la portada" y "El botón del personal en el celular"). Mi cuenta mantiene la indicación para el personal, que sigue explicando que el personal ingresa en el mismo formulario.
@@ -79,8 +79,8 @@ Este change modifica `frontend-navegacion`, que también modifican `ingreso-unic
 - Design system revision: 1 al proponer; **2 desde la etapa A** (2026-11-23, solo quita los alias y suma `--ds-capa-modal`; sin cambio visual; aprobación pendiente de renovar por la líder).
 - Decision: yes, 2026-11-23. El modo del proyecto es `system-and-mockups`.
 - Mockups: se crean por etapa en `openspec/changes/frontend-uniformidad-visual/mockups/<etapa>/` (B: barra lateral, encabezado, pie, componentes y diálogos; C: pantallas del paciente; D: pantallas del personal). Fuente de referencia: `design-system/components.html` y los mockups de C-12, C-33, C-37 y C-38.
-- Approval: pending (por etapa: A no lleva mockups; B, C y D pending).
-- Preview: pending.
+- Approval: pending (por etapa: A no lleva mockups; B, C y D pending). Etapa B: mockups creados el 2026-11-23, pendientes de aprobación.
+- Preview: etapa B rendered (2026-11-23), capturas en `mockups/B/previews/` a 390 × 844 y 1440 × 900 (y a 320 px), sin desplazamiento horizontal ni errores en la consola; C y D pending.
 - Visual verify: pending (por etapa).
 
 ## Risks / Trade-offs
