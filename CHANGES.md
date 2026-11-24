@@ -881,7 +881,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `docs/discovery/informe-discovery.md` §A.3 (presupuestos)
 
 ### [C-20] `liquidaciones-obras-sociales`
-- **Estado**: `[ ]` KB propuesta el 2026-11-24 (dominio Liquidaciones: RN-LQ-01 a RN-LQ-08, US-049 y DD-19; se liquidan los turnos atendidos; PA-38 a PA-42 respondidas: el ADMIN elige el código si hay varios, solo el ADMIN las maneja, precio del cargo de caja de C-22, exportación CSV, no se reabre una presentada), en revisión con la líder; después va el propose
+- **Estado**: `[ ]` KB aprobada (2026-11-24, PR #120; dominio Liquidaciones: RN-LQ-01 a RN-LQ-08, US-049 y DD-19; se liquidan los turnos atendidos; PA-38 a PA-42 respondidas: el ADMIN elige el código si hay varios, solo el ADMIN las maneja, precio del cargo de caja de C-22, exportación CSV, no se reabre una presentada). Sigue el propose
 - **Responsable**: Juan Sebastián
 - **Scope**:
   - Liquidación mensual por obra social y plan, con exportación a PDF o CSV y conciliación de lo cobrado. **Migración V14**.

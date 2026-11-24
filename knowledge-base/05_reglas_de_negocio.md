@@ -212,7 +212,7 @@ Cada regla tiene un código `RN-{DOMINIO}-{NN}`. Entre paréntesis va el código
   - No se incluyen en recordatorios, mensajes ni logs (RN-NO-01).
   - Solo los ven los roles de la matriz de `03_actores_y_roles.md`: ni el odontólogo ni otros pacientes.
 
-## Dominio: Liquidaciones (RN-LQ) [2026-11-24, C-20, en revisión]
+## Dominio: Liquidaciones (RN-LQ) [2026-11-24, C-20]
 
 - **RN-LQ-01**: **qué se liquida**. Se liquidan los **turnos atendidos** (estado `ATENDIDO`), cada uno con su prestación (DD-19). Un turno entra en la liquidación de una obra social si:
   - el paciente tenía una afiliación vigente a un plan de esa obra social en la fecha del turno (RN-OS-02);
