@@ -58,6 +58,9 @@
 | PA-26 | ¿El presupuesto vence? *(2026-11-24, C-19)* | **Sí**: vence a los **30 días** de su fecha; un presupuesto pendiente vencido ya no se puede aceptar | RN-PR-05 |
 | PA-27 | ¿El paciente ve sus presupuestos? *(2026-11-24, C-19)* | **Sí**, en "Mi cuenta", solo los suyos y sin poder cambiarlos | Matriz de 03 |
 | PA-28 | ¿El precio particular tiene historial? *(2026-11-24, C-19)* | **No**: un solo precio vigente; el presupuesto guarda una copia | RN-PR-01, DD-15 |
+| PA-29 | ¿Quién ve los reportes? *(2026-11-24, C-32)* | El `ADMIN` y la `RECEPCIONISTA`, con todo el consultorio. El odontólogo no los ve y el paciente recibe `403` | RN-RE-01, matriz de 03 |
+| PA-30 | ¿De dónde sale el origen del turno? *(2026-11-24, C-32)* | De la **auditoría**: un actor `paciente-online:<id>` es online; el resto, del consultorio. Sin migración | RN-RE-05, DD-16 |
+| PA-31 | ¿Cómo se mide la ocupación? *(2026-11-24, C-32)* | En **porcentaje** de los minutos de atención del profesional (horario menos ausencias, licencias y bloqueos); el sillón, sobre los profesionales que lo tienen como habitual | RN-RE-04 |
 
 ## Puntos "No evidenciado" del Discovery
 

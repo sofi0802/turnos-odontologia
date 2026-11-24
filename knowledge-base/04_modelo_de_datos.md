@@ -78,9 +78,9 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
 - `es_sobreturno` boolean, `motivo_sobreturno` varchar(255). **Obligatorio** si `es_sobreturno = true` (RN-AG-06; CHECK en la base).
 - `extendido` boolean, `motivo_extension` varchar(255) (RN-AG-14)
 - `llegada_en` timestamptz (nullable): momento en que la recepción registró la llegada del paciente (RN-AG-20) [2026-11-24]. No cambia el estado: el turno sigue activo hasta que termina y el sistema lo pasa a `ATENDIDO`. Quién la registró queda en la auditoría del turno, igual que la ausencia y su deshacer (RN-AG-17).
-- `origen` enum: `STAFF`, `ONLINE`
+- ~~`origen` enum: `STAFF`, `ONLINE`~~ *(corregido el 2026-11-24, C-32)*: la tabla `turno` no tiene esta columna. El origen se deduce de la auditoría del turno (RN-RE-05, DD-16).
 - `codigo_reserva` varchar(12) (único; para cancelar o reprogramar online)
-- `creado_por` (usuario o "paciente-online"), `creado_en`, `cancelado_en`, `motivo_cancelacion`
+- ~~`creado_por`, `creado_en`, `cancelado_en`, `motivo_cancelacion`~~ *(corregido el 2026-11-24, C-32)*: tampoco son columnas de `turno`. Quién creó o canceló un turno, y cuándo, queda en `turno_auditoria` (`accion`, `actor`, `fecha`); las operaciones online del paciente usan el actor `paciente-online:<id>`, sin email, nombre ni DNI.
 - `version` int (bloqueo optimista)
 - **Constraints**:
   - `fin > inicio`.
