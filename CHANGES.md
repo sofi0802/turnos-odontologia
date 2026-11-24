@@ -347,7 +347,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 
 ### [C-05] `auth-sesion-roles`
 - **Estado**: `[x]` completo (2026-11-21, PR #14). Specs: `openspec/specs/seguridad-autenticacion/`, `seguridad-autorizacion/`, `cuentas-pacientes/`; change archivado en `openspec/changes/archive/2026-11-21-auth-sesion-roles/`. Evidencia: `docs/evidencia/etapa-c05-auth.txt`
-- **Fix (2026-11-24)**: `errores-rutas-inexistentes`. Una ruta inexistente responde `404 RECURSO_INEXISTENTE` y un error no controlado `500 ERROR_INTERNO`, en lugar de un `403` disfrazado. Rama `fix/C-05-error-404-apply`, PR pendiente. Se mergea antes que C-41
+- **Fix (2026-11-24)**: `errores-rutas-inexistentes`. Una ruta inexistente responde `404 RECURSO_INEXISTENTE` y un error no controlado `500 ERROR_INTERNO`, en lugar de un `403` disfrazado. Propuesta en el PR #56 y apply en el PR #84 (mergeado antes que C-41); change archivado en `openspec/changes/archive/2026-11-24-errores-rutas-inexistentes/` y spec `seguridad-autorizacion` actualizado
 - **Responsable**: Juan Sebastián
 - **Scope**:
   - Spring Security con **sesión y cookie** `HttpOnly`/`SameSite=Lax`, CSRF habilitado (DD-10). Contraseñas con BCrypt.
