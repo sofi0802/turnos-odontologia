@@ -2,7 +2,7 @@ import { cargarProfesionales, type ProfesionalPublico } from '../paciente/catalo
 import { consultarDisponibilidad, type Horario } from '../paciente/disponibilidad.ts';
 import { crearGrillaHorarios } from '../paciente/horarios.ts';
 import type { TurnoPaciente } from '../paciente/reserva.ts';
-import { cancelarTurno, ESTADOS, listarMisTurnos, reprogramarTurno, separarTurnos } from '../paciente/turnos.ts';
+import { cancelarTurno, estadoVisible, listarMisTurnos, reprogramarTurno, separarTurnos } from '../paciente/turnos.ts';
 import { ErrorNegocio, ErrorSesion } from '../shared/api/errores.ts';
 import { fechaDeInstante, fechaLarga, formatearHora, hoy } from '../shared/fecha/zona.ts';
 import { crearAviso, crearBoton, crearCampo, crearEntrada, crearSelector, type Opcion } from '../shared/ui/campos.ts';
@@ -17,6 +17,8 @@ export const MENSAJE_FUERA_DE_PLAZO = 'Faltan menos de 24 h. Para cancelarlo o c
 export const MENSAJE_TURNO_CANCELADO = 'Tu turno se canceló.';
 export const MENSAJE_HORARIO_OCUPADO = 'Ese horario se ocupó recién. Elegí otro.';
 export const MENSAJE_SESION_TERMINADA = 'Tu sesión terminó. Ingresá de nuevo.';
+/** C-42: aclaración de un turno pasado que nadie registró como atendido o ausente. */
+export const MENSAJE_SIN_REGISTRAR = 'El consultorio todavía no registró la asistencia.';
 
 const SIN_PREFERENCIA = '';
 
@@ -76,13 +78,14 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
       );
       return;
     }
-    const { proximos, anteriores } = separarTurnos(turnos, new Date());
+    const ahora = new Date();
+    const { proximos, anteriores } = separarTurnos(turnos, ahora);
     const partes: HTMLElement[] = [];
     if (proximos.length > 0) {
-      partes.push(seccion('Próximos turnos', proximos.map((t) => tarjeta(t, true))));
+      partes.push(seccion('Próximos turnos', proximos.map((t) => tarjeta(t, true, ahora))));
     }
     if (anteriores.length > 0) {
-      partes.push(seccion('Turnos anteriores', anteriores.map((t) => tarjeta(t, false))));
+      partes.push(seccion('Turnos anteriores', anteriores.map((t) => tarjeta(t, false, ahora))));
     }
     const reservar = document.createElement('a');
     reservar.className = 'btn';
@@ -104,7 +107,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
     return contenedorSeccion;
   }
 
-  function tarjeta(turno: TurnoPaciente, proximo: boolean): HTMLLIElement {
+  function tarjeta(turno: TurnoPaciente, proximo: boolean, ahora: Date): HTMLLIElement {
     const item = document.createElement('li');
     item.className = proximo ? 'turno-paciente' : 'turno-paciente turno-anterior';
     item.dataset['reserva'] = turno.numeroReserva;
@@ -115,9 +118,9 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
     fecha.className = 'turno-fecha';
     fecha.textContent = `${fechaLarga(turno.inicio)} · ${formatearHora(turno.inicio)}`;
     const estado = document.createElement('span');
-    const datosEstado = ESTADOS[turno.estado];
-    estado.className = `estado ${datosEstado?.clase ?? ''}`.trim();
-    estado.textContent = datosEstado?.texto ?? turno.estado;
+    const visible = estadoVisible(turno, ahora);
+    estado.className = `estado ${visible.clase}`.trim();
+    estado.textContent = visible.texto;
     cabecera.append(fecha, estado);
 
     const meta = document.createElement('p');
@@ -126,7 +129,14 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
     const numero = document.createElement('p');
     numero.className = 'turno-numero';
     numero.textContent = `Reserva ${turno.numeroReserva}`;
-    item.append(cabecera, meta, numero);
+    item.append(cabecera, meta);
+    if (visible.sinRegistrar) {
+      const nota = document.createElement('p');
+      nota.className = 'turno-meta turno-nota';
+      nota.textContent = MENSAJE_SIN_REGISTRAR;
+      item.append(nota);
+    }
+    item.append(numero);
 
     if (!proximo) {
       return item;

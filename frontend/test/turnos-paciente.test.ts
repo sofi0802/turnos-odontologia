@@ -158,6 +158,68 @@ describe('Lista de mis turnos', () => {
     const enlace = [...raiz.querySelectorAll<HTMLAnchorElement>('main a')].find((a) => a.textContent === 'Reservar turno');
     expect(enlace?.getAttribute('href')).toBe('#/reserva');
   });
+
+  // C-42: el momento actual es el 2026-12-01 a las 08:00 en Buenos Aires.
+  it('Turno pasado sin registrar', async () => {
+    await abrirMisTurnos([
+      turnoPaciente({
+        numeroReserva: 'R-0001',
+        inicio: '2026-11-28T10:00:00-03:00',
+        fin: '2026-11-28T10:30:00-03:00',
+        modificableOnline: false,
+      }),
+      turnoPaciente({
+        numeroReserva: 'R-0004',
+        inicio: '2026-11-27T09:00:00-03:00',
+        fin: '2026-11-27T09:30:00-03:00',
+        estado: 'CONFIRMADO',
+        modificableOnline: false,
+      }),
+    ]);
+
+    const anteriores = seccion('Turnos anteriores');
+    for (const numero of ['R-0001', 'R-0004']) {
+      const t = texto(tarjeta(numero));
+      expect(t).toContain('Sin registrar');
+      expect(t).toContain('El consultorio todavía no registró la asistencia.');
+      expect(tarjeta(numero).closest('section')).toBe(anteriores);
+    }
+    expect(texto(anteriores)).not.toContain('Reservado');
+    expect(texto(anteriores)).not.toContain('Confirmado');
+    expect(servidor.pedidos.map((p) => `${p.metodo} ${p.ruta}`).filter((p) => p !== 'GET /public/sesion')).toEqual([
+      'GET /paciente/turnos',
+    ]);
+  });
+
+  it('Turno en curso', async () => {
+    await abrirMisTurnos([
+      turnoPaciente({
+        numeroReserva: 'R-0005',
+        inicio: '2026-12-01T07:45:00-03:00',
+        fin: '2026-12-01T08:15:00-03:00',
+        estado: 'CONFIRMADO',
+        modificableOnline: false,
+      }),
+    ]);
+
+    const t = texto(tarjeta('R-0005'));
+    expect(tarjeta('R-0005').closest('section')).toBe(seccion('Turnos anteriores'));
+    expect(t).toContain('Confirmado');
+    expect(t).not.toContain('Sin registrar');
+  });
+
+  it('Turnos registrados se muestran igual', async () => {
+    await abrirMisTurnos([
+      turnoPaciente({ numeroReserva: 'R-0006', inicio: '2026-11-25T10:00:00-03:00', fin: '2026-11-25T10:30:00-03:00', estado: 'ATENDIDO', modificableOnline: false }),
+      turnoPaciente({ numeroReserva: 'R-0007', inicio: '2026-11-26T10:00:00-03:00', fin: '2026-11-26T10:30:00-03:00', estado: 'AUSENTE', modificableOnline: false }),
+      turnoPaciente({ numeroReserva: 'R-0008', inicio: '2026-11-20T11:00:00-03:00', fin: '2026-11-20T11:30:00-03:00', estado: 'CANCELADO', modificableOnline: false }),
+    ]);
+
+    expect(texto(tarjeta('R-0006'))).toContain('Atendido');
+    expect(texto(tarjeta('R-0007'))).toContain('Ausente');
+    expect(texto(tarjeta('R-0008'))).toContain('Cancelado');
+    expect(texto(seccion('Turnos anteriores'))).not.toContain('Sin registrar');
+  });
 });
 
 describe('Acciones según el plazo de 24 horas', () => {

@@ -53,4 +53,4 @@ No hay migración. Para volver atrás alcanza con revertir el PR.
 - Mockups: `openspec/changes/frontend-turnos-sin-registrar/mockups/` (ver su README)
 - Approval: approved (2026-11-24, by user: Sofia Indovino aprobó la revisión 2 de los mockups)
 - Preview: rendered (2026-11-24, revisión 2 sobre la etapa C de C-39, `mockups/previews/` a 390x844 y 1440x900)
-- Visual verify: pending
+- Visual verify: passed (2026-11-24, app real con backend de desarrollo y paciente ficticio, `mockups/verify/` a 390x844 y 1440x900; sin errores de consola ni diferencias con el mockup)
