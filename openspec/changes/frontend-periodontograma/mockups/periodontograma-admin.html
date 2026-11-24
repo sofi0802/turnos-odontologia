@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pacientes · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="periodontograma.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="admin" data-rol="ADMIN" data-activa="pacientes">
+  <div class="pagina-ficha">
+    <h1 tabindex="-1">Pacientes</h1>
+
+    <section class="panel ficha-paciente" aria-labelledby="paciente-nombre">
+      <div class="ficha-paciente-datos">
+        <div>
+          <h2 class="ficha-paciente-nombre" id="paciente-nombre">Paciente Uno</h2>
+          <p class="ficha-paciente-dni">DNI 99000001</p>
+        </div>
+        <button type="button" class="btn">Cambiar de paciente</button>
+      </div>
+      <p class="aviso aviso-info">Solo lectura: la ficha clínica la edita el odontólogo.</p>
+    </section>
+
+    <section class="panel ficha-seccion" aria-labelledby="t-perio">
+      <div class="ficha-seccion-cabecera">
+        <h2 id="t-perio">Periodontograma</h2>
+        <div class="perio-cabecera-acciones">
+          <div class="campo">
+            <label for="perio-version">Versión</label>
+            <select id="perio-version">
+              <option>01/12/2026 09:00 · Bruno Prueba (la más nueva)</option>
+              <option selected>20/11/2026 10:30 · Ana Ejemplo</option>
+              <option>14/08/2026 16:15 · Ana Ejemplo</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <p class="perio-firma">Versión del 20/11/2026 a las 10:30 · Ana Ejemplo · 29 piezas cargadas · es una versión anterior</p>
+
+      <div class="perio-mapa" data-elegida="46" data-piezas='{"18":"AUSENTE","17":"LEVE","16":"LEVE","15":"SANO","14":"SANO","13":"SANO","12":"SANO","11":"SANO","21":"SANO","22":"SANO","23":"SANO","24":"SANO","25":"SANO","26":"MODERADO","27":"LEVE","47":"LEVE","46":"MODERADO","45":"SANO","44":"SANO","43":"SANO","42":"SANO","41":"SANO","31":"LEVE","32":"SANO","33":"SANO","34":"SANO","35":"SANO","36":"MODERADO","37":"SANO"}'></div>
+      <ul class="perio-leyenda" aria-label="Estados del periodontograma"></ul>
+
+      <div class="perio-detalle" aria-labelledby="t-pieza">
+        <div class="perio-detalle-cabecera">
+          <h3 id="t-pieza">Pieza 46</h3>
+          <span class="perio-chip" data-estado="MODERADO">Moderado</span>
+        </div>
+        <dl class="perio-datos-pieza">
+          <div><dt>Movilidad</dt><dd>0</dd></div>
+          <div><dt>Furcación</dt><dd>2</dd></div>
+          <div><dt>Pérdida de inserción máxima</dt><dd>4 mm (distolingual)</dd></div>
+        </dl>
+        <table class="perio-tabla" data-pieza="46"
+               data-sitios='[[3,-1,false,false],[2,-2,false,false],[3,0,true,false],[3,-1,false,true],[2,-1,false,false],[4,0,true,true]]'></table>
+      </div>
+    </section>
+
+    <p class="nota-mockup"><b>Mockup C-46.</b> El administrador abrió una versión anterior con el selector. Ve el mapa y el detalle de la pieza 46 como texto, sin "Nueva versión" ni campos editables (RN-CL-01). La recepción no llega a esta pantalla. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+<script src="perio-mockup.js"></script>
+</body>
+</html>

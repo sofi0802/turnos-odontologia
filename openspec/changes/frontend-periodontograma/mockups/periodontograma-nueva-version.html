@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pacientes · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="periodontograma.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="ana.ejemplo" data-rol="ODONTOLOGO" data-activa="pacientes">
+  <div class="pagina-ficha">
+    <h1 tabindex="-1">Pacientes</h1>
+
+    <section class="panel ficha-paciente" aria-labelledby="paciente-nombre">
+      <div class="ficha-paciente-datos">
+        <div>
+          <h2 class="ficha-paciente-nombre" id="paciente-nombre">Paciente Uno</h2>
+          <p class="ficha-paciente-dni">DNI 99000001</p>
+        </div>
+        <button type="button" class="btn">Cambiar de paciente</button>
+      </div>
+    </section>
+
+    <section class="panel ficha-seccion" aria-labelledby="t-perio">
+      <div class="ficha-seccion-cabecera">
+        <h2 id="t-perio">Periodontograma · nueva versión</h2>
+      </div>
+      <p class="perio-firma">Copiada de la versión del 01/12/2026 a las 09:00. Se guarda como una versión nueva; las anteriores no cambian.</p>
+      <p class="aviso aviso-error" role="alert">Completá los 6 sitios y la movilidad de la pieza 36.</p>
+      <p class="perio-resumen-carga">31 piezas cargadas · la pieza 28 sin cargar · la 36 con errores</p>
+
+      <div class="perio-mapa" data-elegida="36" data-errores="[36]" data-piezas='{"18":"AUSENTE","17":"LEVE","16":"MODERADO","15":"SANO","14":"SANO","13":"SANO","12":"SANO","11":"SANO","21":"SANO","22":"SANO","23":"SANO","24":"LEVE","25":"SANO","26":"MODERADO","27":"LEVE","48":"CARGANDO","47":"LEVE","46":"SEVERO","45":"SANO","44":"SANO","43":"SANO","42":"SANO","41":"LEVE","31":"LEVE","32":"SANO","33":"SANO","34":"SANO","35":"SANO","36":"MODERADO","37":"LEVE","38":"AUSENTE"}'></div>
+      <ul class="perio-leyenda" aria-label="Estados del periodontograma"></ul>
+      <p class="nota-mockup">En la nueva versión, cada pieza muestra el estado de la versión copiada hasta guardar: el estado nuevo lo calcula el sistema al guardar. La 48 se cargó recién ("En carga").</p>
+
+      <div class="perio-detalle" aria-labelledby="t-pieza">
+        <div class="perio-detalle-cabecera">
+          <h3 id="t-pieza">Pieza 36</h3>
+          <button type="button" class="btn btn-fantasma btn-chico">Quitar de esta versión</button>
+        </div>
+        <div class="perio-controles-pieza">
+          <label class="perio-casilla"><input type="checkbox" /> Pieza ausente</label>
+          <div class="campo">
+            <label for="mov-36">Movilidad</label>
+            <select id="mov-36" aria-label="Pieza 36: movilidad"><option>0</option><option selected>1</option><option>2</option><option>3</option></select>
+          </div>
+          <div class="campo">
+            <label for="fur-36">Furcación</label>
+            <select id="fur-36" aria-label="Pieza 36: furcación"><option>Sin registrar</option><option>0</option><option>1</option><option selected>2</option><option>3</option></select>
+          </div>
+        </div>
+        <p class="perio-ayuda" id="ayuda-recesion"><b>Recesión:</b> del límite amelocementario al margen de la encía. Cargala en negativo si el margen está por encima del límite, como en una encía sana (por ejemplo, −2).</p>
+        <table class="perio-tabla" data-pieza="36" data-editable data-ayuda="ayuda-recesion"
+               data-sitios='[[4,0,true,false],[3,-1,false,false],[5,0,true,true],[3,-1,false,false],[2,-2,false,false],[null,null,false,false]]'
+               data-errores='{"DL":{"pr":"Completá este dato.","re":"Completá este dato."}}'></table>
+      </div>
+
+      <div class="perio-acciones-version">
+        <button type="button" class="btn">Cancelar</button>
+        <button type="button" class="btn btn-principal">Guardar versión</button>
+      </div>
+    </section>
+
+    <p class="nota-mockup"><b>Mockup C-46.</b> La odontóloga Ana Ejemplo eligió "Nueva versión": el formulario arranca con los datos de la última versión. Eligió la pieza 36, cambió la profundidad del sitio distovestibular a 5 mm y dejó vacío el distolingual. Al elegir "Guardar versión" no se pidió nada a la API: se marcó la pieza 36 en el mapa, el foco fue a ella y los campos vacíos muestran el error. La ayuda de la recesión está siempre visible. La pieza 11, por ejemplo, no ofrece furcación. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+<script src="perio-mockup.js"></script>
+</body>
+</html>
