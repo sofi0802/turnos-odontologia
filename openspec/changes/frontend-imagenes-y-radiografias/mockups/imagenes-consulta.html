@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pacientes · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="imagenes.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="ana.ejemplo" data-rol="ODONTOLOGO" data-activa="pacientes">
+  <div class="pagina-ficha">
+    <h1 tabindex="-1">Pacientes</h1>
+
+    <section class="panel ficha-paciente" aria-labelledby="paciente-nombre">
+      <div class="ficha-paciente-datos">
+        <div>
+          <h2 class="ficha-paciente-nombre" id="paciente-nombre">Paciente Uno</h2>
+          <p class="ficha-paciente-dni">DNI 99000001</p>
+        </div>
+        <button type="button" class="btn">Cambiar de paciente</button>
+      </div>
+    </section>
+
+    <div class="nota-contexto">Odontograma (C-44) y periodontograma (C-46), sin cambios</div>
+
+    <section class="panel ficha-seccion" aria-labelledby="t-imagenes">
+      <div class="ficha-seccion-cabecera">
+        <div>
+          <h2 id="t-imagenes">Imágenes y estudios</h2>
+          <p class="img-contador">4 vigentes</p>
+        </div>
+        <div class="img-cabecera-acciones">
+          <button type="button" class="btn btn-principal" data-icono="subir">Cargar imagen</button>
+        </div>
+      </div>
+
+      <p role="status" class="aviso aviso-ok">Imagen cargada.</p>
+
+      <div class="img-filtros" role="group" aria-label="Filtros de las imágenes">
+        <div class="campo">
+          <label for="f-pieza">Pieza</label>
+          <select id="f-pieza">
+            <option>Todas las piezas</option>
+            <option>11</option>
+            <option>36</option>
+            <option>46</option>
+          </select>
+        </div>
+        <label class="img-check"><input type="checkbox" /> Mostrar anuladas</label>
+      </div>
+
+      <ul class="img-lista" aria-label="Imágenes y estudios de Paciente Uno">
+        <li class="img-fila">
+          <span class="img-tipo" data-icono="imagen"></span>
+          <div class="img-datos">
+            <p class="img-titulo"><span>Radiografía</span><span class="etiqueta">Pieza 36</span></p>
+            <p class="img-meta">Tomada el 30/11/2026 · Cargó Ana Ejemplo · JPEG, 312 KB</p>
+            <p class="img-descripcion">Control de la endodoncia</p>
+          </div>
+          <div class="img-acciones">
+            <button type="button" class="btn" data-icono="ver" aria-label="Ver radiografía de la pieza 36 del 30/11/2026">Ver</button>
+            <button type="button" class="btn" data-icono="descarga" aria-label="Descargar radiografía de la pieza 36 del 30/11/2026">Descargar</button>
+            <button type="button" class="btn btn-peligro" aria-label="Anular radiografía de la pieza 36 del 30/11/2026">Anular</button>
+          </div>
+        </li>
+        <li class="img-fila">
+          <span class="img-tipo" data-icono="imagen"></span>
+          <div class="img-datos">
+            <p class="img-titulo"><span>Fotografía</span><span class="etiqueta">Pieza 11</span></p>
+            <p class="img-meta">Tomada el 15/11/2026 · Cargó Bruno Prueba · PNG, 1,2 MB</p>
+          </div>
+          <div class="img-acciones">
+            <button type="button" class="btn" data-icono="ver" aria-label="Ver fotografía de la pieza 11 del 15/11/2026">Ver</button>
+            <button type="button" class="btn" data-icono="descarga" aria-label="Descargar fotografía de la pieza 11 del 15/11/2026">Descargar</button>
+            <button type="button" class="btn btn-peligro" aria-label="Anular fotografía de la pieza 11 del 15/11/2026">Anular</button>
+          </div>
+        </li>
+        <li class="img-fila">
+          <span class="img-tipo img-tipo-pdf" data-icono="documento"></span>
+          <div class="img-datos">
+            <p class="img-titulo"><span>Estudio</span><span class="etiqueta">PDF</span></p>
+            <p class="img-meta">Tomado el 01/10/2026 · Cargó Ana Ejemplo · PDF, 840 KB</p>
+            <p class="img-descripcion">Informe de la tomografía del laboratorio</p>
+          </div>
+          <div class="img-acciones">
+            <button type="button" class="btn" data-icono="descarga" aria-label="Descargar estudio del 01/10/2026">Descargar</button>
+            <button type="button" class="btn btn-peligro" aria-label="Anular estudio del 01/10/2026">Anular</button>
+          </div>
+        </li>
+        <li class="img-fila">
+          <span class="img-tipo" data-icono="imagen"></span>
+          <div class="img-datos">
+            <p class="img-titulo"><span>Radiografía</span><span class="etiqueta">Pieza 46</span></p>
+            <p class="img-meta">Tomada el 12/08/2026 · Cargó Ana Ejemplo · JPEG, 2,4 MB</p>
+          </div>
+          <div class="img-acciones">
+            <button type="button" class="btn" data-icono="ver" aria-label="Ver radiografía de la pieza 46 del 12/08/2026">Ver</button>
+            <button type="button" class="btn" data-icono="descarga" aria-label="Descargar radiografía de la pieza 46 del 12/08/2026">Descargar</button>
+            <button type="button" class="btn btn-peligro" aria-label="Anular radiografía de la pieza 46 del 12/08/2026">Anular</button>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <p class="rotulo-estado">Visor abierto desde "Ver" de la radiografía de la pieza 36</p>
+    <dialog class="dialogo dialogo-estatico img-visor" open aria-labelledby="v-titulo">
+      <h2 id="v-titulo">Radiografía · pieza 36</h2>
+      <div class="img-visor-marco">
+        <div class="img-ficticia" role="img" aria-label="Radiografía de la pieza 36 del 30/11/2026"></div>
+      </div>
+      <p class="img-visor-pie">Tomada el 30/11/2026 · Cargó Ana Ejemplo · Control de la endodoncia</p>
+      <div class="dialogo-acciones">
+        <button type="button" class="btn" data-icono="descarga">Descargar</button>
+        <button type="button" class="btn btn-principal">Cerrar</button>
+      </div>
+    </dialog>
+
+    <p class="nota-mockup"><b>Mockup C-47.</b> Odontólogo con la ficha de "Paciente Uno". Sin miniaturas: el archivo se pide al elegir "Ver" o "Descargar". Los PDF solo se descargan. La radiografía del visor es un dibujo ficticio. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>
