@@ -25,6 +25,9 @@
 
 | ID | Prioridad | Pregunta | Bloquea | Decisor |
 |---|---|---|---|---|
+| PA-20 | Media | ¿Un paciente puede tener **dos coberturas vigentes** a la vez (obra social y prepaga complementaria)? La propuesta de C-18 dice que no (DD-14). | Modelo de `AfiliacionPaciente` (C-18) | Líder |
+| PA-21 | Media | ¿El **paciente ve su propia cobertura** en "Mi cuenta"? La propuesta de C-18 dice que no por ahora (la carga el personal). | Matriz de 03 y pantallas del paciente | Líder |
+| PA-22 | Baja | ¿El nomenclador se carga **a mano** por el `ADMIN` o se importa un nomenclador nacional? La propuesta de C-18 es la carga a mano, con el seed ficticio. | Alcance de C-18 | Líder |
 | PA-11 | Media | ¿Quiénes del equipo tienen **Docker**? La líder sí. Sin Docker hay alternativas (SU-04). | Verify y README | Cada integrante |
 
 ### Resueltas (2026-11-20, respuestas de la líder)

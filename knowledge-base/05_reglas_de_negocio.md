@@ -83,6 +83,32 @@ Cada regla tiene un código `RN-{DOMINIO}-{NN}`. Entre paréntesis va el código
   - **Severo**: pérdida de inserción máxima de 5 mm o más.
   - Una pieza ausente no tiene estado. El estado es **orientativo** y no reemplaza el diagnóstico del profesional (DD-13).
 
+## Dominio: Coberturas (RN-OS) [2026-11-24, C-18, en revisión]
+
+- **RN-OS-01**: **catálogo de obras sociales, planes y nomenclador**.
+  - Solo el `ADMIN` los da de alta, los edita y los activa o desactiva. No se borran, para no perder el historial de las afiliaciones.
+  - Una obra social puede ser `OBRA_SOCIAL` o `PREPAGA`, y tiene uno o más planes.
+  - Desactivar una obra social no desactiva sus planes, pero ninguno de ellos se puede usar en una afiliación nueva.
+- **RN-OS-02**: **afiliación del paciente**.
+  - El paciente se asocia a un **plan** con su **número de afiliado** y una **vigencia**: una fecha desde y, opcionalmente, una fecha hasta.
+  - Una afiliación está **vigente** en una fecha si la fecha cae dentro de la vigencia.
+  - Un paciente tiene **como máximo una afiliación vigente** en cada fecha: dos vigencias del mismo paciente no se superponen.
+  - Para cambiar de plan o de obra social se cierra la afiliación actual con `vigente_hasta` y se crea otra.
+  - Las afiliaciones no se borran.
+- **RN-OS-03**: **número de afiliado**.
+  - Es obligatorio y tiene de 1 a 30 caracteres: letras, números, `-`, `/` y `.`.
+  - Se guarda sin espacios en los extremos.
+  - Es **único dentro de la misma obra social**: dos pacientes no pueden tener el mismo número en la misma obra social.
+- **RN-OS-04**: **paciente particular**. Un paciente sin afiliación vigente en una fecha se atiende como **particular**, sin cobertura. Dar un turno no exige cobertura, así que la agenda no cambia con C-18.
+- **RN-OS-05**: **nomenclador**.
+  - Cada código de práctica es único y puede vincularse a una prestación del consultorio. Ese vínculo es el que usan C-19 para calcular la cobertura y C-20 para la liquidación.
+  - Una prestación puede no tener código; en ese caso se cobra como particular.
+  - La cobertura por plan, los topes y el copago **no** son parte de C-18.
+- **RN-OS-06**: **no se afilia a lo inactivo**. No se puede crear una afiliación con un plan inactivo ni con un plan de una obra social inactiva. Las afiliaciones que ya existen no cambian si después se desactiva el plan o la obra social.
+- **RN-OS-07**: **privacidad de la cobertura**. La obra social y el número de afiliado son datos personales del paciente (Ley 25.326).
+  - No se incluyen en recordatorios, mensajes ni logs (RN-NO-01).
+  - Solo los ve el personal, según la matriz de `03_actores_y_roles.md`.
+
 ## Dominio: Excepciones globales
 
 - **RN-GL-01**: **solo datos ficticios** en el repositorio, los seeds, los tests, los ejemplos y las capturas.

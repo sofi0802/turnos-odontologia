@@ -9,6 +9,7 @@
 | **Pacientes** | Datos de contacto y preferencia de canal |
 | **Notificaciones** | Recordatorios y confirmaciones por WhatsApp o email |
 | **Clínica** | Ficha básica, odontograma y periodontograma (C-25) |
+| **Coberturas** | Obras sociales y prepagas, sus planes, el nomenclador de prácticas y la afiliación de cada paciente (C-18) |
 | **Seguridad y auditoría** | Usuarios del personal, roles, registro de cambios en turnos |
 
 Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
@@ -32,6 +33,8 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
  Profesional ─1──*─ AusenciaProfesional
  Profesional ─*──*─ Prestacion   (vía ProfesionalPrestacion: especialidades)
  Profesional ─*──0..1─ Sillon    (sillón habitual)
+ ObraSocial ─1──*─ Plan ─1──*─ AfiliacionPaciente ─*──1─ Paciente   (C-18)
+ Nomenclador ─*──0..1─ Prestacion   (código de la práctica, C-18)
  Usuario(PACIENTE) ─1──1─ Paciente
 ```
 
@@ -114,6 +117,26 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
 - `id` BIGINT identity, `pieza_id` FK, `sitio` enum (`MV`, `V`, `DV`, `ML`, `L`, `DL`), `profundidad_sondaje` smallint (0–15), `recesion` smallint (−5–15), `sangrado` boolean, `placa` boolean.
 - Única por (`pieza_id`, `sitio`). El estado periodontal no se guarda: se calcula al leer (RN-CL-06).
 
+### ObraSocial [2026-11-24, C-18, en revisión]
+- `id` BIGINT identity, `nombre` varchar(120) (único, sin distinguir mayúsculas), `sigla` varchar(20) (nullable), `tipo` enum (`OBRA_SOCIAL`, `PREPAGA`), `activa` boolean.
+- Es un catálogo como los de C-04: se da de alta, se edita y se activa o desactiva, pero no se borra (RN-OS-01).
+
+### Plan [2026-11-24, C-18, en revisión]
+- `id` BIGINT identity, `obra_social_id` FK, `nombre` varchar(80), `activo` boolean.
+- Constraint: `nombre` único dentro de la misma obra social, sin distinguir mayúsculas. Un plan pertenece a una sola obra social y no cambia de obra social.
+
+### Nomenclador [2026-11-24, C-18, en revisión]
+- `id` BIGINT identity, `codigo` varchar(20) (único), `descripcion` varchar(200), `prestacion_id` FK nullable, `activo` boolean.
+- Es la lista de **códigos de práctica** con los que se informa a las obras sociales. Cada código puede vincularse a una `Prestacion` del consultorio (RN-OS-05). Los porcentajes de cobertura y el copago por plan quedan para C-19.
+
+### AfiliacionPaciente [2026-11-24, C-18, en revisión]
+- `id` BIGINT identity, `paciente_id` FK, `plan_id` FK, `numero_afiliado` varchar(30), `vigente_desde` date, `vigente_hasta` date (nullable: sin fecha de fin).
+- Constraints:
+  - `vigente_hasta` es nulo o `≥ vigente_desde`.
+  - Un mismo paciente no tiene dos afiliaciones con vigencias superpuestas (RN-OS-02). Se garantiza con `EXCLUDE USING gist (paciente_id WITH =, daterange(vigente_desde, vigente_hasta, '[]') WITH &&)`, con `btree_gist`, igual que las garantías de la agenda.
+  - `numero_afiliado` es único por obra social (RN-OS-03), validado en el dominio y en la base.
+- No se borra. Una afiliación que termina se cierra con `vigente_hasta` y queda como historial (RN-OS-02).
+
 ### Usuario
 - `id` BIGINT identity, `username` (único), `password_hash`, `rol` enum (`ADMIN`, `RECEPCIONISTA`, `ODONTOLOGO`, `PACIENTE`), `profesional_id` FK nullable, `paciente_id` FK nullable, `activo`.
 - Constraint: `rol = PACIENTE` ⇒ `paciente_id` obligatorio y `profesional_id` nulo. El rol `PACIENTE` solo accede a `/api/v1/paciente/**` y a sus propios turnos (RN-RO-08).
@@ -139,4 +162,5 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
 | Horarios de trabajo | Dra. Ana Ejemplo: lunes a viernes de 08:00 a 13:00. Dr. Bruno Prueba: lunes a viernes de 10:00 a 18:00 (se superponen de 10 a 13, para probar "sin preferencia") |
 | Prestaciones | Consulta o control (30 min), Limpieza (profilaxis) (45 min), Tratamiento de conducto (60 min), Extracción simple (30 min) |
 | Usuarios | `admin`, `recepcion`, `ana.ejemplo` (contraseñas solo en el seed de desarrollo, nunca en producción) |
+| Coberturas (C-18) | Obras sociales ficticias: "Obra Social Ejemplo" (`OSE`, tipo obra social) con los planes "Plan Base" y "Plan Integral", y "Prepaga Prueba" (tipo prepaga) con el plan "Plan Oro". Nomenclador ficticio: `N-0101` Consulta (vinculado a Consulta o control), `N-0201` Limpieza (vinculado a Limpieza) y `N-0301` Extracción simple. Afiliaciones: un paciente ficticio con "Plan Base" vigente y el número `OSE-000001`, y otro sin cobertura (particular) |
 | Pacientes | 3 pacientes ficticios con DNI de la forma `99000001` y emails `@example.com`; uno con cuenta de paciente (`paciente.demo`) |

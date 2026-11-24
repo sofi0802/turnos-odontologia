@@ -199,6 +199,18 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 - [ ] CA-5: el administrador lo ve sin poder cargarlo, y la recepción no accede.
 **Reglas relacionadas**: RN-CL-01, RN-CL-04, RN-CL-05, RN-CL-06
 
+## Épica 7: Coberturas (post-MVP)
+
+### US-046: Registrar obras sociales y la cobertura del paciente [2026-11-24, C-18, en revisión]
+**Como** administrador o recepcionista **quiero** cargar las obras sociales y prepagas con sus planes, y asociar cada paciente a su plan con su número de afiliado, **para** saber con qué cobertura se atiende y preparar los presupuestos (C-19) y las liquidaciones (C-20).
+**Criterios de aceptación**:
+- [ ] CA-1: como `ADMIN` doy de alta, edito y activo o desactivo obras sociales, planes y códigos del nomenclador. No se pueden borrar.
+- [ ] CA-2: como `ADMIN` o `RECEPCIONISTA` asocio un paciente a un plan activo con su número de afiliado y su vigencia. El odontólogo la ve y el paciente no.
+- [ ] CA-3: un paciente con una afiliación vigente muestra su obra social, su plan y su número. Uno sin afiliación vigente figura como particular.
+- [ ] CA-4: se rechazan con un error claro una vigencia que se superpone con otra del mismo paciente, un número de afiliado repetido en la misma obra social y un plan inactivo.
+- [ ] CA-5: la cobertura no aparece en recordatorios, mensajes ni logs.
+**Reglas relacionadas**: RN-OS-01 a RN-OS-07
+
 ## Backlog: v1.x y posteriores (fuera del MVP)
 
 > Cada fila se vincula con su change de `CHANGES.md`. Las reglas detalladas se escriben en esta KB **antes de empezar** el change, cuando el MVP esté completo.
@@ -208,7 +220,7 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 | US-100 | Lista de espera automática al liberarse un horario | v1.x | C-15 | Vacío del mercado: 0 de 16 sistemas (informe, C.3) |
 | US-101 | Política de cancelación configurable por consultorio | v1.x | C-16 | Informe, C.4 |
 | US-102 | Registro de consentimiento para comunicaciones con una pantalla propia | v1.x | C-17 | Informe, D.3 |
-| US-200 | Obras sociales y prepagas (planes, nomencladores, liquidaciones) | Posterior | C-18, C-20 | Informe, D.3 |
+| US-200 | Obras sociales y prepagas (planes, nomencladores, liquidaciones; el catálogo y la afiliación pasaron a US-046 el 2026-11-24) | Posterior | C-18, C-20 | Informe, D.3 |
 | US-205 | Presupuestos con cobertura y copago | Posterior | C-19 | Informe, A.3 |
 | US-206 | Validación online de la cobertura con la obra social | Posterior | C-21 | Informe, C.2 (DentalTec) |
 | US-207 | Caja diaria, cobros y cuenta corriente del paciente | Posterior | C-22 | Roadmap (Ajustar de la líder, 2026-11-21); base de C-23 y C-24 |
