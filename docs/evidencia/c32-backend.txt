@@ -1,0 +1,18 @@
+C-32 reportes-y-metricas: evidencia del backend
+Fecha: 2026-11-24
+Rama: change/C-32-reportes-y-metricas-apply
+
+Comando: ./gradlew build integrationTest (Gradle 8, Java 21, PostgreSQL 16 en Docker con la base de tests de .env)
+Resultado: BUILD SUCCESSFUL in 6m 8s, código de salida 0
+- Unitarios (tarea test): 720 PASSED, 0 FAILED, 0 SKIPPED. Antes del change: 689.
+- Integración (tarea integrationTest, @Tag("integration")): 767 PASSED, 0 FAILED, 0 SKIPPED.
+
+Tests nuevos de C-32:
+- Unitarios sin base (reportes/domain): PeriodoTest (5), IntervalosTest (6), CalculoReportesTest (20).
+- Integración con PostgreSQL real (reportes/): ReportesApiIntegrationTest (15) y OrigenOnlineRealIntegrationTest (1),
+  este último reserva por el endpoint real del paciente para cubrir el riesgo de DD-16.
+
+Después de renombrar cuatro DisplayName de unitarios (nombres repetidos con los escenarios de integración), se
+volvieron a correr los 31 unitarios de reportes: 31 PASSED, BUILD SUCCESSFUL.
+
+Datos: solo ficticios (Ana Ejemplo, Bruno Prueba, Paciente Uno con DNI 99000001). Sin credenciales en el repo.

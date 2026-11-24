@@ -117,4 +117,4 @@ Sin migraciones. Se despliega con el backend y el build del frontend. Para volve
 - Mockups: `openspec/changes/reportes-y-metricas/mockups/` (ver su README)
 - Approval: approved (2026-11-24, by user: Enzo aprobó los 5 mockups de la revisión 1)
 - Preview: rendered (2026-11-24, 5 pantallas en `mockups/previews/` a 390x844 y 1440x900, sin desplazamiento horizontal)
-- Visual verify: pending
+- Visual verify: manual (2026-11-24, Enzo verificó la pantalla Reportes en la app real con el backend de desarrollo y confirmó que está bien; sin capturas automatizadas, porque el panel del navegador del agente no tenía sesión, así que `mockups/verify/` queda vacía)

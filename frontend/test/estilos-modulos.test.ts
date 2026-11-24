@@ -28,6 +28,8 @@ const REGLAS_POR_MODULO: Readonly<Record<string, string>> = {
   '18-sobreturno.css': '.aviso-choque {',
   // C-46: periodontograma.
   '19-periodontograma.css': '.perio-linea-margen,',
+  // C-32: pantalla Reportes.
+  '20-reportes.css': '.medidor-relleno {',
 };
 
 function importaciones(): string[] {
