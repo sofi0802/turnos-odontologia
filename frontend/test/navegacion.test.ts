@@ -272,7 +272,8 @@ describe('Menú adaptable a pantallas chicas', () => {
     // está en el documento con sus dos enlaces sin tocar el botón. Lo visual se verifica con capturas.
     abrirEn('#/agenda');
     await esperarTitulo('Agenda');
-    expect(enlacesVisibles()).toEqual(['Agenda', 'Configuración']);
+    // C-32: la recepción también ve "Reportes" (delta de frontend-navegacion).
+    expect(enlacesVisibles()).toEqual(['Agenda', 'Reportes', 'Configuración']);
     expect(menu().hidden).toBe(false);
   });
 });
@@ -294,7 +295,8 @@ describe('Menú según la sesión', () => {
     abrirEn('#/agenda');
     await esperarTitulo('Agenda');
 
-    expect(enlacesVisibles()).toEqual(['Agenda', 'Configuración']);
+    // C-32: la recepción también ve "Reportes" (delta de frontend-navegacion).
+    expect(enlacesVisibles()).toEqual(['Agenda', 'Reportes', 'Configuración']);
     expect(enlacesActivos()).toEqual(['Agenda']);
     expect(barraLateral().hidden).toBe(false);
   });
@@ -321,6 +323,49 @@ describe('Menú según la sesión', () => {
     const salir = [...raiz.querySelectorAll<HTMLButtonElement>('header button')].find((b) => b.textContent === 'Salir');
     expect(salir?.hidden).toBe(false);
     expect(enlaceIngresar()?.hidden).toBe(true);
+  });
+});
+
+describe('Página "Reportes" para administración y recepción (C-32)', () => {
+  const SESION_ADMIN = { autenticado: true, username: 'admin', rol: 'ADMIN' };
+  const SESION_ODONTOLOGO = { autenticado: true, username: 'ana.ejemplo', rol: 'ODONTOLOGO', profesionalId: 1 };
+
+  function conSesion(sesion: Record<string, unknown>): ServidorFalso {
+    const servidor = new ServidorFalso();
+    servidor.responder('GET /public/sesion', () => json(200, sesion));
+    return servidor;
+  }
+
+  it('Menú del administrador', async () => {
+    abrirEn('#/agenda', conSesion(SESION_ADMIN));
+
+    await vi.waitFor(() =>
+      expect(enlacesVisibles()).toEqual(['Agenda', 'Pacientes', 'Reportes', 'Configuración']),
+    );
+  });
+
+  it('El odontólogo no ve Reportes', async () => {
+    abrirEn('#/agenda', conSesion(SESION_ODONTOLOGO));
+
+    await vi.waitFor(() => expect(enlacesVisibles()).toEqual(['Agenda', 'Pacientes', 'Configuración']));
+    expect(enlacesVisibles()).not.toContain('Reportes');
+  });
+
+  it('El odontólogo abre la dirección', async () => {
+    const servidor = abrirEn('#/reportes', conSesion(SESION_ODONTOLOGO));
+
+    await vi.waitFor(() =>
+      expect(raiz.querySelector('main [role="alert"]')?.textContent).toBe(
+        'Esta sección es solo para administración y recepción.',
+      ),
+    );
+    expect(servidor.a('GET', '/reportes')).toEqual([]);
+  });
+
+  it('Sin sesión en Reportes', async () => {
+    abrirEn('#/reportes', sinSesion());
+
+    await esperarTitulo('Mi cuenta');
   });
 });
 

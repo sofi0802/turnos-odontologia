@@ -71,7 +71,7 @@ La respuesta MUST tener solo cifras e identificadores y nombres de profesionales
 #### Scenario: La respuesta no identifica pacientes
 - **GIVEN** turnos de "Paciente Uno" (DNI 99000001) en la semana, uno de ellos un sobreturno con motivo
 - **WHEN** `admin` pide los reportes de la semana
-- **THEN** el cuerpo de la respuesta no contiene "Paciente", "Uno", "99000001", `pacienteId` ni el texto del motivo
+- **THEN** el cuerpo de la respuesta no contiene "Paciente Uno", "Uno", "99000001", `pacienteId`, el email del paciente ni el texto del motivo
 
 ### Requirement: Ocupación por profesional
 Para cada profesional activo, y cada inactivo con turnos en el período, la respuesta SHALL informar `minutosOcupados`: la suma de `fin − inicio` de sus turnos `RESERVADO`, `CONFIRMADO`, `ATENDIDO` y `AUSENTE`, sobreturnos incluidos y sin el margen. También SHALL informar `minutosAtencion`: sus horarios de trabajo en los días del período, menos lo que se superpone con sus ausencias, licencias y bloqueos de agenda.

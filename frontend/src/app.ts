@@ -7,6 +7,7 @@ import { paginaInicio } from './pages/inicio.ts';
 import { paginaMiCuenta } from './pages/mi-cuenta.ts';
 import { paginaMisTurnos } from './pages/mis-turnos.ts';
 import { paginaPacientes } from './pages/pacientes.ts';
+import { paginaReportes } from './pages/reportes.ts';
 import { crearTitulo, type ContextoPagina, type Pagina } from './pages/pagina.ts';
 import { paginaReserva } from './pages/reserva.ts';
 import { api as apiPorDefecto, type ClienteApi } from './shared/api/cliente.ts';
@@ -29,6 +30,7 @@ export const PAGINAS: readonly Pagina[] = [
   paginaInicio,
   paginaAgenda,
   paginaPacientes,
+  paginaReportes,
   paginaConfiguracion,
   paginaCambiarContrasena,
   paginaReserva,
@@ -193,7 +195,7 @@ export function iniciarApp(raiz: HTMLElement, apiBase: ClienteApi = apiPorDefect
     }
     if (pagina.roles !== undefined && (sesion.rol === null || !pagina.roles.includes(sesion.rol))) {
       // No se llama a `render`, así la página no pide ningún dato (C-44, design D2).
-      mostrarAviso(pagina, MENSAJE_SOLO_ODONTOLOGOS_Y_ADMIN);
+      mostrarAviso(pagina, pagina.avisoSinRol ?? MENSAJE_SOLO_ODONTOLOGOS_Y_ADMIN);
       return;
     }
     if (debeCambiarContrasena(sesion) && pagina !== paginaCambiarContrasena) {

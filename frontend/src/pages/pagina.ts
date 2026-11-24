@@ -42,6 +42,8 @@ export interface Pagina {
    * la opción del menú solo se ve para esos roles y los demás reciben un aviso sin que la página pida datos.
    */
   readonly roles?: readonly Rol[];
+  /** C-32: aviso para los roles que no están en `roles`; sin esto, el de C-44 (odontólogos y administradores). */
+  readonly avisoSinRol?: string;
   render(contenedor: HTMLElement, contexto: ContextoPagina): void;
 }
 

@@ -16,7 +16,8 @@ export type NombreIcono =
   | 'reloj'
   | 'copiar'
   | 'volver'
-  | 'pacientes';
+  | 'pacientes'
+  | 'reportes';
 
 type Trazo = readonly [etiqueta: 'path' | 'rect' | 'circle', atributos: Readonly<Record<string, string>>];
 
@@ -57,6 +58,8 @@ const TRAZOS: Readonly<Record<NombreIcono, readonly Trazo[]>> = {
       },
     ],
   ],
+  // C-32: "Reportes", barras de un gráfico.
+  reportes: [['path', { d: 'M4 20V10M10 20V4M16 20v-7M21 20H3' }]],
 };
 
 export function crearIcono(nombre: NombreIcono): SVGElement {
