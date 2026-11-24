@@ -30,6 +30,11 @@ public class CoberturaException extends RuntimeException {
         return campo;
     }
 
+    /** El mismo error apuntando a otro campo del pedido (por ejemplo {@code items[0].pieza}). */
+    public CoberturaException conCampo(String otroCampo) {
+        return new CoberturaException(codigo, otroCampo, getMessage());
+    }
+
     public static CoberturaException datosInvalidos(String campo, String mensaje) {
         return new CoberturaException(CodigoCobertura.DATOS_INVALIDOS, campo, mensaje);
     }

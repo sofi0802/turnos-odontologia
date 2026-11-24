@@ -25,22 +25,26 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 class CoberturasExceptionHandler {
 
     /** Restricciones de la base que también se validan antes en los servicios (design D4 y D6). */
-    private static final Map<String, CoberturaException> RESTRICCIONES = Map.of(
-            "obra_social_nombre_unico", new CoberturaException(CodigoCobertura.OBRA_SOCIAL_EXISTENTE,
-                    "Ya existe una obra social con ese nombre"),
-            "plan_nombre_unico", new CoberturaException(CodigoCobertura.PLAN_EXISTENTE,
-                    "Ya existe un plan con ese nombre en la obra social"),
-            "nomenclador_codigo_unico", new CoberturaException(CodigoCobertura.CODIGO_NOMENCLADOR_EXISTENTE,
-                    "Ya existe un código con ese valor en el nomenclador"),
-            // Las dos EXCLUDE de las afiliaciones frenan a los pedidos que pasaron a la vez la verificación previa.
-            "afiliacion_sin_superposicion", new CoberturaException(CodigoCobertura.VIGENCIA_SUPERPUESTA,
-                    "La vigencia se superpone con otra afiliación del paciente"),
-            "afiliacion_numero_unico_por_obra_social", new CoberturaException(CodigoCobertura.AFILIADO_DUPLICADO,
-                    "El número de afiliado ya está registrado en esa obra social"),
-            "afiliacion_vigencia_valida", new CoberturaException(CodigoCobertura.VIGENCIA_INVALIDA,
-                    "La fecha de fin no puede ser anterior a la de inicio"),
-            "afiliacion_numero_valido", CoberturaException.datosInvalidos("numeroAfiliado",
-                    "El número de afiliado no es válido"));
+    private static final Map<String, CoberturaException> RESTRICCIONES = Map.ofEntries(
+            Map.entry("obra_social_nombre_unico", new CoberturaException(CodigoCobertura.OBRA_SOCIAL_EXISTENTE,
+                    "Ya existe una obra social con ese nombre")),
+            Map.entry("plan_nombre_unico", new CoberturaException(CodigoCobertura.PLAN_EXISTENTE,
+                    "Ya existe un plan con ese nombre en la obra social")),
+            Map.entry("nomenclador_codigo_unico", new CoberturaException(CodigoCobertura.CODIGO_NOMENCLADOR_EXISTENTE,
+                    "Ya existe un código con ese valor en el nomenclador")),
+            Map.entry("afiliacion_sin_superposicion", new CoberturaException(CodigoCobertura.VIGENCIA_SUPERPUESTA,
+                    "La vigencia se superpone con otra afiliación del paciente")),
+            Map.entry("afiliacion_numero_unico_por_obra_social", new CoberturaException(CodigoCobertura.AFILIADO_DUPLICADO,
+                    "El número de afiliado ya está registrado en esa obra social")),
+            Map.entry("afiliacion_vigencia_valida", new CoberturaException(CodigoCobertura.VIGENCIA_INVALIDA,
+                    "La fecha de fin no puede ser anterior a la de inicio")),
+            Map.entry("afiliacion_numero_valido", CoberturaException.datosInvalidos("numeroAfiliado",
+                    "El número de afiliado no es válido")),
+            Map.entry("arancel_precio_positivo", CoberturaException.datosInvalidos("precio", "El precio no es válido")),
+            Map.entry("cobertura_plan_porcentaje_valido", CoberturaException.datosInvalidos("porcentaje", "El porcentaje no es válido")),
+            Map.entry("presupuesto_item_cantidad", CoberturaException.datosInvalidos("items", "La cantidad no es válida")),
+            Map.entry("presupuesto_item_pieza_fdi", CoberturaException.datosInvalidos("items", "La pieza no está en la notación FDI")),
+            Map.entry("presupuesto_item_cara_", CoberturaException.datosInvalidos("items", "La cara no es válida para la pieza")));
 
     @ExceptionHandler(CoberturaException.class)
     ProblemDetail cobertura(CoberturaException e) {
