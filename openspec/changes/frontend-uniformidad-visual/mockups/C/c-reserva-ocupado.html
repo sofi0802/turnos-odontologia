@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Horario ocupado · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="mockups.css" />
+  <script src="../../../../../../design-system/brand.js"></script>
+</head>
+<body>
+  <div class="app">
+  <header class="cabecera">
+    <button class="btn-sobre-azul menu-boton" type="button" aria-controls="menu-principal" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 6h16M4 12h16M4 18h16"/></svg>Menú</button>
+    <a class="marca" href="c-inicio-sin-sesion.html"><img src="../../../../../../design-system/assets/logo.svg?v=5" alt="Turnos odontología" /></a>
+    <div class="acciones-cabecera"><span class="avatar" aria-hidden="true">PU</span><span class="usuario-nombre">paciente.uno@example.com</span><button class="btn-sobre-azul" type="button">Salir</button></div>
+  </header>
+  <div class="cuerpo">
+    <aside class="lateral" id="menu-principal">
+      <div class="cajon-cabecera"><span>Menú</span><button class="cerrar" type="button" aria-label="Cerrar el menú"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+      <nav aria-label="Principal"><a href="c-reserva-paso1.html" aria-current="page"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="4" width="18" height="17" rx="3"/><path d="M8 2v4M16 2v4M3 10h18"/><path d="M12 13v5M9.5 15.5h5"/></svg>Reservar turno</a><a href="c-mis-turnos.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 6h11M9 12h11M9 18h11"/><path d="M4 6h.01M4 12h.01M4 18h.01"/></svg>Mis turnos</a></nav>
+    </aside>
+    <div class="velo" aria-hidden="true"></div>
+    <main class="contenido-app">
+      <div class="pagina">
+    <h1>Reservar turno</h1>
+    <section class="panel" aria-labelledby="t-paso">
+      <ol class="pasos" aria-hidden="true"><li class="hecho"></li><li class="hecho"></li><li class="hecho"></li></ol>
+      <p class="paso-numero">Paso 3 de 3</p>
+      <h2 id="t-paso">Confirmá tu turno</h2>
+
+      <div class="aviso aviso-error" role="alert" style="margin-top:var(--ds-espacio-2)">
+        <div><strong>Ese horario se ocupó recién. Elegí otro.</strong>Estos horarios del mismo día siguen libres:</div>
+      </div>
+      <div class="chips" role="group" aria-label="Horarios alternativos">
+        <button class="chip" type="button" aria-pressed="true">11:00</button>
+        <button class="chip" type="button" aria-pressed="false">11:30</button>
+        <button class="chip" type="button" aria-pressed="false">12:00</button>
+      </div>
+
+      <dl class="resumen detalle-lista" style="margin-top:var(--ds-espacio-3)">
+        <dt>Prestación</dt><dd>Consulta o control</dd>
+        <dt>Profesional</dt><dd>Sin preferencia (te asignamos uno)</dd>
+        <dt>Día</dt><dd>Martes 1 de diciembre</dd>
+        <dt>Hora</dt><dd>11:00</dd>
+      </dl>
+
+      <div class="acciones">
+        <a class="btn" href="c-reserva-paso2.html">Elegir otro día</a>
+        <a class="btn btn-principal" href="c-reserva-confirmada.html">Confirmar reserva</a>
+      </div>
+    </section>
+  </div>
+
+    </main>
+  </div>
+  <footer class="pie"><span data-brand-name>Turnos odontología</span></footer>
+  </div>
+
+</body>
+</html>
