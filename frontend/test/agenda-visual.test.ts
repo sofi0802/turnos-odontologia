@@ -77,16 +77,15 @@ describe('Agenda semanal', () => {
       ACCIONES,
     );
 
-    // Los siete días siguen en orden, de lunes a domingo, y la semana se marca para acomodarse en columnas.
-    const dias = [...contenedor.querySelectorAll('.agenda-dia h2')].map((h) => h.textContent);
+    // Los siete días siguen en orden, de lunes a domingo, y la semana se marca como grilla de columnas fijas.
+    const dias = [...contenedor.querySelectorAll('.semana-encabezado')].map((h) => h.textContent);
     expect(dias).toHaveLength(7);
     expect(dias[0]).toMatch(/^lun/i);
     expect(dias[6]).toMatch(/^dom/i);
     expect(contenedor.classList.contains('semana')).toBe(true);
 
     const agenda = textoDeModulo('03-agenda.css');
-    expect(regla(agenda, '.agenda-lista.semana')).toMatch(/column-width:\s*18rem/);
-    expect(regla(agenda, '.agenda-dia')).toMatch(/break-inside:\s*avoid/);
+    expect(regla(agenda, '.semana-grilla')).toMatch(/grid-template-columns:\s*var\(--semana-escala\) repeat\(7,/);
 
     // Al volver a la vista del día, la marca se quita.
     dibujarAgenda(contenedor, periodoDe('dia', '2026-12-01'), [turno(1, '2026-12-01')], CATALOGOS_VACIOS, ACCIONES);

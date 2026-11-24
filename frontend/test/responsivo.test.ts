@@ -63,9 +63,9 @@ describe('Agenda usable en el celular', () => {
   });
 
   it('Agenda en la computadora', () => {
-    // Desde 768 px, filtros en fila y los días de la semana en columnas que se ajustan al ancho y se acomodan sin huecos.
+    // Desde 768 px, filtros en fila y los días de la semana en siete columnas fijas dentro de una grilla que se desplaza.
     expect(regla(reglasDeEscritorio(), '.agenda-filtros')).toMatch(/flex-direction:\s*row/);
-    expect(regla(textoDeModulo('03-agenda.css'), '.agenda-lista.semana')).toMatch(/column-width:\s*18rem/);
+    expect(regla(textoDeModulo('03-agenda.css'), '.semana-grilla')).toMatch(/overflow:\s*auto/);
     expect(regla(estilos, '.contenido')).toMatch(/max-width:\s*var\(--ds-ancho-maximo\)/);
   });
 });

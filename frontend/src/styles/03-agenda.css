@@ -69,28 +69,217 @@
   opacity: 0.6;
 }
 
-.agenda-lista.semana {
-  column-gap: var(--ds-espacio-2);
-  column-width: 18rem;
+/* C-39, etapa E: la semana como grilla horaria. Siete columnas fijas con una escala horaria compartida; los turnos
+   se ubican por hora de inicio y duración, y los simultáneos van lado a lado. Se desplaza dentro de su contenedor:
+   los encabezados de los días y la escala quedan a la vista. Solo --ds-*. */
+.semana-grilla {
+  --semana-hora: 5.5rem;
+  --semana-minuto: calc(var(--semana-hora) / 60);
+  --semana-escala: 3.5rem;
+  --semana-columna: 9rem; /* siete columnas entran en una pantalla de escritorio; en el celular la grilla se desplaza */
+  --semana-horas: 11; /* se pisa con la cantidad de horas de la escala */
+
+  display: grid;
+  grid-template-columns: var(--semana-escala) repeat(7, minmax(var(--semana-columna), 1fr));
+  grid-template-rows: auto calc(var(--semana-horas) * var(--semana-hora));
+  min-height: 24rem;
+  max-height: calc(100dvh - 14rem);
+  overflow: auto;
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-lg);
+}
+
+.semana-encabezado,
+.semana-esquina {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  margin: 0;
+  background: var(--ds-fondo);
+  border-bottom: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.semana-encabezado {
+  padding: var(--ds-espacio-1);
+  font-size: var(--ds-texto-sm);
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.semana-encabezado[aria-current='date'] {
+  color: var(--ds-acento-700);
+  background: var(--ds-acento-50);
+}
+
+.semana-esquina {
+  left: 0;
+  z-index: 4;
+}
+
+.semana-escala {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  background: var(--ds-fondo);
+  border-right: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.semana-hora {
+  --desde: 0; /* minutos desde el comienzo de la escala (lo pisa cada hora) */
+
+  position: absolute;
+  top: calc(var(--desde) * var(--semana-minuto));
+  right: var(--ds-espacio-0);
+  font-size: var(--ds-texto-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--ds-texto-suave);
 }
 
 .agenda-dia {
-  break-inside: avoid;
+  position: relative;
+  min-width: 0;
+  border-left: var(--ds-borde-ancho) solid var(--ds-borde);
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0,
+    transparent calc(var(--semana-hora) - 1px),
+    var(--ds-borde) calc(var(--semana-hora) - 1px),
+    var(--ds-borde) var(--semana-hora)
+  );
 }
 
-/* En columnas, el primer día de cada una arranca a la misma altura que los demás. */
-.agenda-lista.semana .agenda-dia {
-  margin-bottom: var(--ds-espacio-2);
+.agenda-dia.es-hoy {
+  background-color: var(--ds-acento-50);
 }
 
-.agenda-lista.semana .agenda-dia h2 {
-  margin-top: 0;
+.turnos-semana {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.agenda-dia h2 {
-  margin: var(--ds-espacio-2) 0 var(--ds-espacio-1);
-  font-size: 1rem;
-  text-transform: capitalize;
+.turno-celda {
+  /* Minutos desde el comienzo de la escala, duración, carril y carriles del grupo: los pisa cada turno. */
+  --desde: 0;
+  --dur: 30;
+  --carril: 0;
+  --carriles: 1;
+
+  position: absolute;
+  top: calc(var(--desde) * var(--semana-minuto));
+  left: calc(100% / var(--carriles) * var(--carril));
+  width: calc(100% / var(--carriles));
+  height: calc(var(--dur) * var(--semana-minuto));
+  min-height: 1.5rem;
+  padding: 1px;
+  list-style: none;
+}
+
+.turno-celda .turno-tarjeta,
+.turno-celda .turno-grupo {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  padding: 0.125rem 0.375rem;
+  overflow: hidden;
+  font-size: var(--ds-texto-xs);
+  font-weight: var(--ds-peso-normal);
+  line-height: 1.25;
+  color: var(--ds-texto);
+  text-align: left;
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-left-width: 4px;
+  border-radius: var(--ds-radio-sm);
+}
+
+.tarjeta-linea {
+  display: flex;
+  gap: 0.375rem;
+  align-items: baseline;
+  width: 100%;
+}
+
+.tarjeta-hora {
+  flex: none;
+  font-weight: var(--ds-peso-fuerte);
+  font-variant-numeric: tabular-nums;
+}
+
+.tarjeta-nombre {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  font-weight: var(--ds-peso-fuerte);
+  overflow-wrap: anywhere;
+}
+
+.tarjeta-icono {
+  flex: none;
+}
+
+/* Colores suaves por estado; el texto del estado siempre acompaña. */
+.turno-celda .turno-reservado {
+  background: var(--ds-turno-reservado-fondo);
+  border-left-color: var(--ds-turno-reservado);
+}
+
+.turno-celda .turno-confirmado {
+  background: var(--ds-turno-confirmado-fondo);
+  border-left-color: var(--ds-turno-confirmado);
+}
+
+.turno-celda .turno-sobreturno {
+  background: var(--ds-turno-sobreturno-fondo);
+  border-left-color: var(--ds-turno-sobreturno);
+}
+
+.turno-celda .turno-atendido {
+  background: var(--ds-turno-atendido-fondo);
+  border-left-color: var(--ds-turno-atendido);
+}
+
+.turno-celda .turno-ausente {
+  background: var(--ds-turno-ausente-fondo);
+  border-left-color: var(--ds-turno-ausente);
+}
+
+.turno-celda .turno-cancelado {
+  background: var(--ds-turno-cancelado-fondo);
+  border-left-color: var(--ds-turno-cancelado);
+}
+
+.turno-celda .turno-sin-registrar {
+  background: var(--ds-alerta-fondo);
+  border-left-color: var(--ds-alerta);
+}
+
+.turno-celda .turno-llego {
+  background: var(--ds-ok-fondo);
+  border-left-color: var(--ds-ok);
+}
+
+.turno-celda .turno-cancelado .tarjeta-nombre {
+  text-decoration: line-through;
+}
+
+.turno-celda .turno-grupo {
+  justify-content: center;
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-acento-700);
+  background: var(--ds-acento-50);
+  border-style: dashed;
+  border-color: var(--ds-acento-500);
+}
+
+.turno-celda .turno-tarjeta:hover,
+.turno-celda .turno-grupo:hover {
+  border-color: var(--ds-acento-500);
+  box-shadow: var(--ds-sombra-2);
 }
 
 .agenda-vacia {

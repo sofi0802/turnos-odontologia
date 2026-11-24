@@ -1,4 +1,4 @@
-import { diaDeLaSemana, fechaDeInstante, formatearHora, type Fecha } from '../shared/fecha/zona.ts';
+import { diaDeLaSemana, formatearHora, type Fecha } from '../shared/fecha/zona.ts';
 import type { Rol } from '../shared/sesion/sesion.ts';
 import { crearEstadoVacio } from '../shared/ui/estado-vacio.ts';
 import {
@@ -9,7 +9,8 @@ import {
 } from './asistencia.ts';
 import { nombreDe, type Catalogos } from './catalogos.ts';
 import type { TurnoAgenda } from './consulta.ts';
-import { diasDe, type Periodo } from './periodo.ts';
+import type { Periodo } from './periodo.ts';
+import { dibujarSemana, type NombreEnTarjeta } from './semana.ts';
 
 export interface AccionesTurno {
   cancelar(turno: TurnoAgenda): void;
@@ -171,13 +172,14 @@ function mensajeVacio(textoMensaje: string): HTMLElement {
   return vacio;
 }
 
-/** Dibuja los turnos del período: una lista para el día o un grupo por día para la semana. */
+/** Dibuja los turnos del período: una lista para el día o la grilla horaria para la semana. */
 export function dibujarAgenda(
   contenedor: HTMLElement,
   periodo: Periodo,
   turnos: readonly TurnoAgenda[],
   catalogos: Catalogos,
   acciones: AccionesTurno,
+  nombreEnTarjeta: NombreEnTarjeta = 'profesional',
 ): void {
   contenedor.classList.toggle('semana', periodo.vista === 'semana');
   if (periodo.vista === 'dia') {
@@ -186,19 +188,15 @@ export function dibujarAgenda(
     );
     return;
   }
-  const secciones = diasDe(periodo).map((dia) => {
-    const delDia = turnos.filter((t) => fechaDeInstante(t.inicio) === dia);
-    const seccion = document.createElement('section');
-    seccion.className = 'agenda-dia';
-    const titulo = document.createElement('h2');
-    titulo.textContent = fechaCorta(dia);
-    seccion.append(
-      titulo,
-      delDia.length === 0 ? mensajeVacio('Sin turnos.') : listaDeTurnos(delDia, catalogos, acciones),
-    );
-    return seccion;
-  });
-  contenedor.replaceChildren(...secciones);
+  dibujarSemana(
+    contenedor,
+    periodo,
+    turnos,
+    catalogos,
+    acciones,
+    (turno, propias) => elementoTurno(turno, catalogos, propias, new Date()),
+    nombreEnTarjeta,
+  );
 }
 
 export { fechaCorta };
