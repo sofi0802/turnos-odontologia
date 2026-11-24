@@ -1,7 +1,7 @@
 # Mockups de C-46 `frontend-periodontograma`
 
 - Design system revision: 5 propuesta (design D7). Suma los tokens `--ds-perio-*`: tres reusan colores existentes (sano, leve y severo) y moderado es nuevo (`#9a3412`, 7.3:1 sobre blanco). Mientras no estén en `design-system/tokens.css`, se definen al principio de `periodontograma.css`. La Revision 4 está aprobada.
-- Approval: pending. Los aprueba la líder antes del apply (modo `system-and-mockups`), junto con la Revision 5.
+- Approval: approved (2026-11-24, by Sofia Indovino), junto con la Revision 5. Son el criterio de aceptación visual del apply.
 - Preview: rendered (2026-11-24). Capturas de página completa en `previews/`, a 1440 × 900 y 390 × 844, con Playwright. Ninguna pantalla tiene desplazamiento horizontal a 390 px ni errores de consola.
 
 ## Cómo verlos

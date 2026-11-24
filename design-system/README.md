@@ -1,8 +1,8 @@
 # Design system del proyecto
 
 Mode: system-and-mockups
-Revision: 4
-Approval: approved (2026-11-24, by Sofia Indovino). La líder renovó la aprobación de las revisiones 2, 3 y 4 al mergear el PR #94, que la pedía. La Revision 1 se aprobó el 2026-11-22.
+Revision: 5
+Approval: approved (2026-11-24, by Sofia Indovino). La Revision 5 la aprobó la líder junto con los mockups de C-46. Antes había renovado la aprobación de las revisiones 2, 3 y 4 al mergear el PR #94, que la pedía. La Revision 1 se aprobó el 2026-11-22.
 Revisiones: ver "Historial de revisiones" al final.
 Decisión: Sofia Indovino (líder), 2026-11-22. Reemplaza la política `off` del 2026-11-18 a pedido explícito de la líder.
 
@@ -53,3 +53,4 @@ Abrir `design-system/components.html` con doble clic en el navegador (no requier
 | 2 | 2026-11-23 | C-39 etapa A: se quitan los alias `--color-*`, `--espacio-*`, `--radio` y `--ancho-maximo` de `tokens.css` (el frontend usa solo `--ds-*`) y se suma `--ds-capa-modal` (la capa detrás de los diálogos, antes escrita a mano con el mismo valor). **No cambia ningún valor ni el aspecto de ninguna pantalla** (capturas de antes y después idénticas, ver `openspec/changes/frontend-uniformidad-visual/mockups/`). | Aprobada por la líder al mergear el PR #94 (2026-11-24) |
 | 3 | 2026-11-23 | C-39 etapa B: el logo provisorio (`assets/logo.svg`) dice "Turnos odontología" en lugar de "LOGO PROVISORIO", sin el rótulo "placeholder · (TBD)", y el encabezado de la aplicación deja de repetir el nombre al lado del logo. Sin cambios en `tokens.css`. | Aprobada por la líder al mergear el PR #94 (2026-11-24) |
 | 4 | 2026-11-24 | C-44 `frontend-ficha-clinica-odontograma`: se suman los tokens `--ds-odonto-*` para los siete estados del odontograma, más "sin estado" y el trazo, y la sección "Odontograma" en `components.html`. Cinco reusan colores existentes; corona (`#4b3f8a`) y endodoncia (`#8a2f6b`) son nuevos, con contraste AA. **No cambia ningún valor existente** ni el aspecto de las pantallas actuales. | Aprobada por la líder al mergear el PR #94 (2026-11-24) |
+| 5 | 2026-11-24 | C-46 `frontend-periodontograma`: se suman los tokens `--ds-perio-*` (sano, leve, moderado y severo, cada uno con su fondo) y la sección "Periodontograma" en `components.html`, con los dientes dibujados. Sano, leve y severo reusan `--ds-ok`, `--ds-alerta` y `--ds-error`; moderado (`#9a3412`, 7.3:1 sobre blanco) y su fondo (`#fdf1ea`) son nuevos. **No cambia ningún valor existente** ni el aspecto de las pantallas actuales. | Aprobada por la líder con los mockups de C-46 (2026-11-24) |

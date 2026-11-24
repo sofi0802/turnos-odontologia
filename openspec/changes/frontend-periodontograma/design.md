@@ -76,9 +76,12 @@ Sin migraciones ni cambios de backend. Rollback: revertir el PR deja la ficha de
 
 ## UI Mockups
 
-- Design system revision: 5 propuesta (D7; hoy `design-system/README.md` está en la 4, aprobada).
+- Design system revision: 5 (D7), aprobada por la líder junto con los mockups.
 - Decision: yes (2026-11-24). Modo `system-and-mockups`.
 - Mockups: `openspec/changes/frontend-periodontograma/mockups/` (ver su `README.md`).
-- Approval: pending.
+- Approval: approved (2026-11-24, by Sofia Indovino), con los dientes dibujados.
 - Preview: rendered (2026-11-24). Capturas en `mockups/previews/`, a 390 × 844 y 1440 × 900, sin desplazamiento horizontal ni errores de consola.
-- Visual verify: pendiente (se hace en el verify, después del apply).
+- Visual verify: parcial (2026-11-24), contra el backend de desarrollo con `odontologo.prueba` y "Paciente Uno" (datos ficticios). Captura en `mockups/verify/consulta-1440.png`.
+  - Revisado a 1440 px: estado vacío, primera versión cargada y guardada desde la pantalla (el backend calculó los estados), segunda versión, consulta con la pieza 16 y sus vistas, y nueva versión con la pieza 36 incompleta (error arriba, pieza marcada, foco en la pieza, sin `POST`). A 390 px la nueva versión no tiene desplazamiento horizontal.
+  - Diferencias encontradas y corregidas: [menor] la firma quedaba pegada al mapa porque `.panel p` anula el margen (ahora el cuerpo es una grilla con aire); [mayor] la pieza elegida "Sin cargar" o "En carga" tomaba el fondo de acento de `button[aria-pressed='true']` (ahora tiene fondo propio).
+  - Sin revisar en pantalla: la vista del administrador y las capturas de la nueva versión. La verificación se cortó cuando otra persona empezó a usar el mismo navegador sobre otro paciente; esas capturas se borraron. Los tests de "Solo lectura para el administrador" y de la nueva versión cubren el comportamiento.
