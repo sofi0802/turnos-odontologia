@@ -271,6 +271,130 @@ describe('Errores de sesión, permiso y recurso inexistente', () => {
   });
 });
 
+describe('Envío de un formulario con archivos', () => {
+  beforeEach(borrarCookie);
+  afterEach(borrarCookie);
+
+  function formularioFicticio(): FormData {
+    const datos = new FormData();
+    datos.append('archivo', new File([new Uint8Array([1, 2, 3])], 'rx.jpg', { type: 'image/jpeg' }));
+    datos.append('categoria', 'RADIOGRAFIA');
+    return datos;
+  }
+
+  it('Carga de un archivo con token CSRF', async () => {
+    fijarCookie('token-ficticio-123');
+    const fetchSimulado = responder(201, { id: 5 });
+    const datos = formularioFicticio();
+
+    const resultado = await crearClienteApi(URL_BASE, fetchSimulado).enviarFormulario('/pacientes/1/imagenes', datos);
+
+    const { url, opciones, encabezados } = pedido(fetchSimulado);
+    expect(url).toBe('http://localhost:8080/api/v1/pacientes/1/imagenes');
+    expect(opciones.method).toBe('POST');
+    expect(opciones.body).toBe(datos);
+    expect((opciones.body as FormData).get('categoria')).toBe('RADIOGRAFIA');
+    expect(((opciones.body as FormData).get('archivo') as File).name).toBe('rx.jpg');
+    expect(encabezados.get('X-XSRF-TOKEN')).toBe('token-ficticio-123');
+    expect(opciones.credentials).toBe('include');
+    expect(encabezados.has('Content-Type')).toBe(false);
+    expect(resultado).toEqual({ id: 5 });
+  });
+
+  it('Sin cookie CSRF no manda el encabezado', async () => {
+    const fetchSimulado = responder(201, { id: 5 });
+    await crearClienteApi(URL_BASE, fetchSimulado).enviarFormulario('/pacientes/1/imagenes', formularioFicticio());
+    expect(pedido(fetchSimulado).encabezados.has('X-XSRF-TOKEN')).toBe(false);
+  });
+
+  it('Error de validación de un formulario', async () => {
+    const cliente = crearClienteApi(
+      URL_BASE,
+      responder(422, { status: 422, detail: 'Solo se aceptan archivos JPEG, PNG o PDF', codigo: 'TIPO_ARCHIVO_NO_PERMITIDO' }),
+    );
+
+    const error = await capturarError(cliente.enviarFormulario('/pacientes/1/imagenes', formularioFicticio()));
+
+    expect(error).toBeInstanceOf(ErrorValidacion);
+    expect(error).toMatchObject({ codigo: 'TIPO_ARCHIVO_NO_PERMITIDO' });
+  });
+
+  it('Un formulario con la red caída da un error genérico', async () => {
+    const fetchSimulado = vi.fn<typeof fetch>().mockRejectedValue(new TypeError('Failed to fetch'));
+    const error = await capturarError(
+      crearClienteApi(URL_BASE, fetchSimulado).enviarFormulario('/pacientes/1/imagenes', formularioFicticio()),
+    );
+    expect(error).toBeInstanceOf(ErrorGenerico);
+    expect(error).toMatchObject({ estado: null });
+  });
+});
+
+describe('Descarga de un archivo', () => {
+  it('Descarga de una radiografía', async () => {
+    const bytes = new Uint8Array([255, 216, 255, 1, 2, 3]);
+    const fetchSimulado = vi
+      .fn<typeof fetch>()
+      .mockResolvedValue(new Response(bytes, { status: 200, headers: { 'Content-Type': 'image/jpeg' } }));
+
+    const archivo = await crearClienteApi(URL_BASE, fetchSimulado).obtenerArchivo('/pacientes/1/imagenes/5/archivo');
+
+    const { url, opciones, encabezados } = pedido(fetchSimulado);
+    expect(url).toBe('http://localhost:8080/api/v1/pacientes/1/imagenes/5/archivo');
+    expect(opciones.method).toBe('GET');
+    expect(opciones.credentials).toBe('include');
+    expect(encabezados.get('Accept')).not.toBe('application/json');
+    expect(archivo.type).toBe('image/jpeg');
+    expect(new Uint8Array(await archivo.arrayBuffer())).toEqual(bytes);
+  });
+
+  it('Descarga sin permiso', async () => {
+    const cliente = crearClienteApi(URL_BASE, responder(403, { status: 403, codigo: 'ACCESO_DENEGADO' }));
+
+    const error = await capturarError(cliente.obtenerArchivo('/pacientes/1/imagenes/5/archivo'));
+
+    expect(error).toBeInstanceOf(ErrorPermiso);
+    expect(error).toMatchObject({ codigo: 'ACCESO_DENEGADO', estado: 403 });
+  });
+
+  it('Una descarga con un error del servidor da un error genérico', async () => {
+    const cliente = crearClienteApi(URL_BASE, responder(500, 'traza interna'));
+    const error = await capturarError(cliente.obtenerArchivo('/pacientes/1/imagenes/5/archivo'));
+    expect(error).toBeInstanceOf(ErrorGenerico);
+    expect(error).toMatchObject({ estado: 500 });
+  });
+
+  it('Una descarga con la red caída da un error genérico', async () => {
+    const fetchSimulado = vi.fn<typeof fetch>().mockRejectedValue(new TypeError('Failed to fetch'));
+    const error = await capturarError(crearClienteApi(URL_BASE, fetchSimulado).obtenerArchivo('/x'));
+    expect(error).toBeInstanceOf(ErrorGenerico);
+    expect(error).toMatchObject({ estado: null });
+  });
+});
+
+describe('Error de validación ante un 413', () => {
+  it('Archivo demasiado grande', async () => {
+    const cliente = crearClienteApi(
+      URL_BASE,
+      responder(413, { status: 413, detail: 'El archivo supera los 10 MB', codigo: 'ARCHIVO_DEMASIADO_GRANDE' }),
+    );
+
+    const error = await capturarError(cliente.enviarFormulario('/pacientes/1/imagenes', new FormData()));
+
+    expect(error).toBeInstanceOf(ErrorValidacion);
+    expect(error).toMatchObject({ codigo: 'ARCHIVO_DEMASIADO_GRANDE', detalle: 'El archivo supera los 10 MB', estado: 413 });
+  });
+
+  it('413 sin cuerpo', async () => {
+    const cliente = crearClienteApi(URL_BASE, responder(413));
+
+    const error = await capturarError(cliente.enviarFormulario('/pacientes/1/imagenes', new FormData()));
+
+    expect(error).toBeInstanceOf(ErrorValidacion);
+    expect((error as ErrorValidacion).codigo).toBeNull();
+    expect((error as ErrorValidacion).estado).toBe(413);
+  });
+});
+
 describe('Otras fallas sin detalles internos', () => {
   it('Error interno del servidor', async () => {
     const traza = 'java.lang.NullPointerException at ar.turnos.odontologia.agenda.Ficticio.metodo(Ficticio.java:42)';
@@ -281,6 +405,13 @@ describe('Otras fallas sin detalles internos', () => {
     expect(error).toBeInstanceOf(ErrorGenerico);
     expect(error).toMatchObject({ estado: 500 });
     expect((error as ErrorGenerico).message).not.toContain('NullPointerException');
+  });
+
+  it('Un 502 sigue siendo un error genérico', async () => {
+    const error = await capturarError(crearClienteApi(URL_BASE, responder(502, 'puerta de enlace')).obtener('/turnos'));
+    expect(error).toBeInstanceOf(ErrorGenerico);
+    expect(error).not.toBeInstanceOf(ErrorValidacion);
+    expect(error).toMatchObject({ estado: 502 });
   });
 
   it('Servidor inalcanzable', async () => {

@@ -72,6 +72,8 @@ function conCambioPendiente(base: ClienteApi, alPendiente: () => void): ClienteA
     crear: <T>(ruta: string, cuerpo?: unknown) => vigilar(base.crear<T>(ruta, cuerpo)),
     actualizar: <T>(ruta: string, cuerpo?: unknown) => vigilar(base.actualizar<T>(ruta, cuerpo)),
     borrar: <T>(ruta: string) => vigilar(base.borrar<T>(ruta)),
+    enviarFormulario: <T>(ruta: string, datos: FormData) => vigilar(base.enviarFormulario<T>(ruta, datos)),
+    obtenerArchivo: (ruta: string) => vigilar(base.obtenerArchivo(ruta)),
   };
 }
 

@@ -30,6 +30,8 @@ const REGLAS_POR_MODULO: Readonly<Record<string, string>> = {
   '19-periodontograma.css': '.perio-linea-margen,',
   // C-32: pantalla Reportes.
   '20-reportes.css': '.medidor-relleno {',
+  // C-47: imágenes y estudios de la ficha.
+  '21-imagenes.css': '.img-fila-anulada {',
 };
 
 function importaciones(): string[] {
@@ -64,6 +66,28 @@ describe('Estilos en módulos', () => {
     for (const nombre of NOMBRES_DE_MODULOS) {
       expect(textoDeModulo(nombre)).not.toMatch(/@import/);
     }
+  });
+});
+
+describe('Módulo de imágenes (C-47)', () => {
+  it('Sin las reglas que son solo de los mockups', () => {
+    const modulo = textoDeModulo('21-imagenes.css');
+    for (const regla of ['.nota-mockup', '.rotulo-estado', '.dialogo-estatico', '.img-ficticia', '.nota-contexto']) {
+      expect(modulo, regla).not.toContain(regla);
+    }
+  });
+
+  it('Sin quitar el foco y con controles de 44 px', () => {
+    const modulo = textoDeModulo('21-imagenes.css');
+    expect(modulo).not.toMatch(/outline:\s*none/);
+    expect(modulo).toMatch(/\.img-acciones \.btn \{[^}]*min-height: var\(--ds-alto-control\)/);
+    expect(modulo).toMatch(/\.img-check \{[^}]*min-height: var\(--ds-alto-control\)/);
+  });
+
+  it('Se importa al final de styles.css, después del módulo de reportes', () => {
+    const importaciones = [...textoPrincipal.matchAll(/@import\s+'([^']+)';/g)].map((m) => m[1]);
+    expect(importaciones.at(-1)).toBe('./styles/21-imagenes.css');
+    expect(importaciones.at(-2)).toBe('./styles/20-reportes.css');
   });
 });
 

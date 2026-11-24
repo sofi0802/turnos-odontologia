@@ -31,6 +31,8 @@ export interface Pedido {
   readonly ruta: string;
   readonly query: URLSearchParams;
   readonly cuerpo: unknown;
+  /** El cuerpo multipart de un pedido con archivos (C-47), o `undefined`. */
+  readonly formulario?: FormData;
   readonly encabezados: Headers;
 }
 
@@ -87,6 +89,7 @@ export class ServidorFalso {
         ruta,
         query: url.searchParams,
         cuerpo: texto === null ? undefined : (JSON.parse(texto) as unknown),
+        ...(opciones?.body instanceof FormData ? { formulario: opciones.body } : {}),
         encabezados: new Headers(opciones?.headers),
       };
       this.pedidos.push(pedido);
