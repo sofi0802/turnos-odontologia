@@ -4,7 +4,7 @@
 
 ## 1. Preparación y design system
 
-- [ ] 1.1 Avisar a Enzo (dueño de `frontend/`) y a Emanuel (ficha de C-44) y verificar que el aviso quede en la descripción del PR
+- [x] 1.1 Avisar a Enzo (dueño de `frontend/`) y a Emanuel (ficha de C-44) y verificar que el aviso quede en la descripción del PR
 - [x] 1.2 Sumar los tokens `--ds-perio-*` (design D7) a `design-system/tokens.css` y la sección "Periodontograma" a `components.html`; subir `README.md` a la Revision 5 con su fila en el historial; verificar el contraste AA del color nuevo y regenerar `design-system/previews/` a 390 y 1440 px
 - [x] 1.3 Actualizar `visual_design.revision` en `.active-orchestrator-state.json` y verificar que el JSON siga siendo válido
 
@@ -33,7 +33,7 @@
 
 - [x] 6.1 Correr `npm test` y `npm run build` y verificar que todo pase, incluidos los tests de C-44
 - [x] 6.2 Verificación visual contra el backend de desarrollo con datos ficticios, como `ana.ejemplo` y como `admin`, a 390 × 844 y 1440 × 900: comparar cada pantalla con su mockup, revisar la consola y los pedidos fallidos, guardar las capturas en `mockups/verify/` y anotar las diferencias en el design
-- [ ] 6.3 Marcar C-46 en `CHANGES.md` y abrir el PR a `master` (después del de C-25), con Enzo y Emanuel como revisores
+- [x] 6.3 Marcar C-46 en `CHANGES.md` y abrir el PR a `master` (después del de C-25), con Enzo y Emanuel como revisores
 
 ## Workflow follow-up
 
