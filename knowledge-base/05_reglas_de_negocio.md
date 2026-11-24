@@ -175,6 +175,43 @@ Cada regla tiene un código `RN-{DOMINIO}-{NN}`. Entre paréntesis va el código
   - **De profesionales**: las ausencias y licencias (RN-AG-16) que se superponen con el período, por profesional y por tipo, con los días o las horas que caen dentro del período.
 - **RN-RE-07**: **cancelaciones**. Los turnos `CANCELADO` del período, separados por quién canceló, según el actor de la cancelación en la auditoría: **el paciente** (actor `paciente-online:<id>`) o **el consultorio** (cualquier otro). Los turnos cancelados por una **reprogramación** (en la auditoría, la acción `REPROGRAMAR` en lugar de `CANCELAR`; RN-AG-08) se informan aparte, porque el paciente no perdió el turno.
 
+## Dominio: Caja (RN-CA) [2026-11-24, C-22, en revisión]
+
+- **RN-CA-01**: **quién opera la caja** (PA-32).
+  - La `RECEPCIONISTA` abre la caja, cobra y la cierra.
+  - El `ADMIN` consulta las cajas y la cuenta corriente de los pacientes y anula cobros (RN-CA-07), pero no cobra.
+  - El `ODONTOLOGO` y el `PACIENTE` no acceden: reciben `403`. En C-22 el paciente no ve su cuenta corriente.
+- **RN-CA-02**: **caja diaria única** (PA-35).
+  - Hay **una sola caja abierta a la vez** en el consultorio. Se abre con un **monto inicial en efectivo** mayor o igual a cero.
+  - Sin una caja abierta no se puede cobrar.
+  - Si quedó abierta la caja de un día anterior, hay que cerrarla (con su arqueo, RN-CA-06) antes de abrir otra.
+  - Una caja cerrada no se reabre ni se modifica.
+- **RN-CA-03**: **cargo por turno** (PA-36, DD-18). Cuando un turno pasa a `ATENDIDO` (automáticamente por RN-AG-20 o por una corrección de la recepción), se genera un **cargo** en la cuenta corriente del paciente.
+  - El importe del cargo es el **copago** de la prestación del turno: el precio particular (RN-PR-01) menos la cobertura del plan vigente del paciente en la fecha del turno, calculados como en RN-PR-02 y RN-PR-03, con cantidad 1. Un paciente particular paga el precio completo.
+  - El cargo es una **foto**: guarda el precio, el porcentaje, la cobertura, el copago y la afiliación usada, y no cambia si después cambian los aranceles o la cobertura (como RN-PR-04).
+  - Un turno `AUSENTE` o `CANCELADO` no genera cargo. Un turno genera **como máximo un cargo**. Un sobreturno se trata igual que cualquier turno.
+  - Si la prestación **no tiene arancel**, el turno figura como **"Sin precio"** y el cargo se genera recién cuando haya arancel, con el precio y la cobertura de ese momento.
+  - Un copago de cero (cobertura del 100 %) genera un cargo ya saldado.
+- **RN-CA-04**: **cobro** (PA-33, PA-34).
+  - Cada cobro se imputa a **un cargo** con saldo y va a la **caja abierta**.
+  - El importe es en pesos, mayor que cero, con dos decimales, y **no puede superar el saldo** del cargo: no hay saldo a favor.
+  - El **medio de pago** es `EFECTIVO`, `DEBITO`, `CREDITO` o `TRANSFERENCIA`. No hay integración con bancos ni con Mercado Pago (C-23).
+  - Un cargo se puede pagar en **varios cobros parciales**; lo que falta queda como deuda.
+  - Cada cobro guarda quién lo registró y cuándo.
+- **RN-CA-05**: **cuenta corriente del paciente**. Lista sus cargos con la fecha del turno, la prestación, el copago, lo pagado y el saldo. El **saldo total** es la suma de los cargos menos los cobros no anulados. Un saldo mayor que cero es deuda.
+- **RN-CA-06**: **cierre y arqueo** (PA-37).
+  - El **efectivo esperado** es el monto inicial más los cobros en efectivo no anulados de esa caja.
+  - Al cerrar, la recepción informa el **efectivo contado**. La **diferencia** es contado menos esperado.
+  - Si la diferencia no es cero, el **motivo es obligatorio**. La caja se cierra igual: el arqueo descuadrado queda registrado, no se ajusta.
+  - El cierre informa también los totales por medio de pago; solo el efectivo se arquea.
+- **RN-CA-07**: **anulación de un cobro** (PA-37).
+  - Solo el `ADMIN` anula un cobro, con un **motivo obligatorio**, y solo mientras la caja de ese cobro siga abierta.
+  - Nada se borra: el cobro queda marcado como anulado, con quién, cuándo y el motivo. No cuenta en los totales ni en el arqueo, y su importe vuelve a ser deuda del cargo.
+  - Los cargos no se anulan en C-22.
+- **RN-CA-08**: **privacidad de los importes**. Los cargos, cobros y deudas son datos personales (Ley 25.326).
+  - No se incluyen en recordatorios, mensajes ni logs (RN-NO-01).
+  - Solo los ven los roles de la matriz de `03_actores_y_roles.md`: ni el odontólogo ni otros pacientes.
+
 ## Dominio: Excepciones globales
 
 - **RN-GL-01**: **solo datos ficticios** en el repositorio, los seeds, los tests, los ejemplos y las capturas.

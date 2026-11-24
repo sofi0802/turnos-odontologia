@@ -61,6 +61,12 @@
 | PA-29 | ¿Quién ve los reportes? *(2026-11-24, C-32)* | El `ADMIN` y la `RECEPCIONISTA`, con todo el consultorio. El odontólogo no los ve y el paciente recibe `403` | RN-RE-01, matriz de 03 |
 | PA-30 | ¿De dónde sale el origen del turno? *(2026-11-24, C-32)* | De la **auditoría**: un actor `paciente-online:<id>` es online; el resto, del consultorio. Sin migración | RN-RE-05, DD-16 |
 | PA-31 | ¿Cómo se mide la ocupación? *(2026-11-24, C-32)* | En **porcentaje** de los minutos de atención del profesional (horario menos ausencias, licencias y bloqueos); el sillón, sobre los profesionales que lo tienen como habitual | RN-RE-04 |
+| PA-32 | ¿Quién opera la caja? *(2026-11-24, C-22)* | La **recepción** abre, cobra y cierra; el `ADMIN` consulta y anula cobros; el odontólogo y el paciente no acceden | RN-CA-01, matriz de 03 |
+| PA-33 | ¿Qué importe se cobra por un turno? *(2026-11-24, C-22)* | El **copago** de la prestación según la cobertura vigente (reglas de C-19); se puede pagar en parte y lo que falta queda como deuda | RN-CA-03, RN-CA-04 |
+| PA-34 | ¿Qué medios de pago se registran? *(2026-11-24, C-22)* | **Efectivo, débito, crédito y transferencia**; el arqueo compara solo el efectivo | RN-CA-04, RN-CA-06 |
+| PA-35 | ¿Cuántas cajas hay abiertas a la vez? *(2026-11-24, C-22)* | **Una por día del consultorio**: una sola abierta, con monto inicial en efectivo | RN-CA-02 |
+| PA-36 | ¿Cuándo nace la deuda de un turno? *(2026-11-24, C-22)* | Cuando el turno queda **`ATENDIDO`**; ausentes y cancelados no generan deuda | RN-CA-03, DD-18 |
+| PA-37 | ¿Cómo se corrige un cobro o una diferencia de arqueo? *(2026-11-24, C-22)* | El `ADMIN` **anula** el cobro con motivo, sin borrarlo; una diferencia al cerrar se registra con su motivo | RN-CA-06, RN-CA-07 |
 
 ## Puntos "No evidenciado" del Discovery
 
