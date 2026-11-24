@@ -115,4 +115,4 @@ Antes de empezar, `./gradlew test` y `./gradlew integrationTest` pasan. Los test
 
 - [x] 12.1 Correr `npm test`, `npm run build` y `npm run lint` (si existe) en `frontend/`, y `./gradlew build` e `integrationTest` en `backend/`, todo en verde.
 - [x] 12.2 Hacer la prueba manual como `admin`, `recepcion` y `ana.ejemplo` y la verificación visual contra la revisión 2 de los mockups, con capturas en `mockups/verify/`. Registrar Visual verify en `design.md`.
-- [ ] 12.3 Actualizar el PR #60. La descripción tiene que señalar a Sofia el cambio de autorización de bloqueos (D16) y avisarle a Enzo por `frontend/`. Marcar C-34 en `CHANGES.md`.
+- [x] 12.3 Actualizar el PR #60. La descripción tiene que señalar a Sofia el cambio de autorización de bloqueos (D16) y avisarle a Enzo por `frontend/`. Marcar C-34 en `CHANGES.md`.
