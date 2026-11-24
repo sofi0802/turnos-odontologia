@@ -1,0 +1,17 @@
+# Evidencia manual del fix de C-05 (errores-rutas-inexistentes), 2026-11-24
+# App en el puerto 8081 contra una base descartable; usuario admin con contraseña ficticia no registrada acá.
+
+$ POST /api/v1/public/login (admin)
+HTTP 200
+
+$ GET /api/v1/no-existe  (con sesion admin)
+{"type":"about:blank","title":"Not Found","status":404,"detail":"El recurso pedido no existe","instance":"/api/v1/no-existe","codigo":"RECURSO_INEXISTENTE"}
+HTTP 404
+
+$ GET /error  (con sesion admin)
+{"type":"about:blank","title":"Forbidden","status":403,"detail":"No tenés permiso para esta operación","codigo":"ACCESO_DENEGADO"}
+HTTP 403
+
+$ GET /api/v1/no-existe  (sin sesion)
+{"type":"about:blank","title":"Unauthorized","status":401,"detail":"Hay que iniciar sesión","codigo":"NO_AUTENTICADO"}
+HTTP 401

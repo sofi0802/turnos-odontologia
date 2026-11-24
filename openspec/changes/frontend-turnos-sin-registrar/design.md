@@ -48,9 +48,9 @@ No hay migración. Para volver atrás alcanza con revertir el PR.
 
 ## UI Mockups
 
-- Design system revision: ver `design-system/README.md` al volver a renderizar
+- Design system revision: 3
 - Decision: yes (2026-11-23, política `system-and-mockups`)
 - Mockups: `openspec/changes/frontend-turnos-sin-registrar/mockups/` (ver su README)
-- Approval: pending
-- Preview: pending (las capturas del 2026-11-23 eran con "Vencido" y el estilo de la etapa B de C-39; se vuelven a hacer sobre la etapa C)
-- Visual verify: pending
+- Approval: approved (2026-11-24, by user: Sofia Indovino aprobó la revisión 2 de los mockups)
+- Preview: rendered (2026-11-24, revisión 2 sobre la etapa C de C-39, `mockups/previews/` a 390x844 y 1440x900)
+- Visual verify: passed (2026-11-24, app real con backend de desarrollo y paciente ficticio, `mockups/verify/` a 390x844 y 1440x900; sin errores de consola ni diferencias con el mockup)

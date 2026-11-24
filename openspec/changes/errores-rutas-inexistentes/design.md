@@ -30,7 +30,7 @@ Cada módulo tiene su `@RestControllerAdvice` (`AgendaExceptionHandler`, `Usuari
 
 ## Decisions
 
-### D1. Manejador global de `ProblemDetail` en `shared/` *(a confirmar)*
+### D1. Manejador global de `ProblemDetail` en `shared/` *(aprobada 2026-11-24)*
 Un `@RestControllerAdvice` con la prioridad más baja (`@Order(Ordered.LOWEST_PRECEDENCE)`), para que los manejadores de cada módulo sigan ganando. Maneja:
 - `NoResourceFoundException` → `404 RECURSO_INEXISTENTE`, "El recurso pedido no existe".
 - `Exception` → `500 ERROR_INTERNO`, "Ocurrió un error inesperado". Registra la excepción en el log con `log.error` y la traza, pero sin parámetros del pedido (rule 6 y RN-NO-01: la query puede traer un DNI).
@@ -39,7 +39,7 @@ Así el error se resuelve dentro del `DispatcherServlet`, sin *forward* a `/erro
 
 **Alternativa descartada como única solución:** solo permitir el despacho `ERROR` (ver D2). Funciona, pero el cuerpo lo arma el `BasicErrorController` de Boot, sin `codigo`.
 
-### D2. Permitir solo el despacho interno de error *(a confirmar)*
+### D2. Permitir solo el despacho interno de error *(aprobada 2026-11-24)*
 Se agrega `.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()` como primera regla, que es la recomendación de la documentación de Spring Security 6. Cubre los errores que no pasan por D1, como los que se producen en un filtro o en `sendError` de otra capa: el estado HTTP real llega al cliente en lugar de un `403`.
 
 - Un `GET /error` pedido por el navegador es un despacho `REQUEST`, no `ERROR`, así que sigue denegado por `denyAll`.
@@ -60,6 +60,15 @@ La autorización corre antes del `DispatcherServlet`. Un pedido sin sesión a `/
 
 Sin migración de datos. El deploy es el backend solo. El rollback es revertir el PR.
 
-## Open Questions
+## Resolución de decisiones (2026-11-24)
 
-- ¿La líder lo registra en `CHANGES.md` como fix de C-05 o como ficha propia del MVP (fase 5b)?
+La líder (Sofia Indovino) respondió por medio de Juan Sebastián el 2026-11-24:
+
+- **D1 aprobada** como se recomendó: manejador global de `ProblemDetail` con la prioridad más baja; `NoResourceFoundException` → `404 RECURSO_INEXISTENTE`; error no controlado → `500 ERROR_INTERNO` sin traza, mensaje ni datos del pedido, registrando la excepción sin la query string.
+- **D2 aprobada** como se recomendó: `.dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()` como primera regla de `SecurityConfig`.
+- **Open Question resuelta:** se registra como **fix de C-05** en `CHANGES.md`, no como ficha nueva.
+- **Orden de PR:** este fix se mergea **antes** que C-41 `cuentas-del-personal` (Enzo), que hace rebase.
+- Los manejadores globales no capturan `AccessDeniedException` ni `AuthenticationException` y no pisan los `@RestControllerAdvice` de los módulos ni las excepciones propias de Spring MVC (que siguen con su `4xx`).
+
+### Detalle de implementación (apply)
+Los `@RestControllerAdvice` de los módulos no declaran `@Order`, así que empatan con un advice global en la prioridad más baja y el orden de empate no está garantizado: un `@ExceptionHandler(Exception.class)` en un advice podría ganarles a los de los módulos. Para que sea determinista: el `404` va en un `@RestControllerAdvice` de prioridad más baja (ningún módulo maneja `NoResourceFoundException`) y el `500` va en un `HandlerExceptionResolver` registrado **al final** de la cadena, después de los de Spring MVC (que ya resuelven sus `4xx`). Ese resolver devuelve `null` para `AccessDeniedException` y `AuthenticationException`. El resultado HTTP es el aprobado.
