@@ -1,7 +1,14 @@
 import { crearBuscadorPacientes } from '../agenda/buscador-pacientes.ts';
 import { cajaAbierta, consultarCuenta, consultarHistorial, consultarPendientes, type Caja, type Pendientes } from '../caja/api.ts';
 import { leerImporte } from '../caja/dinero.ts';
-import { abrirAnulacion, abrirCierre, abrirCobro, type ControlCaja } from '../caja/formularios.ts';
+import {
+  abrirAnulacion,
+  abrirCierre,
+  abrirCobro,
+  agregarAyuda,
+  AYUDA_MONTO_INICIAL,
+  type ControlCaja,
+} from '../caja/formularios.ts';
 import { dibujarCobros, dibujarCuenta, dibujarEstado, dibujarHistorial, dibujarPendientes } from '../caja/vista.ts';
 import { ErrorSesion } from '../shared/api/errores.ts';
 import { hoy, sumarDias } from '../shared/fecha/zona.ts';
@@ -62,6 +69,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   entradaMonto.inputMode = 'decimal';
   entradaMonto.autocomplete = 'off';
   const monto = crearCampo('Monto inicial en efectivo', entradaMonto);
+  agregarAyuda(monto, AYUDA_MONTO_INICIAL);
   const apertura = document.createElement('form');
   apertura.className = 'caja-apertura';
   apertura.noValidate = true;

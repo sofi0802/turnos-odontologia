@@ -21,7 +21,7 @@ Acceptance criteria: los escenarios de los deltas `caja`, `cobros-pacientes`, `f
 - [x] 2.4 `Cobrar`, `AnularCobro`, `CuentaCorriente` y pendientes, con sus controladores y `CajaExceptionHandler`
 - [x] 2.5 Logs sin importes ni datos de pacientes (design D8)
 - [x] 2.6 Tests de integración (`@Tag("integration")`, PostgreSQL real), un `@Test` por escenario de `caja` y `cobros-pacientes`, incluidos los de concurrencia y el de logs, más uno que compara el cargo con un presupuesto de C-19 de la misma prestación
-- [ ] 2.7 `./gradlew build integrationTest` en verde; evidencia en `docs/evidencia/c22-backend.txt`
+- [x] 2.7 `./gradlew build integrationTest` en verde; evidencia en `docs/evidencia/c22-backend.txt`
 
 ## 3. Navegación (frontend)
 
@@ -37,10 +37,10 @@ Acceptance criteria: los escenarios de los deltas `caja`, `cobros-pacientes`, `f
 
 ## 5. Verificación
 
-- [ ] 5.1 Cada escenario de los cuatro deltas tiene exactamente un test con su nombre (`grep`)
-- [ ] 5.2 `npx tsc --noEmit`, `npm test` y `npm run build` en verde; la cantidad de tests no baja
-- [ ] 5.3 Verificación visual contra el mockup aprobado, a 390 y 1440 px, con el backend de desarrollo y datos ficticios; resultado en `design.md`
-- [ ] 5.4 `openspec validate caja-y-cobros --strict` en verde, C-22 marcado en `CHANGES.md` y, en el PR, aviso a Sofia (`agenda/`) y a Juan Sebastián (`coberturas/`)
+- [x] 5.1 Cada escenario de los cuatro deltas tiene exactamente un test con su nombre (`grep`)
+- [x] 5.2 `npx tsc --noEmit`, `npm test` y `npm run build` en verde; la cantidad de tests no baja
+- [x] 5.3 Verificación visual contra el mockup aprobado, a 390 y 1440 px, con el backend de desarrollo y datos ficticios; resultado en `design.md`
+- [x] 5.4 `openspec validate caja-y-cobros --strict` en verde, C-22 marcado en `CHANGES.md` y, en el PR, aviso a Sofia (`agenda/`) y a Juan Sebastián (`coberturas/`)
 
 ## Workflow follow-up
 

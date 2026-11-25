@@ -2,7 +2,7 @@ import { formatearHora } from '../shared/fecha/zona.ts';
 import { crearBoton } from '../shared/ui/campos.ts';
 import { MEDIOS, type Caja, type Cobro, type CuentaCorriente, type Pendientes } from './api.ts';
 import { formatearPesos } from './dinero.ts';
-import { diaCorto, fechaYHora, NOMBRE_MEDIO } from './texto.ts';
+import { diaCorto, diaYMes, fechaYHora, NOMBRE_MEDIO } from './texto.ts';
 
 /** Dibujo de las secciones de la pantalla Caja (spec frontend-caja, design D10 de C-22). */
 
@@ -179,7 +179,7 @@ export function dibujarCuenta(destino: HTMLElement, cuenta: CuentaCorriente): vo
   const cuerpo = elemento('tbody');
   for (const cargo of cuenta.cargos) {
     const fila = elemento('tr');
-    fila.append(celda(null, fechaYHora(cargo.inicio)), celda(null, cargo.prestacion),
+    fila.append(celda(null, diaYMes(cargo.inicio)), celda(null, cargo.prestacion),
       celda('Copago', formatearPesos(cargo.copago)), celda('Pagado', formatearPesos(cargo.pagado)),
       celda('Saldo', formatearPesos(cargo.saldo)));
     cuerpo.append(fila);

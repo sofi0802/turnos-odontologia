@@ -3,11 +3,15 @@
 
 .caja-grilla {
   display: grid;
+  /* Con una columna implícita `auto` la tabla de la cuenta corriente ensanchaba la página en el celular. */
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--ds-espacio-2);
 }
 
 .caja-grilla .panel {
   align-content: start;
+  /* Igual que la grilla: el contenido ancho se desplaza dentro del panel en lugar de estirarlo. */
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .caja-encabezado {

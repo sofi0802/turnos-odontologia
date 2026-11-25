@@ -16,6 +16,12 @@ export function diaCorto(fecha: string): string {
   return `${diaDeLaSemana(fecha).toLowerCase()} ${dia ?? ''}/${mes ?? ''}`;
 }
 
+/** "07/12" para un instante (columna "Turno" de la cuenta corriente, como el mockup). */
+export function diaYMes(instante: string): string {
+  const [, mes, dia] = fechaDeInstante(instante).split('-');
+  return `${dia ?? ''}/${mes ?? ''}`;
+}
+
 /** "lunes 07/12 10:00" para un instante. */
 export function fechaYHora(instante: string): string {
   return `${diaCorto(fechaDeInstante(instante))} ${formatearHora(instante)}`;

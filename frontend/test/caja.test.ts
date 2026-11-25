@@ -1,5 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { formatearPesos, leerImporte } from '../src/caja/dinero.ts';
+import { textoDeModulo } from './estilos.ts';
 import {
   abrirApp,
   boton,
@@ -190,6 +191,45 @@ describe('Estado de la caja', () => {
     expect(estado).toContain('Efectivo: $ 9.000,00');
     expect(estado).toContain('Débito: $ 15.000,00');
     expect(estado).toContain('Efectivo esperado: $ 14.000,00');
+  });
+});
+
+describe('Grilla de la caja en el celular', () => {
+  it('la columna única no crece con la tabla de la cuenta corriente (la tabla se desplaza en su panel)', () => {
+    const css = textoDeModulo('21-caja.css');
+    const antesDelEscritorio = css.slice(0, css.indexOf('@media'));
+    const reglaBase = /\.caja-grilla\s*\{([^}]*)\}/.exec(antesDelEscritorio)?.[1] ?? '';
+    const reglaPanel = /\.caja-grilla \.panel\s*\{([^}]*)\}/.exec(antesDelEscritorio)?.[1] ?? '';
+
+    expect(reglaBase).toMatch(/grid-template-columns:\s*minmax\(0,\s*1fr\)/);
+    expect(reglaPanel).toMatch(/grid-template-columns:\s*minmax\(0,\s*1fr\)/);
+  });
+});
+
+describe('Ayudas de los importes (mockup aprobado)', () => {
+  function ayudaDe(control: HTMLElement): string {
+    const ids = (control.getAttribute('aria-describedby') ?? '').split(' ');
+    return ids
+      .map((id) => document.getElementById(id))
+      .filter((nodo): nodo is HTMLElement => nodo !== null && nodo.classList.contains('ayuda'))
+      .map((nodo) => nodo.textContent ?? '')
+      .join(' ');
+  }
+
+  it('el monto inicial explica que es el efectivo con el que arranca el día', async () => {
+    cajaAbierta = null;
+    await abrirCaja();
+
+    expect(ayudaDe(campo(raiz(), 'Monto inicial en efectivo'))).toBe('El efectivo con el que arranca el día.');
+  });
+
+  it('el importe del cobro avisa que se puede cobrar una parte', async () => {
+    pendientes = { cargos: [pendiente({ pagado: 0, saldo: 9000 })], sinPrecio: [] };
+    await abrirCaja();
+
+    boton(seccion('caja-pendientes'), 'Cobrar').click();
+
+    expect(ayudaDe(campo(dialogo(), 'Importe'))).toBe('Podés cobrar una parte; lo que falta queda como deuda.');
   });
 });
 
@@ -405,6 +445,37 @@ describe('Cuenta corriente de un paciente', () => {
     const cuenta = texto(seccion('caja-cuenta'));
     expect(cuenta).toContain('Pagado: $ 4.000,00');
     expect(cuenta).toContain('Saldo: $ 5.000,00');
+  });
+
+  it('la tabla de la cuenta corriente muestra el turno como día y mes, como el mockup', async () => {
+    servidor.responder('GET /pacientes/{id}/cuenta-corriente', () =>
+      json(200, {
+        pacienteId: 1,
+        paciente: 'Uno, Paciente',
+        cargos: [
+          {
+            id: 7,
+            fecha: '2026-12-07',
+            inicio: '2026-12-07T13:00:00Z',
+            prestacion: 'Consulta o control',
+            precio: 15000,
+            porcentajeCobertura: 40,
+            cobertura: 6000,
+            copago: 9000,
+            pagado: 4000,
+            saldo: 5000,
+            cobros: [],
+          },
+        ],
+        saldoTotal: 5000,
+      }),
+    );
+    await abrirCaja();
+
+    await elegirPaciente(seccion('caja-cuenta'), 'uno', 'Uno, Paciente · DNI 99000001');
+
+    await vi.waitFor(() => expect(seccion('caja-cuenta').querySelector('tbody td')).not.toBeNull());
+    expect(seccion('caja-cuenta').querySelector('tbody td')?.textContent).toBe('07/12');
   });
 
   it('Un paciente sin cargos', async () => {

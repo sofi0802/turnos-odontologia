@@ -22,6 +22,20 @@ export const MENSAJE_CONTADO_OBLIGATORIO = 'Escribí el efectivo contado.';
 export const MENSAJE_MOTIVO_DIFERENCIA = 'Escribí el motivo de la diferencia.';
 export const MENSAJE_MOTIVO_ANULACION = 'Escribí el motivo de la anulación.';
 
+export const AYUDA_MONTO_INICIAL = 'El efectivo con el que arranca el día.';
+export const AYUDA_COBRO_PARCIAL = 'Podés cobrar una parte; lo que falta queda como deuda.';
+
+/** Suma un texto de ayuda antes del error del campo y lo enlaza al control, como en el mockup aprobado. */
+export function agregarAyuda(campo: Campo<HTMLInputElement | HTMLSelectElement>, texto: string): void {
+  const ayuda = document.createElement('p');
+  ayuda.className = 'ayuda';
+  ayuda.id = `${campo.control.id}-ayuda`;
+  ayuda.textContent = texto;
+  campo.contenedor.insertBefore(ayuda, campo.contenedor.lastChild);
+  const descripcion = campo.control.getAttribute('aria-describedby') ?? '';
+  campo.control.setAttribute('aria-describedby', `${ayuda.id} ${descripcion}`.trim());
+}
+
 function campoImporte(etiqueta: string, nombre: string, valor = ''): Campo<HTMLInputElement> {
   const entrada = crearEntrada('text', nombre);
   entrada.inputMode = 'decimal';
@@ -85,6 +99,7 @@ async function enviar(
 /** "Cobrar" un pendiente: importe (por defecto, el saldo) y medio de pago. */
 export function abrirCobro(control: ControlCaja, pendiente: Pendiente): void {
   const importe = campoImporte('Importe', 'importe', importeParaCampo(pendiente.saldo));
+  agregarAyuda(importe, AYUDA_COBRO_PARCIAL);
   const medio = crearCampo('Medio de pago', crearSelector('medio', MEDIOS.map((m) => ({ valor: m.valor, texto: m.texto }))));
   const dialogo = abrirDialogo({
     titulo: 'Cobrar',
