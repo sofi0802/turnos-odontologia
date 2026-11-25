@@ -1,14 +1,14 @@
 C-23 senas-mercado-pago: evidencia del backend
 Fecha: 2026-11-25
-Rama: change/C-23-senas-mercado-pago-apply (commit 931d12d, con las correcciones de la verificación visual)
+Rama: change/C-23-senas-mercado-pago-apply (commit 478cb70: las correcciones de la verificación visual y el merge de master con C-15, C-27, C-48, C-49 y C-50)
 
 Comando: ./gradlew cleanTest cleanIntegrationTest build integrationTest (Gradle, Java 21, PostgreSQL 16 en Docker
 con la base de tests de .env). Se limpiaron los resultados para que los tests corrieran de nuevo.
-Resultado: BUILD SUCCESSFUL in 12m 20s, código de salida 0
-- Unitarios (tarea test): 995 PASSED, 0 FAILED, 0 SKIPPED.
-- Integración (tarea integrationTest, @Tag("integration")): 1193 PASSED, 0 FAILED, 0 SKIPPED.
-Captura: active-stack evidence-capture, corrida ea6924488d94f9ff8c0ffa94b1b4a29b, salida redactada sin truncar,
-sha256 12c02e84d0e78e48d1b6b83c361b5c374788f01a8cc945a13bacee1ee091a8aa (copia local, fuera del repo).
+Resultado: BUILD SUCCESSFUL in 14m 42s, código de salida 0
+- Unitarios (tarea test): 1099 PASSED, 0 FAILED, 0 SKIPPED.
+- Integración (tarea integrationTest, @Tag("integration")): 1317 PASSED, 0 FAILED, 0 SKIPPED.
+Captura: active-stack evidence-capture, corrida df131ecac63944dcabeeeae441ecb11f, salida redactada sin truncar,
+sha256 f134c42588651c644607a8b84d75502ce50bd12b0500e96614078ed50acefa53 (copia local, fuera del repo).
 
 Tests nuevos de C-23:
 - Unitarios sin base (pagos/domain y pagos/infrastructure): CalculoSenaTest (8), ReglaFinalTest (6),
