@@ -30,6 +30,14 @@ public abstract class IntegracionPagosBase extends IntegracionCajaBase {
                 "S-" + turno + "-" + System.nanoTime(), pagada ? "pago-" + turno : null);
     }
 
+    /** PUT con la cookie y el encabezado CSRF, como el frontend. */
+    protected org.springframework.test.web.servlet.ResultActions put(ar.turnos.odontologia.shared.security.Navegador
+            navegador, String url, String cuerpo) throws Exception {
+        return navegador.enviar(org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put(url)
+                .contentType(org.springframework.http.MediaType.APPLICATION_JSON).content(cuerpo)
+                .header("X-XSRF-TOKEN", navegador.tokenCsrf() == null ? "" : navegador.tokenCsrf()));
+    }
+
     protected String estadoDeSena(long sena) {
         return jdbc.queryForObject("SELECT estado FROM sena WHERE id = ?", String.class, sena);
     }
