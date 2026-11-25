@@ -5,10 +5,13 @@ import { paginaConfiguracion } from './pages/configuracion.ts';
 import { paginaConfirmar } from './pages/confirmar.ts';
 import { paginaCoberturas } from './pages/coberturas.ts';
 import { paginaInicio } from './pages/inicio.ts';
+import { paginaListaEspera } from './pages/lista-espera.ts';
 import { paginaMiCuenta } from './pages/mi-cuenta.ts';
 import { paginaMisTurnos } from './pages/mis-turnos.ts';
+import { paginaOferta } from './pages/oferta.ts';
 import { paginaPacientes } from './pages/pacientes.ts';
 import { paginaReportes } from './pages/reportes.ts';
+import { paginaCaja } from './pages/caja.ts';
 import { crearTitulo, type ContextoPagina, type Pagina } from './pages/pagina.ts';
 import { paginaReserva } from './pages/reserva.ts';
 import { api as apiPorDefecto, type ClienteApi } from './shared/api/cliente.ts';
@@ -30,15 +33,18 @@ import { crearRouter, type Router } from './shared/ui/router.ts';
 export const PAGINAS: readonly Pagina[] = [
   paginaInicio,
   paginaAgenda,
+  paginaListaEspera,
   paginaPacientes,
   paginaCoberturas,
   paginaReportes,
+  paginaCaja,
   paginaConfiguracion,
   paginaCambiarContrasena,
   paginaReserva,
   paginaMisTurnos,
   paginaMiCuenta,
   paginaConfirmar,
+  paginaOferta,
 ];
 
 export const MENSAJE_SOLO_PERSONAL = 'Esta sección es solo para el personal del consultorio.';

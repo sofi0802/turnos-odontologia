@@ -35,7 +35,7 @@ describe('Selector de fecha', () => {
     expect(campo.control.tabIndex).toBe(-1);
   });
 
-  it('abre el calendario del mes elegido y al tocar un día cambia el valor y avisa', () => {
+  it('Elegir un día con el calendario', () => {
     const { campo, boton, panel } = armar('2026-12-05', { minimo: '2026-12-01' });
     const avisos: string[] = [];
     campo.control.addEventListener('change', () => avisos.push(campo.control.value));
@@ -45,6 +45,8 @@ describe('Selector de fecha', () => {
     expect(boton.getAttribute('aria-expanded')).toBe('true');
     expect(panel.querySelector('.cal-mes')?.textContent?.toLowerCase()).toBe('diciembre de 2026');
     expect(panel.querySelector('[data-fecha="2026-12-05"]')?.getAttribute('aria-pressed')).toBe('true');
+    // Los días anteriores al mínimo no se pueden elegir.
+    expect(panel.querySelector('[data-fecha="2026-11-30"]')).toBeNull();
 
     panel.querySelector<HTMLButtonElement>('[data-fecha="2026-12-10"]')!.click();
     expect(campo.control.value).toBe('2026-12-10');
@@ -61,7 +63,7 @@ describe('Selector de fecha', () => {
     expect(panel.querySelector<HTMLButtonElement>('.cal-nav[aria-label="Mes anterior"]')?.disabled).toBe(true);
   });
 
-  it('con el campo opcional permite borrar la fecha', () => {
+  it('Fecha opcional', () => {
     const { campo, boton, panel } = armar('2026-12-05', { opcional: true });
     boton.click();
     panel.querySelector<HTMLButtonElement>('.selector-fecha-borrar')!.click();

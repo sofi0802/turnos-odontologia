@@ -115,7 +115,7 @@ Se suman a `MENSAJES_POR_CODIGO`:
 - "Menú según la sesión" de `frontend-navegacion` **no se modifica** en este change: ya lo modifican C-22 (`caja-y-cobros`) y `frontend-uniformidad-visual`. Sus escenarios que enumeran "solo" ciertos enlaces quedan desactualizados. Antes de archivar C-49 se reconcilia con un delta MODIFIED sobre el texto que esté en `openspec/specs` en ese momento (tarea 9.2).
 
 ### D10. Estilos e íconos
-- `frontend/src/styles/22-coberturas.css`, importado al final de `styles.css` y registrado en `REGLAS_POR_MODULO` de `test/estilos-modulos.test.ts`. Es `mockups/coberturas.css` sin las reglas "Solo mockups". Solo tokens de la Revision 5; sin `outline: none`. El design system no cambia de revisión.
+- `frontend/src/styles/24-coberturas.css` (era `22-coberturas.css`; al mergear master, C-22 y C-15 ya usaban `22-caja.css` y `23-lista-espera.css`), importado al final de `styles.css` y registrado en `REGLAS_POR_MODULO` de `test/estilos-modulos.test.ts`. Es `mockups/coberturas.css` sin las reglas "Solo mockups". Solo tokens de la Revision 5; sin `outline: none`. El design system no cambia de revisión.
 - `shared/ui/iconos.ts` suma `credencial` y `cuenta`, con el trazo de los existentes y `aria-hidden`.
 
 ### D11. Privacidad

@@ -46,6 +46,10 @@ app:
       # C-43: tarea que pasa a ATENDIDO los turnos con llegada cuyo margen terminó (el perfil de test la apaga)
       activo: ${AGENDA_ASISTENCIA_ACTIVO:true}
       intervalo-ms: ${AGENDA_ASISTENCIA_INTERVALO_MS:300000}
+  lista-espera:
+    # C-15: tarea que vence las ofertas y los avisos de la lista de espera (el perfil de test la apaga)
+    activo: ${APP_LISTA_ESPERA_ACTIVO:true}
+    intervalo-ms: ${APP_LISTA_ESPERA_INTERVALO_MS:60000}
   consultorio:
     nombre: ${CONSULTORIO_NOMBRE:Consultorio odontológico}
     direccion: ${CONSULTORIO_DIRECCION:Dirección a confirmar}
@@ -102,6 +106,12 @@ spring:
 app:
   agenda:
     asistencia:
+      activo: false
+  lista-espera:
+    activo: false
+  # C-22: el barrido de cargos lo llaman los tests a mano.
+  caja:
+    cargos:
       activo: false
   clinica:
     imagenes:

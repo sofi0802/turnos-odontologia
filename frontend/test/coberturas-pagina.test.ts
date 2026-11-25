@@ -169,7 +169,8 @@ describe('Página "Coberturas" para administración y recepción', () => {
 
     await vi.waitFor(() => expect(enlacesVisibles()).toContain('Coberturas'));
     const enlaces = enlacesVisibles();
-    expect(enlaces.indexOf('Coberturas')).toBe(enlaces.indexOf('Agenda') + 1);
+    // Entre "Agenda" y "Reportes"; desde C-15, "Lista de espera" queda entre "Agenda" y "Coberturas".
+    expect(enlaces.indexOf('Coberturas')).toBeGreaterThan(enlaces.indexOf('Agenda'));
     expect(enlaces.indexOf('Reportes')).toBe(enlaces.indexOf('Coberturas') + 1);
   });
 

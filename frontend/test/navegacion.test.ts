@@ -275,8 +275,8 @@ describe('Menú adaptable a pantallas chicas', () => {
     // está en el documento con sus dos enlaces sin tocar el botón. Lo visual se verifica con capturas.
     abrirEn('#/agenda');
     await esperarTitulo('Agenda');
-    // C-32: la recepción también ve "Reportes"; C-49: y "Coberturas" (deltas de frontend-navegacion).
-    expect(enlacesVisibles()).toEqual(['Agenda', 'Coberturas', 'Reportes', 'Configuración']);
+    // C-32: la recepción también ve "Reportes"; C-49: y "Coberturas", antes de "Reportes" (deltas de frontend-navegacion).
+    expect(enlacesVisibles()).toEqual(['Agenda', 'Lista de espera', 'Coberturas', 'Reportes', 'Caja', 'Configuración']);
     expect(menu().hidden).toBe(false);
   });
 });
@@ -298,8 +298,8 @@ describe('Menú según la sesión', () => {
     abrirEn('#/agenda');
     await esperarTitulo('Agenda');
 
-    // C-32: la recepción también ve "Reportes"; C-49: y "Coberturas" (deltas de frontend-navegacion).
-    expect(enlacesVisibles()).toEqual(['Agenda', 'Coberturas', 'Reportes', 'Configuración']);
+    // C-32: la recepción también ve "Reportes"; C-49: y "Coberturas", antes de "Reportes" (deltas de frontend-navegacion).
+    expect(enlacesVisibles()).toEqual(['Agenda', 'Lista de espera', 'Coberturas', 'Reportes', 'Caja', 'Configuración']);
     expect(enlacesActivos()).toEqual(['Agenda']);
     expect(barraLateral().hidden).toBe(false);
   });
@@ -345,7 +345,7 @@ describe('Página "Reportes" para administración y recepción (C-32)', () => {
 
     await vi.waitFor(() =>
       // C-49: "Coberturas" entre "Pacientes" y "Reportes".
-      expect(enlacesVisibles()).toEqual(['Agenda', 'Pacientes', 'Coberturas', 'Reportes', 'Configuración']),
+      expect(enlacesVisibles()).toEqual(['Agenda', 'Lista de espera', 'Pacientes', 'Coberturas', 'Reportes', 'Caja', 'Configuración']),
     );
   });
 
@@ -369,6 +369,40 @@ describe('Página "Reportes" para administración y recepción (C-32)', () => {
 
   it('Sin sesión en Reportes', async () => {
     abrirEn('#/reportes', sinSesion());
+
+    await esperarTitulo('Mi cuenta');
+  });
+});
+
+describe('Página "Caja" para administración y recepción (C-22)', () => {
+  const SESION_ODONTOLOGO = { autenticado: true, username: 'ana.ejemplo', rol: 'ODONTOLOGO', profesionalId: 1 };
+
+  function conOdontologo(): ServidorFalso {
+    const servidor = new ServidorFalso();
+    servidor.responder('GET /public/sesion', () => json(200, SESION_ODONTOLOGO));
+    return servidor;
+  }
+
+  it('El odontólogo no ve Caja', async () => {
+    abrirEn('#/agenda', conOdontologo());
+
+    await vi.waitFor(() => expect(enlacesVisibles()).toEqual(['Agenda', 'Pacientes', 'Configuración']));
+    expect(enlacesVisibles()).not.toContain('Caja');
+  });
+
+  it('El odontólogo abre la dirección de la caja', async () => {
+    const servidor = abrirEn('#/caja', conOdontologo());
+
+    await vi.waitFor(() =>
+      expect(raiz.querySelector('main [role="alert"]')?.textContent).toBe(
+        'Esta sección es solo para administración y recepción.',
+      ),
+    );
+    expect(servidor.a('GET', '/cajas/abierta')).toEqual([]);
+  });
+
+  it('Sin sesión en Caja', async () => {
+    abrirEn('#/caja', sinSesion());
 
     await esperarTitulo('Mi cuenta');
   });

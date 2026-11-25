@@ -80,3 +80,19 @@ Recepción → Frontend → API → CrearTurno → Agenda(dominio) → TurnoRepo
 
 **Casos de error**:
 - Falla del proveedor → `Notificacion.estado = FALLIDA` y reintento con backoff; después de N fallas, se envía por email si hay email.
+
+## Flujo 5: Lista de espera [2026-11-24, C-15]
+
+**Disparador**: se cancela o se reprograma un turno activo que todavía no empezó (RN-LE-02).
+
+**Pasos**:
+1. Después de guardar la cancelación, el sistema busca el **primer** paciente compatible de la lista por orden de llegada (RN-LE-03, RN-LE-04).
+2. Crea la oferta con su vencimiento: el plazo configurado o el inicio del horario, lo que pase primero (RN-LE-05).
+3. Le manda el mensaje por su canal, sin datos de salud, con el link de la oferta (RN-LE-08).
+4. El paciente abre el link: ve la fecha, la hora y el profesional, y elige **Aceptar** o **No me interesa** (RN-LE-07).
+5. **Aceptar**: en una transacción se valida el turno como en el Flujo 1 y se crea `RESERVADO`; la inscripción pasa a `ASIGNADA`.
+6. **No me interesa** o vencimiento (tarea programada): se vuelve al paso 1 con el siguiente paciente.
+
+**Casos de error**:
+- El horario se ocupó durante la oferta → `409 OFERTA_NO_DISPONIBLE`; la inscripción sigue activa (RN-LE-06).
+- Oferta vencida → `409 OFERTA_VENCIDA`; ya respondida → `409 OFERTA_YA_RESPONDIDA`; token inexistente → `404 OFERTA_INEXISTENTE`.

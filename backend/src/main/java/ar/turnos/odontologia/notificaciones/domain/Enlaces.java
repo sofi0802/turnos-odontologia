@@ -14,6 +14,7 @@ public record Enlaces(String baseUrl, String rutaCancelar, String rutaReprograma
     public static final String RUTA_CANCELAR = "/mis-turnos/cancelar";
     public static final String RUTA_REPROGRAMAR = "/mis-turnos/reprogramar";
     static final String RUTA_CONFIRMAR = "/confirmar/";
+    static final String RUTA_OFERTA = "/oferta/";
 
     public Enlaces {
         baseUrl = sinBarraFinal(Objects.requireNonNull(baseUrl, "baseUrl"));
@@ -28,6 +29,11 @@ public record Enlaces(String baseUrl, String rutaCancelar, String rutaReprograma
 
     public String confirmar(String token) {
         return baseUrl + RUTA_CONFIRMAR + Objects.requireNonNull(token, "token");
+    }
+
+    /** La pantalla de la oferta de la lista de espera (C-15), con su token de un solo uso. */
+    public String oferta(String token) {
+        return baseUrl + RUTA_OFERTA + Objects.requireNonNull(token, "token");
     }
 
     public String cancelar() {

@@ -29,7 +29,7 @@ Con una sesión iniciada, el menú SHALL ser una barra lateral: en pantallas de 
 - **AND** la página no tiene desplazamiento horizontal
 
 ### Requirement: Menú según la sesión
-La barra lateral SHALL mostrar "Agenda" y "Configuración" con una sesión del personal y "Reservar turno" y "Mis turnos" con una sesión de paciente. Sin sesión MUST NOT haber barra lateral: el encabezado se mantiene simple y ofrece el enlace "Reservar turno" y un único botón "Ingresar" a `#/mi-cuenta` arriba a la derecha, también en la portada. Al iniciar o cerrar una sesión, la barra lateral MUST aparecer o desaparecer y actualizarse sin recargar el documento.
+La barra lateral SHALL mostrar al personal "Agenda", "Configuración" y las páginas de su rol ("Pacientes" para `ADMIN` y `ODONTOLOGO`; "Reportes" y "Caja" para `ADMIN` y `RECEPCIONISTA`), y al paciente "Reservar turno" y "Mis turnos". Sin sesión MUST NOT haber barra lateral: el encabezado ofrece "Reservar turno" y un único botón "Ingresar" a `#/mi-cuenta`, también en la portada. Al iniciar o cerrar una sesión, la barra lateral MUST actualizarse sin recargar el documento.
 
 #### Scenario: Menú de un visitante
 - **GIVEN** un navegador sin sesión
@@ -40,7 +40,7 @@ La barra lateral SHALL mostrar "Agenda" y "Configuración" con una sesión del p
 #### Scenario: Menú del personal
 - **GIVEN** una sesión de `recepcion` con rol `RECEPCIONISTA`
 - **WHEN** se abre la aplicación en `#/agenda`
-- **THEN** la barra lateral tiene solo los enlaces "Agenda" y "Configuración"
+- **THEN** la barra lateral tiene solo los enlaces "Agenda", "Reportes", "Caja" y "Configuración", en ese orden
 - **AND** el enlace de la página abierta, "Agenda", está marcado como activo
 
 #### Scenario: El menú cambia al ingresar como paciente
