@@ -53,7 +53,7 @@ describe('Pantallas del personal', () => {
     }
   });
 
-  it('La tarjeta del turno y sus acciones', () => {
+  it('Tarjeta del turno y sus acciones', () => {
     const contenedor = document.createElement('div');
     document.body.append(contenedor);
     dibujarAgenda(contenedor, periodoDe('dia', '2026-12-01'), [turno()], CATALOGOS_VACIOS, {

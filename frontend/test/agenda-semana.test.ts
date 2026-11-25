@@ -140,7 +140,7 @@ describe('Agenda semanal en grilla', () => {
     expect(document.querySelectorAll('dialog .turno')).toHaveLength(2);
   });
 
-  it('Todas las tarjetas muestran lo mismo, sea cual sea su duración', () => {
+  it('Todas las tarjetas muestran lo mismo', () => {
     const contenedor = dibujar([
       turno(1, '2026-12-01', '09:00', '09:15'),
       turno(2, '2026-12-01', '10:00', '10:30'),
@@ -158,7 +158,7 @@ describe('Agenda semanal en grilla', () => {
     expect(contenedor.querySelector('.tarjeta-meta, .tarjeta-estado, [data-tam]')).toBeNull();
   });
 
-  it('La recepción y la administración ven el horario y el profesional; el odontólogo, el horario y el paciente', () => {
+  it('Nombre de la tarjeta según quién mira', () => {
     const turnos = [turno(1, '2026-12-01', '09:00', '10:00', { estado: 'CONFIRMADO' })];
 
     const deRecepcion = dibujar(turnos).querySelector('.turno-tarjeta');
