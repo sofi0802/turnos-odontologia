@@ -358,7 +358,7 @@ describe('Cancelar un turno', () => {
         status: 422,
         codigo: 'DATOS_INVALIDOS',
         detail: 'Hay datos inválidos en el pedido',
-        errores: [{ campo: 'causa', mensaje: 'La causa es obligatoria: el paciente pagó una seña.' }],
+        errores: [{ campo: 'causa', mensaje: 'Indicá la causa: el paciente pagó una seña.' }],
       }),
     );
     await abrirCancelacion();
@@ -367,7 +367,7 @@ describe('Cancelar un turno', () => {
 
     await vi.waitFor(() =>
       expect(dialogo().querySelector('.campo-causa .campo-error')?.textContent).toBe(
-        'La causa es obligatoria: el paciente pagó una seña.',
+        'Indicá la causa: el paciente pagó una seña.',
       ),
     );
     expect(dialogo().querySelector('.campo-causa')?.getAttribute('aria-invalid')).toBe('true');

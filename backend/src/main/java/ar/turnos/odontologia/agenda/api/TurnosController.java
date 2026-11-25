@@ -94,7 +94,7 @@ class TurnosController {
         // La cancelación online del paciente no pasa por acá: siempre reintegra.
         if (pedido.causa() == null && senas.tieneSenaPagada(id)) {
             throw new TurnoRechazadoException(CodigoRechazo.DATOS_INVALIDOS,
-                    "La causa es obligatoria: el paciente pagó una seña.");
+                    "Indicá la causa: el paciente pagó una seña.");
         }
         CancelarTurnoCommand comando = new CancelarTurnoCommand(id, pedido.dni(), pedido.numeroReserva(), pedido.causa());
         return TurnoResponse.de(agenda.cancelar(comando, usuario.getUsername()), zona);

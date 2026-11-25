@@ -106,6 +106,10 @@ public abstract class IntegracionPagosBase extends IntegracionCajaBase {
                 .header("X-XSRF-TOKEN", navegador.tokenCsrf() == null ? "" : navegador.tokenCsrf()));
     }
 
+    protected String causaDeSena(long sena) {
+        return jdbc.queryForObject("SELECT causa_cancelacion FROM sena WHERE id = ?", String.class, sena);
+    }
+
     protected String estadoDeSena(long sena) {
         return jdbc.queryForObject("SELECT estado FROM sena WHERE id = ?", String.class, sena);
     }

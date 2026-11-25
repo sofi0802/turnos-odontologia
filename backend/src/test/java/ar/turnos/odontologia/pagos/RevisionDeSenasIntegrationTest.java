@@ -133,6 +133,7 @@ class RevisionDeSenasIntegrationTest extends IntegracionPagosBase {
             revision.ejecutar();
 
             assertThat(estadoDeSena(sena)).isEqualTo("DEVUELTA");
+            assertThat(causaDeSena(sena)).isEqualTo("CONSULTORIO");
         }
 
         @Test
@@ -145,6 +146,7 @@ class RevisionDeSenasIntegrationTest extends IntegracionPagosBase {
             revision.ejecutar();
 
             assertThat(estadoDeSena(sena)).isEqualTo("RETENIDA");
+            assertThat(causaDeSena(sena)).isEqualTo("PACIENTE");
             assertThat(pasarela().reintegros()).isEmpty();
         }
 

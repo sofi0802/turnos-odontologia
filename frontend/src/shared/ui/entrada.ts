@@ -10,12 +10,32 @@ const LINK_MIS_TURNOS = /^(.*)\/mis-turnos\/(cancelar|reprogramar)\/?$/;
 const LINK_CONFIRMAR = /^(.*)\/confirmar\/([^/]+)\/?$/;
 const VUELTA_DE_PAGO = /^#\/mis-turnos\?pago=/;
 
+let escuchaVueltaDePago = false;
+
+/**
+ * Si la dirección es la vuelta de un pago, la guarda y deja `#/mis-turnos`. El resultado de la vuelta no se usa: la
+ * seña se da por pagada solo con la notificación verificada (RN-SE-05).
+ */
+function tomarVueltaDeLaDireccion(ubicacion: Location): boolean {
+  if (!VUELTA_DE_PAGO.test(ubicacion.hash)) {
+    return false;
+  }
+  vueltaDePago = true;
+  history.replaceState(history.state, '', `${ubicacion.pathname}#/mis-turnos`);
+  return true;
+}
+
 export function traducirEntrada(ubicacion: Location = window.location): void {
+  if (!escuchaVueltaDePago) {
+    // La vuelta también puede llegar sin recargar la página (el link de la pasarela simulada solo cambia el hash).
+    // Este listener se registra antes que el del router, así que la dirección ya está traducida cuando el router la lee.
+    escuchaVueltaDePago = true;
+    window.addEventListener('hashchange', () => {
+      tomarVueltaDeLaDireccion(window.location);
+    });
+  }
   const camino = ubicacion.pathname;
-  if (VUELTA_DE_PAGO.test(ubicacion.hash)) {
-    // El resultado de la vuelta no se usa: la seña se da por pagada solo con la notificación verificada (RN-SE-05).
-    vueltaDePago = true;
-    history.replaceState(history.state, '', `${camino}#/mis-turnos`);
+  if (tomarVueltaDeLaDireccion(ubicacion)) {
     return;
   }
   const misTurnos = LINK_MIS_TURNOS.exec(camino);

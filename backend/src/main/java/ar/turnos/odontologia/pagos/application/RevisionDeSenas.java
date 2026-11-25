@@ -121,6 +121,9 @@ public class RevisionDeSenas {
     }
 
     private void terminar(Sena sena, FinDelTurno fin) {
+        if (fin.causa() != null) {
+            senas.registrarCausa(sena.id(), fin.causa());
+        }
         if (ReglaFinal.decidir(fin) == Destino.RETENCION) {
             senas.cambiarEstado(sena.id(), EstadoSena.RETENIDA);
             LOG.info("Seña {} retenida por el consultorio", sena.id());

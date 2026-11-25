@@ -133,6 +133,11 @@ class SenasJdbc implements Senas {
     }
 
     @Override
+    public void registrarCausa(long id, Causa causa) {
+        jdbc.update("UPDATE sena SET causa_cancelacion = ? WHERE id = ?", causa.name(), id);
+    }
+
+    @Override
     public void registrarReintegrado(long id, BigDecimal reintegrado) {
         jdbc.update("UPDATE sena SET importe_reintegrado = ? WHERE id = ?", reintegrado, id);
     }

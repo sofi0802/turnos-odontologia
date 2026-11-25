@@ -502,4 +502,16 @@ describe('Vuelta desde Mercado Pago', () => {
     expect(texto(tarjeta('R-0002'))).toContain('Seña pendiente');
     expect(window.location.hash).toBe('#/mis-turnos');
   });
+
+  it('Vuelta sin recargar la página (link de la pasarela simulada)', async () => {
+    servidor.responder('GET /paciente/turnos', () => json(200, [turnoPaciente({ sena: SENA_PENDIENTE })]));
+    abrirEn('/#/mis-turnos');
+    await vi.waitFor(() => expect(raiz.querySelector('.turno-paciente')).not.toBeNull());
+    expect(avisos()).not.toContain('Estamos confirmando tu pago');
+
+    window.location.hash = '#/mis-turnos?pago=simulado&ref=S-FICTICIA0000001';
+    await vi.waitFor(() => expect(avisos()).toContain('Estamos confirmando tu pago. Puede tardar unos minutos.'));
+    expect(titulo()).toBe('Mis turnos');
+    expect(window.location.hash).toBe('#/mis-turnos');
+  });
 });

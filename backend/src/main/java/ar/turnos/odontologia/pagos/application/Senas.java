@@ -1,5 +1,6 @@
 package ar.turnos.odontologia.pagos.application;
 
+import ar.turnos.odontologia.pagos.domain.Causa;
 import ar.turnos.odontologia.pagos.domain.EstadoSena;
 import ar.turnos.odontologia.pagos.domain.Sena;
 import java.math.BigDecimal;
@@ -55,6 +56,9 @@ public interface Senas {
     void cambiarEstado(long id, EstadoSena estado);
 
     void fijarReintegro(long id, BigDecimal aReintegrar);
+
+    /** Guarda la causa de la cancelación que decidió el destino de una seña pagada (RN-SE-06). */
+    void registrarCausa(long id, Causa causa);
 
     void registrarReintegrado(long id, BigDecimal reintegrado);
 
