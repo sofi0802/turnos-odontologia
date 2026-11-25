@@ -13,6 +13,17 @@ Fecha: 2026-11-24. Rama `change/C-14-entrega-readme-y-evidencia`, desde `master`
 
 Los comandos se corrieron desde una instalación limpia (`clean` en el backend y `npm ci` en el frontend). El detalle de cada test del backend queda en `backend/build/reports/tests/`.
 
+### Actualización antes de la entrega (2026-11-25)
+
+Desde `master` en `d34c8b8` (PR #154, archive de C-15), con todos los changes del MVP y los post-MVP mergeados hasta esa fecha.
+
+| Suite | Comando | Resultado |
+|---|---|---|
+| Backend, dominio | `./gradlew test` | 1108 de 1108, sin fallas ni omitidos |
+| Backend, integración (PostgreSQL 16 real) | `./gradlew integrationTest` | 1343 de 1343 en 265 clases, sin fallas ni omitidos. `BUILD SUCCESSFUL in 23m 59s`, con el `.env` cargado. Sin `DB_TEST_URL`, el contexto de Spring no arranca (`'url' must start with "jdbc"`) |
+| Frontend, tests | `npm test` | 1694 de 1694 en 93 archivos |
+| Frontend, build | `npm run build` (`tsc --noEmit` strict y Vite) | Sin errores |
+
 ## 2. Secretos en el repo
 
 - `.env` está en `.gitignore` (junto con `.env.*`, salvo `.env.example`) y nunca se commiteó: `git log --all -- .env` no devuelve nada.
