@@ -22,7 +22,8 @@ export type NombreIcono =
   | 'documento'
   | 'descarga'
   | 'ver'
-  | 'subir';
+  | 'subir'
+  | 'caja';
 
 type Trazo = readonly [etiqueta: 'path' | 'rect' | 'circle', atributos: Readonly<Record<string, string>>];
 
@@ -81,6 +82,8 @@ const TRAZOS: Readonly<Record<NombreIcono, readonly Trazo[]>> = {
     ['circle', { cx: '12', cy: '12', r: '3' }],
   ],
   subir: [['path', { d: 'M12 20V9M7 14l5-5 5 5M5 4h14' }]],
+  // C-22: "Caja", una caja registradora.
+  caja: [['rect', { x: '3', y: '7', width: '18', height: '13', rx: '2' }], ['path', { d: 'M3 11h18M8 7V4h8v3M12 15h.01' }]],
 };
 
 export function crearIcono(nombre: NombreIcono): SVGElement {

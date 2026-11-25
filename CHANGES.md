@@ -980,7 +980,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/README.md` y `design-system/components.html`
 
 ### [C-22] `caja-y-cobros`
-- **Estado**: `[ ]` en propuesta (KB aprobada en el PR #118; propose y mockups en la rama `change/C-22-caja-y-cobros`, aprobados explícitamente por Enzo el 2026-11-24). Change `openspec/changes/caja-y-cobros/`: capabilities nuevas `caja`, `cobros-pacientes` y `frontend-caja`, y delta de `frontend-navegacion`. Migración V15
+- **Estado**: `[x]` implementado (2026-11-24; KB en el PR #118, propuesta y mockups en el PR #121, apply en la rama `change/C-22-caja-y-cobros-apply`; el archive va en un PR aparte después del merge). Change `openspec/changes/caja-y-cobros/`: capabilities nuevas `caja`, `cobros-pacientes` y `frontend-caja`, y delta de `frontend-navegacion`. Migración V15. Evidencia: `docs/evidencia/c22-backend.txt` (853 unitarios y 985 de integración) y 793 tests del frontend; verificación visual en `design.md` (passed, con dos correcciones de la pantalla a 390 px y las ayudas de los importes)
 - **Responsable**: Enzo
 - **Scope**:
   - Caja diaria (apertura, cierre, arqueo), cobros por turno y cuenta corriente del paciente. **Migración V15**.

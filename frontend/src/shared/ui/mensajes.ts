@@ -21,6 +21,12 @@ export const MENSAJES_POR_CODIGO: Readonly<Record<string, string>> = {
   // C-45: sobreturno sin sillón libre y extensión de un sobreturno.
   SIN_SILLON_DISPONIBLE: 'No hay ningún sillón libre en ese horario. Probá con otra hora.',
   TURNO_NO_EXTENSIBLE: 'Un sobreturno no se puede extender.',
+  // C-22: caja y cobros.
+  SIN_CAJA_ABIERTA: 'No hay una caja abierta. Abrí la caja para cobrar.',
+  IMPORTE_SUPERA_SALDO: 'El importe supera el saldo del cargo.',
+  CAJA_CERRADA: 'La caja ya está cerrada.',
+  COBRO_ANULADO: 'El cobro ya estaba anulado.',
+  CAJA_YA_ABIERTA: 'Ya hay una caja abierta. Cerrala antes de abrir otra.',
   TURNO_INEXISTENTE: 'El turno ya no existe.',
   ACCESO_DENEGADO: 'No tenés permiso para esta acción.',
   SIN_DISPONIBILIDAD: 'Ese horario se ocupó recién. Elegí otro.',

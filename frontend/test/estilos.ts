@@ -29,6 +29,7 @@ import sobreturno from '../src/styles/18-sobreturno.css?raw';
 import periodontograma from '../src/styles/19-periodontograma.css?raw';
 import reportes from '../src/styles/20-reportes.css?raw';
 import imagenes from '../src/styles/21-imagenes.css?raw';
+import caja from '../src/styles/22-caja.css?raw';
 
 const MODULOS: Readonly<Record<string, string>> = {
   '01-base.css': base,
@@ -52,6 +53,7 @@ const MODULOS: Readonly<Record<string, string>> = {
   '19-periodontograma.css': periodontograma,
   '20-reportes.css': reportes,
   '21-imagenes.css': imagenes,
+  '22-caja.css': caja,
 };
 
 /** Archivos que hay en `src/styles/`, ordenados (el prefijo numérico fija el orden). Solo los nombres, sin leerlos. */

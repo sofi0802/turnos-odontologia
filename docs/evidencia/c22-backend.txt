@@ -1,0 +1,34 @@
+C-22 caja-y-cobros: evidencia del backend
+Fecha: 2026-11-24
+Rama: change/C-22-caja-y-cobros-apply (commit 9466084)
+
+Comando: ./gradlew cleanTest cleanIntegrationTest build integrationTest (Gradle, Java 21, PostgreSQL 16 en Docker
+con la base de tests de .env). Se limpiaron los resultados para que los tests corrieran de nuevo y no quedaran
+UP-TO-DATE.
+Resultado: BUILD SUCCESSFUL in 8m 28s, código de salida 0
+- Unitarios (tarea test): 853 PASSED, 0 FAILED, 0 SKIPPED.
+- Integración (tarea integrationTest, @Tag("integration")): 985 PASSED, 0 FAILED, 0 SKIPPED.
+Captura: active-stack evidence-capture, corrida 3302c8b7cf634619da7f985c91c83ee9, salida redactada sin truncar,
+sha256 cf1df18b7e41bb98ad05b6daaac82a7a2c47934bf33913fe59d7dbd93f125ffe (copia local, fuera del repo).
+
+Tests nuevos de C-22:
+- Unitarios sin base (caja/domain): CalculoCargoTest (7) y DineroYArqueoTest (9).
+- Integración con PostgreSQL real (caja/): V15MigrationIntegrationTest (4), CajaIntegrationTest (21) y
+  CobrosIntegrationTest (31). Incluyen los escenarios de concurrencia (bloqueos de design D4), el de logs sin
+  importes ni datos de pacientes (D8) y el que compara el cargo con un presupuesto de C-19 de la misma prestación.
+
+Un test por escenario (tarea 5.1): los 39 escenarios de los deltas caja (16) y cobros-pacientes (23) tienen
+exactamente un test con su nombre en backend/src/test/java/ar/turnos/odontologia/caja/. Cuatro nombres
+("Paciente con cobertura", "Paciente particular", "Prestación sin código", "Anular sin motivo") también existen en
+tests de otras capacidades (afiliaciones-pacientes, presupuestos, imágenes clínicas); no son duplicados de C-22.
+
+Datos: solo ficticios (Paciente Uno con DNI 99000001, Paciente Dos, Ana Ejemplo). Sin credenciales en el repo.
+
+Después del merge de master (commit e05bb59, con C-20, C-39, C-47 y C-49 ya en master):
+Comando: ./gradlew cleanTest cleanIntegrationTest build integrationTest
+Resultado: BUILD SUCCESSFUL in 11m 2s, código de salida 0
+- Unitarios: 962 PASSED, 0 FAILED, 0 SKIPPED.
+- Integración: 1133 PASSED, 0 FAILED, 0 SKIPPED.
+Captura: active-stack evidence-capture, corrida e88cebb6f5b8c2dbfcb6ea07cdceba8d, salida redactada sin truncar,
+sha256 da2d8fc46997612c1b1ac9e3f2440b75d37e38bdec63abcb9256944aef88886c (copia local, fuera del repo).
+Frontend después del merge: 991 tests, tsc y build en verde.
