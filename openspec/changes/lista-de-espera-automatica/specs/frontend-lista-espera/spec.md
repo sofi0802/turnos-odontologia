@@ -84,13 +84,19 @@ Cada fila de `#/lista-espera` SHALL tener "Dar de baja", que pide confirmación 
 - **THEN** no se envía ningún pedido y la fila sigue
 
 ### Requirement: Anotarse desde la reserva
-En `#/reserva`, cuando el día elegido no tiene horarios libres, la página SHALL ofrecer, junto a "No hay horarios libres para ese día…", la acción "Anotarme en la lista de espera". Con sesión `PACIENTE`, la acción abre un diálogo con la prestación y el profesional (o "Sin preferencia") ya elegidos y no editables, y "Desde" y "Hasta" por defecto del día elegido a 14 días después. Valida igual que el diálogo de la recepción y envía `POST /api/v1/paciente/lista-espera`. Ante `201`, el diálogo SHALL mostrar "Listo, te anotamos. Si se libera un horario, te avisamos por mensaje." con un enlace a "Mis turnos". Sin sesión, la acción lleva a Mi cuenta. Ante `YA_EN_LISTA_DE_ESPERA`, SHALL mostrar "Ya estás en la lista de espera para esta prestación." con el enlace a "Mis turnos".
+En `#/reserva`, cuando el día elegido no tiene horarios libres, la página SHALL ofrecer, junto a "No hay horarios libres para ese día…", la acción "Anotarme en la lista de espera". Con sesión `PACIENTE`, la acción abre un diálogo con la prestación y el profesional (o "Sin preferencia") ya elegidos y no editables, y "Desde" y "Hasta" por defecto del día elegido a 14 días después. Valida igual que el diálogo de la recepción y envía `POST /api/v1/paciente/lista-espera`. Ante `201`, el diálogo SHALL mostrar "Listo, te anotamos. Si se libera un horario, te avisamos por mensaje." con un enlace a "Mis turnos". Sin sesión, la acción lleva a Mi cuenta. Ante `YA_EN_LISTA_DE_ESPERA`, SHALL mostrar "Ya estás en la lista de espera para esta prestación." con el enlace a "Mis turnos". Ante `SIN_CONSENTIMIENTO`, el diálogo MUST seguir abierto y mostrar "Para anotarte tenés que aceptar recibir mensajes del consultorio: así te avisamos cuando se libere un horario.", con "Anotarme" habilitado otra vez.
 
 #### Scenario: El paciente se anota desde un día sin horarios
 - **GIVEN** la sesión de "Paciente Uno" en `#/reserva`, con "Limpieza", la Dra. Ana Ejemplo y el jueves 3 de diciembre sin horarios
 - **WHEN** elige "Anotarme en la lista de espera" y confirma con las fechas por defecto
 - **THEN** se envía `POST /api/v1/paciente/lista-espera` con la prestación 1, el profesional 1, desde 2026-12-03 hasta 2026-12-17
 - **AND** se muestra "Listo, te anotamos. Si se libera un horario, te avisamos por mensaje."
+
+#### Scenario: El paciente no dio el consentimiento de comunicaciones
+- **GIVEN** la sesión de "Paciente Tres", sin consentimiento de comunicaciones, en `#/reserva` con un día sin horarios
+- **WHEN** elige "Anotarme en la lista de espera", confirma y la API responde `409` con el código `SIN_CONSENTIMIENTO`
+- **THEN** el diálogo sigue abierto y muestra "Para anotarte tenés que aceptar recibir mensajes del consultorio: así te avisamos cuando se libere un horario."
+- **AND** "Anotarme" vuelve a estar habilitado
 
 #### Scenario: Un día con horarios no ofrece la lista
 - **WHEN** el día elegido tiene horarios libres

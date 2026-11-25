@@ -160,6 +160,23 @@ describe('Anotarse desde la reserva', () => {
     expect(dialogo().querySelector('a[href="#/mis-turnos"]')).not.toBeNull();
   });
 
+  it('El paciente no dio el consentimiento de comunicaciones', async () => {
+    servidor.responder('POST /paciente/lista-espera', () => json(409, { codigo: 'SIN_CONSENTIMIENTO' }));
+    await diaSinHorarios();
+
+    boton(panel(), 'Anotarme en la lista de espera').click();
+    await vi.waitFor(() => expect(boton(dialogo(), 'Anotarme')).toBeDefined());
+    boton(dialogo(), 'Anotarme').click();
+
+    await vi.waitFor(() =>
+      expect(texto(dialogo())).toContain(
+        'Para anotarte tenés que aceptar recibir mensajes del consultorio: así te avisamos cuando se libere un horario.',
+      ),
+    );
+    expect(dialogo().querySelector('h2')?.textContent).toBe('Anotarme en la lista de espera');
+    expect(boton(dialogo(), 'Anotarme').disabled).toBe(false);
+  });
+
   it('Valida el rango como la recepción', async () => {
     await diaSinHorarios();
     boton(panel(), 'Anotarme en la lista de espera').click();
