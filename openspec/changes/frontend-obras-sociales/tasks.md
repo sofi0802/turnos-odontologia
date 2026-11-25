@@ -9,7 +9,7 @@
 ## 0. Aprobación y avisos
 
 - [x] 0.1 Pedir a la líder la revisión del propose y de los mockups, con las decisiones "(a confirmar)" de `design.md` (D2 acceso de la recepción, D3 "Mi cuenta" del paciente, D5 nomenclador en la misma pestaña, D6 sin confirmación al desactivar, D7 cambio de cobertura en dos pasos); registrar su respuesta y `Approval: approved (<fecha>, by <persona>)` en `design.md` y `mockups/README.md`. Verificar que ambos archivos lo digan antes de seguir
-- [ ] 0.2 Avisar a Enzo (dueño de `frontend/`) y a Emanuel (ficha clínica de C-44 en `pages/pacientes.ts` y Configuración de C-34) qué archivos se tocan; verificar que el aviso quede en la descripción del PR
+- [x] 0.2 Avisar a Enzo (dueño de `frontend/`) y a Emanuel (ficha clínica de C-44 en `pages/pacientes.ts` y Configuración de C-34) qué archivos se tocan; verificar que el aviso quede en la descripción del PR
 - [x] 0.3 Si la líder cambia una decisión "(a confirmar)", actualizar specs, design, mockups y capturas con `openspec-update-change` y verificar con `openspec validate frontend-obras-sociales --strict`
 
 ## 1. Mensajes, íconos y modelo
@@ -56,7 +56,7 @@
 
 - [x] 8.1 Correr `npm test`, `npx tsc --noEmit` y `npm run build` en `frontend/` y verificar que todo pase
 - [x] 8.2 Verificación visual contra el backend de desarrollo con C-18: como `admin`, `recepcion`, `ana.ejemplo`, `paciente.uno` y `paciente.dos`, a 390 × 844 y 1440 × 900; comparar cada pantalla con su mockup aprobado, revisar la consola y los pedidos fallidos, guardar las capturas en `mockups/verify/` y anotar en `design.md` `Visual verify:` con las diferencias (blocker / major / minor) y lo no revisado
-- [ ] 8.3 Abrir el PR a `master` con Enzo, Emanuel y Sofia como revisores; verificar que la descripción liste las decisiones confirmadas y los avisos de 0.2
+- [x] 8.3 Abrir el PR a `master` con Enzo, Emanuel y Sofia como revisores; verificar que la descripción liste las decisiones confirmadas y los avisos de 0.2
 
 ## 9. Cierre
 
