@@ -10,7 +10,7 @@
 
 ## 0. Avisos
 
-- [ ] 0.1 Avisar en el PR a Juan Cruz (dueño de `docker-compose.yml`) y a Enzo (dueño de `frontend/`) qué archivos se tocan y por qué (D3, D2). Verificar que el aviso, con su mención, quede en la descripción del PR.
+- [x] 0.1 Avisar en el PR a Juan Cruz (dueño de `docker-compose.yml`) y a Enzo (dueño de `frontend/`) qué archivos se tocan y por qué (D3, D2). Verificar que el aviso, con su mención, quede en la descripción del PR.
 
 ## 1. Imagen del backend
 
