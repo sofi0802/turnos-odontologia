@@ -10,9 +10,9 @@ Acceptance criteria: los escenarios de los deltas `senas`, `frontend-senas`, `co
 
 ## 1. Migración, dominio y configuración (backend)
 
-- [ ] 1.1 `V23__senas.sql` con `sena`, `sena_movimiento` y el cambio de `cobro` (design D8); test de integración de la migración: CHECK, índices únicos y `caja_id` nulo solo con `MERCADO_PAGO`
-- [ ] 1.2 Test primero: `CalculoSena` (particular, con cobertura del 40 %, redondeo, copago cero y sin arancel)
-- [ ] 1.3 Test primero: `ReglaFinal` (online, personal con 24 h o más, personal con menos de 24 h por causa del paciente y del consultorio, ausente)
+- [x] 1.1 `V23__senas.sql` con `sena`, `sena_movimiento` y el cambio de `cobro` (design D8); test de integración de la migración: CHECK, índices únicos y `caja_id` nulo solo con `MERCADO_PAGO`
+- [x] 1.2 Test primero: `CalculoSena` (particular, con cobertura del 40 %, redondeo, copago cero y sin arancel)
+- [x] 1.3 Test primero: `ReglaFinal` (online, personal con 24 h o más, personal con menos de 24 h por causa del paciente y del consultorio, ausente)
 - [ ] 1.4 `ConfiguracionSenas` y `ConfiguracionSenasController` con `@PreAuthorize`; un `@Test` de integración por escenario de "Configurar las señas" y "Permisos de las señas"
 
 ## 2. Pasarela de pagos (backend)
