@@ -60,8 +60,8 @@
 
 ## 9. Cierre
 
-- [ ] 9.1 Después del merge del PR (no antes), marcar `[x]` C-49 en `CHANGES.md` en un PR aparte o en el que indique la líder
-- [ ] 9.2 Antes de archivar, reconciliar "Menú según la sesión" de `frontend-navegacion` (D9): agregar un delta MODIFIED con "Coberturas" y "Mi cuenta" sobre el texto vigente en `openspec/specs` y verificar con `openspec validate frontend-obras-sociales --strict`
+- [x] 9.1 Después del merge del PR (no antes), marcar `[x]` C-49 en `CHANGES.md` en un PR aparte o en el que indique la líder
+- [x] 9.2 Antes de archivar, reconciliar "Menú según la sesión" de `frontend-navegacion` (D9): agregar un delta MODIFIED con "Coberturas" y "Mi cuenta" sobre el texto vigente en `openspec/specs` y verificar con `openspec validate frontend-obras-sociales --strict`
 
 ## Workflow follow-up
 

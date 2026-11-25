@@ -940,7 +940,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `docs/discovery/sources/relevamiento-fuentes.md` §DentalTec
 
 ### [C-49] `frontend-obras-sociales`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-25, SDD, solo frontend; sin migraciones). Propuesta y mockups en el PR #127; apply en el PR #138; archive en el PR #151. Specs: `openspec/specs/frontend-coberturas/` (nuevo) y `frontend-configuracion-consultorio/` ("Obras sociales" entre "Usuarios" y "Señas"), `frontend-cuenta-paciente/` ("Mi cuenta" con "Mi cobertura") y `frontend-navegacion/` ("Coberturas" y "Mi cuenta" en la barra lateral; "Menú según la sesión" reconciliado sobre el texto de C-39, tarea 9.2) actualizados; change archivado en `openspec/changes/archive/2026-11-25-frontend-obras-sociales/`. Verificación visual: passed con diferencias menores. Aviso a C-15: su delta de "Menú según la sesión" se escribe sobre este texto y suma "Lista de espera"
 - **Responsable**: Juan Sebastián (avisa a Enzo, dueño de `frontend/`)
 - **Scope**:
   - C-18 hizo el backend de obras sociales, planes, nomenclador y afiliaciones, pero ninguna pantalla lo usa.
