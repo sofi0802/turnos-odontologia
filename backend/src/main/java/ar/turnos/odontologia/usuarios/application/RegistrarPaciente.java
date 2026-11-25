@@ -26,15 +26,28 @@ public class RegistrarPaciente {
     private final UsuarioRepository usuarios;
     private final PacienteRegistro pacientes;
     private final PasswordEncoder encoder;
+    private final ConsentimientoInicial consentimiento;
 
-    public RegistrarPaciente(UsuarioRepository usuarios, PacienteRegistro pacientes, PasswordEncoder encoder) {
+    public RegistrarPaciente(UsuarioRepository usuarios, PacienteRegistro pacientes, PasswordEncoder encoder,
+                             ConsentimientoInicial consentimiento) {
         this.usuarios = usuarios;
         this.pacientes = pacientes;
         this.encoder = encoder;
+        this.consentimiento = consentimiento;
     }
 
+    /** Registro sin aceptar los mensajes: el paciente queda sin consentimiento (C-17). */
     @Transactional
     public Usuario registrar(Datos datos) {
+        return registrar(datos, false);
+    }
+
+    /**
+     * Registro con la casilla de mensajes (C-17): si la marcó, el consentimiento queda otorgado en la misma
+     * transacción, así un registro que falla no deja historial.
+     */
+    @Transactional
+    public Usuario registrar(Datos datos, boolean aceptaMensajes) {
         if (!PoliticaContrasena.cumple(datos.password())) {
             throw new IllegalArgumentException("La contraseña no cumple la política");
         }
@@ -47,7 +60,11 @@ public class RegistrarPaciente {
         }
         long pacienteId = pacientes.crear(new PerfilPaciente(datos.nombre(), datos.apellido(), datos.dni(),
                 username.valor(), datos.telefono()));
-        return usuarios.guardar(new Usuario(null, username, encoder.encode(datos.password()), Rol.PACIENTE,
+        Usuario cuenta = usuarios.guardar(new Usuario(null, username, encoder.encode(datos.password()), Rol.PACIENTE,
                 null, pacienteId, true));
+        if (aceptaMensajes) {
+            consentimiento.otorgadoAlRegistrarse(pacienteId);
+        }
+        return cuenta;
     }
 }

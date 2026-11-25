@@ -19,6 +19,8 @@ export interface OpcionesBuscador {
   esperaMs?: number;
   /** C-44: avisa el paciente elegido (la página Pacientes abre su ficha). */
   alElegir?(paciente: PacienteEncontrado): void;
+  /** C-17: avisa que se quitó el paciente elegido ("Cambiar paciente"). */
+  alQuitar?(): void;
 }
 
 /** Campo "Paciente": cumple `Campo<HTMLInputElement>` y guarda el id del paciente elegido. */
@@ -330,6 +332,7 @@ export function crearBuscadorPacientes(api: ClienteApi, opciones: OpcionesBuscad
     entrada.value = '';
     mostrarEstado(AYUDA_INICIAL);
     entrada.focus();
+    opciones.alQuitar?.();
   });
 
   return {

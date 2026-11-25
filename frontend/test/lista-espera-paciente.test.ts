@@ -177,6 +177,22 @@ describe('Anotarse desde la reserva', () => {
     expect(boton(dialogo(), 'Anotarme').disabled).toBe(false);
   });
 
+  // C-17: "El aviso al paciente lleva a Mi cuenta" (spec `frontend-consentimiento-comunicaciones`).
+  it('Paciente sin consentimiento en la lista de espera', async () => {
+    servidor.responder('POST /paciente/lista-espera', () => json(409, { codigo: 'SIN_CONSENTIMIENTO' }));
+    await diaSinHorarios();
+    boton(panel(), 'Anotarme en la lista de espera').click();
+    await vi.waitFor(() => expect(boton(dialogo(), 'Anotarme')).toBeDefined());
+
+    boton(dialogo(), 'Anotarme').click();
+
+    await vi.waitFor(() => expect(texto(dialogo())).toContain('Para anotarte tenés que aceptar recibir mensajes'));
+    const enlace = [...dialogo().querySelectorAll<HTMLAnchorElement>('a')].find(
+      (a) => a.textContent === 'Aceptar mensajes en Mi cuenta',
+    );
+    expect(enlace?.getAttribute('href')).toBe('#/mi-cuenta');
+  });
+
   it('Valida el rango como la recepción', async () => {
     await diaSinHorarios();
     boton(panel(), 'Anotarme en la lista de espera').click();

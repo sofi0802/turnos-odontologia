@@ -1,4 +1,6 @@
 import { crearMiCobertura } from '../coberturas/mi-cobertura.ts';
+import { crearMensajesDelConsultorio } from '../consentimiento/mensajes-paciente.ts';
+import { crearTusDatos } from '../paciente/tus-datos.ts';
 import { crearMisPresupuestos } from '../presupuestos/mis-presupuestos.ts';
 import { leerReservaPendiente } from '../paciente/reserva.ts';
 import { ErrorNegocio, ErrorSesion, ErrorValidacion } from '../shared/api/errores.ts';
@@ -18,6 +20,9 @@ import { crearTitulo, type ContextoPagina, type Pagina } from './pagina.ts';
 export const MENSAJE_CREDENCIALES_PACIENTE = 'Email o contraseña incorrectos.';
 export const INDICACION_PERSONAL = '¿Sos del personal del consultorio? Ingresá con tu usuario en este mismo formulario.';
 export const MENSAJE_CUENTA_CREADA = 'Tu cuenta se creó. Ingresá con tu email y tu contraseña.';
+export const TEXTO_CASILLA_MENSAJES =
+  'Acepto recibir mensajes del consultorio sobre mis turnos (fecha, hora y links, sin datos de salud). ' +
+  'Lo podés cambiar después en Mi cuenta.';
 
 type Seccion = 'ingresar' | 'registro';
 
@@ -72,6 +77,15 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   claveRegistro.control.autocomplete = 'new-password';
   const repeticion = campoDeTexto('Repetí la contraseña', 'repeticion', 'password');
   repeticion.control.autocomplete = 'new-password';
+  // C-17: casilla de mensajes, sin marcar por defecto y no obligatoria.
+  const aceptaMensajes = document.createElement('input');
+  aceptaMensajes.type = 'checkbox';
+  aceptaMensajes.name = 'aceptaMensajes';
+  const casillaMensajes = document.createElement('label');
+  casillaMensajes.className = 'casilla casilla-mensajes';
+  const textoCasilla = document.createElement('span');
+  textoCasilla.textContent = TEXTO_CASILLA_MENSAJES;
+  casillaMensajes.append(aceptaMensajes, textoCasilla);
   const errorRegistro = crearAviso('alert');
   const enviarRegistro = crearBoton('Crear cuenta', 'submit');
   enviarRegistro.className = 'btn btn-principal';
@@ -87,6 +101,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
     telefono.contenedor,
     claveRegistro.contenedor,
     repeticion.contenedor,
+    casillaMensajes,
     errorRegistro,
     enviarRegistro,
   );
@@ -214,6 +229,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
       email: correo,
       telefono: tel === '' ? null : tel,
       password: contrasena,
+      aceptaMensajes: aceptaMensajes.checked,
     })
       .then(async () => {
         // El registro no inicia la sesión: se ingresa con lo recién escrito (design D6).
@@ -261,7 +277,10 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   });
 }
 
-/** "Mi cuenta" del paciente con sesión: "Mi cobertura" y, debajo, "Mis presupuestos" (C-50, PA-27). */
+/**
+ * "Mi cuenta" del paciente con sesión: "Tus datos" y "Mensajes del consultorio" (C-17, design D4), "Mi cobertura"
+ * (C-49) y, debajo, "Mis presupuestos" (C-50, PA-27). Cada sección carga lo suyo: un error en una no oculta las demás.
+ */
 function dibujarCuentaConSesion(contenedor: HTMLElement, contexto: ContextoPagina): void {
   const pagina = document.createElement('div');
   pagina.className = 'pagina-paciente';
@@ -276,7 +295,13 @@ function dibujarCuentaConSesion(contenedor: HTMLElement, contexto: ContextoPagin
     },
     vigente: () => contenedor.contains(pagina),
   };
-  pagina.append(crearTitulo('Mi cuenta'), crearMiCobertura(conSesion), crearMisPresupuestos(conSesion));
+  pagina.append(
+    crearTitulo('Mi cuenta'),
+    crearTusDatos(conSesion),
+    crearMensajesDelConsultorio(conSesion),
+    crearMiCobertura(conSesion),
+    crearMisPresupuestos(conSesion),
+  );
   contenedor.replaceChildren(pagina);
 }
 

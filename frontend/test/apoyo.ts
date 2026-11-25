@@ -83,6 +83,14 @@ export class ServidorFalso {
     this.responder('GET /lista-espera', () => json(200, []));
     this.responder('GET /paciente/lista-espera', () => json(200, []));
     this.responder('GET /configuracion/lista-espera', () => json(200, { plazoHoras: 2 }));
+    // C-17: por defecto, "Paciente Uno" sin teléfono y nadie con el consentimiento de comunicaciones.
+    this.responder('GET /paciente/perfil', () =>
+      json(200, { nombre: 'Paciente', apellido: 'Uno', dni: '99000001', email: 'paciente.uno@example.com', telefono: null }),
+    );
+    this.responder('GET /paciente/consentimiento-comunicaciones', () => json(200, { otorgado: false, actualizadoEn: null }));
+    this.responder('GET /pacientes/{id}/consentimiento-comunicaciones', () =>
+      json(200, { otorgado: false, actualizadoEn: null, historial: [] }),
+    );
     const fetchFalso = vi.fn<typeof fetch>(async (entrada, opciones) => {
       const url = new URL(String(entrada));
       const metodo = opciones?.method ?? 'GET';

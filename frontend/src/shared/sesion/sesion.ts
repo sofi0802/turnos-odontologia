@@ -90,6 +90,8 @@ export interface DatosRegistro {
   readonly email: string;
   readonly telefono: string | null;
   readonly password: string;
+  /** C-17: la casilla "Acepto recibir mensajes del consultorio…". */
+  readonly aceptaMensajes: boolean;
 }
 
 /** Crea la cuenta del paciente; el registro no inicia la sesión (spec "Sesión iniciada después del registro"). */

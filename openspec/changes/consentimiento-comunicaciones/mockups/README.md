@@ -3,7 +3,7 @@
 - Design system: Revision 5 (`design-system/tokens.css`, `brand.js` y `assets/logo.svg`), más los estilos reales de `frontend/src/styles.css`.
 - Estilos nuevos propuestos: `consentimiento.css` (lo marcado "Solo mockups" no pasa al módulo).
 - Datos 100 % ficticios: "Paciente Uno" (DNI 99000001), "Paciente Dos" (DNI 99000002) y `recepcion`.
-- Approval: pending
+- Approval: approved (2026-11-25, by Sofia Indovino, PR #142)
 
 ## Pantallas
 

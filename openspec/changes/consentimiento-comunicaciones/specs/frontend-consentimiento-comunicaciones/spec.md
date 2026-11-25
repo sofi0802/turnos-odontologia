@@ -9,12 +9,12 @@ Definir cómo el paciente y la recepción ven, otorgan y revocan el consentimien
 ### Requirement: Sección de mensajes en la cuenta del paciente
 La página "Mi cuenta" del paciente SHALL tener la sección "Mensajes del consultorio", que explica que los mensajes solo traen fecha, hora, consultorio y links para confirmar, cancelar o reprogramar, sin datos de salud. MUST mostrar el estado vigente ("Aceptás recibir mensajes" o "No recibís mensajes") y, si hubo algún cambio, su fecha.
 
-#### Scenario: Paciente sin consentimiento
+#### Scenario: Mi cuenta sin consentimiento
 - **GIVEN** una sesión de `paciente.uno@example.com` sin consentimiento
 - **WHEN** abre `#/mi-cuenta`
 - **THEN** la sección "Mensajes del consultorio" dice "No recibís mensajes" y ofrece "Aceptar mensajes"
 
-#### Scenario: Paciente con consentimiento
+#### Scenario: Mi cuenta con consentimiento
 - **GIVEN** una sesión de `paciente.uno@example.com` con el consentimiento otorgado el 2026-12-01
 - **WHEN** abre `#/mi-cuenta`
 - **THEN** la sección dice "Aceptás recibir mensajes" y "Desde el 01/12/2026"
