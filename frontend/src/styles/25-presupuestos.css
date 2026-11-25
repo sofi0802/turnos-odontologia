@@ -1,0 +1,365 @@
+/* C-50 (design D9): precios en "Prestaciones", cobertura de un plan, sección "Presupuestos", armado y "Mis
+   presupuestos". Sale de openspec/changes/frontend-presupuestos/mockups/presupuestos.css sin las reglas que eran solo de
+   los mockups. Solo usa tokens de la Revision 5 del design system. */
+
+
+/* ---- Precios en "Prestaciones" ---- */
+.pre-precio {
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-texto);
+}
+
+.pre-sin-precio {
+  color: var(--ds-texto-suave);
+  font-style: italic;
+}
+
+/* ---- Diálogo "Cobertura" de un plan ---- */
+.pre-cob-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-lg);
+}
+
+.pre-cob-fila {
+  display: grid;
+  grid-template-columns: 1fr 7rem;
+  gap: var(--ds-espacio-1) var(--ds-espacio-2);
+  align-items: center;
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+}
+
+.pre-cob-fila + .pre-cob-fila {
+  border-top: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.pre-cob-fila .campo {
+  margin: 0;
+}
+
+.pre-cob-codigo {
+  margin: 0;
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.pre-cob-codigo .cob-codigo {
+  margin-right: var(--ds-espacio-0);
+}
+
+.pre-cob-nota {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.pre-porcentaje {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-0);
+}
+
+.pre-porcentaje .control {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Sección "Presupuestos" ---- */
+.pre-seccion {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.pre-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.pre-presupuesto {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  padding: var(--ds-espacio-2);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-lg);
+}
+
+.pre-presupuesto-cerrado {
+  background: var(--ds-superficie-2);
+}
+
+.pre-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--ds-espacio-0) var(--ds-espacio-1);
+  margin: 0;
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.pre-meta {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.etiqueta-pendiente {
+  color: var(--ds-info);
+  background: var(--ds-info-fondo);
+}
+
+.etiqueta-vencido {
+  color: var(--ds-alerta);
+  background: var(--ds-alerta-fondo);
+}
+
+.etiqueta-aceptado {
+  color: var(--ds-ok);
+  background: var(--ds-ok-fondo);
+}
+
+.etiqueta-rechazado {
+  color: var(--ds-texto-suave);
+  background: var(--ds-superficie-2);
+}
+
+/* Totales: tres cifras con su rótulo, siempre escritas. */
+.pre-totales {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--ds-espacio-1);
+  margin: 0;
+}
+
+.pre-totales div {
+  display: grid;
+  gap: var(--ds-espacio-0);
+}
+
+.pre-totales dt {
+  font-size: var(--ds-texto-xs);
+  font-weight: var(--ds-peso-fuerte);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ds-texto-suave);
+}
+
+.pre-totales dd {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: var(--ds-peso-medio);
+  overflow-wrap: anywhere;
+}
+
+.pre-totales .pre-copago dd {
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-acento-700);
+}
+
+.pre-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1);
+}
+
+.pre-acciones .btn {
+  flex: 1 1 auto;
+  justify-content: center;
+}
+
+/* Detalle: tarjetas en el celular, filas desde 768 px. */
+.pre-detalle {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.pre-renglon {
+  display: grid;
+  gap: var(--ds-espacio-0);
+  padding: var(--ds-espacio-1) 0;
+}
+
+.pre-renglon + .pre-renglon {
+  border-top: var(--ds-borde-ancho) dashed var(--ds-borde);
+}
+
+.pre-renglon-titulo {
+  margin: 0;
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.pre-renglon-datos {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.pre-renglon .pre-totales dd {
+  font-size: var(--ds-texto-sm);
+}
+
+@media (min-width: 48rem) {
+  .pre-presupuesto {
+    grid-template-columns: 1fr auto;
+    align-items: start;
+  }
+
+  .pre-presupuesto > .pre-totales,
+  .pre-presupuesto > .pre-detalle,
+  .pre-presupuesto > .aviso {
+    grid-column: 1 / -1;
+  }
+
+  .pre-acciones {
+    justify-content: flex-end;
+  }
+
+  .pre-acciones .btn {
+    flex: 0 0 auto;
+  }
+
+  .pre-totales dd {
+    text-align: right;
+  }
+
+  .pre-totales dt {
+    text-align: right;
+  }
+
+  .pre-renglon {
+    grid-template-columns: 1fr minmax(20rem, 26rem);
+    align-items: center;
+  }
+}
+
+/* ---- Armado ("Nuevo presupuesto") ---- */
+.dialogo.pre-dialogo {
+  max-width: 56rem;
+}
+
+.pre-armado {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.pre-cobertura-usada {
+  margin: 0;
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  font-size: var(--ds-texto-sm);
+  background: var(--ds-acento-50);
+  border-radius: var(--ds-radio);
+}
+
+.pre-items {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.pre-item {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  padding: var(--ds-espacio-2);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-lg);
+  background: var(--ds-superficie);
+}
+
+.pre-item-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1);
+}
+
+.pre-item-numero {
+  margin: 0;
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.pre-origen {
+  font-size: var(--ds-texto-xs);
+}
+
+.pre-item-campos {
+  display: grid;
+  gap: var(--ds-espacio-1) var(--ds-espacio-2);
+}
+
+.pre-item-campos .campo {
+  margin: 0;
+}
+
+.pre-estimado {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--ds-texto-suave);
+}
+
+.pre-estimado strong {
+  color: var(--ds-texto);
+}
+
+.pre-pie {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  padding: var(--ds-espacio-2);
+  background: var(--ds-superficie-2);
+  border-radius: var(--ds-radio-lg);
+}
+
+.pre-pie .ayuda {
+  margin: 0;
+}
+
+@media (min-width: 40rem) {
+  .pre-item-campos {
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+  }
+
+  .pre-item-campos .pre-campo-ancho {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 47.99rem) {
+  .dialogo.pre-dialogo {
+    width: 100%;
+    max-width: none;
+    max-height: 100dvh;
+    margin: 0;
+    border-radius: 0;
+  }
+}
+
+/* ---- Mis presupuestos ---- */
+.mis-presupuestos {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.mis-presupuestos h2 {
+  margin: 0;
+}
+
+/* Avisos de los precios, arriba de la lista de "Prestaciones". */
+.pre-precios-avisos {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  margin-bottom: var(--ds-espacio-1);
+}
+
+.pre-precios-avisos:empty {
+  display: none;
+}

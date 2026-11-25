@@ -1,5 +1,6 @@
 import { crearBuscadorPacientes, type PacienteEncontrado } from '../agenda/buscador-pacientes.ts';
 import { crearSeccionCobertura, type SeccionCobertura } from '../coberturas/seccion.ts';
+import { crearSeccionPresupuestos, type SeccionPresupuestos } from '../presupuestos/seccion.ts';
 import { ErrorSesion } from '../shared/api/errores.ts';
 import { crearBoton } from '../shared/ui/campos.ts';
 import { crearEstadoVacio } from '../shared/ui/estado-vacio.ts';
@@ -31,6 +32,14 @@ function dibujarCoberturas(contenedor: HTMLElement, contexto: ContextoPagina): v
   contenedor.replaceChildren(pagina);
 
   let seccion: SeccionCobertura | null = null;
+  let presupuestos: SeccionPresupuestos | null = null;
+
+  function soltar(): void {
+    seccion?.destruir();
+    seccion = null;
+    presupuestos?.destruir();
+    presupuestos = null;
+  }
 
   function sesionVencida(causa: unknown): boolean {
     if (causa instanceof ErrorSesion) {
@@ -41,8 +50,7 @@ function dibujarCoberturas(contenedor: HTMLElement, contexto: ContextoPagina): v
   }
 
   function mostrarBuscador(): void {
-    seccion?.destruir();
-    seccion = null;
+    soltar();
     const panel = document.createElement('section');
     panel.className = 'panel ficha-seccion';
     const titulo = document.createElement('h2');
@@ -59,7 +67,7 @@ function dibujarCoberturas(contenedor: HTMLElement, contexto: ContextoPagina): v
   }
 
   function mostrarPaciente(paciente: PacienteEncontrado): void {
-    seccion?.destruir();
+    soltar();
     const nombreCompleto = `${paciente.nombre} ${paciente.apellido}`.trim();
 
     const cabecera = document.createElement('section');
@@ -88,7 +96,16 @@ function dibujarCoberturas(contenedor: HTMLElement, contexto: ContextoPagina): v
       mensajeDeError: (causa) => (sesionVencida(causa) ? '' : mensajeDeError(causa)),
       vigente,
     });
-    cuerpo.replaceChildren(cabecera, seccion.contenedor);
+    // C-50 (design D3): los presupuestos en solo lectura; la recepción, sin pieza ni cara.
+    presupuestos = crearSeccionPresupuestos({
+      pacienteId: paciente.id,
+      nombrePaciente: nombreCompleto,
+      modo: contexto.sesion.rol === 'RECEPCIONISTA' ? 'recepcion' : 'lectura',
+      api: contexto.api,
+      mensajeDeError: (causa) => (sesionVencida(causa) ? '' : mensajeDeError(causa)),
+      vigente,
+    });
+    cuerpo.replaceChildren(cabecera, seccion.contenedor, presupuestos.contenedor);
   }
 
   mostrarBuscador();

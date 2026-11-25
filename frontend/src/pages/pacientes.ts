@@ -1,5 +1,6 @@
 import { crearBuscadorPacientes, type PacienteEncontrado } from '../agenda/buscador-pacientes.ts';
 import { crearSeccionCobertura, type SeccionCobertura } from '../coberturas/seccion.ts';
+import { crearSeccionPresupuestos, type SeccionPresupuestos } from '../presupuestos/seccion.ts';
 import { crearAusencias, marcarAusenteDisponible } from '../ficha/ausencias.ts';
 import {
   guardarFicha,
@@ -68,9 +69,14 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
   // C-49: el administrador carga la cobertura aunque la ficha clínica sea de solo lectura para él.
   const editaCobertura = contexto.sesion.rol === 'ADMIN' || contexto.sesion.rol === 'RECEPCIONISTA';
 
+  let presupuestos: SeccionPresupuestos | null = null;
+
   function soltarCobertura(): void {
     cobertura?.destruir();
     cobertura = null;
+    // C-50: los presupuestos se sueltan junto con la cobertura.
+    presupuestos?.destruir();
+    presupuestos = null;
   }
 
   function sesionVencida(causa: unknown): boolean {
@@ -281,6 +287,15 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
           mensajeDeError: (causa) => (sesionVencida(causa) ? '' : mensajeDeError(causa)),
           vigente,
         });
+        // C-50: los presupuestos van debajo de la cobertura; el odontólogo los arma y el admin solo los lee.
+        presupuestos = crearSeccionPresupuestos({
+          pacienteId,
+          nombrePaciente: `${seleccion.paciente.nombre} ${seleccion.paciente.apellido}`.trim(),
+          modo: editable ? 'odontologo' : 'lectura',
+          api: contexto.api,
+          mensajeDeError: (causa) => (sesionVencida(causa) ? '' : mensajeDeError(causa)),
+          vigente,
+        });
         const columnas = document.createElement('div');
         columnas.className = 'ficha-columnas';
         const derecha = document.createElement('div');
@@ -290,6 +305,7 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
         cuerpo.replaceChildren(
           cabeceraDelPaciente(seleccion),
           cobertura.contenedor,
+          presupuestos.contenedor,
           odontograma.elemento,
           periodontograma.contenedor,
           imagenes.contenedor,

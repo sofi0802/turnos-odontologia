@@ -6,14 +6,14 @@ C-19 dejó en el backend los aranceles, la cobertura por plan y los presupuestos
 
 ## What Changes
 
-- **Precios particulares** (solo `ADMIN`): en Configuración → "Prestaciones", cada prestación muestra su precio o "Sin precio" y suma "Cambiar precio" (`PUT /api/v1/aranceles/{prestacionId}`). No hay pestaña nueva. *(a confirmar: ver design D2)*
+- **Precios particulares** (solo `ADMIN`): en Configuración → "Prestaciones", cada prestación muestra su precio o "Sin precio" y suma "Cambiar precio" (`PUT /api/v1/aranceles/{prestacionId}`). No hay pestaña nueva. *(confirmada por la líder, 2026-11-25: ver design D2)*
 - **Cobertura por plan** (solo `ADMIN`): en Configuración → "Obras sociales" (C-49), cada plan suma "Cobertura", un diálogo con los códigos activos del nomenclador y el porcentaje que cubre cada uno (`GET` y `PUT .../planes/{planId}/coberturas/{nomencladorId}`). Dejar de cubrir un código es cargar 0 %.
 - **Sección "Presupuestos" en la ficha** (`#/pacientes`), debajo de "Cobertura":
-  - el odontólogo arma un presupuesto con las piezas sugeridas del odontograma (`/sugerencias`), elige la prestación, el código si hace falta, la pieza, la cara y la cantidad, y ve un **estimado** de importe, cobertura y copago antes de emitir *(a confirmar: ver design D4)*;
+  - el odontólogo arma un presupuesto con las piezas sugeridas del odontograma (`/sugerencias`), elige la prestación, el código si hace falta, la pieza, la cara y la cantidad, y ve un **estimado** de importe, cobertura y copago antes de emitir *(confirmada por la líder, 2026-11-25: ver design D4)*;
   - lista los presupuestos del paciente con estado ("Pendiente", "Vencido", "Aceptado", "Rechazado"), cobertura usada o "Particular", ítems y totales;
   - el odontólogo acepta o rechaza un pendiente, con confirmación; uno vencido solo se puede rechazar;
   - el `ADMIN` solo lee.
-- **Presupuestos en la página "Coberturas"** (C-49): la recepción y el administrador ven los presupuestos del paciente elegido en solo lectura. La API no le manda pieza ni cara a la recepción (PA-24). *(a confirmar: ver design D3)*
+- **Presupuestos en la página "Coberturas"** (C-49): la recepción y el administrador ven los presupuestos del paciente elegido en solo lectura. La API no le manda pieza ni cara a la recepción (PA-24). *(confirmada por la líder, 2026-11-25: ver design D3)*
 - **"Mis presupuestos" del paciente** en "Mi cuenta", debajo de "Mi cobertura", en solo lectura (PA-27), sobre `GET /api/v1/paciente/presupuestos`.
 - Mensajes para `ARANCEL_INEXISTENTE`, `PRESUPUESTO_VENCIDO`, `PRESUPUESTO_CERRADO`, `CODIGO_NOMENCLADOR_REQUERIDO` y `CODIGO_NOMENCLADOR_INVALIDO`. `PRESTACION_INACTIVA` y `PRESTACION_INEXISTENTE` ya tienen el suyo.
 - Ninguna pieza, cara, importe ni dato de cobertura en la dirección, en `localStorage`, en `sessionStorage` ni en la consola (reglas duras 1 y 6, RN-PR-07).
