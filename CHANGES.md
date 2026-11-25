@@ -54,7 +54,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `backend/.../agenda/` lista de espera, `configuracion/` política de cancelación | Sofia (C-16 avisa a Emanuel) | V9, V10 |
 | `backend/.../notificaciones/` consentimiento | Juan Cruz | V11 |
 | `backend/.../coberturas/` (obras sociales, presupuestos, liquidaciones) | Juan Sebastián | V12, V13, V14 |
-| `backend/.../caja/`, `pagos/`, `facturacion/`, `reportes/` | Enzo | V15 |
+| `backend/.../caja/`, `pagos/`, `facturacion/`, `reportes/` | Enzo | V15, V23 (señas de C-23, propuesta a confirmar por la líder) |
 | `backend/.../clinica/` periodontograma, imágenes, consentimientos, FHIR | Emanuel | V16, V17, V18 |
 | `frontend/` periodontograma en la ficha clínica (C-46) | Sofia (avisa a Enzo, dueño de `frontend/`) | — |
 | `frontend/` imágenes y radiografías en la ficha clínica (C-47) | Emanuel (avisa a Enzo, dueño de `frontend/`) | — |
@@ -993,14 +993,17 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/03_actores_y_roles.md` §RBAC
 
 ### [C-23] `senas-mercado-pago`
-- **Estado**: `[ ]` pendiente
-- **Responsable**: Enzo
+- **Estado**: `[ ]` KB propuesta el 2026-11-24 (dominio Señas: RN-SE-01 a RN-SE-12, US-202 y DD-21; PA-53 a PA-61, PA-63 y PA-65 respondidas por Enzo: solo la reserva online, un porcentaje del copago configurable por el `ADMIN` y desactivado al inicio, el turno ocupa el hueco con vencimiento, reintegro por Mercado Pago al cancelar a tiempo, retención si no viene o cancela tarde, la seña pasa al turno reprogramado y se imputa al cargo fuera de la caja). Pendientes para la líder: PA-62 (estado del turno con la seña pagada) y **PA-64 (excepción de CSRF solo para la notificación de Mercado Pago, regla dura 8)**. En revisión con la líder; después va el propose. Governance CRÍTICO: no se escribe código sin aprobación explícita
+- **Responsable**: Enzo (avisa a Juan Sebastián por `reserva/`, a Sofia por la cancelación y la reprogramación de `agenda/` y a Juan Cruz por los avisos de `notificaciones/`)
 - **Scope**:
-  - Puerto `PasarelaPago` con adaptador Mercado Pago (modo sandbox, **sin credenciales reales en el repo**): link de pago para la seña al reservar y webhook de confirmación con validación de firma.
+  - Puerto `PasarelaPago` con adaptador Mercado Pago (modo sandbox, **sin credenciales reales en el repo**) y una pasarela simulada: link de pago para la seña al reservar y webhook de confirmación con validación de firma.
+  - Seña con vencimiento, reintegros, traslado al reprogramar e imputación al cargo de C-22 (RN-SE-01 a RN-SE-12).
   - Tests: seña pagada confirma el turno; seña vencida lo libera; webhook con firma inválida rechazado.
+- **Migración**: V23 (propuesta en este PR, a confirmar por la líder): `sena`, `sena_movimiento` y el cambio de `cobro` (`MERCADO_PAGO` y `caja_id` nullable), sin editar V15
 - **Dependencias**: `C-10, C-22`
 - **Governance**: CRITICO (pagos)
 - **Leer antes**:
+  - `knowledge-base/05_reglas_de_negocio.md` §Dominio: Señas, DD-21 en `09_decisiones_y_supuestos.md`
   - `knowledge-base/02_descripcion_general.md` §Integraciones externas
   - `knowledge-base/08_arquitectura_propuesta.md` §Seguridad, §Variables de entorno
 

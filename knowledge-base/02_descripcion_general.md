@@ -43,7 +43,7 @@ Monolito modular con API REST. El dominio de agenda queda aislado de la infraest
 |---|---|---|---|
 | WhatsApp Business API (Cloud API de Meta) | Recordatorio y confirmación de turno | REST y webhook | Sí, **detrás de un puerto y simulado** en el TP. Costo de referencia: USD 0,026 por mensaje (dato publicado por DentalSoft) |
 | Email (SMTP) | Canal alternativo si el paciente no tiene WhatsApp (RN-NO-02) | SMTP | Sí, simulado (log o servidor SMTP de desarrollo) |
-| Mercado Pago | Señas | REST | No (posterior) |
+| Mercado Pago | Señas de la reserva online (C-23, RN-SE) | REST y webhook | No (posterior): **detrás de un puerto**, con una pasarela simulada y el sandbox de Mercado Pago, sin credenciales reales |
 | ARCA (ex AFIP) | Facturación electrónica | SOAP | No (posterior) |
 | Webservices de obras sociales | Validación de afiliado y prestación | SOAP o REST | No (posterior) |
 | Google Calendar | Sincronización de agenda | REST | No (posterior) |
