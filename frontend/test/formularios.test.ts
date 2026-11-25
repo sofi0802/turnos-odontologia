@@ -335,6 +335,44 @@ describe('Cancelar un turno', () => {
     expect(errorDeCampo(dialogo(), 'Número de reserva')).toBe('Ingresá el número de reserva.');
     expect(servidor.a('POST', '/turnos/7/cancelar')).toHaveLength(0);
   });
+  // C-23: la causa de la cancelación (spec frontend-senas).
+  it('Cancelar con la causa', async () => {
+    servidor.responder('POST /turnos/{id}/cancelar', () => json(200, { ...turno(), estado: 'CANCELADO' }));
+    await abrirCancelacion();
+    expect(texto(dialogo())).toContain('Obligatoria si el paciente pagó una seña.');
+
+    dialogo().querySelector<HTMLInputElement>('input[name="causa"][value="CONSULTORIO"]')?.click();
+    boton(dialogo(), 'Confirmar cancelación').click();
+
+    await vi.waitFor(() => expect(texto(raiz())).toContain('Turno cancelado.'));
+    expect(servidor.ultimo('POST', '/turnos/7/cancelar').cuerpo).toEqual({
+      dni: '99000001',
+      numeroReserva: 'R-0001',
+      causa: 'CONSULTORIO',
+    });
+  });
+
+  it('Falta la causa de un turno con seña', async () => {
+    servidor.responder('POST /turnos/{id}/cancelar', () =>
+      json(422, {
+        status: 422,
+        codigo: 'DATOS_INVALIDOS',
+        detail: 'Hay datos inválidos en el pedido',
+        errores: [{ campo: 'causa', mensaje: 'La causa es obligatoria: el paciente pagó una seña.' }],
+      }),
+    );
+    await abrirCancelacion();
+
+    boton(dialogo(), 'Confirmar cancelación').click();
+
+    await vi.waitFor(() =>
+      expect(dialogo().querySelector('.campo-causa .campo-error')?.textContent).toBe(
+        'La causa es obligatoria: el paciente pagó una seña.',
+      ),
+    );
+    expect(dialogo().querySelector('.campo-causa')?.getAttribute('aria-invalid')).toBe('true');
+    expect(hayDialogo()).toBe(true);
+  });
 });
 
 describe('Reprogramar un turno', () => {

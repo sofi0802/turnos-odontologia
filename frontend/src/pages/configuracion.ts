@@ -1,3 +1,4 @@
+import { montarSenas } from '../configuracion/senas.ts';
 import { montarAusencias } from '../configuracion/ausencias.ts';
 import { montarBloqueos } from '../configuracion/bloqueos.ts';
 import { montarPrestaciones, montarProfesionales, montarSillones } from '../configuracion/catalogo.ts';
@@ -40,6 +41,10 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   // Las cuentas del personal son solo del administrador (C-41).
   if (permisosDelRol.gestionaUsuarios) {
     definiciones.push(['Usuarios', montarUsuarios]);
+  }
+  // Las señas de la reserva online las configura solo el administrador (C-23).
+  if (permisosDelRol.configuraSenas) {
+    definiciones.push(['Señas', montarSenas]);
   }
   const pestanas: Pestana[] = definiciones.map(([titulo, montar]) => ({
     titulo,

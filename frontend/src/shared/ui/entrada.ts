@@ -3,12 +3,21 @@
  * hash (design D9 de C-12), antes de crear el router. No suma entradas al historial.
  */
 let tokenConfirmacion: string | null = null;
+/** C-23: la aplicación se abrió al volver de Mercado Pago (`#/mis-turnos?pago=…`). */
+let vueltaDePago = false;
 
 const LINK_MIS_TURNOS = /^(.*)\/mis-turnos\/(cancelar|reprogramar)\/?$/;
 const LINK_CONFIRMAR = /^(.*)\/confirmar\/([^/]+)\/?$/;
+const VUELTA_DE_PAGO = /^#\/mis-turnos\?pago=/;
 
 export function traducirEntrada(ubicacion: Location = window.location): void {
   const camino = ubicacion.pathname;
+  if (VUELTA_DE_PAGO.test(ubicacion.hash)) {
+    // El resultado de la vuelta no se usa: la seña se da por pagada solo con la notificación verificada (RN-SE-05).
+    vueltaDePago = true;
+    history.replaceState(history.state, '', `${camino}#/mis-turnos`);
+    return;
+  }
   const misTurnos = LINK_MIS_TURNOS.exec(camino);
   if (misTurnos !== null) {
     history.replaceState(history.state, '', `${misTurnos[1] ?? ''}/#/mis-turnos`);
@@ -25,6 +34,13 @@ export function traducirEntrada(ubicacion: Location = window.location): void {
 /** Token del link de confirmación que abrió la aplicación, si lo hubo. */
 export function tokenDeConfirmacion(): string | null {
   return tokenConfirmacion;
+}
+
+/** C-23: si se volvió de Mercado Pago; la primera lectura lo consume. */
+export function tomarVueltaDePago(): boolean {
+  const volvio = vueltaDePago;
+  vueltaDePago = false;
+  return volvio;
 }
 
 /** Para los tests: olvida el token guardado. */

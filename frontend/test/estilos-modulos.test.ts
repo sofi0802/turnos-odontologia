@@ -34,6 +34,8 @@ const REGLAS_POR_MODULO: Readonly<Record<string, string>> = {
   '21-imagenes.css': '.img-fila-anulada {',
   // C-22: caja y cobros.
   '22-caja.css': '.caja-grilla {',
+  // C-23: señas.
+  '23-senas.css': '.sena-linea {',
 };
 
 function importaciones(): string[] {

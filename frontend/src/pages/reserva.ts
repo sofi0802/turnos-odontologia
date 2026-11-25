@@ -16,6 +16,7 @@ import {
 import { ErrorNegocio, ErrorSesion } from '../shared/api/errores.ts';
 import { aIsoConZona, fechaDeInstante, fechaLarga, formatearHora, hoy, type Fecha } from '../shared/fecha/zona.ts';
 import { esPaciente, esPersonal } from '../shared/sesion/sesion.ts';
+import { crearBloqueReserva } from '../paciente/sena.ts';
 import { crearAviso, crearBoton, crearCampo, crearEntrada } from '../shared/ui/campos.ts';
 import { usarSelectorFecha } from '../shared/ui/selector-fecha.ts';
 import { mensajeDeError } from '../shared/ui/mensajes.ts';
@@ -524,6 +525,14 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
         ['Profesional', turno.profesional.nombre],
       ]),
     );
+    // C-23: la seña pendiente, con su importe, su vencimiento y "Pagar seña" (spec frontend-senas).
+    const errorSena = crearAviso('alert');
+    const sena = crearBloqueReserva(turno.sena ?? null, turno.numeroReserva, contexto.api, (mensaje) => {
+      errorSena.textContent = mensaje;
+    });
+    if (sena !== null) {
+      caja.append(sena, errorSena);
+    }
     const otro = boton('Reservar otro turno');
     otro.addEventListener('click', () => {
       eleccion.prestacionId = null;

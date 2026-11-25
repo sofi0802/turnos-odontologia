@@ -27,6 +27,8 @@ export interface Permisos {
   readonly profesionalFijoId: number | null;
   /** Ver y administrar las cuentas del personal (pestaña Usuarios y "Dar acceso"): solo `ADMIN` (C-41). */
   readonly gestionaUsuarios: boolean;
+  /** Configurar las señas de la reserva online: solo `ADMIN` (C-23, RN-SE-01). */
+  readonly configuraSenas: boolean;
 }
 
 const NINGUNO: Permisos = {
@@ -41,6 +43,7 @@ const NINGUNO: Permisos = {
   profesionalFijo: false,
   profesionalFijoId: null,
   gestionaUsuarios: false,
+  configuraSenas: false,
 };
 
 export function permisos(sesion: Sesion): Permisos {
@@ -58,6 +61,7 @@ export function permisos(sesion: Sesion): Permisos {
         profesionalFijo: false,
         profesionalFijoId: null,
         gestionaUsuarios: true,
+        configuraSenas: true,
       };
     case 'RECEPCIONISTA':
       return { ...NINGUNO, gestionaAusencias: true, reasigna: true, veBloqueos: true, veTodos: true };

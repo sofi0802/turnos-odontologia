@@ -412,3 +412,94 @@ describe('Entrada desde los links de los avisos', () => {
     expect(history.length).toBe(entradasPrevias);
   });
 });
+
+// ---------- C-23: la seña en "Mis turnos" (spec frontend-senas) ----------
+
+const SENA_PENDIENTE = {
+  estado: 'PENDIENTE',
+  importe: 4500,
+  venceEn: '2026-12-01T10:30:00-03:00',
+  linkPago: 'https://mp.test/pagar/1',
+};
+
+function enlacePagar(elemento: HTMLElement): HTMLAnchorElement | undefined {
+  return [...elemento.querySelectorAll('a')].find((a) => a.textContent === 'Pagar seña');
+}
+
+describe('Seña en Mis turnos', () => {
+  it('Seña pendiente en mis turnos', async () => {
+    await abrirMisTurnos([turnoPaciente({ sena: SENA_PENDIENTE })]);
+
+    expect(texto(tarjeta('R-0002'))).toContain('Seña pendiente: $ 4.500,00. Vence a las 10:30.');
+    expect(enlacePagar(tarjeta('R-0002'))?.getAttribute('href')).toBe('https://mp.test/pagar/1');
+  });
+
+  it('Seña pagada en mis turnos', async () => {
+    await abrirMisTurnos([
+      turnoPaciente({ sena: { estado: 'PAGADA', importe: 4500, venceEn: '2026-12-01T10:30:00-03:00', linkPago: null } }),
+    ]);
+
+    expect(texto(tarjeta('R-0002'))).toContain('Seña pagada');
+    expect(enlacePagar(tarjeta('R-0002'))).toBeUndefined();
+    expect(botones(tarjeta('R-0002'))).not.toContain('Pagar seña');
+  });
+
+  it('Seña devuelta en mis turnos', async () => {
+    await abrirMisTurnos([
+      turnoPaciente({
+        estado: 'CANCELADO',
+        modificableOnline: false,
+        sena: { estado: 'DEVUELTA', importe: 4500, venceEn: '2026-12-01T10:30:00-03:00', linkPago: null },
+      }),
+    ]);
+
+    expect(texto(tarjeta('R-0002'))).toContain('Seña devuelta');
+  });
+
+  it('los estados vencida y retenida se dicen con texto', async () => {
+    await abrirMisTurnos([
+      turnoPaciente({
+        numeroReserva: 'R-0003',
+        estado: 'CANCELADO',
+        modificableOnline: false,
+        sena: { estado: 'VENCIDA', importe: 4500, venceEn: '2026-12-01T10:30:00-03:00', linkPago: null },
+      }),
+      turnoPaciente({
+        numeroReserva: 'R-0004',
+        estado: 'AUSENTE',
+        modificableOnline: false,
+        sena: { estado: 'RETENIDA', importe: 4500, venceEn: '2026-12-01T10:30:00-03:00', linkPago: null },
+      }),
+    ]);
+
+    expect(texto(tarjeta('R-0003'))).toContain('Seña vencida: el turno se canceló');
+    expect(texto(tarjeta('R-0004'))).toContain('Seña retenida por el consultorio');
+  });
+
+  it('una seña pendiente sin link pide uno nuevo al pagar', async () => {
+    servidor.responder('POST /paciente/reservas/R-0002/sena/link', () =>
+      json(200, { linkPago: 'https://mp.test/pagar/nuevo' }),
+    );
+    const abrir = vi.spyOn(window, 'open').mockReturnValue(null);
+    await abrirMisTurnos([turnoPaciente({ sena: { ...SENA_PENDIENTE, linkPago: null } })]);
+
+    boton(tarjeta('R-0002'), 'Pagar seña').click();
+
+    await vi.waitFor(() => expect(abrir).toHaveBeenCalledWith('https://mp.test/pagar/nuevo', '_self'));
+    expect(servidor.a('POST', '/paciente/reservas/R-0002/sena/link')).toHaveLength(1);
+    abrir.mockRestore();
+  });
+});
+
+describe('Vuelta desde Mercado Pago', () => {
+  it('Vuelta antes de la notificación', async () => {
+    servidor.responder('GET /paciente/turnos', () => json(200, [turnoPaciente({ sena: SENA_PENDIENTE })]));
+    abrirEn('/#/mis-turnos?pago=aprobado');
+    await vi.waitFor(() => expect(titulo()).toBe('Mis turnos'));
+    await vi.waitFor(() => expect(raiz.querySelector('.turno-paciente')).not.toBeNull());
+
+    expect(avisos()).toContain('Estamos confirmando tu pago. Puede tardar unos minutos.');
+    expect(texto(tarjeta('R-0002'))).toContain('Seña pendiente');
+    expect(window.location.hash).toBe('#/mis-turnos');
+  });
+});

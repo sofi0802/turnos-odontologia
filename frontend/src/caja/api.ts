@@ -2,14 +2,21 @@ import type { ClienteApi } from '../shared/api/cliente.ts';
 
 /** Respuestas de la API de la caja (design D9 de C-22), leídas sin `any`. */
 
-export type MedioPago = 'EFECTIVO' | 'DEBITO' | 'CREDITO' | 'TRANSFERENCIA';
+/** `MERCADO_PAGO` es la seña imputada al cargo (C-23): se lee en la cuenta corriente, pero no se cobra en la caja. */
+export type MedioPago = 'EFECTIVO' | 'DEBITO' | 'CREDITO' | 'TRANSFERENCIA' | 'MERCADO_PAGO';
 
-export const MEDIOS: readonly { readonly valor: MedioPago; readonly texto: string }[] = [
+/** Los medios que se cobran en la caja y se suman en sus totales. */
+export type MedioDeCaja = Exclude<MedioPago, 'MERCADO_PAGO'>;
+
+export const MEDIOS: readonly { readonly valor: MedioDeCaja; readonly texto: string }[] = [
   { valor: 'EFECTIVO', texto: 'Efectivo' },
   { valor: 'DEBITO', texto: 'Débito' },
   { valor: 'CREDITO', texto: 'Crédito' },
   { valor: 'TRANSFERENCIA', texto: 'Transferencia' },
 ];
+
+/** Todos los medios que puede traer la API, también el de la seña (C-23). */
+const MEDIOS_LEIDOS: readonly MedioPago[] = [...MEDIOS.map((m) => m.valor), 'MERCADO_PAGO'];
 
 export interface Cobro {
   readonly id: number;
@@ -28,7 +35,7 @@ export interface Caja {
   readonly abiertaPor: string;
   readonly abiertaEn: string;
   readonly cerradaPor: string | null;
-  readonly totales: Readonly<Record<MedioPago, number>>;
+  readonly totales: Readonly<Record<MedioDeCaja, number>>;
   readonly efectivoEsperado: number;
   readonly efectivoContado: number | null;
   readonly diferencia: number | null;
@@ -115,11 +122,11 @@ function lista(origen: object, clave: string): unknown[] {
 
 function medio(origen: object): MedioPago {
   const valor = cadena(origen, 'medio');
-  const conocido = MEDIOS.find((m) => m.valor === valor);
+  const conocido = MEDIOS_LEIDOS.find((m) => m === valor);
   if (conocido === undefined) {
     throw new RespuestaInvalida(`Medio de pago desconocido: ${valor}`);
   }
-  return conocido.valor;
+  return conocido;
 }
 
 function leerCobro(valor: unknown): Cobro {
