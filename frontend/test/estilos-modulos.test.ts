@@ -42,6 +42,8 @@ const REGLAS_POR_MODULO: Readonly<Record<string, string>> = {
   '25-presupuestos.css': '.pre-presupuesto {',
   // C-23: señas.
   '26-senas.css': '.sena-linea {',
+  // C-17: consentimiento de comunicaciones.
+  '27-consentimiento.css': '.consentimiento-linea {',
 };
 
 function importaciones(): string[] {
@@ -167,7 +169,9 @@ describe('Módulo de presupuestos (C-50, design D9)', () => {
     expect(presupuestos).toBeGreaterThan(-1);
     expect(importaciones[presupuestos - 1]).toBe('./styles/24-coberturas.css');
     expect(importaciones[presupuestos + 1]).toBe('./styles/26-senas.css');
-    expect(importaciones.at(-1)).toBe('./styles/26-senas.css');
+    // C-17 suma 27-consentimiento.css después de las señas, al final.
+    expect(importaciones[presupuestos + 2]).toBe('./styles/27-consentimiento.css');
+    expect(importaciones.at(-1)).toBe('./styles/27-consentimiento.css');
   });
 });
 

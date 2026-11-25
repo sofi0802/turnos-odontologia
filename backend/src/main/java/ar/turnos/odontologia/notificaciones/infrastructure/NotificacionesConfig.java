@@ -3,7 +3,9 @@ package ar.turnos.odontologia.notificaciones.infrastructure;
 import ar.turnos.odontologia.notificaciones.application.AvisarOperacionOnline;
 import ar.turnos.odontologia.notificaciones.application.AvisarReasignacion;
 import ar.turnos.odontologia.notificaciones.application.AvisarReintegroSena;
+import ar.turnos.odontologia.notificaciones.application.CambiarConsentimiento;
 import ar.turnos.odontologia.notificaciones.application.ConfirmadorDeTurnos;
+import ar.turnos.odontologia.notificaciones.application.ConsentimientoRepository;
 import ar.turnos.odontologia.notificaciones.application.ConfirmarAsistencia;
 import ar.turnos.odontologia.notificaciones.application.EnviarRecordatorios;
 import ar.turnos.odontologia.notificaciones.application.GeneradorToken;
@@ -73,6 +75,11 @@ class NotificacionesConfig {
     AvisarReintegroSena avisarReintegroSena(TurnosARecordar turnos, NotificacionRepository notificaciones,
             List<NotificacionPort> canales, Consultorio consultorio, Clock reloj) {
         return new AvisarReintegroSena(turnos, notificaciones, canales, consultorio, reloj);
+    }
+
+    @Bean
+    CambiarConsentimiento cambiarConsentimiento(ConsentimientoRepository repositorio, Clock reloj) {
+        return new CambiarConsentimiento(repositorio, reloj);
     }
 
     @Bean

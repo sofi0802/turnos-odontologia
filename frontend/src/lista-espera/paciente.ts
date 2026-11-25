@@ -12,6 +12,7 @@ export const MENSAJE_ANOTADO = 'Listo, te anotamos. Si se libera un horario, te 
 export const MENSAJE_YA_ANOTADO = 'Ya estás en la lista de espera para esta prestación.';
 export const MENSAJE_SIN_CONSENTIMIENTO_PACIENTE =
   'Para anotarte tenés que aceptar recibir mensajes del consultorio: así te avisamos cuando se libere un horario.';
+export const ENLACE_ACEPTAR_MENSAJES = 'Aceptar mensajes en Mi cuenta';
 export const MENSAJE_FALLA_LISTA = 'No pudimos cargar tu lista de espera.';
 export const MENSAJE_INGRESA_PARA_ANOTARTE = 'Ingresá con tu cuenta para anotarte en la lista de espera.';
 export const MENSAJE_SALISTE = 'Saliste de la lista de espera.';
@@ -164,10 +165,15 @@ export function abrirAnotarme(
         }
         enviando = false;
         principal.disabled = false;
-        general.textContent =
-          error instanceof ErrorNegocio && error.codigo === 'SIN_CONSENTIMIENTO'
-            ? MENSAJE_SIN_CONSENTIMIENTO_PACIENTE
-            : mensajeDeError(error);
+        if (error instanceof ErrorNegocio && error.codigo === 'SIN_CONSENTIMIENTO') {
+          // C-17: el aviso lleva a "Mi cuenta", donde el paciente acepta los mensajes.
+          const enlace = document.createElement('a');
+          enlace.href = '#/mi-cuenta';
+          enlace.textContent = ENLACE_ACEPTAR_MENSAJES;
+          general.replaceChildren(MENSAJE_SIN_CONSENTIMIENTO_PACIENTE, ' ', enlace);
+        } else {
+          general.textContent = mensajeDeError(error);
+        }
       });
   });
 }

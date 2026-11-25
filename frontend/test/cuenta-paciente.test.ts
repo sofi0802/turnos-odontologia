@@ -181,6 +181,8 @@ describe('Registro del paciente', () => {
       dni: '99000001',
       email: 'paciente.uno@example.com',
       password: 'clave-ficticia-1',
+      // C-17: el registro siempre envía la casilla de mensajes.
+      aceptaMensajes: false,
     });
   });
 
@@ -302,7 +304,10 @@ describe('Cuenta del paciente con sesión iniciada', () => {
 
     app = abrirApp(servidor, '#/mi-cuenta');
 
-    await vi.waitFor(() => expect(raiz().querySelector('main h2')?.textContent).toBe('Mi cobertura'));
+    // C-17 suma "Tus datos" y "Mensajes del consultorio" antes de "Mi cobertura".
+    await vi.waitFor(() =>
+      expect([...raiz().querySelectorAll('main h2')].map((h) => h.textContent)).toContain('Mi cobertura'),
+    );
     expect(titulo()).toBe('Mi cuenta');
     expect(window.location.hash).toBe('#/mi-cuenta');
     expect(raiz().querySelector('form[aria-label="Ingresar"]')).toBeNull();
@@ -361,5 +366,42 @@ describe('Salida del paciente', () => {
     expect(servidor.a('POST', '/logout')).toHaveLength(1);
     expect(raiz().querySelector<HTMLElement>('.usuario-nombre')?.hidden).toBe(true);
     expect(sessionStorage.getItem('turnos.reservaPendiente')).toBeNull();
+  });
+});
+
+// C-17: "Casilla de mensajes en el registro" (delta de `frontend-cuenta-paciente`).
+describe('Casilla de mensajes en el registro', () => {
+  function casilla(): HTMLInputElement {
+    const elemento = raiz().querySelector<HTMLInputElement>('input[type="checkbox"][name="aceptaMensajes"]');
+    if (elemento === null) {
+      throw new Error('No está la casilla de mensajes');
+    }
+    return elemento;
+  }
+
+  it('Registro con la casilla marcada', async () => {
+    servidor.responder('POST /public/pacientes/registro', () => json(201, { username: 'paciente.uno@example.com' }));
+    loginDePaciente();
+    await abrirMiCuenta();
+    boton(raiz(), 'Crear cuenta').click();
+    expect(casilla().checked).toBe(false);
+    expect(casilla().labels?.[0]?.textContent).toContain('Acepto recibir mensajes del consultorio');
+
+    casilla().click();
+    completarRegistro();
+
+    await vi.waitFor(() => expect(servidor.a('POST', '/public/pacientes/registro')).toHaveLength(1));
+    expect(servidor.ultimo('POST', '/public/pacientes/registro').cuerpo).toMatchObject({ aceptaMensajes: true });
+  });
+
+  it('Registro sin marcar la casilla', async () => {
+    servidor.responder('POST /public/pacientes/registro', () => json(201, { username: 'paciente.uno@example.com' }));
+    loginDePaciente();
+    await abrirMiCuenta();
+
+    completarRegistro();
+
+    await vi.waitFor(() => expect(servidor.a('POST', '/public/pacientes/registro')).toHaveLength(1));
+    expect(servidor.ultimo('POST', '/public/pacientes/registro').cuerpo).toMatchObject({ aceptaMensajes: false });
   });
 });
