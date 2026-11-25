@@ -19,7 +19,7 @@ Acceptance criteria: los escenarios de los deltas `senas`, `frontend-senas`, `co
 
 - [x] 2.1 Puerto `PasarelaPago` y `PasarelaSimulada` con fallos programables (design D6)
 - [x] 2.2 `PasarelaMercadoPago` con `RestClient`, probada con `MockRestServiceServer`: la preferencia sin datos del pagador ni la prestación, la consulta del pago y el reintegro con `X-Idempotency-Key`
-- [ ] 2.3 Variables `PAGOS_PASARELA`, `MERCADOPAGO_ACCESS_TOKEN`, `MERCADOPAGO_WEBHOOK_SECRET` y `PAGOS_URL_PUBLICA` en `.env.example` sin valores reales; el arranque falla con `mercadopago` sin credenciales
+- [x] 2.3 Variables `PAGOS_PASARELA`, `MERCADOPAGO_ACCESS_TOKEN`, `MERCADOPAGO_WEBHOOK_SECRET` y `PAGOS_URL_PUBLICA` en `.env.example` sin valores reales; el arranque falla con `mercadopago` sin credenciales
 
 ## 3. Notificación de Mercado Pago (backend)
 
@@ -55,7 +55,7 @@ Acceptance criteria: los escenarios de los deltas `senas`, `frontend-senas`, `co
 - [x] 7.1 Cada escenario de los siete deltas tiene exactamente un test con su nombre (`grep`)
 - [x] 7.2 `npx tsc --noEmit`, `npm test` y `npm run build` en verde; la cantidad de tests no baja
 - [x] 7.3 Verificación visual contra el mockup aprobado, a 390 y 1440 px, con el backend de desarrollo, la pasarela simulada y datos ficticios; resultado en `design.md`
-- [ ] 7.4 `openspec validate senas-mercado-pago --strict` en verde, C-23 marcado en `CHANGES.md` y, en el PR, aviso a Juan Sebastián (`reserva/`, `shared/security/`), a Sofia (`agenda/`) y a Juan Cruz (`notificaciones/`)
+- [x] 7.4 `openspec validate senas-mercado-pago --strict` en verde, C-23 marcado en `CHANGES.md` y, en el PR, aviso a Juan Sebastián (`reserva/`, `shared/security/`), a Sofia (`agenda/`) y a Juan Cruz (`notificaciones/`)
 
 ## Workflow follow-up
 
