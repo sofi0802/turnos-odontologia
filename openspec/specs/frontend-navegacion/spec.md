@@ -69,43 +69,50 @@ El menú SHALL tener un enlace por cada página que corresponde a la sesión act
 - **AND** solo el enlace "Mis turnos" queda marcado como página activa
 
 ### Requirement: Menú adaptable a pantallas chicas
-En pantallas de menos de 768 px de ancho, el menú SHALL quedar oculto detrás de un botón que lo abre y lo cierra e informa su estado (`aria-expanded`); al elegir una página, el menú se cierra. Desde 768 px el menú SHALL verse siempre, sin botón. En ningún ancho desde 320 px la página MUST NOT tener desplazamiento horizontal.
+Con una sesión iniciada, el menú SHALL ser una barra lateral: en pantallas de menos de 768 px, un cajón oculto detrás del botón "Menú" (que informa `aria-expanded`) y que se cierra al elegir una página, con "Escape" o al tocar fuera; desde 768 px, siempre visible a la izquierda. Desde 320 px la página MUST NOT tener desplazamiento horizontal.
 
 #### Scenario: Abrir el menú en el celular
-- **GIVEN** la aplicación abierta sin sesión en una pantalla de 390 × 844 px con el menú cerrado
-- **WHEN** se toca el botón del menú
-- **THEN** se ve el enlace "Reservar turno" y no el de "Mis turnos"
+- **GIVEN** la aplicación abierta con una sesión de `paciente.uno@example.com` en una pantalla de 390 × 844 px con el menú cerrado
+- **WHEN** se toca el botón "Menú"
+- **THEN** el cajón se ve con los enlaces "Reservar turno" y "Mis turnos" y no con los de "Agenda" ni "Configuración"
 - **AND** el botón informa que el menú está expandido
 
 #### Scenario: Elegir una página en el celular
-- **GIVEN** el menú abierto sin sesión en una pantalla de 390 × 844 px
+- **GIVEN** el cajón abierto con una sesión de paciente en una pantalla de 390 × 844 px
 - **WHEN** se elige el enlace "Reservar turno"
 - **THEN** se muestra la página "Reservar turno"
-- **AND** el menú se cierra
+- **AND** el cajón se cierra
+
+#### Scenario: Cerrar el cajón con Escape o tocando fuera
+- **GIVEN** el cajón abierto en una pantalla de 390 × 844 px
+- **WHEN** se oprime "Escape"
+- **THEN** el cajón se cierra y el botón "Menú" informa que está contraído
+- **AND** tocar fuera del cajón con el cajón abierto también lo cierra
 
 #### Scenario: Menú siempre visible en la computadora
 - **WHEN** se abre la aplicación con una sesión del personal en una pantalla de 1440 × 900 px
-- **THEN** los enlaces "Agenda" y "Configuración" se ven sin tocar ningún botón
+- **THEN** los enlaces "Agenda" y "Configuración" se ven en la barra lateral sin tocar ningún botón
 - **AND** la página no tiene desplazamiento horizontal
 
 ### Requirement: Menú según la sesión
-El menú SHALL mostrar "Agenda" y "Configuración" con una sesión del personal, más las páginas que su rol puede abrir ("Pacientes" para `ADMIN` y `ODONTOLOGO`; "Reportes" y "Caja" para `ADMIN` y `RECEPCIONISTA`), "Reservar turno" y "Mis turnos" con una sesión de paciente, y solo "Reservar turno" sin sesión. Al iniciar o cerrar una sesión, el menú MUST actualizarse sin recargar el documento. Sin sesión, el encabezado SHALL ofrecer además el enlace "Ingresar" a `#/mi-cuenta`.
+La barra lateral SHALL mostrar al personal "Agenda", "Configuración" y las páginas de su rol ("Pacientes" para `ADMIN` y `ODONTOLOGO`; "Reportes" y "Caja" para `ADMIN` y `RECEPCIONISTA`), y al paciente "Reservar turno" y "Mis turnos". Sin sesión MUST NOT haber barra lateral: el encabezado ofrece "Reservar turno" y un único botón "Ingresar" a `#/mi-cuenta`, también en la portada. Al iniciar o cerrar una sesión, la barra lateral MUST actualizarse sin recargar el documento.
 
 #### Scenario: Menú de un visitante
 - **GIVEN** un navegador sin sesión
 - **WHEN** se abre la aplicación en `#/reserva`
-- **THEN** el menú tiene solo el enlace "Reservar turno"
-- **AND** el encabezado tiene el enlace "Ingresar" a `#/mi-cuenta`
+- **THEN** no hay barra lateral
+- **AND** el encabezado tiene el enlace "Reservar turno" y el enlace "Ingresar" a `#/mi-cuenta`
 
 #### Scenario: Menú del personal
 - **GIVEN** una sesión de `recepcion` con rol `RECEPCIONISTA`
 - **WHEN** se abre la aplicación en `#/agenda`
-- **THEN** el menú tiene solo los enlaces "Agenda", "Reportes", "Caja" y "Configuración", en ese orden
+- **THEN** la barra lateral tiene solo los enlaces "Agenda", "Reportes", "Caja" y "Configuración", en ese orden
+- **AND** el enlace de la página abierta, "Agenda", está marcado como activo
 
 #### Scenario: El menú cambia al ingresar como paciente
 - **GIVEN** la página `#/mi-cuenta` abierta sin sesión
 - **WHEN** "Paciente Uno" ingresa correctamente
-- **THEN** el menú pasa a tener los enlaces "Reservar turno" y "Mis turnos"
+- **THEN** aparece la barra lateral con los enlaces "Reservar turno" y "Mis turnos"
 - **AND** el encabezado muestra `paciente.uno@example.com` y "Salir" en lugar de "Ingresar"
 
 ### Requirement: Página "Pacientes" para odontólogos y administradores
