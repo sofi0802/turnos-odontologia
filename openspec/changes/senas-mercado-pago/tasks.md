@@ -40,7 +40,7 @@ Acceptance criteria: los escenarios de los deltas `senas`, `frontend-senas`, `co
 - [x] 5.4 Imputación al cargo: `ServicioCobros.imputarSena`, cobro `MERCADO_PAGO` sin caja, rechazo del medio en el cobro manual y `COBRO_SIN_CAJA` al anular; un `@Test` por escenario de "Imputación de la seña al cargo" y del delta `cobros-pacientes`
 - [x] 5.5 Reintegros con reintento e idempotencia; un `@Test` por escenario de "Reintegros sin duplicar"
 - [x] 5.6 `AvisoReintegroSena` en `notificaciones/` (avisa a Juan Cruz) y logs sin datos (design D10); un `@Test` por escenario de "Privacidad de las señas"
-- [ ] 5.7 `./gradlew build integrationTest` en verde, con `cleanTest cleanIntegrationTest`; evidencia en `docs/evidencia/c23-backend.txt`
+- [x] 5.7 `./gradlew build integrationTest` en verde, con `cleanTest cleanIntegrationTest`; evidencia en `docs/evidencia/c23-backend.txt`
 
 ## 6. Frontend
 
