@@ -659,7 +659,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/components.html` (secciones "Reserva online" y "Formularios y avisos")
 
 ### [C-39] `frontend-uniformidad-visual`
-- **Estado**: `[ ]` en curso: cuatro etapas mergeadas, cada una con su PR: A tokens y CSS modular (PR #74, 2026-11-23), B barra lateral y componentes (PR #77, 2026-11-23; 471 tests), C pantallas del paciente (PR #79, 2026-11-24; 474 tests) y D pantallas del personal (PR #83, 2026-11-24; 484 tests), todas con mockups aprobados, y la etapa E, agenda semanal en grilla horaria (PR #95, 2026-11-24; sin mockups previos por pedido del usuario). Las 31 tareas están hechas (A.5, 7.1 y 7.2 cerradas el 2026-11-24: 952 tests, un test por cada uno de los 34 escenarios y `openspec validate --strict` válido), y la líder ya renovó la aprobación del design system (Revision 5). Falta solo el archive. Proposal, specs, design y tasks en `openspec/changes/frontend-uniformidad-visual/`
+- **Estado**: `[x]` completo (2026-11-25, archive en el PR #151): cuatro etapas mergeadas, cada una con su PR: A tokens y CSS modular (PR #74, 2026-11-23), B barra lateral y componentes (PR #77, 2026-11-23; 471 tests), C pantallas del paciente (PR #79, 2026-11-24; 474 tests) y D pantallas del personal (PR #83, 2026-11-24; 484 tests), todas con mockups aprobados, y la etapa E, agenda semanal en grilla horaria (PR #95, 2026-11-24; sin mockups previos por pedido del usuario). Las 31 tareas están hechas (A.5, 7.1 y 7.2 cerradas el 2026-11-24: 952 tests, un test por cada uno de los 34 escenarios y `openspec validate --strict` válido), y la líder ya renovó la aprobación del design system (Revision 5). Specs: `openspec/specs/frontend-sistema-visual/` (nuevo) y `frontend-navegacion/` (actualizado: barra lateral, con "Pacientes", "Reportes" y "Caja" del texto vigente); change archivado en `openspec/changes/archive/2026-11-25-frontend-uniformidad-visual/`. Aviso a C-49 y C-15: "Menú según la sesión" ahora describe la barra lateral; sus deltas se escriben sobre ese texto
 - **Responsable**: Juan Cruz (avisa a Enzo)
 - **Scope**:
   - **Barra lateral desplegable** con los botones del menú ("Reservar turno", "Mis turnos", "Agenda", "Configuración"), que muestra solo las opciones del rol que ingresó. En el celular es un cajón con un botón de menú. Sin sesión se mantiene un encabezado simple con "Acceso personal" arriba a la derecha.
@@ -870,7 +870,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/04_modelo_de_datos.md` §Configuracion
 
 ### [C-17] `consentimiento-comunicaciones`
-- **Estado**: `[x]` completo (2026-11-25, SDD, backend y frontend; migración V11). Propuesta y mockups aprobados en el PR #142; apply en `change/C-17-consentimiento-comunicaciones`. Un solo consentimiento con historial que no se edita; el paciente lo maneja en "Mi cuenta" (secciones "Tus datos" y "Mensajes del consultorio"), el registro tiene la casilla y la recepción lo registra o revoca junto al buscador ("Anotar paciente" y "Nuevo turno"), con el medio. Cubre los tres puntos que pedía C-15. Evidencia: 2358 tests del backend y 1386 del frontend en verde; verificación visual en `mockups/verify/`. Change en `openspec/changes/consentimiento-comunicaciones/`; el archive queda para después del merge
+- **Estado**: `[x]` completo (2026-11-25, SDD, backend y frontend; migración V11). Propuesta y mockups aprobados en el PR #142; apply en `change/C-17-consentimiento-comunicaciones`. Un solo consentimiento con historial que no se edita; el paciente lo maneja en "Mi cuenta" (secciones "Tus datos" y "Mensajes del consultorio"), el registro tiene la casilla y la recepción lo registra o revoca junto al buscador ("Anotar paciente" y "Nuevo turno"), con el medio. Cubre los tres puntos que pedía C-15. Evidencia: 2358 tests del backend y 1386 del frontend en verde; verificación visual en `mockups/verify/`. Specs: `openspec/specs/consentimiento-comunicaciones/` y `frontend-consentimiento-comunicaciones/` (nuevos) y `cuentas-pacientes/`, `frontend-cuenta-paciente/` y `notificaciones-recordatorios/` (actualizados); change archivado en `openspec/changes/archive/2026-11-25-consentimiento-comunicaciones/` (PR #151)
 - **Responsable**: Juan Cruz
 - **Scope**:
   - Pantalla y endpoint para que el paciente otorgue o revoque el consentimiento de comunicaciones, con fecha y canal (Ley 25.326). Historial de cambios. **Migración V11**.
@@ -904,7 +904,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `docs/discovery/sources/relevamiento-fuentes.md` §DentalTec, §DentalCore, §Dentalink
 
 ### [C-19] `presupuestos-y-cobertura`
-- **Estado**: `[ ]` KB aprobada (2026-11-24, PR #108; dominio Presupuestos: RN-PR-01 a RN-PR-07, US-047 y DD-15; PA-23 a PA-28 respondidas: arma el odontólogo, la recepción lo ve sin pieza ni cara, cobertura solo por porcentaje, vence a los 30 días, el paciente ve los suyos, precio sin historial). Sigue el propose
+- **Estado**: `[x]` completo (2026-11-25; KB en el PR #108, apply en el PR #117 y archive en el PR #151; migración V13; dominio Presupuestos: RN-PR-01 a RN-PR-07, US-047 y DD-15; PA-23 a PA-28 respondidas: arma el odontólogo, la recepción lo ve sin pieza ni cara, cobertura solo por porcentaje, vence a los 30 días, el paciente ve los suyos, precio sin historial). Specs: `openspec/specs/presupuestos/` y `aranceles-y-cobertura-planes/` (nuevos); change archivado en `openspec/changes/archive/2026-11-25-presupuestos-y-cobertura/`. Solo backend: las pantallas van en C-50
 - **Responsable**: Juan Sebastián
 - **Scope**:
   - Presupuesto por paciente a partir de las prestaciones del odontograma, separando la parte que cubre la obra social y el copago. **Migración V13**.
@@ -916,7 +916,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `docs/discovery/informe-discovery.md` §A.3 (presupuestos)
 
 ### [C-20] `liquidaciones-obras-sociales`
-- **Estado**: `[ ]` KB aprobada (2026-11-24, PR #120; dominio Liquidaciones: RN-LQ-01 a RN-LQ-08, US-049 y DD-19; se liquidan los turnos atendidos; PA-38 a PA-42 respondidas: el ADMIN elige el código si hay varios, solo el ADMIN las maneja, precio del cargo de caja de C-22, exportación CSV, no se reabre una presentada). Sigue el propose
+- **Estado**: `[x]` completo (2026-11-25; KB en el PR #120, apply en el PR #125 y archive en el PR #151; migración V14; dominio Liquidaciones: RN-LQ-01 a RN-LQ-08, US-049 y DD-19; se liquidan los turnos atendidos; PA-38 a PA-42 respondidas: el ADMIN elige el código si hay varios, solo el ADMIN las maneja, precio del cargo de caja de C-22, exportación CSV, no se reabre una presentada). Specs: `openspec/specs/liquidaciones-obras-sociales/` y `conciliacion-liquidaciones/` (nuevos); change archivado en `openspec/changes/archive/2026-11-25-liquidaciones-obras-sociales/`
 - **Responsable**: Juan Sebastián
 - **Scope**:
   - Liquidación mensual por obra social y plan, con exportación a PDF o CSV y conciliación de lo cobrado. **Migración V14**.
@@ -960,7 +960,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/README.md` y `design-system/components.html`
 
 ### [C-50] `frontend-presupuestos`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-25, SDD, solo frontend; sin migraciones). Propuesta y mockups aprobados en el PR #139; apply en el PR #141; archive en el PR #151. Specs: `openspec/specs/frontend-presupuestos/` y `frontend-aranceles/` (nuevos); change archivado en `openspec/changes/archive/2026-11-25-frontend-presupuestos/`. Verificación visual: passed con diferencias menores, 16 capturas en `mockups/verify/`
 - **Responsable**: Juan Sebastián (avisa a Enzo, dueño de `frontend/`)
 - **Scope**:
   - C-19 hizo el backend de aranceles, cobertura por plan y presupuestos, pero ninguna pantalla lo usa.
@@ -1132,7 +1132,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/05_reglas_de_negocio.md` §Clínica
 
 ### [C-48] `frontend-consentimientos`
-- **Estado**: `[x]` completo (2026-11-25, SDD, solo frontend; sin migraciones). Propuesta y mockups aprobados en el PR #137; apply en `change/C-48-frontend-consentimientos-apply`, sobre C-23 y C-17. Change en `openspec/changes/frontend-consentimientos/`; el archive queda para después del merge (regla del segundo con C-49, design D2). Pestaña "Consentimientos" del `ADMIN` después de "Señas" y módulo de estilos `28-consentimientos.css`. Evidencia: 1694 tests del frontend, `tsc` y build en verde; prueba manual (6.4) y verificación visual a 1440 y 390 px contra el backend de desarrollo en `design.md` (differences: el reloj de "Versiones", corregido, y dos hallazgos menores) con capturas en `mockups/verify/`
+- **Estado**: `[x]` completo (2026-11-25, SDD, solo frontend; sin migraciones). Propuesta y mockups aprobados en el PR #137; apply en `change/C-48-frontend-consentimientos-apply`, sobre C-23 y C-17. Specs: `openspec/specs/frontend-consentimientos/` y `frontend-plantillas-consentimiento/` (nuevos) y `frontend-configuracion-consultorio/` (actualizado: "Consentimientos" en las pestañas del `ADMIN`); change archivado en `openspec/changes/archive/2026-11-25-frontend-consentimientos/` (PR #151). Por la regla del segundo (design D2), C-49 suma "Obras sociales" sobre este texto en su archive. Pestaña "Consentimientos" del `ADMIN` después de "Señas" y módulo de estilos `28-consentimientos.css`. Evidencia: 1694 tests del frontend, `tsc` y build en verde; prueba manual (6.4) y verificación visual a 1440 y 390 px contra el backend de desarrollo en `design.md` (differences: el reloj de "Versiones", corregido, y dos hallazgos menores) con capturas en `mockups/verify/`
 - **Responsable**: Emanuel (avisa a Enzo, dueño de `frontend/`)
 - **Scope**:
   - C-27 hace el backend de los consentimientos, pero ninguna pantalla lo usa. Este change suma la interfaz, sin cambiar el contrato de la API.
