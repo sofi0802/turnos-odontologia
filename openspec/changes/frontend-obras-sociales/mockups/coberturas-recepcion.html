@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coberturas · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="coberturas.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="recepcion" data-rol="RECEPCIONISTA" data-activa="coberturas">
+  <div class="pagina-coberturas">
+    <h1 tabindex="-1">Coberturas</h1>
+
+    <p class="rotulo-estado">1 · Recién abierta: buscar al paciente</p>
+    <section class="panel ficha-seccion" aria-labelledby="t-buscar">
+      <h2 id="t-buscar">Buscar paciente</h2>
+      <div class="campo buscador">
+        <label for="b-paciente" id="b-etiqueta">Paciente</label>
+        <div class="buscador-entrada">
+          <svg class="buscador-lupa" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"></circle><path d="m13 13 4.5 4.5"></path></svg>
+          <input id="b-paciente" class="control" type="text" value="99000002" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="b-lista" />
+        </div>
+        <p class="campo-error"></p>
+      </div>
+      <ul class="buscador-lista" id="b-lista" role="listbox" aria-label="Pacientes encontrados">
+        <li class="buscador-opcion" role="option" aria-selected="true"><span class="nombre">Dos, Paciente</span> <span class="dni">· DNI 99000002</span></li>
+      </ul>
+      <p class="buscador-estado" role="status">1 paciente encontrado.</p>
+    </section>
+    <div class="estado-vacio chico"><p class="estado-vacio-titulo">Todavía no elegiste un paciente</p><p class="estado-vacio-texto">Buscá un paciente para ver y cargar su cobertura.</p></div>
+
+    <p class="rotulo-estado">2 · Paciente elegido: solo su cobertura, sin datos clínicos</p>
+    <section class="panel ficha-paciente" aria-labelledby="p-nombre">
+      <div class="ficha-paciente-datos">
+        <div>
+          <h2 class="ficha-paciente-nombre" id="p-nombre">Paciente Dos</h2>
+          <p class="ficha-paciente-dni">DNI 99000002</p>
+        </div>
+        <button type="button" class="btn">Cambiar de paciente</button>
+      </div>
+    </section>
+
+    <section class="panel ficha-seccion cob-seccion" aria-labelledby="t-cob">
+      <div class="ficha-seccion-cabecera"><h2 id="t-cob">Cobertura</h2><button type="button" class="btn btn-principal">Afiliar</button></div>
+      <div class="cob-tarjeta cob-tarjeta-particular">
+        <span class="cob-tarjeta-icono" data-icono="credencial"></span>
+        <div class="cob-tarjeta-datos">
+          <p class="cob-tarjeta-rotulo">Cobertura de hoy</p>
+          <p class="cob-tarjeta-titulo">Se atiende como particular</p>
+          <p class="cob-vigencia">No tiene una afiliación vigente hoy. Dar un turno no exige cobertura.</p>
+        </div>
+      </div>
+      <h3 class="cob-historial-titulo">Historial de afiliaciones</h3>
+      <ul class="cob-historial" aria-label="Historial de afiliaciones de Paciente Dos">
+        <li class="cob-afiliacion cob-afiliacion-finalizada">
+          <div>
+            <p class="cob-afiliacion-titulo"><span>Plan Oro</span><span class="etiqueta etiqueta-finalizada">Finalizada</span></p>
+            <p class="cob-afiliacion-meta">Prepaga Prueba · N.º <span class="cob-numero">PP-77</span> · Del 01/01/2026 al 31/10/2026</p>
+          </div>
+          <div class="cob-afiliacion-acciones"><button type="button" class="btn btn-chico" aria-label="Corregir la afiliación a Plan Oro">Corregir</button></div>
+        </li>
+      </ul>
+    </section>
+
+    <p class="nota-mockup"><b>Mockup C-49.</b> Recepción (decisión a confirmar, design D2): página "Coberturas" con el buscador de C-44 y solo la sección de cobertura. No pide la ficha, el odontograma, el periodontograma, las imágenes ni el historial clínico (RN-CL-01). El paciente elegido vive solo en memoria. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

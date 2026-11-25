@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi cuenta · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="coberturas.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="paciente.uno@example.com" data-rol="PACIENTE" data-activa="mi-cuenta">
+  <div class="pagina-paciente">
+    <h1 tabindex="-1">Mi cuenta</h1>
+
+    <p class="rotulo-estado">1 · Paciente Uno, con cobertura vigente</p>
+    <section class="panel mi-cobertura" aria-labelledby="mc1">
+      <h2 id="mc1">Mi cobertura</h2>
+      <div class="cob-tarjeta">
+        <span class="cob-tarjeta-icono" data-icono="credencial"></span>
+        <div class="cob-tarjeta-datos">
+          <p class="cob-tarjeta-titulo">Obra Social Ejemplo (OSE)</p>
+          <p class="cob-tarjeta-plan">Plan Base · N.º de afiliado <span class="cob-numero">OSE-000001</span></p>
+          <p class="cob-vigencia">Desde 01/01/2026, sin fecha de fin</p>
+        </div>
+      </div>
+      <p class="ayuda">Si cambiaste de obra social o de plan, avisá en la recepción del consultorio.</p>
+    </section>
+
+    <p class="rotulo-estado">2 · Paciente Dos, particular</p>
+    <section class="panel mi-cobertura" aria-labelledby="mc2">
+      <h2 id="mc2">Mi cobertura</h2>
+      <div class="cob-tarjeta cob-tarjeta-particular">
+        <span class="cob-tarjeta-icono" data-icono="credencial"></span>
+        <div class="cob-tarjeta-datos">
+          <p class="cob-tarjeta-titulo">Te atendés como particular.</p>
+          <p class="cob-vigencia">No tenés una obra social o prepaga cargada para hoy.</p>
+        </div>
+      </div>
+      <p class="ayuda">Si tenés obra social o prepaga, avisá en la recepción del consultorio.</p>
+    </section>
+
+    <p class="rotulo-estado">3 · Falla al cargar</p>
+    <section class="panel mi-cobertura" aria-labelledby="mc3">
+      <h2 id="mc3">Mi cobertura</h2>
+      <p class="aviso aviso-error" role="alert">No pudimos completar la operación. Probá de nuevo en unos minutos.</p>
+      <div><button type="button" class="btn">Reintentar</button></div>
+    </section>
+
+    <p class="nota-mockup"><b>Mockup C-49.</b> Paciente con sesión en <code>#/mi-cuenta</code> (decisión a confirmar, design D3): "Mi cobertura" de solo lectura sobre <code>GET /api/v1/paciente/cobertura</code>, sin ids. El menú suma "Mi cuenta" después de "Mis turnos". C-50 sumará "Mis presupuestos" debajo. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>
