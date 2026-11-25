@@ -26,7 +26,11 @@ export type NombreIcono =
   | 'caja'
   | 'espera'
   | 'credencial'
-  | 'cuenta';
+  | 'cuenta'
+  | 'firma'
+  | 'verificado'
+  | 'alterado'
+  | 'candado';
 
 type Trazo = readonly [etiqueta: 'path' | 'rect' | 'circle', atributos: Readonly<Record<string, string>>];
 
@@ -96,6 +100,15 @@ const TRAZOS: Readonly<Record<NombreIcono, readonly Trazo[]>> = {
     ['path', { d: 'M6 16c.5-1.4 1.6-2 3-2s2.5.6 3 2M14 10h4M14 14h3' }],
   ],
   cuenta: [['circle', { cx: '12', cy: '8', r: '4' }], ['path', { d: 'M4 21c1-4 4.5-6 8-6s7 2 8 6' }]],
+  // C-48: consentimientos (lapicera de la firma, escudo de "Íntegro", triángulo de "Alterado" y candado del bloqueo).
+  firma: [['path', { d: 'M16.5 3.5l4 4L9 19l-5 1 1-5z' }], ['path', { d: 'M14 6l4 4M3 22h18' }]],
+  verificado: [['path', { d: 'M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6z' }], ['path', { d: 'M8.5 12l2.5 2.5 4.5-5' }]],
+  alterado: [['path', { d: 'M12 3l9.5 17h-19z' }], ['path', { d: 'M12 10v4M12 17h.01' }]],
+  candado: [
+    ['rect', { x: '4', y: '11', width: '16', height: '10', rx: '2' }],
+    ['path', { d: 'M8 11V7a4 4 0 0 1 8 0v4' }],
+    ['path', { d: 'M12 15v2' }],
+  ],
 };
 
 export function crearIcono(nombre: NombreIcono): SVGElement {

@@ -164,3 +164,28 @@ describe('Mensajes de las coberturas (C-49, design D8)', () => {
     expect(mensajeDeError(new ErrorValidacion('detalle del servidor', codigo))).toBe(mensaje);
   });
 });
+
+describe('Mensajes de los consentimientos (C-48, design D9)', () => {
+  const MENSAJES: ReadonlyArray<readonly [string, string]> = [
+    ['PLANTILLA_DUPLICADA', 'Ya existe una plantilla con ese título.'],
+    ['VERSION_DESACTUALIZADA', 'La plantilla cambió mientras la usabas.'],
+    ['PLANTILLA_INACTIVA', 'Esta plantilla se desactivó y ya no se puede firmar.'],
+    ['CONSENTIMIENTO_YA_REVOCADO', 'El consentimiento ya estaba revocado.'],
+    ['FIRMANTE_NO_COINCIDE', 'El DNI no coincide con el del paciente. Revisalo.'],
+  ];
+
+  it.each(MENSAJES)('%s tiene su mensaje propio', (codigo, mensaje) => {
+    expect(MENSAJES_POR_CODIGO[codigo]).toBe(mensaje);
+    expect(mensajeDeError(new ErrorNegocio(codigo, 'detalle del servidor'))).toBe(mensaje);
+    expect(mensajeDeError(new ErrorValidacion('detalle del servidor', codigo))).toBe(mensaje);
+  });
+
+  it('ningún mensaje contiene un DNI ni dice "firma digital"', () => {
+    for (const [codigo] of MENSAJES) {
+      const mensaje = MENSAJES_POR_CODIGO[codigo] ?? '';
+      expect(mensaje).not.toBe('');
+      expect(mensaje).not.toMatch(/\d{7,8}/);
+      expect(mensaje.toLowerCase()).not.toContain('firma digital');
+    }
+  });
+});

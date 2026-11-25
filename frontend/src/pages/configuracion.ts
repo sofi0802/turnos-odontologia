@@ -1,4 +1,5 @@
 import { montarObrasSociales } from '../coberturas/catalogo.ts';
+import { montarConsentimientos } from '../consentimientos/plantillas.ts';
 import { montarAusencias } from '../configuracion/ausencias.ts';
 import { montarBloqueos } from '../configuracion/bloqueos.ts';
 import { montarPrestaciones, montarProfesionales, montarSillones } from '../configuracion/catalogo.ts';
@@ -45,6 +46,10 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   // El catálogo de obras sociales, planes y nomenclador es solo del administrador (C-49, design D5).
   if (permisosDelRol.gestionaCoberturas) {
     definiciones.push(['Obras sociales', montarObrasSociales]);
+  }
+  // Las plantillas de consentimiento son solo del administrador y van última (C-48, design D2).
+  if (permisosDelRol.gestionaConsentimientos) {
+    definiciones.push(['Consentimientos', montarConsentimientos]);
   }
   const pestanas: Pestana[] = definiciones.map(([titulo, montar]) => ({
     titulo,

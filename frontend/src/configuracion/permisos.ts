@@ -29,6 +29,8 @@ export interface Permisos {
   readonly gestionaUsuarios: boolean;
   /** Mantener el catálogo de obras sociales, planes y nomenclador (pestaña "Obras sociales"): solo `ADMIN` (C-49, D5). */
   readonly gestionaCoberturas: boolean;
+  /** Administrar las plantillas de consentimiento informado (pestaña "Consentimientos"): solo `ADMIN` (C-48, D2). */
+  readonly gestionaConsentimientos: boolean;
 }
 
 const NINGUNO: Permisos = {
@@ -44,6 +46,7 @@ const NINGUNO: Permisos = {
   profesionalFijoId: null,
   gestionaUsuarios: false,
   gestionaCoberturas: false,
+  gestionaConsentimientos: false,
 };
 
 export function permisos(sesion: Sesion): Permisos {
@@ -62,6 +65,7 @@ export function permisos(sesion: Sesion): Permisos {
         profesionalFijoId: null,
         gestionaUsuarios: true,
         gestionaCoberturas: true,
+        gestionaConsentimientos: true,
       };
     case 'RECEPCIONISTA':
       return { ...NINGUNO, gestionaAusencias: true, reasigna: true, veBloqueos: true, veTodos: true };

@@ -93,6 +93,12 @@ export const MENSAJES_POR_CODIGO: Readonly<Record<string, string>> = {
   OBRA_SOCIAL_INACTIVA: 'La obra social está inactiva. Elegí otra.',
   VIGENCIA_INVALIDA: 'La fecha de fin no puede ser anterior a la de inicio.',
   AFILIACION_CERRADA: 'Esa afiliación ya estaba cerrada.',
+  // Consentimientos informados (C-48, design D9). Ninguno repite el DNI escrito ni el del paciente.
+  PLANTILLA_DUPLICADA: 'Ya existe una plantilla con ese título.',
+  VERSION_DESACTUALIZADA: 'La plantilla cambió mientras la usabas.',
+  PLANTILLA_INACTIVA: 'Esta plantilla se desactivó y ya no se puede firmar.',
+  CONSENTIMIENTO_YA_REVOCADO: 'El consentimiento ya estaba revocado.',
+  FIRMANTE_NO_COINCIDE: 'El DNI no coincide con el del paciente. Revisalo.',
 };
 
 export const MENSAJE_SIN_PERMISO = 'No tenés permiso para esta acción.';
