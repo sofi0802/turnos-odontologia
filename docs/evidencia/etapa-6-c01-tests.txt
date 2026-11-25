@@ -28,3 +28,15 @@ Change 'crear-turno-sin-solapamientos' is valid
 - agenda/domain sin imports de org.springframework ni jakarta.persistence.
 - Mutaciones de control: quitar la verificación de margen hace fallar "Turno contiguo sin margen" y "Margen mayor al mínimo"; invertir la prioridad sillón/profesional hace fallar "Choque por profesional y por sillón a la vez".
 - Desvíos: (1) el scaffolding se mergeó junto con el change en el PR #6, no en un PR aparte; (2) Agenda recibe el margen en el constructor y no en verificar(...), según design D3. Ninguno cambia el comportamiento del spec.
+
+## Revisión del Propose (2026-11-21, registrada el 2026-11-25)
+
+- La líder leyó completos proposal.md, specs/agenda-turnos/spec.md, design.md y tasks.md antes del apply (commit 7281321).
+- Decisión: Continuar, sin Ajustar. El spec no tenía alcance de más, de menos ni inventado, porque los casos dudosos ya se habían cerrado en el explore:
+  (1) prioridad SOLAPAMIENTO_PROFESIONAL > SOLAPAMIENTO_SILLON > MARGEN_INSUFICIENTE, con un solo error informado;
+  (2) solo bloquean los turnos RESERVADO y CONFIRMADO: un CANCELADO no bloquea;
+  (3) un inicio igual a "ahora" se acepta y uno anterior se rechaza (INICIO_EN_EL_PASADO);
+  (4) margen configurable con mínimo de 10 minutos (MARGEN_INVALIDO si es menor);
+  (5) la atomicidad ante reservas simultáneas (RN-AG-12) queda fuera, para C-03 y C-06.
+- Qué se comprobó en la revisión: que cada decisión del explore tuviera su escenario, que hubiera escenarios feliz ("Turno sin conflictos"), de error de negocio ("El profesional ya atiende en otro sillón", "El sillón ya está ocupado por otro profesional") y de borde ("Turno contiguo sin margen", "Turno que respeta el margen exacto", "Inicio igual al momento actual"), y que el "Fuera de alcance" de proposal.md coincidiera con el roadmap.
+- Los Ajustar de la fundación (5 en la KB y 1 en el roadmap) se hicieron antes y son los que dejaron el spec sin decisiones abiertas.

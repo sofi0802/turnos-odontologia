@@ -27,3 +27,6 @@ Thumbs.db
 
 # Respaldos del orquestador
 *.bak
+
+# Capturas y logs locales del navegador de Playwright MCP
+.playwright-mcp/
