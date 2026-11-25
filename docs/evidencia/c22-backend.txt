@@ -23,3 +23,12 @@ exactamente un test con su nombre en backend/src/test/java/ar/turnos/odontologia
 tests de otras capacidades (afiliaciones-pacientes, presupuestos, imágenes clínicas); no son duplicados de C-22.
 
 Datos: solo ficticios (Paciente Uno con DNI 99000001, Paciente Dos, Ana Ejemplo). Sin credenciales en el repo.
+
+Después del merge de master (commit e05bb59, con C-20, C-39, C-47 y C-49 ya en master):
+Comando: ./gradlew cleanTest cleanIntegrationTest build integrationTest
+Resultado: BUILD SUCCESSFUL in 11m 2s, código de salida 0
+- Unitarios: 962 PASSED, 0 FAILED, 0 SKIPPED.
+- Integración: 1133 PASSED, 0 FAILED, 0 SKIPPED.
+Captura: active-stack evidence-capture, corrida e88cebb6f5b8c2dbfcb6ea07cdceba8d, salida redactada sin truncar,
+sha256 da2d8fc46997612c1b1ac9e3f2440b75d37e38bdec63abcb9256944aef88886c (copia local, fuera del repo).
+Frontend después del merge: 991 tests, tsc y build en verde.
