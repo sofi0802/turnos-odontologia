@@ -1080,7 +1080,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/README.md` y `design-system/components.html`
 
 ### [C-26] `imagenes-y-radiografias`
-- **Estado**: `[~]` implementado (2026-11-24, SDD; propuesta en el PR #112, apply en su PR; `openspec/changes/imagenes-y-radiografias/`, migración V17). Solo backend: almacén en disco detrás de un puerto, JPEG, PNG y PDF de hasta 10 MB, anulación con motivo en lugar de borrado (RN-CL-07, RN-CL-08, US-048, DD-17). Evidencia: `docs/evidencia/c26-backend.txt`. Falta el merge y después archivarlo. El apply suma a `shared/web/ProblemDetailGlobalHandler` el `413` del límite de multipart (avisar a Juan Sebastián)
+- **Estado**: `[x]` completo (2026-11-25, SDD; propuesta en el PR #112, apply en el PR #115 y archive el 2026-11-25; migración V17). Spec `openspec/specs/imagenes-clinicas/` (nueva); change archivado en `openspec/changes/archive/2026-11-25-imagenes-y-radiografias/`. Solo backend: almacén en disco detrás de un puerto, JPEG, PNG y PDF de hasta 10 MB, anulación con motivo en lugar de borrado (RN-CL-07, RN-CL-08, US-048, DD-17). Evidencia: `docs/evidencia/c26-backend.txt`. El apply suma a `shared/web/ProblemDetailGlobalHandler` el `413` del límite de multipart (avisar a Juan Sebastián)
 - **Responsable**: Emanuel
 - **Scope**:
   - Carga de imágenes y radiografías por paciente, pieza y fecha, con almacenamiento detrás de un puerto (local o S3 compatible). **Migración V17**.
@@ -1092,7 +1092,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/08_arquitectura_propuesta.md` §Seguridad
 
 ### [C-47] `frontend-imagenes-y-radiografias`
-- **Estado**: `[~]` implementado (2026-11-24, SDD; propuesta y mockups en el PR #119, aprobados por Emanuel; apply en su PR; `openspec/changes/frontend-imagenes-y-radiografias/`). 949 tests del frontend y verificación visual en `mockups/verify/`. Falta la revisión de la líder y de Enzo, el merge y el archive
+- **Estado**: `[x]` completo (2026-11-25, SDD; propuesta y mockups en el PR #119, aprobados por Emanuel; apply en el PR #123 y archive el 2026-11-25). Spec `openspec/specs/frontend-imagenes-clinicas/` (nueva) y `frontend-cliente-api/` (actualizada: envío de archivos, descarga y `413`); change archivado en `openspec/changes/archive/2026-11-25-frontend-imagenes-y-radiografias/`. 949 tests del frontend y verificación visual en `mockups/verify/`
 - **Responsable**: Emanuel (avisa a Enzo, dueño de `frontend/`)
 - **Scope**:
   - C-26 hace el backend de las imágenes, pero ninguna pantalla lo usa. Este change suma la interfaz sobre `/api/v1/pacientes/{id}/imagenes`, sin cambiar su contrato.
@@ -1115,7 +1115,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/README.md` y `design-system/components.html`
 
 ### [C-27] `consentimientos-firma-electronica`
-- **Estado**: `[~]` implementado (2026-11-24, SDD; propuesta aprobada en el PR #124, apply en su PR; `openspec/changes/consentimientos-firma-electronica/`, migración V18). Solo backend: plantillas con versiones, firma electrónica en el consultorio con hash SHA-256 y revocación con registro. Evidencia: `docs/evidencia/c27-backend.txt` (917 unitarios y 1001 de integración). Falta la revisión de la líder, el merge y el archive; las pantallas van en C-48
+- **Estado**: `[x]` completo (2026-11-25, SDD; propuesta en el PR #124, apply en el PR #128 y archive el 2026-11-25; migración V18). Spec `openspec/specs/consentimientos-informados/` (nueva); change archivado en `openspec/changes/archive/2026-11-25-consentimientos-firma-electronica/`. Solo backend: plantillas con versiones, firma electrónica en el consultorio con hash SHA-256 y revocación con registro. Evidencia: `docs/evidencia/c27-backend.txt` (917 unitarios y 1001 de integración). Las pantallas van en C-48
 - **Responsable**: Emanuel
 - **Scope**:
   - Plantillas de consentimiento informado y firma con hash, fecha, IP y dispositivo; documento bloqueado una vez firmado (Ley 25.506). **Migración V18**.
