@@ -33,6 +33,8 @@ C = crear, R = leer, U = modificar, D = eliminar o desactivar. "Propio" = solo s
 | Llegada del paciente (RN-AG-20) [2026-11-24] | — | U (desde la agenda) | — | — |
 | Ausencia del paciente (RN-AG-17) [2026-11-24] | — | U (desde la agenda) | U propio (desde la ficha) | — |
 | Deshacer la ausencia del paciente (RN-AG-17) [2026-11-24] | — | U (si el horario sigue libre) | — (ve en la ficha que se deshizo) | — |
+| Lista de espera (RN-LE-01, RN-LE-09) [2026-11-24, C-15] | CRUD (anota, ve y da de baja) | CRUD (anota, ve y da de baja) | — | C, R y baja propias; acepta o rechaza la oferta desde el link, sin sesión (RN-LE-07) |
+| Plazo para aceptar una oferta de la lista de espera (RN-LE-05) [2026-11-24, C-15] | U (de 1 a 24 h) | R | — | — |
 | Paciente (datos de contacto) | CRUD | CRUD | R | R/U propio (al reservar) |
 | Ficha clínica y odontograma | R | **—** | CRUD | — |
 | Periodontograma (RN-CL-04) [2026-11-24] | R | **—** | C y R (cada carga es una versión nueva; no se edita ni se borra) | — |
@@ -46,6 +48,8 @@ C = crear, R = leer, U = modificar, D = eliminar o desactivar. "Propio" = solo s
 | Liquidación a obras sociales y conciliación (RN-LQ-02 a RN-LQ-06) [2026-11-24, C-20] | CRUD (sin borrar) y descarga | — (PA-39) | — | — |
 | Reportes: ocupación, origen, ausencias y cancelaciones (RN-RE-01) [2026-11-24, C-32, en revisión] | R (todo el consultorio) | R (todo el consultorio; PA-29) | **—** (su agenda sigue en RN-AG-18) | **—** |
 | Caja, cobros y cuenta corriente del paciente (RN-CA-01) [2026-11-24, C-22, en revisión] | R, y anula cobros con motivo (RN-CA-07) | C y R: abre la caja, cobra y la cierra (PA-32) | **—** | **—** |
+| Señas: configuración (RN-SE-01) [2026-11-24, C-23, en revisión] | R y U: las activa y fija el porcentaje y el plazo (PA-53) | **—** | **—** | **—** |
+| Señas de los turnos (RN-SE-04 a RN-SE-12) [2026-11-24, C-23, en revisión] | Indica la causa al cancelar un turno con seña pagada (RN-SE-06); la ve como cobro en la cuenta corriente | Igual que el `ADMIN` | **—** | Paga y ve el estado de las propias en "Mis turnos" (PA-65) |
 
 > **Lección de la verificación de fuentes:** en la demo de VecDent, un rol "paciente" armado a mano veía el dashboard con estadísticas de la clínica y el menú de configuración (informe, verificación de fuentes, fila 5). El paciente **no es un rol del personal con menos permisos**: solo accede a endpoints públicos y a sus propios turnos.
 
@@ -61,5 +65,6 @@ Accesibles sin sesión del personal:
 - `GET /api/v1/paciente/turnos`: sus turnos.
 - `POST /api/v1/paciente/reservas/{numeroReserva}/cancelar` y `/reprogramar`: hasta 24 h antes (RN-AG-07).
 - `POST /api/v1/public/confirmaciones/{token}`: confirmación desde el link del recordatorio.
+- `GET /api/v1/public/ofertas/{token}` y `POST /api/v1/public/ofertas/{token}/aceptar` o `/rechazar`: oferta de la lista de espera desde el link del mensaje; el `GET` no consume el token (RN-LE-07) [2026-11-24, C-15].
 - `POST /api/v1/webhooks/whatsapp`: webhook del proveedor. Valida la firma.
 - Frontend: página de reserva del paciente.

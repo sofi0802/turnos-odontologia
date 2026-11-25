@@ -12,6 +12,7 @@ import ar.turnos.odontologia.agenda.application.CrearTurno;
 import ar.turnos.odontologia.agenda.application.CrearTurnoCommand;
 import ar.turnos.odontologia.agenda.application.ExtenderTurno;
 import ar.turnos.odontologia.agenda.application.ExtenderTurnoCommand;
+import ar.turnos.odontologia.agenda.application.HorariosLiberados;
 import ar.turnos.odontologia.agenda.application.MarcarAusencia;
 import ar.turnos.odontologia.agenda.application.MarcarAusenciaCommand;
 import ar.turnos.odontologia.agenda.application.ReasignarTurno;
@@ -26,9 +27,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionSynchronization;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
 /**
@@ -43,6 +50,8 @@ import org.springframework.transaction.support.TransactionTemplate;
 public class ServicioAgenda {
 
     static final int INTENTOS = 3;
+
+    private static final Logger LOG = LoggerFactory.getLogger(ServicioAgenda.class);
 
     /** C-43: actor de la auditoría del paso automático a {@code ATENDIDO}. */
     static final String ACTOR_SISTEMA = "sistema";
@@ -60,11 +69,36 @@ public class ServicioAgenda {
     private final AuditoriaTurnos auditoria;
     private final TransactionTemplate transaccion;
     private final TransactionTemplate lectura;
+    private final Supplier<HorariosLiberados> horariosLiberados;
 
     ServicioAgenda(CrearTurno crearTurno, CrearSobreturno crearSobreturno, ExtenderTurno extenderTurno,
                    CancelarTurno cancelarTurno, ReprogramarTurno reprogramarTurno, ConfirmarTurno confirmarTurno,
                    ReasignarTurno reasignarTurno, MarcarAusencia marcarAusencia, CasosAsistencia asistencia,
                    ConsultaAgenda consulta, AuditoriaTurnos auditoria, PlatformTransactionManager transacciones) {
+        this(crearTurno, crearSobreturno, extenderTurno, cancelarTurno, reprogramarTurno, confirmarTurno,
+                reasignarTurno, marcarAusencia, asistencia, consulta, auditoria, transacciones,
+                () -> turno -> { });
+    }
+
+    /** C-15: con la lista de espera, que recibe los horarios liberados por una cancelación o una reprogramación. */
+    @Autowired
+    ServicioAgenda(CrearTurno crearTurno, CrearSobreturno crearSobreturno, ExtenderTurno extenderTurno,
+                   CancelarTurno cancelarTurno, ReprogramarTurno reprogramarTurno, ConfirmarTurno confirmarTurno,
+                   ReasignarTurno reasignarTurno, MarcarAusencia marcarAusencia, CasosAsistencia asistencia,
+                   ConsultaAgenda consulta, AuditoriaTurnos auditoria, PlatformTransactionManager transacciones,
+                   ObjectProvider<HorariosLiberados> horariosLiberados) {
+        // Se resuelve al usarlo: la lista de espera depende de la agenda (por la reserva) y no puede crearse antes.
+        this(crearTurno, crearSobreturno, extenderTurno, cancelarTurno, reprogramarTurno, confirmarTurno,
+                reasignarTurno, marcarAusencia, asistencia, consulta, auditoria, transacciones,
+                () -> horariosLiberados.getIfAvailable(() -> turno -> { }));
+    }
+
+    ServicioAgenda(CrearTurno crearTurno, CrearSobreturno crearSobreturno, ExtenderTurno extenderTurno,
+                   CancelarTurno cancelarTurno, ReprogramarTurno reprogramarTurno, ConfirmarTurno confirmarTurno,
+                   ReasignarTurno reasignarTurno, MarcarAusencia marcarAusencia, CasosAsistencia asistencia,
+                   ConsultaAgenda consulta, AuditoriaTurnos auditoria, PlatformTransactionManager transacciones,
+                   Supplier<HorariosLiberados> horariosLiberados) {
+        this.horariosLiberados = horariosLiberados;
         this.crearTurno = crearTurno;
         this.crearSobreturno = crearSobreturno;
         this.extenderTurno = extenderTurno;
@@ -117,20 +151,50 @@ public class ServicioAgenda {
     }
 
     public Turno cancelar(CancelarTurnoCommand comando, String actor) {
-        return enTransaccion(() -> {
+        Turno cancelado = enTransaccion(() -> {
             Turno turno = cancelarTurno.ejecutar(comando);
             auditoria.registrar(turno.id(), Accion.CANCELAR, actor, null);
             return turno;
         });
+        avisarLiberado(cancelado);
+        return cancelado;
     }
 
     public Turno reprogramar(ReprogramarTurnoCommand comando, String actor) {
-        return enTransaccion(() -> {
-            ReprogramarTurno.Reprogramacion resultado = reprogramarTurno.ejecutar(comando);
-            auditoria.registrar(resultado.original().id(), Accion.REPROGRAMAR, actor, resultado.nuevo().id());
-            auditoria.registrar(resultado.nuevo().id(), Accion.CREAR, actor, null);
-            return resultado.nuevo();
+        ReprogramarTurno.Reprogramacion resultado = enTransaccion(() -> {
+            ReprogramarTurno.Reprogramacion hecha = reprogramarTurno.ejecutar(comando);
+            auditoria.registrar(hecha.original().id(), Accion.REPROGRAMAR, actor, hecha.nuevo().id());
+            auditoria.registrar(hecha.nuevo().id(), Accion.CREAR, actor, null);
+            return hecha;
         });
+        avisarLiberado(resultado.original());
+        return resultado.nuevo();
+    }
+
+    /**
+     * C-15 (design D2): el horario liberado se ofrece a la lista de espera después del commit, en su propia
+     * transacción. Si hay una transacción externa, espera a que confirme; una falla nunca deshace la cancelación y
+     * queda en el log solo con el id del turno.
+     */
+    private void avisarLiberado(Turno cancelado) {
+        if (TransactionSynchronizationManager.isSynchronizationActive()) {
+            TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+                @Override
+                public void afterCommit() {
+                    ofrecer(cancelado);
+                }
+            });
+        } else {
+            ofrecer(cancelado);
+        }
+    }
+
+    private void ofrecer(Turno cancelado) {
+        try {
+            horariosLiberados.get().liberado(cancelado);
+        } catch (RuntimeException e) {
+            LOG.warn("No se pudo ofrecer a la lista de espera el horario del turno {}", cancelado.id(), e);
+        }
     }
 
     /**

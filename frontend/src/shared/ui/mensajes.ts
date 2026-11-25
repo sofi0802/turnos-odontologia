@@ -21,6 +21,12 @@ export const MENSAJES_POR_CODIGO: Readonly<Record<string, string>> = {
   // C-45: sobreturno sin sillón libre y extensión de un sobreturno.
   SIN_SILLON_DISPONIBLE: 'No hay ningún sillón libre en ese horario. Probá con otra hora.',
   TURNO_NO_EXTENSIBLE: 'Un sobreturno no se puede extender.',
+  // C-22: caja y cobros.
+  SIN_CAJA_ABIERTA: 'No hay una caja abierta. Abrí la caja para cobrar.',
+  IMPORTE_SUPERA_SALDO: 'El importe supera el saldo del cargo.',
+  CAJA_CERRADA: 'La caja ya está cerrada.',
+  COBRO_ANULADO: 'El cobro ya estaba anulado.',
+  CAJA_YA_ABIERTA: 'Ya hay una caja abierta. Cerrala antes de abrir otra.',
   TURNO_INEXISTENTE: 'El turno ya no existe.',
   ACCESO_DENEGADO: 'No tenés permiso para esta acción.',
   SIN_DISPONIBILIDAD: 'Ese horario se ocupó recién. Elegí otro.',
@@ -67,6 +73,26 @@ export const MENSAJES_POR_CODIGO: Readonly<Record<string, string>> = {
   TIPO_ARCHIVO_NO_PERMITIDO: 'Solo se aceptan archivos JPEG, PNG o PDF.',
   ARCHIVO_DEMASIADO_GRANDE: 'El archivo supera los 10 MB.',
   IMAGEN_YA_ANULADA: 'La imagen ya estaba anulada.',
+  // Lista de espera (C-15).
+  YA_EN_LISTA_DE_ESPERA: 'El paciente ya está en la lista de espera para esta prestación.',
+  SIN_CONSENTIMIENTO: 'El paciente no aceptó recibir mensajes: no le podemos avisar las ofertas.',
+  INSCRIPCION_NO_ACTIVA: 'Esta inscripción ya no estaba activa.',
+  PLAZO_INVALIDO: 'Ingresá un número entero de 1 a 24.',
+  OFERTA_NO_DISPONIBLE: 'Ese horario ya se ocupó. Seguís en la lista de espera.',
+  OFERTA_VENCIDA: 'Esta oferta venció. Seguís en la lista de espera.',
+  OFERTA_YA_RESPONDIDA: 'Ya respondiste esta oferta.',
+  OFERTA_INEXISTENTE: 'El link no es válido. Revisá que esté completo.',
+  // Coberturas (C-49, design D8). Ninguno repite el número de afiliado escrito.
+  OBRA_SOCIAL_EXISTENTE: 'Ya existe una obra social o prepaga con ese nombre.',
+  PLAN_EXISTENTE: 'Esa obra social ya tiene un plan con ese nombre.',
+  CODIGO_NOMENCLADOR_EXISTENTE: 'Ya existe ese código en el nomenclador.',
+  PRESTACION_INEXISTENTE: 'La prestación elegida ya no existe.',
+  VIGENCIA_SUPERPUESTA: 'El paciente ya tiene una cobertura en esas fechas. Cerrá la vigente o cambiá las fechas.',
+  AFILIADO_DUPLICADO: 'Ese número ya lo tiene otro paciente de la misma obra social.',
+  PLAN_INACTIVO: 'El plan está inactivo. Elegí otro.',
+  OBRA_SOCIAL_INACTIVA: 'La obra social está inactiva. Elegí otra.',
+  VIGENCIA_INVALIDA: 'La fecha de fin no puede ser anterior a la de inicio.',
+  AFILIACION_CERRADA: 'Esa afiliación ya estaba cerrada.',
 };
 
 export const MENSAJE_SIN_PERMISO = 'No tenés permiso para esta acción.';

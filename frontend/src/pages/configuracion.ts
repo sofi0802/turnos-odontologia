@@ -1,3 +1,4 @@
+import { montarObrasSociales } from '../coberturas/catalogo.ts';
 import { montarAusencias } from '../configuracion/ausencias.ts';
 import { montarBloqueos } from '../configuracion/bloqueos.ts';
 import { montarPrestaciones, montarProfesionales, montarSillones } from '../configuracion/catalogo.ts';
@@ -40,6 +41,10 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   // Las cuentas del personal son solo del administrador (C-41).
   if (permisosDelRol.gestionaUsuarios) {
     definiciones.push(['Usuarios', montarUsuarios]);
+  }
+  // El catálogo de obras sociales, planes y nomenclador es solo del administrador (C-49, design D5).
+  if (permisosDelRol.gestionaCoberturas) {
+    definiciones.push(['Obras sociales', montarObrasSociales]);
   }
   const pestanas: Pestana[] = definiciones.map(([titulo, montar]) => ({
     titulo,

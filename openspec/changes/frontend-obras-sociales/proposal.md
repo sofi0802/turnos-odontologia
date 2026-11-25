@@ -13,11 +13,11 @@ C-18 dejó en el backend el catálogo de obras sociales, planes y nomenclador, y
   - lista vacía, carga, error con "Reintentar" y los errores de la API en cada diálogo.
 - **Sección "Cobertura" del paciente**, un solo componente que se usa en dos lugares:
   - en la ficha de `#/pacientes` (C-44), arriba del odontograma: el `ADMIN` la edita y el odontólogo solo la lee;
-  - en una página nueva **"Coberturas"** (`#/coberturas`) para `ADMIN` y `RECEPCIONISTA`, con el buscador de pacientes y solo la cobertura, sin ningún dato clínico (RN-CL-01). *(a confirmar: ver design D2)*
+  - en una página nueva **"Coberturas"** (`#/coberturas`) para `ADMIN` y `RECEPCIONISTA`, con el buscador de pacientes y solo la cobertura, sin ningún dato clínico (RN-CL-01). *(confirmada por la líder, 2026-11-24: ver design D2)*
   - Muestra la cobertura vigente hoy (obra social, plan, número y vigencia) o "Particular", y el historial de afiliaciones (vigente, próxima o finalizada).
   - Afiliar, corregir (plan, número y "desde") y cerrar una afiliación, con validación previa del número y de las fechas, y los errores `VIGENCIA_SUPERPUESTA`, `AFILIADO_DUPLICADO`, `PLAN_INACTIVO`, `OBRA_SOCIAL_INACTIVA`, `VIGENCIA_INVALIDA` y `AFILIACION_CERRADA`.
   - Se carga aparte del resto de la ficha, con su propio error y "Reintentar".
-- **Mi cuenta del paciente con sesión** (`#/mi-cuenta`): deja de llevar a "Mis turnos" y muestra "Mi cobertura", solo lectura, sobre `GET /api/v1/paciente/cobertura` (PA-21). El menú del paciente suma "Mi cuenta". *(a confirmar: ver design D3)*
+- **Mi cuenta del paciente con sesión** (`#/mi-cuenta`): deja de llevar a "Mis turnos" y muestra "Mi cobertura", solo lectura, sobre `GET /api/v1/paciente/cobertura` (PA-21). El menú del paciente suma "Mi cuenta". *(confirmada por la líder, 2026-11-24: ver design D3)*
 - **Mensajes nuevos** en `MENSAJES_POR_CODIGO` para los códigos de coberturas.
 - **Privacidad**: la obra social, el plan y el número de afiliado no van en la dirección, el almacenamiento del navegador ni la consola (RN-OS-07, reglas duras 1 y 6).
 - **Design system**: se reusan los tokens de la Revision 5, sin tokens nuevos. Dos íconos nuevos: `credencial` ("Coberturas" y la tarjeta de la cobertura) y `cuenta` ("Mi cuenta" del paciente).

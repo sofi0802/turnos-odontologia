@@ -134,7 +134,8 @@ export function crearLayout(raiz: HTMLElement, paginas: readonly Pagina[], opcio
       item.append(enlace);
       (pagina.seccionMenu === 'cuenta' ? listaCuenta : lista).append(item);
       // Las páginas que exigen sesión de paciente (Mis turnos) no se ofrecen al visitante.
-      return { item, enlace, conSesion: pagina.acceso === 'paciente', roles: pagina.roles };
+      // C-49: Mi cuenta es pública (es el ingreso), pero en el menú figura solo con sesión.
+      return { item, enlace, conSesion: pagina.acceso === 'paciente' || pagina.soloConSesion === true, roles: pagina.roles };
     });
   menu.append(lista);
   lateral.append(cajonCabecera, menu, menuCuenta);

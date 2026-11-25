@@ -14,7 +14,7 @@
 - [x] A.2 Pasar los tests que hacen `import estilos from '../src/styles.css?raw'` al ayudante y verificar que pasan sin cambiar sus afirmaciones; informar cada test tocado
 - [x] A.3 RED: escribir "Sin alias ni colores sueltos" y verlo fallar; GREEN: reemplazar `--color-*`, `--espacio-*` y `--radio` por sus `--ds-*` equivalentes en todos los módulos y quitar los alias de `design-system/tokens.css` (Revision 2); TRIANGULATE: colores `#rrggbb` o `rgb()` fuera de `tokens.css`; REFACTOR: unificar valores repetidos. Verificar con `npm test`
 - [x] A.4 Actualizar `design-system/README.md` (Revision 2, `Approval: pending`, qué cambió y por qué) y presentar la renovación a la líder; capturas de después idénticas a las de antes (comparar con `mockups/antes/`). Registrar `Approval` en `design.md` y en el README del design system (hecho: Revision 2 con `Approval: pending`; falta que la líder la renueve)
-- [ ] A.5 Correr `npm test` y `npm run build` y abrir el PR de la etapa A. Verificar que la cantidad de tests no baja
+- [x] A.5 Correr `npm test` y `npm run build` y abrir el PR de la etapa A. Verificar que la cantidad de tests no baja (hecho: PR #74 mergeado el 2026-11-23; los tests no bajaron: 447 al empezar, 952 en el cierre del 2026-11-24)
 
 ## B. Barra lateral, encabezado, pie y componentes comunes
 
@@ -51,8 +51,8 @@
 
 ## 7. Cierre
 
-- [ ] 7.1 Recorrer los deltas y verificar que los 34 escenarios tienen un test con el nombre del escenario, sin duplicados. Verificar con un `grep` de los nombres
-- [ ] 7.2 Completar `Preview` y `Visual verify` de cada etapa en `design.md`; correr `openspec validate frontend-uniformidad-visual --strict` y verificar que el change es válido
+- [x] 7.1 Recorrer los deltas y verificar que los 34 escenarios tienen un test con el nombre del escenario, sin duplicados. Verificar con un `grep` de los nombres (hecho el 2026-11-24: los 34 tienen exactamente un test con su nombre; se renombraron 5 tests que los cubrían con otro nombre sin cambiar lo que comprueban, y "Elegir un día con el calendario" suma la comprobación del día mínimo)
+- [x] 7.2 Completar `Preview` y `Visual verify` de cada etapa en `design.md`; correr `openspec validate frontend-uniformidad-visual --strict` y verificar que el change es válido (hecho el 2026-11-24: se sumaron las etapas A y E; `openspec validate --strict` da válido)
 
 ## Workflow follow-up
 

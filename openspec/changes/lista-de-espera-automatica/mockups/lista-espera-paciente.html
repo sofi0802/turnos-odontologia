@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lista de espera del paciente · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="lista-espera.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="paciente.uno@example.com" data-rol="PACIENTE" data-activa="reserva">
+  <div class="pagina-paciente">
+    <h1 tabindex="-1">Reservar turno</h1>
+
+    <p class="rotulo-estado">1 · Reserva: un día sin horarios</p>
+    <section class="panel">
+      <h2 class="seccion-titulo">Elegí el horario</h2>
+      <p class="subtitulo">Limpieza · Ana Ejemplo · jueves 3 de diciembre</p>
+      <div class="le-sin-horarios">
+        <p role="status">No hay horarios libres para ese día. Probá con otra fecha o con otro profesional.</p>
+        <p class="le-sugerencia">¿Querés un turno antes? Anotate y te avisamos por mensaje si se libera un horario.</p>
+        <button type="button" class="btn btn-principal">Anotarme en la lista de espera</button>
+      </div>
+    </section>
+
+    <p class="rotulo-estado">2 · Diálogo para anotarse</p>
+    <dialog open class="dialogo mockup-dialogo" aria-labelledby="d1">
+      <h2 id="d1">Anotarme en la lista de espera</h2>
+      <form class="formulario" novalidate>
+        <dl class="le-fijo">
+          <dt>Prestación</dt><dd>Limpieza</dd>
+          <dt>Profesional</dt><dd>Ana Ejemplo</dd>
+        </dl>
+        <div class="le-rango">
+          <div class="campo"><label for="d1-desde">Desde</label><input id="d1-desde" class="control" type="date" value="2026-12-03" /></div>
+          <div class="campo"><label for="d1-hasta">Hasta</label><input id="d1-hasta" class="control" type="date" value="2026-12-17" /></div>
+        </div>
+        <p class="ayuda">Si se libera un horario en esas fechas, te lo ofrecemos por WhatsApp o email y tenés un plazo para aceptarlo.</p>
+        <div class="dialogo-acciones"><button type="button" class="btn">Volver</button><button type="submit" class="btn btn-principal">Anotarme</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">3 · Anotado</p>
+    <dialog open class="dialogo mockup-dialogo" aria-labelledby="d2">
+      <h2 id="d2">Anotarme en la lista de espera</h2>
+      <p class="aviso aviso-ok" role="status">Listo, te anotamos. Si se libera un horario, te avisamos por mensaje.</p>
+      <div class="dialogo-acciones"><button type="button" class="btn">Cerrar</button><a class="btn btn-principal" href="#/mis-turnos">Ver Mis turnos</a></div>
+    </dialog>
+
+    <p class="rotulo-estado">4 · Ya estaba anotado (409 YA_EN_LISTA_DE_ESPERA)</p>
+    <dialog open class="dialogo mockup-dialogo" aria-labelledby="d3">
+      <h2 id="d3">Anotarme en la lista de espera</h2>
+      <p class="aviso aviso-error" role="alert">Ya estás en la lista de espera para esta prestación.</p>
+      <div class="dialogo-acciones"><button type="button" class="btn">Cerrar</button><a class="btn btn-principal" href="#/mis-turnos">Ver Mis turnos</a></div>
+    </dialog>
+  </div>
+
+  <div class="pagina-paciente">
+    <h1>Mis turnos</h1>
+    <p class="rotulo-estado">5 · Mis turnos con la sección Lista de espera</p>
+    <section aria-label="Próximos turnos">
+      <h2 class="seccion-titulo">Próximos turnos</h2>
+      <ul class="lista-turnos">
+        <li class="turno-paciente">
+          <div class="turno-cabecera"><p class="turno-fecha">miércoles 9 de diciembre · 11:00</p><span class="estado e-reservado">Reservado</span></div>
+          <p class="turno-meta">Control · Bruno Prueba</p>
+          <p class="turno-numero">Reserva R-0007</p>
+        </li>
+      </ul>
+    </section>
+    <section aria-label="Lista de espera">
+      <h2 class="seccion-titulo">Lista de espera</h2>
+      <ul class="lista-turnos">
+        <li class="turno-paciente le-tarjeta">
+          <div class="turno-cabecera"><p class="turno-fecha">Limpieza</p><button type="button" class="btn btn-chico">Salir de la lista</button></div>
+          <p class="turno-meta">Sin preferencia · del martes 1 de diciembre al martes 15 de diciembre</p>
+          <p class="le-oferta"><span data-icono="espera"></span>Te enviamos un horario: jueves 3 de diciembre a las 10:00. Revisá tu WhatsApp o tu email.</p>
+        </li>
+        <li class="turno-paciente le-tarjeta">
+          <div class="turno-cabecera"><p class="turno-fecha">Control</p><button type="button" class="btn btn-chico">Salir de la lista</button></div>
+          <p class="turno-meta">Ana Ejemplo · del jueves 3 de diciembre al jueves 17 de diciembre</p>
+        </li>
+      </ul>
+    </section>
+
+    <p class="rotulo-estado">6 · No se pudo cargar la lista de espera</p>
+    <p class="aviso aviso-alerta" role="status">No pudimos cargar tu lista de espera.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

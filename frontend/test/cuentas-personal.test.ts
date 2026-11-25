@@ -504,7 +504,8 @@ describe('Sección de la cuenta en el menú del personal', () => {
     const { raiz } = abrirApp(servidorCon(SESION_RECEPCION_CONFIG), '#/agenda');
 
     await vi.waitFor(() => expect(enlaces(raiz, 'Tu cuenta')).toEqual(['Mi contraseña']));
-    expect(enlaces(raiz, 'Principal')).toEqual(['Agenda', 'Reportes', 'Configuración']);
+    // C-49: la recepción también ve "Coberturas".
+    expect(enlaces(raiz, 'Principal')).toEqual(['Agenda', 'Lista de espera', 'Coberturas', 'Reportes', 'Caja', 'Configuración']);
   });
 
   it('Un paciente no ve la sección de la cuenta', async () => {
