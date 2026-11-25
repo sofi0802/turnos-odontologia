@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pacientes · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="presupuestos.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="ana.ejemplo" data-rol="ODONTOLOGO" data-activa="pacientes">
+  <div class="pagina-ficha">
+    <h1 tabindex="-1">Pacientes</h1>
+
+    <p class="rotulo-estado">1 · "Nuevo presupuesto" con las piezas sugeridas y el estimado</p>
+    <dialog class="dialogo dialogo-estatico pre-dialogo" open aria-labelledby="a1-t">
+      <h2 id="a1-t">Nuevo presupuesto</h2>
+      <p class="dialogo-resumen">Paciente Uno. Vence a los 30 días. No se puede editar después de emitirlo.</p>
+      <form class="formulario cob-form pre-armado" novalidate>
+        <p class="aviso aviso-error" role="alert"></p>
+        <p class="pre-cobertura-usada">Cobertura de hoy: <strong>Obra Social Ejemplo · Plan Base</strong> · N.º <span class="cob-numero">OSE-000001</span></p>
+        <div class="pre-acciones">
+          <button type="button" class="btn btn-chico">Agregar piezas sugeridas</button>
+          <button type="button" class="btn btn-chico">Agregar ítem</button>
+        </div>
+        <p class="ayuda">Las prestaciones sin precio no se pueden presupuestar.</p>
+
+        <ol class="pre-items" aria-label="Ítems del presupuesto">
+          <li class="pre-item">
+            <div class="pre-item-cabecera">
+              <p class="pre-item-numero">Ítem 1 <span class="etiqueta etiqueta-vencido pre-origen">Caries</span></p>
+              <button type="button" class="btn btn-chico" aria-label="Quitar el ítem 1">Quitar</button>
+            </div>
+            <div class="pre-item-campos">
+              <div class="campo"><label for="i1-p">Prestación<span class="solo-lectores"> del ítem 1</span></label><select id="i1-p" class="control"><option>Consulta o control</option></select><p class="campo-error"></p></div>
+              <div class="campo"><label for="i1-pi">Pieza<span class="solo-lectores"> del ítem 1</span></label><input id="i1-pi" class="control" inputmode="numeric" value="16" /><p class="campo-error"></p></div>
+              <div class="campo"><label for="i1-c">Cara<span class="solo-lectores"> del ítem 1</span></label><select id="i1-c" class="control"><option>Oclusal (O)</option></select><p class="campo-error"></p></div>
+              <div class="campo"><label for="i1-q">Cantidad<span class="solo-lectores"> del ítem 1</span></label><input id="i1-q" class="control" inputmode="numeric" value="1" /><p class="campo-error"></p></div>
+            </div>
+            <p class="pre-estimado"><span class="cob-codigo">N-0101</span> · 100 % · Importe $ 15.000,00 · Cobertura $ 15.000,00 · <strong>Copago $ 0,00</strong></p>
+          </li>
+          <li class="pre-item">
+            <div class="pre-item-cabecera">
+              <p class="pre-item-numero">Ítem 2 <span class="etiqueta etiqueta-pendiente pre-origen">A tratar</span></p>
+              <button type="button" class="btn btn-chico">Quitar</button>
+            </div>
+            <div class="pre-item-campos">
+              <div class="campo"><label for="i2-p">Prestación<span class="solo-lectores"> del ítem 2</span></label><select id="i2-p" class="control"><option>Extracción simple</option></select><p class="campo-error"></p></div>
+              <div class="campo"><label for="i2-pi">Pieza<span class="solo-lectores"> del ítem 2</span></label><input id="i2-pi" class="control" value="36" /><p class="campo-error"></p></div>
+              <div class="campo"><label for="i2-c">Cara<span class="solo-lectores"> del ítem 2</span></label><select id="i2-c" class="control"><option>Sin cara</option></select><p class="campo-error"></p></div>
+              <div class="campo"><label for="i2-q">Cantidad<span class="solo-lectores"> del ítem 2</span></label><input id="i2-q" class="control" value="1" /><p class="campo-error"></p></div>
+            </div>
+            <p class="pre-estimado"><span class="cob-codigo">N-0301</span> · el plan no lo cubre (0 %) · Importe $ 30.000,00 · Cobertura $ 0,00 · <strong>Copago $ 30.000,00</strong></p>
+          </li>
+          <li class="pre-item">
+            <div class="pre-item-cabecera">
+              <p class="pre-item-numero">Ítem 3</p>
+              <button type="button" class="btn btn-chico">Quitar</button>
+            </div>
+            <div class="pre-item-campos">
+              <div class="campo"><label for="i3-p">Prestación<span class="solo-lectores"> del ítem 3</span></label><select id="i3-p" class="control"><option>Limpieza (profilaxis)</option></select><p class="campo-error"></p></div>
+              <div class="campo"><label for="i3-pi">Pieza<span class="solo-lectores"> del ítem 3</span></label><input id="i3-pi" class="control" value="" placeholder="Opcional" /><p class="campo-error"></p></div>
+              <div class="campo"><label for="i3-c">Cara<span class="solo-lectores"> del ítem 3</span></label><select id="i3-c" class="control" disabled><option>Sin cara</option></select><p class="campo-error"></p></div>
+              <div class="campo"><label for="i3-q">Cantidad<span class="solo-lectores"> del ítem 3</span></label><input id="i3-q" class="control" value="1" /><p class="campo-error"></p></div>
+            </div>
+            <p class="pre-estimado"><span class="cob-codigo">N-0201</span> · 50 % · Importe $ 25.000,00 · Cobertura $ 12.500,00 · <strong>Copago $ 12.500,00</strong></p>
+          </li>
+        </ol>
+
+        <div class="pre-pie">
+          <dl class="pre-totales">
+            <div><dt>Precio</dt><dd>$ 70.000,00</dd></div>
+            <div><dt>Cobertura</dt><dd>$ 27.500,00</dd></div>
+            <div class="pre-copago"><dt>Copago</dt><dd>$ 42.500,00</dd></div>
+          </dl>
+          <p class="ayuda">Estimado: el importe final lo calcula el sistema al emitir.</p>
+        </div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Emitir presupuesto</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">2 · Validación antes de emitir y prestación con varios códigos</p>
+    <dialog class="dialogo dialogo-estatico pre-dialogo" open aria-labelledby="a2-t">
+      <h2 id="a2-t">Nuevo presupuesto</h2>
+      <form class="formulario cob-form pre-armado" novalidate>
+        <p class="pre-cobertura-usada">Cobertura de hoy: <strong>Particular</strong> · el paciente paga el importe completo.</p>
+        <ol class="pre-items" aria-label="Ítems del presupuesto">
+          <li class="pre-item">
+            <div class="pre-item-cabecera"><p class="pre-item-numero">Ítem 1</p><button type="button" class="btn btn-chico">Quitar</button></div>
+            <div class="pre-item-campos">
+              <div class="campo"><label for="j1-p">Prestación<span class="solo-lectores"> del ítem 1</span></label><select id="j1-p" class="control"><option>Consulta o control</option></select><p class="campo-error"></p></div>
+              <div class="campo"><label for="j1-pi">Pieza<span class="solo-lectores"> del ítem 1</span></label><input id="j1-pi" class="control" value="36" /><p class="campo-error"></p></div>
+              <div class="campo"><label for="j1-c">Cara<span class="solo-lectores"> del ítem 1</span></label><select id="j1-c" class="control" aria-invalid="true" aria-describedby="j1-ce"><option>Palatina (P)</option></select><p class="campo-error" id="j1-ce">Esa cara no corresponde a la pieza.</p></div>
+              <div class="campo"><label for="j1-q">Cantidad<span class="solo-lectores"> del ítem 1</span></label><input id="j1-q" class="control" value="1" /><p class="campo-error"></p></div>
+              <div class="campo pre-campo-ancho"><label for="j1-k">Código<span class="solo-lectores"> del ítem 1</span></label><select id="j1-k" class="control" aria-invalid="true" aria-describedby="j1-ke"><option>Elegí el código</option><option>N-0101 · Consulta</option><option>N-0102 · Consulta de urgencia</option></select><p class="campo-error" id="j1-ke">Elegí el código del nomenclador.</p></div>
+            </div>
+          </li>
+          <li class="pre-item">
+            <div class="pre-item-cabecera"><p class="pre-item-numero">Ítem 2</p><button type="button" class="btn btn-chico">Quitar</button></div>
+            <div class="pre-item-campos">
+              <div class="campo"><label for="j2-p">Prestación<span class="solo-lectores"> del ítem 2</span></label><select id="j2-p" class="control" aria-invalid="true" aria-describedby="j2-pe"><option>Elegí la prestación</option></select><p class="campo-error" id="j2-pe">Elegí la prestación.</p></div>
+              <div class="campo"><label for="j2-pi">Pieza<span class="solo-lectores"> del ítem 2</span></label><input id="j2-pi" class="control" value="19" aria-invalid="true" aria-describedby="j2-pie" /><p class="campo-error" id="j2-pie">La pieza no existe en la notación FDI.</p></div>
+              <div class="campo"><label for="j2-c">Cara<span class="solo-lectores"> del ítem 2</span></label><select id="j2-c" class="control"><option>Sin cara</option></select><p class="campo-error"></p></div>
+              <div class="campo"><label for="j2-q">Cantidad<span class="solo-lectores"> del ítem 2</span></label><input id="j2-q" class="control" value="1" /><p class="campo-error"></p></div>
+            </div>
+          </li>
+        </ol>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Emitir presupuesto</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">3 · Rechazo de la API al emitir (el diálogo queda abierto)</p>
+    <dialog class="dialogo dialogo-estatico pre-dialogo" open aria-labelledby="a3-t">
+      <h2 id="a3-t">Nuevo presupuesto</h2>
+      <form class="formulario cob-form pre-armado" novalidate>
+        <p class="aviso aviso-error" role="alert">Una de las prestaciones ya no tiene precio. Revisá los aranceles.</p>
+        <p class="nota-contexto">Los mismos ítems de antes, con sus datos</p>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Emitir presupuesto</button></div>
+      </form>
+    </dialog>
+
+    <p class="nota-mockup"><b>Mockup C-50.</b> Armado (design D6): ítems como tarjetas; "Agregar piezas sugeridas" trae las caries y piezas a tratar del odontograma con su origen escrito. El estimado (decisión a confirmar, design D4) usa los precios y la cobertura de hoy, y siempre dice que el importe final lo calcula el sistema. "Código" aparece solo si la prestación tiene varios. A 390 px el diálogo ocupa la pantalla. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

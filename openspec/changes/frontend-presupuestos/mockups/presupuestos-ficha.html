@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pacientes · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="presupuestos.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="ana.ejemplo" data-rol="ODONTOLOGO" data-activa="pacientes">
+  <div class="pagina-ficha">
+    <h1 tabindex="-1">Pacientes</h1>
+
+    <section class="panel ficha-paciente" aria-labelledby="p-nombre">
+      <div class="ficha-paciente-datos">
+        <div>
+          <h2 class="ficha-paciente-nombre" id="p-nombre">Paciente Uno</h2>
+          <p class="ficha-paciente-dni">DNI 99000001</p>
+        </div>
+        <button type="button" class="btn">Cambiar de paciente</button>
+      </div>
+    </section>
+
+    <div class="nota-contexto">Sección "Cobertura" (C-49), sin cambios: Obra Social Ejemplo (OSE) · Plan Base · N.º OSE-000001</div>
+
+    <section class="panel ficha-seccion pre-seccion" aria-labelledby="t-pre">
+      <div class="ficha-seccion-cabecera">
+        <h2 id="t-pre">Presupuestos</h2>
+        <button type="button" class="btn btn-principal">Nuevo presupuesto</button>
+      </div>
+      <p class="aviso aviso-ok" role="status">Presupuesto emitido.</p>
+
+      <ul class="pre-lista" aria-label="Presupuestos de Paciente Uno">
+        <li class="pre-presupuesto">
+          <div>
+            <p class="pre-cabecera"><span>Presupuesto del 24/11/2026</span><span class="etiqueta etiqueta-pendiente">Pendiente</span></p>
+            <p class="pre-meta">Vence el 24/12/2026 · Dra. Ana Ejemplo</p>
+            <p class="pre-meta">Obra Social Ejemplo · Plan Base · N.º <span class="cob-numero">OSE-000001</span></p>
+          </div>
+          <div class="pre-acciones">
+            <button type="button" class="btn btn-chico" aria-expanded="true" aria-controls="d41">Ocultar detalle</button>
+            <button type="button" class="btn btn-chico btn-peligro">Rechazar</button>
+            <button type="button" class="btn btn-chico btn-principal">Aceptar</button>
+          </div>
+          <dl class="pre-totales">
+            <div><dt>Precio</dt><dd>$ 40.000,00</dd></div>
+            <div><dt>Cobertura</dt><dd>$ 27.500,00</dd></div>
+            <div class="pre-copago"><dt>Copago</dt><dd>$ 12.500,00</dd></div>
+          </dl>
+          <ul class="pre-detalle" id="d41" aria-label="Ítems del presupuesto del 24/11/2026">
+            <li class="pre-renglon">
+              <div>
+                <p class="pre-renglon-titulo">Consulta o control</p>
+                <p class="pre-renglon-datos"><span class="cob-codigo">N-0101</span> · Pieza 16, cara oclusal · Cantidad 1 × $ 15.000,00 · 100 %</p>
+              </div>
+              <dl class="pre-totales">
+                <div><dt>Importe</dt><dd>$ 15.000,00</dd></div>
+                <div><dt>Cobertura</dt><dd>$ 15.000,00</dd></div>
+                <div class="pre-copago"><dt>Copago</dt><dd>$ 0,00</dd></div>
+              </dl>
+            </li>
+            <li class="pre-renglon">
+              <div>
+                <p class="pre-renglon-titulo">Limpieza (profilaxis)</p>
+                <p class="pre-renglon-datos"><span class="cob-codigo">N-0201</span> · Sin pieza · Cantidad 1 × $ 25.000,00 · 50 %</p>
+              </div>
+              <dl class="pre-totales">
+                <div><dt>Importe</dt><dd>$ 25.000,00</dd></div>
+                <div><dt>Cobertura</dt><dd>$ 12.500,00</dd></div>
+                <div class="pre-copago"><dt>Copago</dt><dd>$ 12.500,00</dd></div>
+              </dl>
+            </li>
+          </ul>
+        </li>
+
+        <li class="pre-presupuesto">
+          <div>
+            <p class="pre-cabecera"><span>Presupuesto del 01/10/2026</span><span class="etiqueta etiqueta-vencido">Vencido</span></p>
+            <p class="pre-meta">Venció el 31/10/2026 · Dra. Ana Ejemplo</p>
+            <p class="pre-meta">Obra Social Ejemplo · Plan Base · N.º <span class="cob-numero">OSE-000001</span></p>
+          </div>
+          <div class="pre-acciones">
+            <button type="button" class="btn btn-chico" aria-expanded="false">Ver detalle</button>
+            <button type="button" class="btn btn-chico btn-peligro">Rechazar</button>
+          </div>
+          <dl class="pre-totales">
+            <div><dt>Precio</dt><dd>$ 30.000,00</dd></div>
+            <div><dt>Cobertura</dt><dd>$ 0,00</dd></div>
+            <div class="pre-copago"><dt>Copago</dt><dd>$ 30.000,00</dd></div>
+          </dl>
+          <p class="aviso aviso-info">Venció: ya no se puede aceptar. Para renovarlo, emití uno nuevo.</p>
+        </li>
+
+        <li class="pre-presupuesto pre-presupuesto-cerrado">
+          <div>
+            <p class="pre-cabecera"><span>Presupuesto del 02/06/2026</span><span class="etiqueta etiqueta-aceptado">Aceptado</span></p>
+            <p class="pre-meta">Dra. Ana Ejemplo · Particular</p>
+          </div>
+          <div class="pre-acciones">
+            <button type="button" class="btn btn-chico" aria-expanded="false">Ver detalle</button>
+          </div>
+          <dl class="pre-totales">
+            <div><dt>Precio</dt><dd>$ 15.000,00</dd></div>
+            <div><dt>Cobertura</dt><dd>$ 0,00</dd></div>
+            <div class="pre-copago"><dt>Copago</dt><dd>$ 15.000,00</dd></div>
+          </dl>
+        </li>
+      </ul>
+    </section>
+
+    <div class="nota-contexto">Odontograma (C-44), periodontograma (C-46), imágenes (C-47) y ficha básica, sin cambios</div>
+
+    <p class="nota-mockup"><b>Mockup C-50.</b> Odontóloga en la ficha: "Presupuestos" va debajo de "Cobertura" y arriba del odontograma, y carga aparte. Estados escritos: Pendiente, Vencido, Aceptado y Rechazado. Uno vencido solo se rechaza; uno cerrado no tiene acciones. Los importes son los que devolvió la API al emitir. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>
