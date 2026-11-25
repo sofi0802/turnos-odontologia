@@ -30,10 +30,10 @@ Datos ficticios de los escenarios (salvo que el escenario diga otra cosa):
 ### Requirement: Secciones según el rol
 `#/configuracion` SHALL mostrar estas pestañas:
 
-- **Para `ADMIN`:** "Profesionales", "Sillones", "Prestaciones", "Margen", "Horarios", "Ausencias", "Bloqueos", "Usuarios", "Señas" y "Consentimientos".
-- **Para `RECEPCIONISTA` y `ODONTOLOGO`:** las mismas sin las tres últimas.
+- **Para `ADMIN`:** "Profesionales", "Sillones", "Prestaciones", "Margen", "Horarios", "Ausencias", "Bloqueos", "Usuarios", "Obras sociales", "Señas" y "Consentimientos".
+- **Para `RECEPCIONISTA` y `ODONTOLOGO`:** las mismas sin las cuatro últimas.
 
-La pestaña elegida MUST quedar marcada con `aria-selected` y solo su contenido MUST estar visible. La página MUST exigir una sesión del personal: sin sesión lleva a `#/ingreso` sin pedir datos de configuración.
+La pestaña elegida MUST quedar marcada con `aria-selected` y solo su contenido MUST estar visible. Sin una sesión del personal, la página MUST llevar a `#/ingreso` sin pedir datos.
 
 #### Scenario: Abrir Configuración sin sesión
 - **GIVEN** que `GET /api/v1/public/sesion` informa que no hay sesión
@@ -44,13 +44,13 @@ La pestaña elegida MUST quedar marcada con `aria-selected` y solo su contenido 
 #### Scenario: Pestañas del administrador
 - **GIVEN** una sesión de `admin`
 - **WHEN** se abre `#/configuracion`
-- **THEN** se ven las pestañas "Profesionales", "Sillones", "Prestaciones", "Margen", "Horarios", "Ausencias", "Bloqueos", "Usuarios", "Señas" y "Consentimientos"
+- **THEN** se ven las pestañas "Profesionales", "Sillones", "Prestaciones", "Margen", "Horarios", "Ausencias", "Bloqueos", "Usuarios", "Obras sociales", "Señas" y "Consentimientos"
 - **AND** "Profesionales" está seleccionada y muestra la lista de profesionales
 
 #### Scenario: Recepción no ve la pestaña Usuarios
 - **GIVEN** una sesión de `recepcion`
 - **WHEN** se abre `#/configuracion`
-- **THEN** se ven siete pestañas, sin "Usuarios", "Señas" ni "Consentimientos"
+- **THEN** se ven siete pestañas, sin "Usuarios", "Obras sociales", "Señas" ni "Consentimientos"
 - **AND** no se envía ningún pedido a `/api/v1/usuarios` ni a `/api/v1/senas/configuracion`
 
 #### Scenario: Recepción ve los bloqueos sin poder registrarlos
@@ -70,6 +70,12 @@ La pestaña elegida MUST quedar marcada con `aria-selected` y solo su contenido 
 - **WHEN** se abre `#/configuracion`
 - **THEN** no hay una pestaña "Consentimientos"
 - **AND** no se envía ningún pedido a `/api/v1/consentimientos/plantillas`
+
+#### Scenario: El odontólogo no ve Obras sociales
+- **GIVEN** una sesión de `ana.ejemplo`
+- **WHEN** se abre `#/configuracion`
+- **THEN** no hay una pestaña "Obras sociales"
+- **AND** no se envía ningún pedido a `/api/v1/obras-sociales`
 
 ### Requirement: Catálogos del consultorio
 Las pestañas "Profesionales", "Sillones" y "Prestaciones" SHALL listar lo que devuelven:

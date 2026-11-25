@@ -3,12 +3,12 @@
 ## ADDED Requirements
 
 ### Requirement: Página "Coberturas" para administración y recepción
-La aplicación SHALL ofrecer la página "Coberturas" en `#/coberturas`, con su opción en la barra lateral después de "Pacientes" (o de "Agenda" si no está "Pacientes") y antes de "Reportes", solo con sesión `ADMIN` o `RECEPCIONISTA`. Con sesión `ODONTOLOGO` o `PACIENTE`, abrir la dirección MUST mostrar "Esta sección es solo para administración y recepción." sin pedir datos de pacientes. Sin sesión, lleva a Mi cuenta.
+La aplicación SHALL ofrecer la página "Coberturas" en `#/coberturas`, con su opción en la barra lateral después de "Pacientes" (o de "Lista de espera" si no está "Pacientes") y antes de "Reportes", solo con sesión `ADMIN` o `RECEPCIONISTA`. Con sesión `ODONTOLOGO` o `PACIENTE`, abrir la dirección MUST mostrar "Esta sección es solo para administración y recepción." sin pedir datos de pacientes. Sin sesión, lleva a Mi cuenta.
 
 #### Scenario: Menú de la recepción con Coberturas
 - **GIVEN** la sesión de `recepcion` con rol `RECEPCIONISTA`
 - **WHEN** se abre la aplicación en `#/agenda`
-- **THEN** la barra lateral tiene el enlace "Coberturas" entre "Agenda" y "Reportes"
+- **THEN** la barra lateral tiene el enlace "Coberturas" entre "Lista de espera" y "Reportes"
 
 #### Scenario: Menú del administrador con Coberturas
 - **GIVEN** la sesión de `admin` con rol `ADMIN`

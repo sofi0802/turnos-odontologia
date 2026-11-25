@@ -940,7 +940,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `docs/discovery/sources/relevamiento-fuentes.md` §DentalTec
 
 ### [C-49] `frontend-obras-sociales`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-25, SDD, solo frontend; sin migraciones). Propuesta y mockups en el PR #127; apply en el PR #138; archive en este PR. Specs: `openspec/specs/frontend-coberturas/` (nuevo) y `frontend-configuracion-consultorio/` ("Obras sociales" entre "Usuarios" y "Señas"), `frontend-cuenta-paciente/` ("Mi cuenta" con "Mi cobertura") y `frontend-navegacion/` ("Coberturas" y "Mi cuenta" en la barra lateral; "Menú según la sesión" ya los tenía desde el archive de C-15, tarea 9.2) actualizados; change archivado en `openspec/changes/archive/2026-11-25-frontend-obras-sociales/`. Verificación visual: passed con diferencias menores
 - **Responsable**: Juan Sebastián (avisa a Enzo, dueño de `frontend/`)
 - **Scope**:
   - C-18 hizo el backend de obras sociales, planes, nomenclador y afiliaciones, pero ninguna pantalla lo usa.
@@ -960,7 +960,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/README.md` y `design-system/components.html`
 
 ### [C-50] `frontend-presupuestos`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-25, SDD, solo frontend; sin migraciones). Propuesta y mockups aprobados en el PR #139; apply en el PR #141; archive en este PR. Specs: `openspec/specs/frontend-presupuestos/` y `frontend-aranceles/` (nuevos); change archivado en `openspec/changes/archive/2026-11-25-frontend-presupuestos/`. Verificación visual: passed con diferencias menores, 16 capturas en `mockups/verify/`
 - **Responsable**: Juan Sebastián (avisa a Enzo, dueño de `frontend/`)
 - **Scope**:
   - C-19 hizo el backend de aranceles, cobertura por plan y presupuestos, pero ninguna pantalla lo usa.
