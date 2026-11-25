@@ -1,4 +1,5 @@
 import { montarObrasSociales } from '../coberturas/catalogo.ts';
+import { montarSenas } from '../configuracion/senas.ts';
 import { montarAusencias } from '../configuracion/ausencias.ts';
 import { montarBloqueos } from '../configuracion/bloqueos.ts';
 import { montarPrestaciones, montarProfesionales, montarSillones } from '../configuracion/catalogo.ts';
@@ -45,6 +46,10 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   // El catálogo de obras sociales, planes y nomenclador es solo del administrador (C-49, design D5).
   if (permisosDelRol.gestionaCoberturas) {
     definiciones.push(['Obras sociales', montarObrasSociales]);
+  }
+  // Las señas de la reserva online las configura solo el administrador (C-23).
+  if (permisosDelRol.configuraSenas) {
+    definiciones.push(['Señas', montarSenas]);
   }
   const pestanas: Pestana[] = definiciones.map(([titulo, montar]) => ({
     titulo,

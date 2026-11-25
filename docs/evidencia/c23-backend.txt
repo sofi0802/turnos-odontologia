@@ -1,0 +1,29 @@
+C-23 senas-mercado-pago: evidencia del backend
+Fecha: 2026-11-25
+Rama: change/C-23-senas-mercado-pago-apply (commit 478cb70: las correcciones de la verificación visual y el merge de master con C-15, C-27, C-48, C-49 y C-50)
+
+Comando: ./gradlew cleanTest cleanIntegrationTest build integrationTest (Gradle, Java 21, PostgreSQL 16 en Docker
+con la base de tests de .env). Se limpiaron los resultados para que los tests corrieran de nuevo.
+Resultado: BUILD SUCCESSFUL in 14m 42s, código de salida 0
+- Unitarios (tarea test): 1099 PASSED, 0 FAILED, 0 SKIPPED.
+- Integración (tarea integrationTest, @Tag("integration")): 1317 PASSED, 0 FAILED, 0 SKIPPED.
+Captura: active-stack evidence-capture, corrida df131ecac63944dcabeeeae441ecb11f, salida redactada sin truncar,
+sha256 f134c42588651c644607a8b84d75502ce50bd12b0500e96614078ed50acefa53 (copia local, fuera del repo).
+
+Tests nuevos de C-23:
+- Unitarios sin base (pagos/domain y pagos/infrastructure): CalculoSenaTest (8), ReglaFinalTest (6),
+  FirmaMercadoPagoTest (8), PasarelaMercadoPagoTest (7, contra MockRestServiceServer, nunca contra Mercado Pago) y
+  PasarelaSimuladaTest (4).
+- Integración con PostgreSQL real (pagos/): V23MigrationIntegrationTest (4), ConfiguracionSenasIntegrationTest (6),
+  NotificacionesMercadoPagoIntegrationTest (10, incluida la excepción de CSRF de una sola ruta),
+  ReservaConSenaIntegrationTest (17, incluida la reserva simultánea), CausaDeCancelacionIntegrationTest (4) y
+  RevisionDeSenasIntegrationTest (19, incluidos los logs sin importes y el aviso de reintegro).
+
+Firma de Mercado Pago: formato de x-signature (ts, v1, manifiesto id:<data.id>;request-id:<x-request-id>;ts:<ts>;)
+confirmado contra la documentación vigente de Mercado Pago (tarea 3.1).
+
+Un test por escenario (tarea 7.1): los 74 escenarios de los ocho deltas tienen su test. "Falta la causa de un turno
+con seña" y "Reserva sin seña" se llaman igual en un delta del backend y en frontend-senas: cada uno tiene su test.
+
+Datos: solo ficticios (Paciente Uno con DNI 99000001, Paciente Dos con DNI 99000002, Ana Ejemplo). La clave de firma
+de los tests (clave-de-prueba-no-secreta) no es una credencial. Sin credenciales de Mercado Pago en el repo.

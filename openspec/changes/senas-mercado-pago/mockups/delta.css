@@ -1,5 +1,5 @@
 /* C-23: señas. Lo nuevo respecto de los estilos actuales (reusa .panel, .casilla, .dos-campos, .aviso-info y .ayuda).
-   Solo variables --ds-*. En el apply va al módulo src/styles/23-senas.css. */
+   Solo variables --ds-*. En el apply va al módulo src/styles/26-senas.css. */
 
 /* Configuración: la casilla y los dos números en una columna en el celular, en dos desde 768 px. */
 .senas-config .formulario {

@@ -23,6 +23,14 @@ class AuditoriaTurnosJpa implements AuditoriaTurnos {
     }
 
     @Override
+    public void registrarCancelacion(Long turnoId, String actor, String causa) {
+        TurnoAuditoriaEntity registro = new TurnoAuditoriaEntity(turnoId, Accion.CANCELAR.name(), actor, reloj.instant(),
+                null);
+        registro.conCausa(causa);
+        em.persist(registro);
+    }
+
+    @Override
     public boolean registrada(Long turnoId, Accion accion) {
         return !em.createQuery("select a.id from TurnoAuditoriaEntity a where a.turnoId = :turno and a.accion = :accion",
                         Long.class)

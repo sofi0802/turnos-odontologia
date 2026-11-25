@@ -40,6 +40,8 @@ const REGLAS_POR_MODULO: Readonly<Record<string, string>> = {
   '24-coberturas.css': '.cob-afiliacion {',
   // C-50: aranceles, presupuestos y "Mis presupuestos".
   '25-presupuestos.css': '.pre-presupuesto {',
+  // C-23: señas.
+  '26-senas.css': '.sena-linea {',
 };
 
 function importaciones(): string[] {
@@ -159,9 +161,13 @@ describe('Módulo de presupuestos (C-50, design D9)', () => {
   });
 
   it('Se importa al final de styles.css, después del módulo de coberturas', () => {
+    // C-23 agregó 26-senas.css después de este módulo: ya no es el último, pero sigue justo después de coberturas.
     const importaciones = [...textoPrincipal.matchAll(/@import\s+'([^']+)';/g)].map((m) => m[1]);
-    expect(importaciones.at(-1)).toBe('./styles/25-presupuestos.css');
-    expect(importaciones.at(-2)).toBe('./styles/24-coberturas.css');
+    const presupuestos = importaciones.indexOf('./styles/25-presupuestos.css');
+    expect(presupuestos).toBeGreaterThan(-1);
+    expect(importaciones[presupuestos - 1]).toBe('./styles/24-coberturas.css');
+    expect(importaciones[presupuestos + 1]).toBe('./styles/26-senas.css');
+    expect(importaciones.at(-1)).toBe('./styles/26-senas.css');
   });
 });
 

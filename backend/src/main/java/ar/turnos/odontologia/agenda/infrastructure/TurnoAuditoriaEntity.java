@@ -20,6 +20,8 @@ class TurnoAuditoriaEntity {
     private String actor;
     private Instant fecha;
     private Long turnoRelacionadoId;
+    /** C-23: causa de una cancelación con seña pagada (V23). */
+    private String causa;
 
     protected TurnoAuditoriaEntity() {}
 
@@ -29,5 +31,9 @@ class TurnoAuditoriaEntity {
         this.actor = actor;
         this.fecha = fecha;
         this.turnoRelacionadoId = turnoRelacionadoId;
+    }
+
+    void conCausa(String causa) {
+        this.causa = causa;
     }
 }

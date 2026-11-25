@@ -86,6 +86,9 @@ class AgendaExceptionHandler {
         if (mensaje.contains("motivo")) {
             return "motivo";
         }
+        if (mensaje.contains("causa")) {
+            return "causa";
+        }
         return mensaje.contains("fin") ? "fin" : "cuerpo";
     }
 

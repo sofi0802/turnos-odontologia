@@ -54,7 +54,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `backend/.../agenda/` lista de espera, `configuracion/` política de cancelación | Sofia (C-16 avisa a Emanuel) | V9, V10 |
 | `backend/.../notificaciones/` consentimiento | Juan Cruz | V11 |
 | `backend/.../coberturas/` (obras sociales, presupuestos, liquidaciones) | Juan Sebastián | V12, V13, V14 |
-| `backend/.../caja/`, `pagos/`, `facturacion/`, `reportes/` | Enzo | V15, V23 (señas de C-23, propuesta a confirmar por la líder) |
+| `backend/.../caja/`, `pagos/`, `facturacion/`, `reportes/` | Enzo | V15, V23 (señas de C-23, confirmada por la líder al revisar el PR #135) |
 | `backend/.../clinica/` periodontograma, imágenes, consentimientos, FHIR | Emanuel | V16, V17, V18 |
 | `frontend/` periodontograma en la ficha clínica (C-46) | Sofia (avisa a Enzo, dueño de `frontend/`) | — |
 | `frontend/` imágenes y radiografías en la ficha clínica (C-47) | Emanuel (avisa a Enzo, dueño de `frontend/`) | — |
@@ -993,13 +993,13 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/03_actores_y_roles.md` §RBAC
 
 ### [C-23] `senas-mercado-pago`
-- **Estado**: `[ ]` en propuesta (KB aprobada en el PR #133, con PA-62 y PA-64 decididas por la líder: el turno con seña pagada sigue `RESERVADO` y la notificación de Mercado Pago tiene una excepción de CSRF solo para su ruta). Propose y mockups en la rama `change/C-23-senas-mercado-pago`. Governance CRÍTICO: no se escribe código sin aprobación explícita
+- **Estado**: `[x]` implementado (2026-11-25; KB en el PR #133, con PA-62 y PA-64 decididas por la líder; propuesta y mockups en el PR #135; apply en la rama `change/C-23-senas-mercado-pago-apply`, falta el archive). Migración V23. Evidencia: `docs/evidencia/c23-backend.txt` (tras el merge de master: 1099 unitarios y 1317 de integración) y 1379 tests del frontend; verificación visual en `design.md` (differences: tres corregidas y el aviso general de los formularios que los mockups no muestran). Pasarela simulada por defecto (`PAGOS_PASARELA=simulada`); con `mercadopago` el arranque exige `MERCADOPAGO_ACCESS_TOKEN` y `MERCADOPAGO_WEBHOOK_SECRET`. Toca módulos de otros dueños: `reserva/` y `shared/security/` (Juan Sebastián), `agenda/` y la columna `turno_auditoria.causa` (Sofia), `notificaciones/` (Juan Cruz). Delta nuevo de `frontend-configuracion-consultorio` (pestaña Señas) encontrado en el apply. Módulo de estilos `26-senas.css`
 - **Responsable**: Enzo (avisa a Juan Sebastián por `reserva/`, a Sofia por la cancelación y la reprogramación de `agenda/` y a Juan Cruz por los avisos de `notificaciones/`)
 - **Scope**:
   - Puerto `PasarelaPago` con adaptador Mercado Pago (modo sandbox, **sin credenciales reales en el repo**) y una pasarela simulada: link de pago para la seña al reservar y webhook de confirmación con validación de firma.
   - Seña con vencimiento, reintegros, traslado al reprogramar e imputación al cargo de C-22 (RN-SE-01 a RN-SE-12).
   - Tests: seña pagada confirma el turno; seña vencida lo libera; webhook con firma inválida rechazado.
-- **Migración**: V23 (propuesta en este PR, a confirmar por la líder): `sena`, `sena_movimiento` y el cambio de `cobro` (`MERCADO_PAGO` y `caja_id` nullable), sin editar V15
+- **Migración**: V23 (reservada; confirmada por la líder al revisar el PR #135): `sena`, `sena_movimiento` y el cambio de `cobro` (`MERCADO_PAGO` y `caja_id` nullable), sin editar V15
 - **Dependencias**: `C-10, C-22`
 - **Governance**: CRITICO (pagos)
 - **Leer antes**:

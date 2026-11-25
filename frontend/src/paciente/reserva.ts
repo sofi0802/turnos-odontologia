@@ -70,6 +70,33 @@ export interface Referencia {
   readonly nombre: string;
 }
 
+/** C-23: la seña de un turno tal como la ve el paciente (spec turnos-paciente). */
+export interface SenaPaciente {
+  readonly estado: 'PENDIENTE' | 'PAGADA' | 'VENCIDA' | 'IMPUTADA' | 'DEVUELTA' | 'RETENIDA';
+  readonly importe: number;
+  readonly venceEn: string;
+  /** Solo con la seña pendiente. */
+  readonly linkPago: string | null;
+}
+
+const ESTADOS_SENA: readonly SenaPaciente['estado'][] = ['PENDIENTE', 'PAGADA', 'VENCIDA', 'IMPUTADA', 'DEVUELTA', 'RETENIDA'];
+
+/** Interpreta la seña de un turno; `null` si no tiene o si la respuesta no tiene esa forma. */
+export function leerSena(valor: unknown): SenaPaciente | null {
+  if (typeof valor !== 'object' || valor === null) {
+    return null;
+  }
+  const estado: unknown = Reflect.get(valor, 'estado');
+  const importe: unknown = Reflect.get(valor, 'importe');
+  const venceEn: unknown = Reflect.get(valor, 'venceEn');
+  const linkPago: unknown = Reflect.get(valor, 'linkPago');
+  const conocido = ESTADOS_SENA.find((e) => e === estado);
+  if (conocido === undefined || typeof importe !== 'number' || typeof venceEn !== 'string') {
+    return null;
+  }
+  return { estado: conocido, importe, venceEn, linkPago: typeof linkPago === 'string' && linkPago !== '' ? linkPago : null };
+}
+
 /** Un turno visto por su paciente (`TurnoPacienteResponse`). */
 export interface TurnoPaciente {
   readonly numeroReserva: string;
@@ -79,6 +106,8 @@ export interface TurnoPaciente {
   readonly prestacion: Referencia;
   readonly profesional: Referencia;
   readonly modificableOnline: boolean;
+  /** C-23: `null` (o ausente) si el turno no tiene seña. */
+  readonly sena?: SenaPaciente | null;
 }
 
 function leerReferencia(valor: unknown): Referencia {
@@ -115,7 +144,18 @@ export function leerTurnoPaciente(valor: unknown): TurnoPaciente | null {
     prestacion: leerReferencia(Reflect.get(valor, 'prestacion')),
     profesional: leerReferencia(Reflect.get(valor, 'profesional')),
     modificableOnline: Reflect.get(valor, 'modificableOnline') === true,
+    sena: leerSena(Reflect.get(valor, 'sena')),
   };
+}
+
+/** C-23: pide un link de pago nuevo para la seña pendiente de un turno propio (spec turnos-paciente). */
+export async function pedirLinkSena(api: ClienteApi, numeroReserva: string): Promise<string> {
+  const cuerpo = await api.crear<unknown>(`/paciente/reservas/${encodeURIComponent(numeroReserva)}/sena/link`);
+  const link: unknown = typeof cuerpo === 'object' && cuerpo !== null ? Reflect.get(cuerpo, 'linkPago') : null;
+  if (typeof link !== 'string' || link === '') {
+    throw new Error('Respuesta inesperada del link de pago');
+  }
+  return link;
 }
 
 /** Pedido de la reserva: el `inicio` va tal como lo dio la API (design D5). */

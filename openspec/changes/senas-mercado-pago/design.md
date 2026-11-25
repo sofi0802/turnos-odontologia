@@ -113,7 +113,7 @@ Los logs registran solo la acción, el id y la referencia de la seña, y el esta
 - **`pages/reserva.ts`**: la confirmación muestra el bloque de la seña con "Pagar seña". Si hay `linkPago`, es un enlace que abre Mercado Pago en la misma pestaña; si no, un botón que pide el link nuevo.
 - **`pages/mis-turnos.ts`**: el estado de la seña por turno, el aviso de vuelta (`?pago=` en el hash) y "Pagar seña" en las pendientes.
 - **`agenda/`**: el diálogo de cancelación suma "Causa" como un grupo de radio opcional con su ayuda, y marca el `422` del campo `causa`.
-- **Estilos**: módulo `23-senas.css` (el siguiente libre después de `22-caja.css`), registrado en `test/estilos.ts`, solo con los tokens del design system.
+- **Estilos**: módulo `26-senas.css` (el 23 lo tomó `23-lista-espera.css` de C-15; 24 y 25 son de C-49 y C-50), registrado en `test/estilos.ts`, solo con los tokens del design system.
 - Textos y montos con `caja/dinero.ts` (formato "$ 4.500,00").
 
 ### D12. Tests
@@ -145,3 +145,10 @@ Los logs registran solo la acción, el id y la referencia de la seña, y el esta
 - Mockups: `openspec/changes/senas-mercado-pago/mockups/` (ver su README)
 - Approval: approved (2026-11-25, by user: Enzo aprobó explícitamente la propuesta y los 7 mockups de la revisión 1; governance CRÍTICO)
 - Preview: rendered (2026-11-25, 7 pantallas en `mockups/previews/` a 390x844 y 1440x900, sin desplazamiento horizontal)
+- Visual verify: differences (2026-11-25, `mockups/verify/`, backend de desarrollo con la pasarela simulada y la cuenta ficticia Paciente Cuatro; el email de la cabecera se reemplazó por `paciente.cuatro@example.com` antes de cada captura)
+  - Revisadas: Configuración > Señas (inicial, error del porcentaje, guardada), reserva con seña (800 y 375 px), Mis turnos con la seña pendiente (375 px), vuelta del pago (375 px), seña pagada (1440 px), cancelación con causa y su error (800 px). Con la cancelación "Por el consultorio" la seña quedó `DEVUELTA` con su reintegro y la causa `CONSULTORIO` en la auditoría. No hubo aviso porque la cuenta no dio consentimiento (RN-NO-01).
+  - No revisadas en pantalla: las señas devuelta, retenida y vencida de Mis turnos (cubiertas por los tests de `turnos-paciente.test.ts`).
+  - Corregido (blocker): la vuelta del link de la pasarela simulada solo cambia el hash y caía en la portada. `entrada.ts` también la traduce en `hashchange`, antes que el router. Test "Vuelta sin recargar la página".
+  - Corregido (major): la columna `sena.causa_cancelacion` del modelo nunca se escribía. `RevisionDeSenas` la guarda al terminar una seña por cancelación; asserts en "El consultorio cancela tarde" y "El paciente pide cancelar tarde".
+  - Corregido (minor): el error de la causa ahora dice "Indicá la causa: el paciente pagó una seña.", como en el mockup.
+  - Pendiente (minor, sin cambiar): el aviso general "Hay datos inválidos en el pedido" aparece además del error del campo, en Configuración > Señas y en el diálogo de cancelación. Es el comportamiento común de los formularios (Margen hace lo mismo); los mockups no lo muestran.

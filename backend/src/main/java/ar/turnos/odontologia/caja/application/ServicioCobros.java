@@ -100,6 +100,25 @@ public class ServicioCobros {
         return new CobroRegistrado(cobros.porId(cobroId).orElseThrow(), cargo.saldo().subtract(monto.valor()));
     }
 
+    /**
+     * C-23 (RN-SE-08): la seña pagada como un cobro {@code MERCADO_PAGO} sin caja, con el cargo bloqueado. No supera
+     * el saldo: la seña ya se recortó al copago antes de llamar.
+     *
+     * @return el id del cobro
+     */
+    @Transactional
+    public long imputarSena(long cargoId, BigDecimal importe) {
+        Dinero monto = Dinero.positivo(importe);
+        CargoBloqueado cargo = cargos.bloquear(cargoId)
+                .orElseThrow(() -> new CajaException(CodigoCaja.RECURSO_NO_ENCONTRADO, "El cargo no existe."));
+        if (monto.valor().compareTo(cargo.saldo()) > 0) {
+            throw new CajaException(CodigoCaja.IMPORTE_SUPERA_SALDO, "La seña supera el saldo del cargo.");
+        }
+        long cobroId = cobros.registrarSinCaja(cargo.id(), monto.valor(), "sistema", reloj.instant());
+        LOG.info("Cobro {} de una seña imputado al cargo {}, medio MERCADO_PAGO", cobroId, cargo.id());
+        return cobroId;
+    }
+
     /** Anulación de design D4: el cobro con {@code FOR UPDATE} y su caja con {@code FOR SHARE}. */
     @Transactional
     public CobroVista anular(long cobroId, String motivo, String usuario) {
@@ -108,6 +127,10 @@ public class ServicioCobros {
         }
         CobroBloqueado cobro = cobros.bloquear(cobroId)
                 .orElseThrow(() -> new CajaException(CodigoCaja.RECURSO_NO_ENCONTRADO, "El cobro no existe."));
+        if (cobro.cajaId() == null) {
+            throw new CajaException(CodigoCaja.COBRO_SIN_CAJA,
+                    "El cobro de una seña no tiene caja y no se anula desde la caja.");
+        }
         boolean cajaCerrada = cajas.bloquearParaAnular(cobro.cajaId()).map(Cajas.CajaFila::cerrada).orElse(true);
         if (cajaCerrada) {
             throw new CajaException(CodigoCaja.CAJA_CERRADA, "La caja ya está cerrada.");

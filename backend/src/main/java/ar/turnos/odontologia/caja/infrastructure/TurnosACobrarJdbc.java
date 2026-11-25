@@ -27,6 +27,16 @@ class TurnosACobrarJdbc implements TurnosACobrar {
 
     @Override
     public List<TurnoACobrar> atendidosSinCargo() {
+        return consultar("t.estado = 'ATENDIDO' AND NOT EXISTS (SELECT 1 FROM cargo c WHERE c.turno_id = t.id)",
+                new MapSqlParameterSource());
+    }
+
+    @Override
+    public java.util.Optional<TurnoACobrar> tarifaDe(long turnoId) {
+        return consultar("t.id = :turno", new MapSqlParameterSource("turno", turnoId)).stream().findFirst();
+    }
+
+    private List<TurnoACobrar> consultar(String condicion, MapSqlParameterSource parametros) {
         record Fila(long turnoId, long pacienteId, long prestacionId, java.time.LocalDate fecha,
                     java.math.BigDecimal precio, Long afiliacionId, Long planId) {}
         List<Fila> filas = jdbc.query("""
@@ -39,9 +49,10 @@ class TurnosACobrarJdbc implements TurnosACobrar {
                        WHERE ap.paciente_id = t.paciente_id AND ap.vigente_desde <= x.fecha
                          AND (ap.vigente_hasta IS NULL OR ap.vigente_hasta >= x.fecha)
                        ORDER BY ap.vigente_desde DESC, ap.id DESC LIMIT 1) af ON true
-                 WHERE t.estado = 'ATENDIDO' AND NOT EXISTS (SELECT 1 FROM cargo c WHERE c.turno_id = t.id)
+                 WHERE """ + " " + condicion + """
+
                  ORDER BY t.id
-                """, new MapSqlParameterSource("zona", zona.getId()),
+                """, parametros.addValue("zona", zona.getId()),
                 (rs, n) -> new Fila(rs.getLong("id"), rs.getLong("paciente_id"), rs.getLong("prestacion_id"),
                         rs.getObject("fecha", java.time.LocalDate.class), rs.getBigDecimal("precio"),
                         rs.getObject("afiliacion_id", Long.class), rs.getObject("plan_id", Long.class)));

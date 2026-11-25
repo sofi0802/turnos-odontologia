@@ -30,6 +30,7 @@ Un paciente puede reservar online y no venir, y el consultorio pierde el horario
 - `seguridad-autorizacion`: se agrega la ruta pública de la notificación de Mercado Pago, fuera de CSRF y autenticada por la firma.
 - `turnos-paciente`: "Mis turnos" informa la seña de cada turno.
 - `reserva-online`: la reserva crea la seña y la informa en la respuesta.
+- `frontend-configuracion-consultorio`: el `ADMIN` suma la pestaña "Señas" (agregado en el apply: el requisito "Secciones según el rol" fija la lista exacta de pestañas).
 
 ## Impact
 
