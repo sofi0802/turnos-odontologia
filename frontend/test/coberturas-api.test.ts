@@ -70,7 +70,8 @@ describe('Lectura defensiva de las afiliaciones', () => {
       particular: false,
       afiliacion: {
         id: 31,
-        obraSocial: { nombre: 'Obra Social Ejemplo', sigla: 'OSE' },
+        // C-50 (design D5): el id de la obra social arma la ruta de la cobertura del plan.
+        obraSocial: { id: 1, nombre: 'Obra Social Ejemplo', sigla: 'OSE' },
         plan: { id: 11, nombre: 'Plan Base' },
         numeroAfiliado: 'OSE-000001',
         vigenteDesde: '2026-01-01',
@@ -78,6 +79,11 @@ describe('Lectura defensiva de las afiliaciones', () => {
         vigente: true,
       },
     });
+  });
+
+  it('una afiliación sin id de obra social se lee igual, con id null (C-50)', () => {
+    const sinId = { ...COBERTURA_UNO, afiliacion: { ...AFILIACION_UNO, obraSocial: { nombre: 'Obra Social Ejemplo', sigla: 'OSE' } } };
+    expect(leerCobertura(sinId).afiliacion?.obraSocial).toEqual({ id: null, nombre: 'Obra Social Ejemplo', sigla: 'OSE' });
   });
 
   it('una respuesta sin afiliación legible es particular', () => {

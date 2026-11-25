@@ -1,3 +1,4 @@
+import { abrirCoberturaPlan, MENSAJE_COBERTURA_GUARDADA } from '../aranceles/cobertura-plan.ts';
 import { cargarPrestaciones } from '../configuracion/api.ts';
 import { botonChico, cargarEn, crearCabecera, crearEstado, crearFila, crearLista, guardando, type ContextoSeccion } from '../configuracion/ui.ts';
 import { crearAviso, crearBoton, crearCampo, crearEntrada, crearSelector, cambiarOpciones, type Campo } from '../shared/ui/campos.ts';
@@ -69,6 +70,8 @@ function estadoFemenino(activa: boolean): HTMLSpanElement {
 
 interface Bloque {
   readonly elemento: HTMLDivElement;
+  /** C-50: aviso de éxito ("Cobertura guardada."). */
+  readonly exito: HTMLParagraphElement;
   readonly aviso: HTMLParagraphElement;
   readonly contenido: HTMLDivElement;
 }
@@ -79,10 +82,11 @@ function crearBloque(titulo: string, ayuda: string, accion: HTMLButtonElement): 
   const texto = document.createElement('p');
   texto.className = 'ayuda';
   texto.textContent = ayuda;
+  const exito = crearAviso('status');
   const aviso = crearAviso('alert');
   const contenido = document.createElement('div');
-  elemento.append(crearCabecera(titulo, accion), texto, aviso, contenido);
-  return { elemento, aviso, contenido };
+  elemento.append(crearCabecera(titulo, accion), texto, exito, aviso, contenido);
+  return { elemento, exito, aviso, contenido };
 }
 
 export function montarObrasSociales(panel: HTMLElement, contexto: ContextoSeccion): void {
@@ -216,11 +220,32 @@ export function montarObrasSociales(panel: HTMLElement, contexto: ContextoSeccio
     item.append(
       datos,
       acciones(
+        botonCobertura(obra, plan),
         botonEditar(plan.nombre, (boton) => dialogoPlan(boton, obra, plan)),
         botonEstado(plan.activo, plan.nombre, obras.aviso, (activar) => cambiarEstadoPlan(contexto.api, obra.id, plan.id, activar), recargarObras),
       ),
     );
     return item;
+  }
+
+  /** C-50 (design D2): el porcentaje que cubre el plan por código del nomenclador. */
+  function botonCobertura(obra: ObraSocial, plan: PlanCatalogo): HTMLButtonElement {
+    const boton = botonChico('Cobertura');
+    boton.setAttribute('aria-label', `Cobertura de ${plan.nombre}`);
+    boton.addEventListener('click', () => {
+      obras.exito.textContent = '';
+      obras.aviso.textContent = '';
+      abrirCoberturaPlan({
+        origen: boton,
+        obraSocial: { id: obra.id, nombre: obra.nombre },
+        plan: { id: plan.id, nombre: plan.nombre },
+        contexto,
+        alGuardar: () => {
+          obras.exito.textContent = MENSAJE_COBERTURA_GUARDADA;
+        },
+      });
+    });
+    return boton;
   }
 
   function dialogoObra(origen: HTMLButtonElement, obra: ObraSocial | null): void {

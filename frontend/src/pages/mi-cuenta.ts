@@ -1,4 +1,5 @@
 import { crearMiCobertura } from '../coberturas/mi-cobertura.ts';
+import { crearMisPresupuestos } from '../presupuestos/mis-presupuestos.ts';
 import { leerReservaPendiente } from '../paciente/reserva.ts';
 import { ErrorNegocio, ErrorSesion, ErrorValidacion } from '../shared/api/errores.ts';
 import {
@@ -260,13 +261,13 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   });
 }
 
-/** "Mi cuenta" del paciente con sesión: por ahora "Mi cobertura"; C-50 sumará "Mis presupuestos" (PA-27). */
+/** "Mi cuenta" del paciente con sesión: "Mi cobertura" y, debajo, "Mis presupuestos" (C-50, PA-27). */
 function dibujarCuentaConSesion(contenedor: HTMLElement, contexto: ContextoPagina): void {
   const pagina = document.createElement('div');
   pagina.className = 'pagina-paciente';
-  const cobertura = crearMiCobertura({
+  const conSesion = {
     api: contexto.api,
-    mensajeDeError: (causa) => {
+    mensajeDeError: (causa: unknown): string => {
       if (causa instanceof ErrorSesion) {
         contexto.irAMiCuenta(MENSAJE_SESION_TERMINADA);
         return '';
@@ -274,8 +275,8 @@ function dibujarCuentaConSesion(contenedor: HTMLElement, contexto: ContextoPagin
       return mensajeDeError(causa);
     },
     vigente: () => contenedor.contains(pagina),
-  });
-  pagina.append(crearTitulo('Mi cuenta'), cobertura);
+  };
+  pagina.append(crearTitulo('Mi cuenta'), crearMiCobertura(conSesion), crearMisPresupuestos(conSesion));
   contenedor.replaceChildren(pagina);
 }
 

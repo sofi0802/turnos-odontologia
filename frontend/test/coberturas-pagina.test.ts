@@ -131,7 +131,10 @@ describe('Página "Coberturas" sin datos clínicos', () => {
     expect(texto(main())).toContain('DNI 99000002');
     expect(cobertura.querySelector('h2')?.textContent).toBe('Cobertura');
     const pedidos = servidor.pedidos.filter((p) => p.ruta.startsWith('/pacientes')).map((p) => `${p.ruta}${p.query.size > 0 ? `?${p.query.toString()}` : ''}`);
-    expect(new Set(pedidos)).toEqual(new Set(['/pacientes?q=99000002', '/pacientes/2/cobertura', '/pacientes/2/afiliaciones']));
+    // C-50 suma los presupuestos del paciente, en solo lectura (spec frontend-presupuestos).
+    expect(new Set(pedidos)).toEqual(
+      new Set(['/pacientes?q=99000002', '/pacientes/2/cobertura', '/pacientes/2/afiliaciones', '/pacientes/2/presupuestos']),
+    );
   });
 
   it('Ningún pedido clínico', async () => {

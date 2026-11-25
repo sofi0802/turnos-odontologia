@@ -1,4 +1,5 @@
 import type { ClienteApi } from '../shared/api/cliente.ts';
+import { precioDePrestacion } from '../aranceles/precios.ts';
 import { crearAviso, crearBoton, crearCampo, crearEntrada, type Campo } from '../shared/ui/campos.ts';
 import { mensajeDeError } from '../shared/ui/mensajes.ts';
 import {
@@ -291,6 +292,8 @@ const PRESTACIONES: DefinicionCatalogo<Prestacion> = {
   valorInicial: (p, campo) => (campo === 'nombre' ? p.nombre : String(p.duracionMinutos)),
   // La duración se valida en el dominio (`DURACION_INVALIDA`): se envía tal cual.
   cuerpo: (v) => ({ nombre: texto(v, 'nombre'), duracionMinutos: numeroONulo(v.get('duracionMinutos') ?? '') }),
+  // C-50: el precio particular y "Cambiar precio", solo para ADMIN (design D2).
+  extra: precioDePrestacion,
 };
 
 export function montarProfesionales(panel: HTMLElement, contexto: ContextoSeccion): void {

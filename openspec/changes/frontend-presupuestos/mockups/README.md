@@ -1,7 +1,7 @@
 # Mockups de C-50 `frontend-presupuestos`
 
 - **Design system revision**: 5, aprobada. No suma tokens: `presupuestos.css` usa solo los de la Revision 5.
-- **Approval**: pending. Los aprueba la líder (Sofia Indovino) antes del apply; son el criterio de aceptación visual.
+- **Approval**: approved (2026-11-25, by Sofia Indovino), en el PR #139. Son el criterio de aceptación visual.
 - **Preview**: rendered (2026-11-25). Capturas de página completa en `previews/`, a 1440 × 900 y 390 × 844, hechas con Playwright (Chromium) sobre un servidor estático local. En ninguna pantalla:
   - hay desplazamiento horizontal a 390 px;
   - hay errores ni advertencias de consola;

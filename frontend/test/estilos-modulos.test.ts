@@ -38,6 +38,8 @@ const REGLAS_POR_MODULO: Readonly<Record<string, string>> = {
   '23-lista-espera.css': '.le-fila {',
   // C-49: obras sociales, cobertura del paciente y "Mi cobertura".
   '24-coberturas.css': '.cob-afiliacion {',
+  // C-50: aranceles, presupuestos y "Mis presupuestos".
+  '25-presupuestos.css': '.pre-presupuesto {',
 };
 
 function importaciones(): string[] {
@@ -133,8 +135,33 @@ describe('Módulo de coberturas (C-49, design D10)', () => {
 
   it('Se importa al final de styles.css, después del módulo de la lista de espera', () => {
     const importaciones = [...textoPrincipal.matchAll(/@import\s+'([^']+)';/g)].map((m) => m[1]);
-    expect(importaciones.at(-1)).toBe('./styles/24-coberturas.css');
-    expect(importaciones.at(-2)).toBe('./styles/23-lista-espera.css');
+    // C-50 suma 25-presupuestos.css después: coberturas sigue inmediatamente después de la lista de espera.
+    const coberturas = importaciones.indexOf('./styles/24-coberturas.css');
+    expect(importaciones[coberturas - 1]).toBe('./styles/23-lista-espera.css');
+  });
+});
+
+describe('Módulo de presupuestos (C-50, design D9)', () => {
+  it('Sin las reglas que son solo de los mockups', () => {
+    const modulo = textoDeModulo('25-presupuestos.css');
+    for (const regla of ['.nota-mockup', '.rotulo-estado', '.dialogo-estatico', '.nota-contexto', 'Solo mockups']) {
+      expect(modulo, regla).not.toContain(regla);
+    }
+  });
+
+  it('Sin quitar el foco, con importes tabulares y las piezas de los mockups', () => {
+    const modulo = textoDeModulo('25-presupuestos.css');
+    expect(modulo).not.toMatch(/outline:\s*none/);
+    expect(modulo).toMatch(/\.pre-totales dd \{[^}]*font-variant-numeric: tabular-nums/);
+    for (const regla of ['.pre-presupuesto {', '.pre-item {', '.pre-cob-fila {', '.etiqueta-vencido {', '.dialogo.pre-dialogo {', '.mis-presupuestos {']) {
+      expect(modulo, regla).toContain(regla);
+    }
+  });
+
+  it('Se importa al final de styles.css, después del módulo de coberturas', () => {
+    const importaciones = [...textoPrincipal.matchAll(/@import\s+'([^']+)';/g)].map((m) => m[1]);
+    expect(importaciones.at(-1)).toBe('./styles/25-presupuestos.css');
+    expect(importaciones.at(-2)).toBe('./styles/24-coberturas.css');
   });
 });
 
