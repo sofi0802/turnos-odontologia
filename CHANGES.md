@@ -841,7 +841,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 > Arranca con el MVP completo (C-01 a C-14). Los tres changes pueden ir en paralelo.
 
 ### [C-15] `lista-de-espera-automatica`
-- **Estado**: `[x]` completo (2026-11-24, SDD, backend y frontend; migración V9). Change en `openspec/changes/lista-de-espera-automatica/`; el archive queda para después del merge (reconciliar "Menú según la sesión", tarea 11.3)
+- **Estado**: `[x]` completo (2026-11-24, SDD, backend y frontend; migración V9). Apply en el PR #136; archive en el PR #151. Specs: `openspec/specs/lista-espera/` y `frontend-lista-espera/` (nuevos) y `notificaciones-recordatorios/` y `frontend-navegacion/` (actualizados: "Lista de espera" después de "Agenda" en la barra lateral de `ADMIN` y `RECEPCIONISTA`, tarea 11.3); change archivado en `openspec/changes/archive/2026-11-25-lista-de-espera-automatica/`. Sin verificar en la app real (solo tests): "Anotarme" en `#/reserva`, la sección de `#/mis-turnos` y el plazo editable del administrador
 - **Responsable**: Sofia Indovino
 - **Scope**:
   - Entidad `ListaEspera` (paciente, prestación, profesional opcional, rango de fechas preferido). **Migración V9**.
