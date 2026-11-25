@@ -209,6 +209,18 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 - [ ] CA-5: el administrador las ve sin poder cargarlas ni anularlas, y la recepción y el paciente no acceden.
 **Reglas relacionadas**: RN-CL-01, RN-CL-07, RN-CL-08
 
+### US-208: Firmar el consentimiento informado en el consultorio [2026-11-24, C-27 backend y C-48 pantalla]
+**Como** odontólogo **quiero** que el paciente firme electrónicamente el consentimiento informado en el consultorio **para** guardar en su historia clínica qué texto aceptó, cuándo y con qué evidencia, sin papeles sueltos.
+**Criterios de aceptación**:
+- [ ] CA-1: como `ADMIN`, creo una plantilla con título y texto; cada vez que la edito queda una versión nueva y las anteriores no cambian; puedo desactivarla y reactivarla, pero no borrarla.
+- [ ] CA-2: como odontólogo, elijo una plantilla activa; el paciente lee el texto, escribe su nombre completo y su DNI y acepta. Si el DNI no es el suyo, o si la plantilla cambió o se desactivó mientras la leía, la firma se rechaza con un error claro.
+- [ ] CA-3: el consentimiento firmado guarda su propia copia del texto, el firmante, el profesional, la fecha y hora, la IP, el dispositivo y un hash SHA-256; nunca se modifica ni se borra, y editar la plantilla después no lo cambia.
+- [ ] CA-4: puedo pedir la verificación de un consentimiento y el sistema me dice si su hash coincide con lo guardado.
+- [ ] CA-5: si el paciente revoca su consentimiento, registro la revocación con un motivo; queda quién y cuándo, y el documento firmado sigue igual y verificando.
+- [ ] CA-6: el `ADMIN` ve y verifica los consentimientos sin poder firmarlos ni revocarlos; la recepción y el paciente no acceden.
+- [ ] CA-7: en ningún lugar se la llama "firma digital": es firma electrónica (Ley 25.506, art. 5).
+**Reglas relacionadas**: RN-CL-01, RN-CL-09, RN-CL-10, RN-CL-11
+
 ## Épica 7: Coberturas (post-MVP)
 
 ### US-046: Registrar obras sociales y la cobertura del paciente [2026-11-24, C-18]
@@ -290,7 +302,7 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 | US-202 | Señas con Mercado Pago | Posterior | C-23 | Informe, D.3 |
 | US-201 | Facturación electrónica ARCA | Posterior | C-24 | Informe, D.3 |
 | US-203 | ~~Imágenes y radiografías~~ (pasó a US-048 el 2026-11-24; el periodontograma, a US-045) | Posterior | C-26, C-47 | Informe, D.3 |
-| US-208 | Consentimiento informado con firma electrónica | Posterior | C-27 | Informe, D.3; relevamiento: Bilog (Ley 25.506) |
+| US-208 | Consentimiento informado con firma electrónica | Posterior | C-27, C-48 | Informe, D.3; relevamiento: Bilog (Ley 25.506) |
 | US-204 | Asistente con IA, multisucursal, exportación HL7 FHIR | Posterior | C-28, C-29, C-31 | Informe, D.3 |
 | US-209 | Sincronización de la agenda del profesional con Google Calendar | Posterior | C-30 | Roadmap (Ajustar de la líder, 2026-11-21) |
 | US-210 | Reportes de ocupación, ausencias y cancelaciones (detallada en la Épica 8 el 2026-11-24) | Posterior | C-32 | `01_vision_y_objetivos.md` §Métricas de éxito |

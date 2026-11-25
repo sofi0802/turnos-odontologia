@@ -94,6 +94,21 @@ Cada regla tiene un código `RN-{DOMINIO}-{NN}`. Entre paréntesis va el código
   - queda registrado quién la anuló y cuándo;
   - la anulación es una sola vez y no se deshace;
   - una imagen anulada no aparece en el listado salvo que se pida, pero sigue disponible para auditoría.
+- **RN-CL-09**: **plantillas de consentimiento con versiones** [2026-11-24, C-27]. El `ADMIN` crea y edita las plantillas de consentimiento informado:
+  - **Contenido**: un título de hasta 120 caracteres, único sin distinguir mayúsculas, y un texto plano (sin HTML) de hasta 20 000 caracteres.
+  - **Versiones**: cada edición con cambios crea una **versión nueva** numerada, con quién y cuándo; las anteriores no se modifican ni se borran. Una edición sobre una versión que ya no es la última se rechaza (`VERSION_DESACTUALIZADA`).
+  - **Activación**: el `ADMIN` puede desactivar y reactivar una plantilla. Una inactiva no se usa para firmas nuevas. Las plantillas no se borran (PA-51).
+  - **Acceso**: el `ADMIN` las administra porque no son datos de un paciente; el odontólogo ve las activas; la recepción y el paciente no acceden (PA-44).
+- **RN-CL-10**: **firma electrónica en el consultorio** [2026-11-24, C-27]. Es **firma electrónica** (Ley 25.506, art. 5), **no firma digital**: no hay certificado de un certificador licenciado (DD-20).
+  - En la computadora del consultorio, con la sesión del odontólogo, el paciente lee el texto de una versión concreta, escribe su nombre completo y su DNI y acepta (PA-43).
+  - El DNI escrito, sin puntos, tiene que coincidir con el del paciente (`FIRMANTE_NO_COINCIDE`); el nombre se guarda como lo escribió (PA-46). Firma solo el propio paciente (PA-47).
+  - Se guardan una **copia del título y del texto firmados**, el nombre y el DNI escritos, el profesional, la fecha y hora del servidor, la IP de origen y el dispositivo (User-Agent), y un **hash SHA-256** de todo eso en un formato canónico (PA-48).
+  - Si la plantilla se editó o se desactivó entre que se mostró y la firma, la firma se rechaza (`VERSION_DESACTUALIZADA` o `PLANTILLA_INACTIVA`).
+  - **Acceso** (RN-CL-01): el odontólogo firma, ve y verifica; el `ADMIN` solo ve y verifica (PA-52); la recepción y el paciente no acceden.
+- **RN-CL-11**: **el consentimiento firmado no cambia** [2026-11-24, C-27]. El documento firmado no se modifica ni se borra, tampoco en la base, y editar la plantilla después no lo cambia.
+  - Cualquiera con acceso puede pedir su **verificación**: el sistema recalcula el hash con los datos guardados y dice si coincide.
+  - **Revocación**: el odontólogo la registra con un motivo de hasta 200 caracteres; queda quién y cuándo (PA-45). Es una sola vez y no se deshace.
+  - La revocación se guarda aparte: el documento firmado no cambia y su hash sigue verificando.
 
 ## Dominio: Coberturas (RN-OS) [2026-11-24, C-18]
 
