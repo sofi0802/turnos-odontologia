@@ -58,6 +58,10 @@ ALTER TABLE cobro ADD CONSTRAINT cobro_medio_valido
 ALTER TABLE cobro ALTER COLUMN caja_id DROP NOT NULL;
 ALTER TABLE cobro ADD CONSTRAINT cobro_caja_segun_medio CHECK ((caja_id IS NULL) = (medio = 'MERCADO_PAGO'));
 
+-- RN-SE-06: la causa que indica el personal al cancelar un turno con seña pagada (agenda/, de Sofia).
+ALTER TABLE turno_auditoria ADD COLUMN causa VARCHAR(12)
+    CONSTRAINT turno_auditoria_causa_valida CHECK (causa IN ('PACIENTE', 'CONSULTORIO'));
+
 -- RN-SE-11: aviso al paciente de que se reintegró su seña, sin el importe.
 ALTER TABLE notificacion DROP CONSTRAINT notificacion_tipo_valido;
 ALTER TABLE notificacion ADD CONSTRAINT notificacion_tipo_valido

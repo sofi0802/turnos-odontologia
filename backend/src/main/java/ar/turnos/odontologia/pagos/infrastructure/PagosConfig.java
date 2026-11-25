@@ -1,5 +1,6 @@
 package ar.turnos.odontologia.pagos.infrastructure;
 
+import ar.turnos.odontologia.agenda.application.SenasDeAgenda;
 import ar.turnos.odontologia.agenda.infrastructure.ServicioAgenda;
 import ar.turnos.odontologia.caja.application.TurnosACobrar;
 import ar.turnos.odontologia.pagos.application.AvisoReintegroSena;
@@ -55,6 +56,12 @@ class PagosConfig {
     CrearSena crearSena(ConfiguracionSenas configuracion, TurnosACobrar turnos, Senas senas, PasarelaPago pasarela,
                         Clock reloj) {
         return new CrearSena(configuracion, turnos, senas, pasarela, reloj);
+    }
+
+    /** El puerto de la agenda (design D2): la cancelación pide la causa con la seña pagada. */
+    @Bean
+    SenasDeAgenda senasDeAgenda(JdbcTemplate jdbc) {
+        return new SenasParaAgenda(jdbc);
     }
 
     /** El puerto de la reserva online (design D2): la reserva lo toma si existe. */

@@ -79,7 +79,7 @@ class TurnosController {
     @PostMapping("/{id}/cancelar")
     TurnoResponse cancelar(@PathVariable Long id, @Valid @RequestBody CancelarTurnoRequest pedido,
                            @AuthenticationPrincipal UsuarioAutenticado usuario) {
-        CancelarTurnoCommand comando = new CancelarTurnoCommand(id, pedido.dni(), pedido.numeroReserva());
+        CancelarTurnoCommand comando = new CancelarTurnoCommand(id, pedido.dni(), pedido.numeroReserva(), pedido.causa());
         return TurnoResponse.de(agenda.cancelar(comando, usuario.getUsername()), zona);
     }
 

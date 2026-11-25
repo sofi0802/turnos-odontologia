@@ -35,7 +35,7 @@ Acceptance criteria: los escenarios de los deltas `senas`, `frontend-senas`, `co
 ## 5. Ciclo de vida de la seña (backend)
 
 - [ ] 5.1 `RevisionDeSenas` y `TareaSenas` con `FOR UPDATE SKIP LOCKED` (design D4): vencimiento y reprogramación; un `@Test` por escenario de "Vencimiento de la seña" y "Reprogramación de un turno con seña"
-- [ ] 5.2 Causa de la cancelación en `agenda/` (avisa a Sofia): puerto `SenasDeAgenda`, `causa` en `CancelarTurnoCommand` y en el detalle de la auditoría; un `@Test` por escenario del delta `agenda-api`
+- [x] 5.2 Causa de la cancelación en `agenda/` (avisa a Sofia): puerto `SenasDeAgenda`, `causa` en `CancelarTurnoCommand` y en el detalle de la auditoría; un `@Test` por escenario del delta `agenda-api`
 - [ ] 5.3 Reintegro y retención según cómo terminó el turno; un `@Test` por escenario de "Cancelación de un turno con seña pagada"
 - [ ] 5.4 Imputación al cargo: `ServicioCobros.imputarSena`, cobro `MERCADO_PAGO` sin caja, rechazo del medio en el cobro manual y `COBRO_SIN_CAJA` al anular; un `@Test` por escenario de "Imputación de la seña al cargo" y del delta `cobros-pacientes`
 - [ ] 5.5 Reintegros con reintento e idempotencia; un `@Test` por escenario de "Reintegros sin duplicar"
