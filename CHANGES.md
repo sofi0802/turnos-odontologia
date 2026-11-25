@@ -848,7 +848,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/04_modelo_de_datos.md` §Configuracion
 
 ### [C-17] `consentimiento-comunicaciones`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-25, SDD, backend y frontend; migración V11). Propuesta y mockups aprobados en el PR #142; apply en `change/C-17-consentimiento-comunicaciones`. Un solo consentimiento con historial que no se edita; el paciente lo maneja en "Mi cuenta" (secciones "Tus datos" y "Mensajes del consultorio"), el registro tiene la casilla y la recepción lo registra o revoca junto al buscador ("Anotar paciente" y "Nuevo turno"), con el medio. Cubre los tres puntos que pedía C-15. Evidencia: 2358 tests del backend y 1386 del frontend en verde; verificación visual en `mockups/verify/`. Change en `openspec/changes/consentimiento-comunicaciones/`; el archive queda para después del merge
 - **Responsable**: Juan Cruz
 - **Scope**:
   - Pantalla y endpoint para que el paciente otorgue o revoque el consentimiento de comunicaciones, con fecha y canal (Ley 25.326). Historial de cambios. **Migración V11**.

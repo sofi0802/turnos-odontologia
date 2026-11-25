@@ -15,6 +15,7 @@ import {
   SIN_PREFERENCIA,
   textoOfertaRecepcion,
 } from '../lista-espera/formato.ts';
+import { crearLineaConsentimiento } from '../consentimiento/linea-recepcion.ts';
 import { cargarPrestaciones, cargarProfesionales, type PrestacionPublica } from '../paciente/catalogo.ts';
 import { ErrorNegocio, ErrorSesion } from '../shared/api/errores.ts';
 import { hoy, sumarDias } from '../shared/fecha/zona.ts';
@@ -164,11 +165,28 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   function abrirAlta(origen: HTMLButtonElement): void {
     let elegido: PacienteEncontrado | null = null;
     let prestaciones: PrestacionPublica[] = [];
+    // C-17: la lista de espera es de ADMIN y RECEPCIONISTA, que gestionan el consentimiento.
+    const consentimiento = crearLineaConsentimiento({
+      api: contexto.api,
+      visible: true,
+      sesionVencida,
+      // Con el consentimiento ya registrado, el rechazo SIN_CONSENTIMIENTO deja de valer.
+      alCambiar: (estado) => {
+        if (estado.otorgado) {
+          general.textContent = '';
+        }
+      },
+    });
     const buscador = crearBuscadorPacientes(contexto.api, {
       sesionVencida,
       alElegir: (paciente) => {
         elegido = paciente;
         buscador.mostrarError('');
+        consentimiento.mostrarPaciente(paciente.id);
+      },
+      alQuitar: () => {
+        elegido = null;
+        consentimiento.mostrarPaciente(null);
       },
     });
     const prestacion = crearCampo('Prestación', crearSelector('prestacion', []));
@@ -193,7 +211,14 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
     const { formulario, general, principal, cerrar } = abrirDialogo({
       titulo: 'Anotar paciente',
       resumen: 'Le avisamos por mensaje cuando se libere un horario que le sirva.',
-      contenido: [buscador.contenedor, prestacion.contenedor, profesional.contenedor, rango, ayuda],
+      contenido: [
+        buscador.contenedor,
+        consentimiento.contenedor,
+        prestacion.contenedor,
+        profesional.contenedor,
+        rango,
+        ayuda,
+      ],
       textoDescartar: 'Volver',
       textoPrincipal: 'Anotar',
       alCerrar: () => origen.focus(),
@@ -280,6 +305,10 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
           if (!sesionVencida(error)) {
             // Los rechazos se muestran en el diálogo, que sigue abierto.
             general.textContent = mensajeDeError(error);
+            // C-17: sin consentimiento, la recepción lo puede registrar ahí mismo y volver a anotar.
+            if (error instanceof ErrorNegocio && error.codigo === 'SIN_CONSENTIMIENTO') {
+              consentimiento.destacarRegistro();
+            }
           }
         });
     });

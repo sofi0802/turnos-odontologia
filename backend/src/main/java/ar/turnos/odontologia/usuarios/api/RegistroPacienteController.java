@@ -25,7 +25,8 @@ class RegistroPacienteController {
     @ResponseStatus(HttpStatus.CREATED)
     RegistroPacienteResponse registrar(@Valid @RequestBody RegistroPacienteRequest pedido) {
         Usuario cuenta = registrarPaciente.registrar(new RegistrarPaciente.Datos(pedido.nombre(),
-                pedido.apellido(), pedido.dni(), pedido.email(), pedido.telefono(), pedido.password()));
+                pedido.apellido(), pedido.dni(), pedido.email(), pedido.telefono(), pedido.password()),
+                pedido.aceptaLosMensajes());
         return new RegistroPacienteResponse(cuenta.username().valor(), cuenta.rol());
     }
 }

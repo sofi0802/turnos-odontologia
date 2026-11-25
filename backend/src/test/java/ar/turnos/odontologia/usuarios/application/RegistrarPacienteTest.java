@@ -5,6 +5,8 @@ import ar.turnos.odontologia.usuarios.domain.PerfilPaciente;
 import ar.turnos.odontologia.usuarios.domain.RegistroRechazadoException;
 import ar.turnos.odontologia.usuarios.domain.Rol;
 import ar.turnos.odontologia.usuarios.domain.Usuario;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,12 +24,13 @@ class RegistrarPacienteTest {
     private UsuarioRepositoryEnMemoria usuarios;
     private PacienteRegistroEnMemoria pacientes;
     private RegistrarPaciente registrar;
+    private final List<Long> consentimientos = new ArrayList<>();
 
     @BeforeEach
     void preparar() {
         usuarios = new UsuarioRepositoryEnMemoria();
         pacientes = new PacienteRegistroEnMemoria();
-        registrar = new RegistrarPaciente(usuarios, pacientes, encoder);
+        registrar = new RegistrarPaciente(usuarios, pacientes, encoder, consentimientos::add);
     }
 
     private static RegistrarPaciente.Datos datos(String dni, String email, String clave) {
@@ -107,5 +110,21 @@ class RegistrarPacienteTest {
                 .isInstanceOf(IllegalArgumentException.class);
         assertThat(usuarios.todos()).isEmpty();
         assertThat(pacientes.todos()).isEmpty();
+    }
+
+    @Test
+    void conLaCasillaMarcadaSeAvisaElConsentimientoDelPacienteCreado() {
+        registrar.registrar(datos("99000001", "paciente.uno@example.com", CLAVE), true);
+
+        assertThat(consentimientos).hasSize(1);
+        assertThat(pacientes.existePorDni("99000001")).isTrue();
+    }
+
+    @Test
+    void sinLaCasillaNoSeAvisaElConsentimiento() {
+        registrar.registrar(datos("99000001", "paciente.uno@example.com", CLAVE), false);
+        registrar.registrar(datos("99000002", "paciente.dos@example.com", CLAVE));
+
+        assertThat(consentimientos).isEmpty();
     }
 }

@@ -33,6 +33,7 @@ import caja from '../src/styles/22-caja.css?raw';
 import listaEspera from '../src/styles/23-lista-espera.css?raw';
 import coberturas from '../src/styles/24-coberturas.css?raw';
 import presupuestos from '../src/styles/25-presupuestos.css?raw';
+import consentimiento from '../src/styles/26-consentimiento.css?raw';
 
 const MODULOS: Readonly<Record<string, string>> = {
   '01-base.css': base,
@@ -60,6 +61,7 @@ const MODULOS: Readonly<Record<string, string>> = {
   '23-lista-espera.css': listaEspera,
   '24-coberturas.css': coberturas,
   '25-presupuestos.css': presupuestos,
+  '26-consentimiento.css': consentimiento,
 };
 
 /** Archivos que hay en `src/styles/`, ordenados (el prefijo numérico fija el orden). Solo los nombres, sin leerlos. */

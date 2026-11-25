@@ -63,6 +63,6 @@ V11 crea la tabla, sus CHECK, el índice por `paciente_id` y el trigger. No modi
 - Design system revision: 5
 - Decision: yes, 2026-11-25. Modo del proyecto `system-and-mockups`.
 - Mockups: `openspec/changes/consentimiento-comunicaciones/mockups/` ("Mi cuenta" con y sin consentimiento, confirmación de revocar, casilla del registro, línea y diálogo de la recepción, rechazo `SIN_CONSENTIMIENTO` y aviso de la lista de espera).
-- Approval: pending
+- Approval: approved (2026-11-25, by Sofia Indovino): mergeó la propuesta y los mockups en el PR #142 sin pedir cambios
 - Preview: rendered (2026-11-25), 12 capturas en `mockups/previews/` a 390 × 844 y 1440 × 900 (página completa), sin desplazamiento horizontal ni errores en la consola
-- Visual verify: pending
+- Visual verify: passed (2026-11-25): sin blockers ni majors; dos diferencias menores corregidas durante la verificación; 16 capturas en `mockups/verify/` con su README (y lo que no se revisó en el navegador)
