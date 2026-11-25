@@ -4,6 +4,8 @@ import { cargarProfesionales, type ProfesionalPublico } from '../paciente/catalo
 import { consultarDisponibilidad, type Horario } from '../paciente/disponibilidad.ts';
 import { crearGrillaHorarios } from '../paciente/horarios.ts';
 import type { TurnoPaciente } from '../paciente/reserva.ts';
+import { crearLineaSena, crearPagarSena, MENSAJE_VUELTA_DE_PAGO } from '../paciente/sena.ts';
+import { tomarVueltaDePago } from '../shared/ui/entrada.ts';
 import { cancelarTurno, estadoVisible, listarMisTurnos, reprogramarTurno, separarTurnos } from '../paciente/turnos.ts';
 import { ErrorNegocio, ErrorSesion } from '../shared/api/errores.ts';
 import { fechaDeInstante, fechaLarga, formatearHora, hoy } from '../shared/fecha/zona.ts';
@@ -39,7 +41,13 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   listas.append(crearCargando());
   const pagina = document.createElement('div');
   pagina.className = 'pagina-paciente';
-  pagina.append(crearTitulo('Mis turnos'), avisoOk, avisoError, listas);
+  // C-23: al volver de Mercado Pago se avisa que se está confirmando el pago; el estado lo dice la API.
+  const avisoPago = crearAviso('status');
+  avisoPago.className = 'aviso aviso-info';
+  if (tomarVueltaDePago()) {
+    avisoPago.textContent = MENSAJE_VUELTA_DE_PAGO;
+  }
+  pagina.append(crearTitulo('Mis turnos'), avisoPago, avisoOk, avisoError, listas);
   contenedor.replaceChildren(pagina);
 
   const vigente = (): boolean => contenedor.contains(listas);
@@ -180,11 +188,29 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
       item.append(nota);
     }
     item.append(numero);
+    const sena = turno.sena ?? null;
+    if (sena !== null) {
+      item.append(crearLineaSena(sena));
+    }
+    // C-23: "Pagar seña" mientras la seña está pendiente (spec frontend-senas).
+    const pagar =
+      proximo && sena !== null && sena.estado === 'PENDIENTE'
+        ? crearPagarSena(sena, turno.numeroReserva, contexto.api, (mensaje) => {
+            avisoOk.textContent = '';
+            avisoError.textContent = mensaje;
+          })
+        : null;
 
     if (!proximo) {
       return item;
     }
     if (!turno.modificableOnline) {
+      if (pagar !== null) {
+        const soloPagar = document.createElement('div');
+        soloPagar.className = 'turno-acciones';
+        soloPagar.append(pagar);
+        item.append(soloPagar);
+      }
       const aviso = document.createElement('p');
       aviso.className = 'aviso aviso-alerta';
       aviso.textContent = MENSAJE_FUERA_DE_PLAZO;
@@ -195,6 +221,9 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
     const cancelar = boton('Cancelar turno', 'btn btn-peligro');
     const accionesTurno = document.createElement('div');
     accionesTurno.className = 'turno-acciones';
+    if (pagar !== null) {
+      accionesTurno.append(pagar);
+    }
     accionesTurno.append(cambiar, cancelar);
     const zonaCambio = document.createElement('div');
     item.append(accionesTurno, zonaCambio);

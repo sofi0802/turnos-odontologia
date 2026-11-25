@@ -131,6 +131,8 @@ describe('Registro del paciente (C-12)', () => {
     email: 'paciente.uno@example.com',
     telefono: null,
     password: 'clave-ficticia-1',
+    // C-17: la casilla de mensajes viaja siempre.
+    aceptaMensajes: false,
   };
 
   it('pide la sesión antes si no hay cookie CSRF y envía el registro sin la repetición', async () => {
@@ -149,6 +151,7 @@ describe('Registro del paciente (C-12)', () => {
       dni: '99000001',
       email: 'paciente.uno@example.com',
       password: 'clave-ficticia-1',
+      aceptaMensajes: false,
     });
   });
 

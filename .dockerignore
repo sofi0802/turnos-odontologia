@@ -1,0 +1,22 @@
+# Contexto de build del frontend, que es la raíz del repo (C-52, design D4).
+# Deja afuera los secretos, las dependencias y los artefactos locales, y lo que el frontend no usa.
+.env
+.env.*
+!.env.example
+**/node_modules
+**/build
+**/.gradle
+**/dist
+backend
+data
+.git
+.claude
+.agents
+.atl
+.playwright-mcp
+.engram
+.active-stack
+openspec
+knowledge-base
+docs
+docker

@@ -483,3 +483,59 @@ describe('Reserva con sesión del personal', () => {
     expect(servidor.a('GET', '/public/prestaciones')).toHaveLength(0);
   });
 });
+
+// ---------- C-23: la seña al terminar la reserva (spec frontend-senas) ----------
+
+describe('Seña al terminar la reserva', () => {
+  const SENA = { estado: 'PENDIENTE', importe: 4500, venceEn: '2026-12-01T10:30:00-03:00', linkPago: 'https://mp.test/pagar/1' };
+
+  async function reservarCon(sena: unknown): Promise<void> {
+    conSesionDePaciente();
+    servidor.responder('POST /paciente/reservas', () =>
+      json(201, {
+        numeroReserva: 'R-0001',
+        ...horario('10:30'),
+        estado: 'RESERVADO',
+        prestacion: { id: 1, nombre: 'Consulta' },
+        profesional: { id: 2, nombre: 'Bruno Prueba' },
+        sena,
+      }),
+    );
+    await irAlResumen();
+    boton(panel(), 'Confirmar reserva').click();
+    await vi.waitFor(() => expect(texto(panel())).toContain('¡Turno reservado!'));
+  }
+
+  function enlacePagar(): HTMLAnchorElement | undefined {
+    return [...panel().querySelectorAll('a')].find((a) => a.textContent === 'Pagar seña');
+  }
+
+  it('Reserva con seña', async () => {
+    await reservarCon(SENA);
+
+    expect(texto(panel())).toContain('Seña: $ 4.500,00. Pagala antes de las 10:30 para no perder el turno.');
+    expect(enlacePagar()?.getAttribute('href')).toBe('https://mp.test/pagar/1');
+  });
+
+  it('Reserva sin seña', async () => {
+    await reservarCon(null);
+
+    expect(texto(panel())).not.toContain('Seña');
+    expect(enlacePagar()).toBeUndefined();
+    expect([...panel().querySelectorAll('button')].map((b) => b.textContent)).not.toContain('Pagar seña');
+  });
+
+  it('Seña sin link', async () => {
+    servidor.responder('POST /paciente/reservas/R-0001/sena/link', () =>
+      json(200, { linkPago: 'https://mp.test/pagar/nuevo' }),
+    );
+    const abrir = vi.spyOn(window, 'open').mockReturnValue(null);
+    await reservarCon({ ...SENA, linkPago: null });
+
+    boton(panel(), 'Pagar seña').click();
+
+    await vi.waitFor(() => expect(abrir).toHaveBeenCalledWith('https://mp.test/pagar/nuevo', '_self'));
+    expect(servidor.a('POST', '/paciente/reservas/R-0001/sena/link')).toHaveLength(1);
+    abrir.mockRestore();
+  });
+});

@@ -11,7 +11,13 @@ public record RegistroPacienteRequest(
         @NotBlank @Pattern(regexp = "\\d{7,8}", message = "El DNI debe tener 7 u 8 dígitos") String dni,
         @NotBlank @Email @Size(max = 150) String email,
         @Size(max = 30) String telefono,
-        @NotBlank @ContrasenaValida String password) {
+        @NotBlank @ContrasenaValida String password,
+        Boolean aceptaMensajes) {
+
+    /** La casilla de mensajes (C-17): si no viene, no acepta. */
+    public boolean aceptaLosMensajes() {
+        return Boolean.TRUE.equals(aceptaMensajes);
+    }
 
     /** Nunca incluye la contraseña. */
     @Override

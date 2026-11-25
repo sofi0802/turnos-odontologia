@@ -1,5 +1,13 @@
 package ar.turnos.odontologia.reserva.api;
 
+import ar.turnos.odontologia.reserva.application.SenasDeReserva;
+import ar.turnos.odontologia.reserva.application.ReservasPaciente;
+import ar.turnos.odontologia.reserva.application.ReservasPaciente.TurnoDelPaciente;
+import ar.turnos.odontologia.reserva.domain.CodigoReserva;
+import ar.turnos.odontologia.reserva.domain.ReservaRechazadaException;
+import org.springframework.beans.factory.ObjectProvider;
+import java.util.List;
+import java.util.Locale;
 import ar.turnos.odontologia.reserva.application.CancelarReservaOnline;
 import ar.turnos.odontologia.reserva.application.ReprogramarReservaOnline;
 import ar.turnos.odontologia.reserva.application.ReservarTurno;
@@ -29,9 +37,14 @@ class ReservasPacienteController {
     private final CancelarReservaOnline cancelar;
     private final ReprogramarReservaOnline reprogramar;
     private final ZoneId zona;
+    private final SenasDeReserva senas;
+    private final ReservasPaciente reservas;
 
     ReservasPacienteController(ReservarTurno reservar, CancelarReservaOnline cancelar,
-                               ReprogramarReservaOnline reprogramar, ZoneId zonaHoraria) {
+                               ReprogramarReservaOnline reprogramar, ZoneId zonaHoraria,
+                               ObjectProvider<SenasDeReserva> senas, ReservasPaciente reservas) {
+        this.senas = senas.getIfAvailable(() -> SenasDeReserva.NINGUNA);
+        this.reservas = reservas;
         this.reservar = reservar;
         this.cancelar = cancelar;
         this.reprogramar = reprogramar;
@@ -48,7 +61,7 @@ class ReservasPacienteController {
                                                    @AuthenticationPrincipal UsuarioAutenticado usuario) {
         var turno = reservar.ejecutar(usuario.pacienteId(), usuario.usuarioId(), pedido.prestacionId(),
                 pedido.profesionalId(), pedido.inicio().toInstant());
-        return ResponseEntity.status(HttpStatus.CREATED).body(TurnoPacienteResponse.de(turno, zona, null));
+        return ResponseEntity.status(HttpStatus.CREATED).body(conSena(turno));
     }
 
     record ReprogramacionRequest(
@@ -59,7 +72,7 @@ class ReservasPacienteController {
     TurnoPacienteResponse cancelar(@PathVariable String numeroReserva,
                                    @AuthenticationPrincipal UsuarioAutenticado usuario) {
         var turno = cancelar.ejecutar(usuario.pacienteId(), usuario.usuarioId(), numeroReserva);
-        return TurnoPacienteResponse.de(turno, zona, null);
+        return conSena(turno);
     }
 
     @PostMapping("/reservas/{numeroReserva}/reprogramar")
@@ -68,6 +81,23 @@ class ReservasPacienteController {
                                       @AuthenticationPrincipal UsuarioAutenticado usuario) {
         var turno = reprogramar.ejecutar(usuario.pacienteId(), usuario.usuarioId(), numeroReserva,
                 pedido.inicio().toInstant(), pedido.profesionalId());
-        return TurnoPacienteResponse.de(turno, zona, null);
+        return conSena(turno);
+    }
+
+    record LinkResponse(String linkPago) {}
+
+    /** C-23: un link de pago nuevo para la seña pendiente de un turno propio (spec turnos-paciente). */
+    @PostMapping("/reservas/{numeroReserva}/sena/link")
+    LinkResponse nuevoLink(@PathVariable String numeroReserva, @AuthenticationPrincipal UsuarioAutenticado usuario) {
+        String numero = numeroReserva == null ? "" : numeroReserva.trim().toUpperCase(Locale.ROOT);
+        // un número ajeno y uno inexistente responden igual, como el resto de la reserva
+        var turno = reservas.buscar(numero, usuario.pacienteId())
+                .orElseThrow(() -> ReservaRechazadaException.de(CodigoReserva.RESERVA_INEXISTENTE,
+                        "No existe una reserva con ese número"));
+        return new LinkResponse(senas.nuevoLink(turno.turnoId()));
+    }
+
+    private TurnoPacienteResponse conSena(TurnoDelPaciente turno) {
+        return TurnoPacienteResponse.de(turno, zona, null, senas.deTurnos(List.of(turno.turnoId())));
     }
 }

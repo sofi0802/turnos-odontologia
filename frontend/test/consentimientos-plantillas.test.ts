@@ -89,12 +89,14 @@ describe('Pestaña "Consentimientos" solo para el administrador', () => {
     expect(servidor.pedidos.filter((p) => p.ruta.startsWith('/consentimientos/plantillas'))).toHaveLength(0);
   });
 
-  it('va después de "Obras sociales", última de la tira', async () => {
+  it('va después de "Señas", última de la tira', async () => {
     const { raiz } = await abrirConfiguracion(servidorAdmin());
 
     const nombres = pestanas(raiz).map((p) => p.textContent);
+    // Orden del administrador tras C-49 y C-23: ..., "Obras sociales", "Señas", "Consentimientos".
     expect(nombres.at(-1)).toBe('Consentimientos');
-    expect(nombres.at(-2)).toBe('Obras sociales');
+    expect(nombres.at(-2)).toBe('Señas');
+    expect(nombres.at(-3)).toBe('Obras sociales');
   });
 });
 

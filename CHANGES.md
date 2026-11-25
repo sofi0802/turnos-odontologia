@@ -54,7 +54,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `backend/.../agenda/` lista de espera, `configuracion/` política de cancelación | Sofia (C-16 avisa a Emanuel) | V9, V10 |
 | `backend/.../notificaciones/` consentimiento | Juan Cruz | V11 |
 | `backend/.../coberturas/` (obras sociales, presupuestos, liquidaciones) | Juan Sebastián | V12, V13, V14 |
-| `backend/.../caja/`, `pagos/`, `facturacion/`, `reportes/` | Enzo | V15, V23 (señas de C-23, propuesta a confirmar por la líder) |
+| `backend/.../caja/`, `pagos/`, `facturacion/`, `reportes/` | Enzo | V15, V23 (señas de C-23, confirmada por la líder al revisar el PR #135) |
 | `backend/.../clinica/` periodontograma, imágenes, consentimientos, FHIR | Emanuel | V16, V17, V18 |
 | `frontend/` periodontograma en la ficha clínica (C-46) | Sofia (avisa a Enzo, dueño de `frontend/`) | — |
 | `frontend/` imágenes y radiografías en la ficha clínica (C-47) | Emanuel (avisa a Enzo, dueño de `frontend/`) | — |
@@ -62,6 +62,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `frontend/` obras sociales y cobertura del paciente (C-49) | Juan Sebastián (avisa a Enzo, dueño de `frontend/`) | — |
 | `frontend/` aranceles y presupuestos (C-50) | Juan Sebastián (avisa a Enzo, dueño de `frontend/`) | — |
 | `frontend/` liquidaciones a obras sociales (C-51) | Juan Sebastián (avisa a Enzo, dueño de `frontend/`) | — |
+| `docker-compose.yml`, `backend/Dockerfile`, `frontend/Dockerfile`: app completa con Docker (C-52) | Emanuel (avisa a Juan Cruz, dueño de `docker-compose.yml`, y a Enzo, dueño de `frontend/`) | — |
 | `backend/.../sucursales/` (transversal) | Sofia | V19 |
 | `backend/.../integraciones/` Google Calendar, asistente IA | Juan Cruz | — |
 
@@ -106,6 +107,8 @@ C-01 crear-turno-sin-solapamientos  [Sofia · OPSX]      ← tarea 1 = scaffoldi
 C-02 frontend-base-ts  [Enzo]                            ← independiente: carpeta frontend/
   │
 C-14 entrega-readme-y-evidencia  [Sofia]                 ← al final: README reproducible + evidencias
+  │
+C-14 ─ C-52 docker-compose-completo  [Emanuel]            ← `docker compose up` levanta base, backend y frontend
 
 ═══════════════ POST-MVP (arranca con C-01 a C-14 completos) ═══════════════
 
@@ -299,7 +302,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 |---|---|---|
 | **Sofia Indovino** (líder) | **C-01** (OPSX), C-06, C-35, C-42, C-43, C-14 + revisión de todos los PR | C-15, C-16, C-25, C-29, C-46 |
 | **Juan Cruz** | C-03, C-08, C-11, C-33, C-37, C-38, C-39 | C-17, C-30, C-31 |
-| **Emanuel** | C-04, C-07, C-13, C-12, C-34, C-44 | C-26, C-47, C-27, C-48, C-28 |
+| **Emanuel** | C-04, C-07, C-13, C-12, C-34, C-44 | C-26, C-47, C-27, C-48, C-28, C-52 |
 | **Juan Sebastián** | C-05, C-10, C-36 | C-18, C-19, C-20, C-21, C-49, C-50, C-51 |
 | **Enzo** | C-02, C-09, C-40, C-41, C-45 | C-22, C-23, C-24, C-32 (backend y pantallas de administración) |
 
@@ -812,6 +815,25 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/08_arquitectura_propuesta.md` §Variables de entorno
   - `knowledge-base/09_decisiones_y_supuestos.md` §SU-04
 
+### [C-52] `docker-compose-completo`
+- **Estado**: `[x]` completo (2026-11-25, SDD; propuesta en el PR #144, apply en el PR #147 y archive el mismo día). `docker compose up -d` levanta `postgres`, `backend` y `frontend`. Verificados los 17 escenarios de `entorno-desarrollo` con Docker (detalle en `openspec/changes/docker-compose-completo/design.md`, "Notas del apply"), 1099 tests unitarios y 1317 de integración del backend y 1379 del frontend. Sin código de la aplicación ni migraciones. Spec `openspec/specs/entorno-desarrollo/` (nueva); change archivado en `openspec/changes/archive/2026-11-25-docker-compose-completo/`, con la nota en la KB (PA-11 y SU-04) que aprobó la líder
+- **Responsable**: Emanuel (avisa a Juan Cruz, dueño de `docker-compose.yml`, y a Enzo, dueño de `frontend/`)
+- **Scope**:
+  - Hoy `docker compose up` levanta solo PostgreSQL; el backend y el frontend se arrancan a mano (README, pasos 3 y 4). Este change suma los dos al `docker-compose.yml` para que la aplicación completa arranque con un solo comando.
+  - `backend/Dockerfile` en dos etapas: compila el jar con el wrapper de Gradle y Java 21, y lo corre con una imagen de solo JRE, perfil `dev` (seed ficticio) y `-Duser.timezone=America/Argentina/Buenos_Aires`.
+  - `frontend/Dockerfile` con Vite en modo desarrollo y el código montado como volumen, para que recargue al editar. El contexto de build es la raíz del repo porque el frontend importa `../design-system`.
+  - `docker-compose.yml`: servicios `postgres` (con healthcheck), `backend` (espera a la base sana y se conecta por la red interna) y `frontend` (puerto 5173). El navegador sigue usando `localhost:5173` y `localhost:8080`: no cambian la cookie `HttpOnly`, el CSRF ni `APP_CORS_ORIGENES` (regla dura 8).
+  - Credenciales solo por variables de entorno del `.env`; nada en las imágenes ni en el repo (regla dura 4). `.dockerignore` excluye `.env`, `node_modules` y `build`.
+  - README y `.env.example` actualizados. El arranque manual sin Docker sigue documentado (PA-11, SU-04), y los tests de integración siguen usando la base del compose como hasta ahora.
+  - Sin cambios de código de la aplicación ni migraciones.
+- **Dependencias**: `C-03`, `C-14`
+- **Governance**: MEDIO (configuración de desarrollo compartida por el equipo)
+- **Leer antes**:
+  - `README.md` (requisitos y arranque)
+  - `knowledge-base/08_arquitectura_propuesta.md` §Variables de entorno
+  - `knowledge-base/09_decisiones_y_supuestos.md` §SU-04 y `knowledge-base/10_preguntas_abiertas.md` §PA-11
+  - `docker-compose.yml`, `backend/src/main/resources/application.yml`, `frontend/vite.config.ts`
+
 ---
 
 ## FASE 7: Post-MVP v1.x (diferenciadores)
@@ -848,7 +870,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/04_modelo_de_datos.md` §Configuracion
 
 ### [C-17] `consentimiento-comunicaciones`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-25, SDD, backend y frontend; migración V11). Propuesta y mockups aprobados en el PR #142; apply en `change/C-17-consentimiento-comunicaciones`. Un solo consentimiento con historial que no se edita; el paciente lo maneja en "Mi cuenta" (secciones "Tus datos" y "Mensajes del consultorio"), el registro tiene la casilla y la recepción lo registra o revoca junto al buscador ("Anotar paciente" y "Nuevo turno"), con el medio. Cubre los tres puntos que pedía C-15. Evidencia: 2358 tests del backend y 1386 del frontend en verde; verificación visual en `mockups/verify/`. Change en `openspec/changes/consentimiento-comunicaciones/`; el archive queda para después del merge
 - **Responsable**: Juan Cruz
 - **Scope**:
   - Pantalla y endpoint para que el paciente otorgue o revoque el consentimiento de comunicaciones, con fecha y canal (Ley 25.326). Historial de cambios. **Migración V11**.
@@ -993,13 +1015,13 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/03_actores_y_roles.md` §RBAC
 
 ### [C-23] `senas-mercado-pago`
-- **Estado**: `[ ]` en propuesta (KB aprobada en el PR #133, con PA-62 y PA-64 decididas por la líder: el turno con seña pagada sigue `RESERVADO` y la notificación de Mercado Pago tiene una excepción de CSRF solo para su ruta). Propose y mockups en la rama `change/C-23-senas-mercado-pago`. Governance CRÍTICO: no se escribe código sin aprobación explícita
+- **Estado**: `[x]` completo (2026-11-25; KB en el PR #133, propuesta y mockups en el PR #135, apply en el PR #143, archive el mismo día). Specs: `openspec/specs/senas/` y `frontend-senas/` (nuevos), y `agenda-api/`, `cobros-pacientes/`, `reserva-online/`, `seguridad-autorizacion/`, `turnos-paciente/` y `frontend-configuracion-consultorio/` (actualizados: "Señas" en las pestañas de `ADMIN`); change archivado en `openspec/changes/archive/2026-11-25-senas-mercado-pago/`. Migración V23. Evidencia: `docs/evidencia/c23-backend.txt` (tras el merge de master: 1099 unitarios y 1317 de integración) y 1379 tests del frontend; verificación visual en `design.md` (differences: tres corregidas y el aviso general de los formularios que los mockups no muestran). Pasarela simulada por defecto (`PAGOS_PASARELA=simulada`); con `mercadopago` el arranque exige `MERCADOPAGO_ACCESS_TOKEN` y `MERCADOPAGO_WEBHOOK_SECRET`. Módulo de estilos `26-senas.css` (C-48 tiene que pasar su `25-consentimientos.css` al 27). Aviso a C-48 y C-49: sus deltas de `frontend-configuracion-consultorio` modifican "Secciones según el rol" con una versión anterior a C-23; hay que sumar "Señas" antes de su archive para no perderla
 - **Responsable**: Enzo (avisa a Juan Sebastián por `reserva/`, a Sofia por la cancelación y la reprogramación de `agenda/` y a Juan Cruz por los avisos de `notificaciones/`)
 - **Scope**:
   - Puerto `PasarelaPago` con adaptador Mercado Pago (modo sandbox, **sin credenciales reales en el repo**) y una pasarela simulada: link de pago para la seña al reservar y webhook de confirmación con validación de firma.
   - Seña con vencimiento, reintegros, traslado al reprogramar e imputación al cargo de C-22 (RN-SE-01 a RN-SE-12).
   - Tests: seña pagada confirma el turno; seña vencida lo libera; webhook con firma inválida rechazado.
-- **Migración**: V23 (propuesta en este PR, a confirmar por la líder): `sena`, `sena_movimiento` y el cambio de `cobro` (`MERCADO_PAGO` y `caja_id` nullable), sin editar V15
+- **Migración**: V23 (reservada; confirmada por la líder al revisar el PR #135): `sena`, `sena_movimiento` y el cambio de `cobro` (`MERCADO_PAGO` y `caja_id` nullable), sin editar V15
 - **Dependencias**: `C-10, C-22`
 - **Governance**: CRITICO (pagos)
 - **Leer antes**:
@@ -1058,7 +1080,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/README.md` y `design-system/components.html`
 
 ### [C-26] `imagenes-y-radiografias`
-- **Estado**: `[~]` implementado (2026-11-24, SDD; propuesta en el PR #112, apply en su PR; `openspec/changes/imagenes-y-radiografias/`, migración V17). Solo backend: almacén en disco detrás de un puerto, JPEG, PNG y PDF de hasta 10 MB, anulación con motivo en lugar de borrado (RN-CL-07, RN-CL-08, US-048, DD-17). Evidencia: `docs/evidencia/c26-backend.txt`. Falta el merge y después archivarlo. El apply suma a `shared/web/ProblemDetailGlobalHandler` el `413` del límite de multipart (avisar a Juan Sebastián)
+- **Estado**: `[x]` completo (2026-11-25, SDD; propuesta en el PR #112, apply en el PR #115 y archive el 2026-11-25; migración V17). Spec `openspec/specs/imagenes-clinicas/` (nueva); change archivado en `openspec/changes/archive/2026-11-25-imagenes-y-radiografias/`. Solo backend: almacén en disco detrás de un puerto, JPEG, PNG y PDF de hasta 10 MB, anulación con motivo en lugar de borrado (RN-CL-07, RN-CL-08, US-048, DD-17). Evidencia: `docs/evidencia/c26-backend.txt`. El apply suma a `shared/web/ProblemDetailGlobalHandler` el `413` del límite de multipart (avisar a Juan Sebastián)
 - **Responsable**: Emanuel
 - **Scope**:
   - Carga de imágenes y radiografías por paciente, pieza y fecha, con almacenamiento detrás de un puerto (local o S3 compatible). **Migración V17**.
@@ -1070,7 +1092,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/08_arquitectura_propuesta.md` §Seguridad
 
 ### [C-47] `frontend-imagenes-y-radiografias`
-- **Estado**: `[~]` implementado (2026-11-24, SDD; propuesta y mockups en el PR #119, aprobados por Emanuel; apply en su PR; `openspec/changes/frontend-imagenes-y-radiografias/`). 949 tests del frontend y verificación visual en `mockups/verify/`. Falta la revisión de la líder y de Enzo, el merge y el archive
+- **Estado**: `[x]` completo (2026-11-25, SDD; propuesta y mockups en el PR #119, aprobados por Emanuel; apply en el PR #123 y archive el 2026-11-25). Spec `openspec/specs/frontend-imagenes-clinicas/` (nueva) y `frontend-cliente-api/` (actualizada: envío de archivos, descarga y `413`); change archivado en `openspec/changes/archive/2026-11-25-frontend-imagenes-y-radiografias/`. 949 tests del frontend y verificación visual en `mockups/verify/`
 - **Responsable**: Emanuel (avisa a Enzo, dueño de `frontend/`)
 - **Scope**:
   - C-26 hace el backend de las imágenes, pero ninguna pantalla lo usa. Este change suma la interfaz sobre `/api/v1/pacientes/{id}/imagenes`, sin cambiar su contrato.
@@ -1093,7 +1115,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/README.md` y `design-system/components.html`
 
 ### [C-27] `consentimientos-firma-electronica`
-- **Estado**: `[~]` implementado (2026-11-24, SDD; propuesta aprobada en el PR #124, apply en su PR; `openspec/changes/consentimientos-firma-electronica/`, migración V18). Solo backend: plantillas con versiones, firma electrónica en el consultorio con hash SHA-256 y revocación con registro. Evidencia: `docs/evidencia/c27-backend.txt` (917 unitarios y 1001 de integración). Falta la revisión de la líder, el merge y el archive; las pantallas van en C-48
+- **Estado**: `[x]` completo (2026-11-25, SDD; propuesta en el PR #124, apply en el PR #128 y archive el 2026-11-25; migración V18). Spec `openspec/specs/consentimientos-informados/` (nueva); change archivado en `openspec/changes/archive/2026-11-25-consentimientos-firma-electronica/`. Solo backend: plantillas con versiones, firma electrónica en el consultorio con hash SHA-256 y revocación con registro. Evidencia: `docs/evidencia/c27-backend.txt` (917 unitarios y 1001 de integración). Las pantallas van en C-48
 - **Responsable**: Emanuel
 - **Scope**:
   - Plantillas de consentimiento informado y firma con hash, fecha, IP y dispositivo; documento bloqueado una vez firmado (Ley 25.506). **Migración V18**.

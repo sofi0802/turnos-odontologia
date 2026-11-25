@@ -6,6 +6,8 @@ import jakarta.servlet.DispatcherType;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -40,6 +42,9 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 @EnableMethodSecurity
 @EnableConfigurationProperties(SeguridadProperties.class)
 public class SecurityConfig {
+
+    /** C-23: ruta de la notificación de Mercado Pago, la única fuera de CSRF (design D7). */
+    static final String NOTIFICACION_MERCADO_PAGO = "/api/v1/public/pagos/mercadopago/notificaciones";
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -88,7 +93,12 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .csrf(csrf -> csrf
                         .csrfTokenRepository(csrfTokenRepository)
-                        .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler()))
+                        .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
+                        // C-23 (PA-64, aceptada por la líder): la notificación de Mercado Pago no puede llevar el token.
+                        // Es la única ruta exceptuada, con coincidencia exacta; la autentican la firma y la consulta del
+                        // pago (design D7). El resto de la API sigue con CSRF (regla dura 8).
+                        .ignoringRequestMatchers(PathPatternRequestMatcher.withDefaults()
+                                .matcher(HttpMethod.POST, NOTIFICACION_MERCADO_PAGO)))
                 .addFilterAfter(new CsrfCookieFilter(), BasicAuthenticationFilter.class)
                 // C-41: cierra sesiones de cuentas desactivadas o restablecidas y frena la contraseña temporal pendiente
                 .addFilterAfter(new VerificacionDeCuentaFilter(usuarios, contextRepository, escritor),

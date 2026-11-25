@@ -7,7 +7,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import ar.turnos.odontologia.agenda.application.AuditoriaTurnos;
-import ar.turnos.odontologia.agenda.application.AuditoriaTurnos.Accion;
 import ar.turnos.odontologia.agenda.application.CancelarTurno;
 import ar.turnos.odontologia.agenda.application.CancelarTurnoCommand;
 import ar.turnos.odontologia.agenda.application.ConfirmarTurno;
@@ -91,7 +90,7 @@ class ServicioAgendaHorariosLiberadosTest {
         Turno resultado = servicio().cancelar(new CancelarTurnoCommand(7L, "99000003", "K7M2-QX9P"), ACTOR);
 
         assertThat(resultado.estado()).isEqualTo(EstadoTurno.CANCELADO);
-        verify(auditoria).registrar(7L, Accion.CANCELAR, ACTOR, null);
+        verify(auditoria).registrarCancelacion(7L, ACTOR, null);
         verify(transacciones).commit(any());
     }
 

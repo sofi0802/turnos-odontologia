@@ -40,8 +40,12 @@ const REGLAS_POR_MODULO: Readonly<Record<string, string>> = {
   '24-coberturas.css': '.cob-afiliacion {',
   // C-50: aranceles, presupuestos y "Mis presupuestos".
   '25-presupuestos.css': '.pre-presupuesto {',
+  // C-23: señas.
+  '26-senas.css': '.sena-linea {',
+  // C-17: consentimiento de comunicaciones.
+  '27-consentimiento.css': '.consentimiento-linea {',
   // C-48: plantillas y consentimientos informados, vista de firma y bloqueo.
-  '26-consentimientos.css': '.cons-fila {',
+  '28-consentimientos.css': '.cons-fila {',
 };
 
 function importaciones(): string[] {
@@ -136,7 +140,7 @@ describe('Módulo de coberturas (C-49, design D10)', () => {
   });
 
   it('Se importa después del módulo de la lista de espera', () => {
-    // C-50 y C-48 suman 25-presupuestos.css y 26-consentimientos.css después: coberturas sigue inmediatamente después de la lista de espera.
+    // C-50 y C-48 suman 25-presupuestos.css y 28-consentimientos.css después: coberturas sigue inmediatamente después de la lista de espera.
     const importaciones = [...textoPrincipal.matchAll(/@import\s+'([^']+)';/g)].map((m) => m[1]);
     const coberturas = importaciones.indexOf('./styles/24-coberturas.css');
     expect(importaciones[coberturas - 1]).toBe('./styles/23-lista-espera.css');
@@ -160,25 +164,28 @@ describe('Módulo de presupuestos (C-50, design D9)', () => {
     }
   });
 
-  it('Se importa justo después del módulo de coberturas', () => {
-    // C-48 suma 26-consentimientos.css después: presupuestos sigue inmediatamente después de coberturas.
+  it('Se importa al final de styles.css, después del módulo de coberturas', () => {
+    // C-23 agregó 26-senas.css después de este módulo: ya no es el último, pero sigue justo después de coberturas.
     const importaciones = [...textoPrincipal.matchAll(/@import\s+'([^']+)';/g)].map((m) => m[1]);
-    const coberturas = importaciones.indexOf('./styles/24-coberturas.css');
-    expect(coberturas).toBeGreaterThan(-1);
-    expect(importaciones[coberturas + 1]).toBe('./styles/25-presupuestos.css');
+    const presupuestos = importaciones.indexOf('./styles/25-presupuestos.css');
+    expect(presupuestos).toBeGreaterThan(-1);
+    expect(importaciones[presupuestos - 1]).toBe('./styles/24-coberturas.css');
+    expect(importaciones[presupuestos + 1]).toBe('./styles/26-senas.css');
+    // C-17 suma 27-consentimiento.css después de las señas, y C-48 28-consentimientos.css al final.
+    expect(importaciones[presupuestos + 2]).toBe('./styles/27-consentimiento.css');
   });
 });
 
 describe('Módulo de consentimientos (C-48, design D10)', () => {
   it('Sin las reglas que son solo de los mockups', () => {
-    const modulo = textoDeModulo('26-consentimientos.css');
+    const modulo = textoDeModulo('28-consentimientos.css');
     for (const regla of ['.nota-mockup', '.rotulo-estado', '.dialogo-estatico', '.nota-contexto', '.mockup-pagina', '.pagina-estados', '.ingreso-mockup', 'Solo mockups']) {
       expect(modulo, regla).not.toContain(regla);
     }
   });
 
   it('Sin quitar el foco y con las piezas de los mockups', () => {
-    const modulo = textoDeModulo('26-consentimientos.css');
+    const modulo = textoDeModulo('28-consentimientos.css');
     expect(modulo).not.toMatch(/outline:\s*none/);
     for (const regla of [
       '.cons-plantillas > li {',
@@ -194,13 +201,13 @@ describe('Módulo de consentimientos (C-48, design D10)', () => {
   });
 
   it('El texto plano conserva los saltos de línea y no rompe el ancho', () => {
-    const modulo = textoDeModulo('26-consentimientos.css');
+    const modulo = textoDeModulo('28-consentimientos.css');
     expect(modulo).toMatch(/\.cons-texto \{[^}]*white-space: pre-wrap/);
     expect(modulo).toMatch(/\.cons-texto \{[^}]*overflow-wrap: anywhere/);
   });
 
   it('La vista de firma y el bloqueo tapan la ficha con un fondo opaco', () => {
-    const modulo = textoDeModulo('26-consentimientos.css');
+    const modulo = textoDeModulo('28-consentimientos.css');
     expect(modulo).toMatch(/\.firma-pantalla \{[^}]*position: fixed[^}]*inset: 0/);
     expect(modulo).toMatch(/\.firma-pantalla \{[^}]*background: var\(--ds-fondo\)/);
     expect(modulo).toMatch(/\.firma-pantalla::backdrop \{[^}]*background: var\(--ds-fondo\)/);
@@ -209,13 +216,13 @@ describe('Módulo de consentimientos (C-48, design D10)', () => {
   });
 
   it('El bloqueo usa una capa numérica: --ds-capa-modal es un color y no sirve como z-index', () => {
-    const modulo = textoDeModulo('26-consentimientos.css');
+    const modulo = textoDeModulo('28-consentimientos.css');
     expect(modulo).toMatch(/\.bloqueo-pantalla \{[^}]*z-index: \d+/);
     expect(modulo).not.toMatch(/z-index:\s*var\(--ds-capa-modal\)/);
   });
 
   it('Solo usa tokens que existen en design-system/tokens.css', () => {
-    const usados = new Set([...textoDeModulo('26-consentimientos.css').matchAll(/var\((--ds-[a-z0-9-]+)/g)].map((m) => m[1] ?? ''));
+    const usados = new Set([...textoDeModulo('28-consentimientos.css').matchAll(/var\((--ds-[a-z0-9-]+)/g)].map((m) => m[1] ?? ''));
     for (const token of usados) {
       expect(textoDeTokens, token).toContain(`${token}:`);
     }
@@ -223,7 +230,7 @@ describe('Módulo de consentimientos (C-48, design D10)', () => {
   });
 
   it('Los controles de la firma, el bloqueo y las filas miden al menos 44 px', () => {
-    const modulo = textoDeModulo('26-consentimientos.css');
+    const modulo = textoDeModulo('28-consentimientos.css');
     for (const regla of ['.cons-acciones .btn {', '.firma-acciones .btn {', '.bloqueo-form .btn {', '.cons-opcion {', '.cons-acepto {']) {
       const inicio = modulo.indexOf(regla);
       expect(inicio, regla).toBeGreaterThan(-1);
@@ -231,10 +238,10 @@ describe('Módulo de consentimientos (C-48, design D10)', () => {
     }
   });
 
-  it('Se importa al final de styles.css, después del módulo de presupuestos', () => {
+  it('Se importa al final de styles.css, después del consentimiento de comunicaciones (C-17)', () => {
     const importaciones = [...textoPrincipal.matchAll(/@import\s+'([^']+)';/g)].map((m) => m[1]);
-    expect(importaciones.at(-1)).toBe('./styles/26-consentimientos.css');
-    expect(importaciones.at(-2)).toBe('./styles/25-presupuestos.css');
+    expect(importaciones.at(-1)).toBe('./styles/28-consentimientos.css');
+    expect(importaciones.at(-2)).toBe('./styles/27-consentimiento.css');
   });
 });
 

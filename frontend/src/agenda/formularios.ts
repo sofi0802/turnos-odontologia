@@ -15,6 +15,7 @@ import { abrirDialogo as abrirDialogoUniforme } from '../shared/ui/dialogo.ts';
 import { mensajeDeError, mensajeDeReprogramacion } from '../shared/ui/mensajes.ts';
 import { crearCalendario } from '../shared/ui/calendario.ts';
 import { usarSelectorFecha } from '../shared/ui/selector-fecha.ts';
+import { crearLineaConsentimiento } from '../consentimiento/linea-recepcion.ts';
 import { crearBuscadorPacientes, MENSAJE_PACIENTE_OBLIGATORIO } from './buscador-pacientes.ts';
 import { nombreDe, type Catalogos, type ItemCatalogo } from './catalogos.ts';
 import { crearBuscadorHorariosNuevoTurno } from './nuevo-turno.ts';
@@ -209,7 +210,17 @@ export function abrirNuevoTurno(control: ControlAgenda): void {
     }
     return vencida;
   };
-  const paciente = crearBuscadorPacientes(control.api, { sesionVencida });
+  // C-17: la recepción y la administración ven y registran el consentimiento; el odontólogo (con profesional fijo), no.
+  const consentimiento = crearLineaConsentimiento({
+    api: control.api,
+    visible: control.profesionalFijo === undefined,
+    sesionVencida,
+  });
+  const paciente = crearBuscadorPacientes(control.api, {
+    sesionVencida,
+    alElegir: (elegido) => consentimiento.mostrarPaciente(elegido.id),
+    alQuitar: () => consentimiento.mostrarPaciente(null),
+  });
   const prestacion = selector('Prestación', 'prestacionId', opcionesActivas(catalogos.prestaciones, 'Elegí una prestación'));
   const profesional = selector('Profesional', 'profesionalId', [{ valor: '', texto: 'Elegí un profesional' }]);
   profesional.control.disabled = true;
@@ -253,6 +264,7 @@ export function abrirNuevoTurno(control: ControlAgenda): void {
   dialogo = abrirDialogo('Nuevo turno', null, [paciente, prestacion, profesional], 'Crear turno');
   const dialogoAbierto = dialogo;
   dialogoAbierto.formulario.closest('dialog')?.classList.add('dialogo-ancho');
+  paciente.contenedor.after(consentimiento.contenedor);
   const columnas = document.createElement('div');
   columnas.className = 'dos-columnas';
   prestacion.contenedor.before(columnas);
@@ -365,20 +377,82 @@ function camposDeIdentidad(): [Campo<HTMLInputElement>, Campo<HTMLInputElement>]
   return [dni, numero];
 }
 
+/**
+ * C-23 (RN-SE-06): "Causa" de la cancelación, opcional; la API la exige si el paciente pagó una seña. Es un grupo de
+ * radios que se comporta como un campo, así el 422 del campo `causa` se muestra acá.
+ */
+function campoCausa(): Campo<HTMLInputElement> & { valor(): string | null } {
+  const grupo = document.createElement('fieldset');
+  grupo.className = 'campo-causa';
+  const leyenda = document.createElement('legend');
+  leyenda.textContent = 'Causa';
+  const opciones = document.createElement('div');
+  opciones.className = 'casillas';
+  const radios = (
+    [
+      ['PACIENTE', 'A pedido del paciente'],
+      ['CONSULTORIO', 'Por el consultorio'],
+    ] as const
+  ).map(([valor, texto]) => {
+    const radio = document.createElement('input');
+    radio.type = 'radio';
+    radio.name = 'causa';
+    radio.value = valor;
+    const etiqueta = document.createElement('label');
+    etiqueta.className = 'casilla';
+    etiqueta.append(radio, ` ${texto}`);
+    opciones.append(etiqueta);
+    return radio;
+  });
+  const ayuda = document.createElement('p');
+  ayuda.className = 'ayuda';
+  ayuda.id = `causa-ayuda-${String(Date.now())}`;
+  ayuda.textContent = 'Obligatoria si el paciente pagó una seña.';
+  const error = document.createElement('p');
+  error.className = 'campo-error';
+  error.id = `${ayuda.id}-error`;
+  grupo.setAttribute('aria-describedby', `${ayuda.id} ${error.id}`);
+  grupo.append(leyenda, opciones, ayuda, error);
+  const [primero] = radios;
+  if (primero === undefined) {
+    throw new Error('Faltan las opciones de la causa');
+  }
+  return {
+    contenedor: grupo,
+    control: primero,
+    mostrarError(mensaje: string) {
+      error.textContent = mensaje;
+      if (mensaje === '') {
+        grupo.removeAttribute('aria-invalid');
+      } else {
+        grupo.setAttribute('aria-invalid', 'true');
+      }
+    },
+    valor: () => radios.find((r) => r.checked)?.value ?? null,
+  };
+}
+
 export function abrirCancelacion(control: ControlAgenda, turno: TurnoAgenda): void {
   const [dni, numero] = camposDeIdentidad();
-  const dialogo = abrirDialogo('Cancelar turno', resumenDe(turno), [dni, numero], 'Confirmar cancelación');
+  const causa = campoCausa();
+  const dialogo = abrirDialogo('Cancelar turno', resumenDe(turno), [dni, numero, causa], 'Confirmar cancelación');
 
   dialogo.formulario.addEventListener('submit', (evento) => {
     evento.preventDefault();
     if (!validarObligatorios([[dni, 'Ingresá el DNI.'], [numero, 'Ingresá el número de reserva.']])) {
       return;
     }
-    const cuerpo = { dni: dni.control.value.trim(), numeroReserva: numero.control.value.trim() };
+    const elegida = causa.valor();
+    const cuerpo = {
+      dni: dni.control.value.trim(),
+      numeroReserva: numero.control.value.trim(),
+      ...(elegida === null ? {} : { causa: elegida }),
+    };
+    causa.mostrarError('');
     manejarEnvio(
       control,
       dialogo,
-      { dni, numeroReserva: numero },
+      { dni, numeroReserva: numero, causa },
       () => control.api.crear<unknown>(`/turnos/${turno.id}/cancelar`, cuerpo),
       () => 'Turno cancelado.',
     );

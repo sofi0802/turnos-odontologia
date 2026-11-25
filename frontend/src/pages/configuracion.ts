@@ -1,5 +1,6 @@
 import { montarObrasSociales } from '../coberturas/catalogo.ts';
 import { montarConsentimientos } from '../consentimientos/plantillas.ts';
+import { montarSenas } from '../configuracion/senas.ts';
 import { montarAusencias } from '../configuracion/ausencias.ts';
 import { montarBloqueos } from '../configuracion/bloqueos.ts';
 import { montarPrestaciones, montarProfesionales, montarSillones } from '../configuracion/catalogo.ts';
@@ -47,7 +48,11 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   if (permisosDelRol.gestionaCoberturas) {
     definiciones.push(['Obras sociales', montarObrasSociales]);
   }
-  // Las plantillas de consentimiento son solo del administrador y van última (C-48, design D2).
+  // Las señas de la reserva online las configura solo el administrador (C-23).
+  if (permisosDelRol.configuraSenas) {
+    definiciones.push(['Señas', montarSenas]);
+  }
+  // Las plantillas de consentimiento son solo del administrador y van última, después de Señas (C-48, design D2).
   if (permisosDelRol.gestionaConsentimientos) {
     definiciones.push(['Consentimientos', montarConsentimientos]);
   }

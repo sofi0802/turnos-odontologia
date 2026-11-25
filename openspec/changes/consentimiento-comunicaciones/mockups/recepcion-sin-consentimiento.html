@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lista de espera · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="consentimiento.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="recepcion" data-rol="RECEPCIONISTA" data-activa="lista-espera">
+  <div class="pila">
+    <h1 tabindex="-1">Lista de espera</h1>
+
+    <p class="rotulo-estado">"Anotar" respondió 409 SIN_CONSENTIMIENTO</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="d-anotar">
+      <h2 id="d-anotar">Anotar paciente</h2>
+      <p class="dialogo-resumen">Le avisamos por mensaje cuando se libere un horario que le sirva.</p>
+      <form class="formulario" novalidate>
+        <p role="alert" class="aviso aviso-error">El paciente no aceptó recibir mensajes: no le podemos avisar las ofertas.</p>
+        <div class="campo buscador">
+          <label id="b-etq">Paciente</label>
+          <div class="buscador-elegido" role="group" aria-labelledby="b-etq"><span><span class="nombre">Dos, Paciente</span> <span class="dni">· DNI 99000002</span></span><button type="button" class="boton-secundario">Cambiar paciente</button></div>
+        </div>
+        <div class="consentimiento-linea">
+          <p class="mensajes-estado no" data-icono="mensaje-no">No acepta mensajes</p>
+          <button type="button" class="btn btn-chico btn-principal">Registrar consentimiento</button>
+        </div>
+        <div class="campo"><label for="a-pre">Prestación</label><select id="a-pre" class="control"><option>Limpieza (profilaxis)</option></select></div>
+        <div class="campo"><label for="a-pro">Profesional</label><select id="a-pro" class="control"><option>Sin preferencia</option></select></div>
+        <div class="le-rango">
+          <div class="campo"><label for="a-des">Desde</label><input id="a-des" class="control" value="01/12/2026" /></div>
+          <div class="campo"><label for="a-has">Hasta</label><input id="a-has" class="control" value="15/12/2026" /></div>
+        </div>
+        <p class="ayuda">Hasta 60 días. Una sola inscripción por prestación.</p>
+        <div class="dialogo-acciones"><button type="button" class="btn">Volver</button><button type="submit" class="btn btn-principal">Anotar</button></div>
+      </form>
+    </dialog>
+
+    <p class="nota-mockup"><b>Mockup C-17.</b> El diálogo no se cierra: el foco va a "Registrar consentimiento", que se destaca. Después de registrarlo, "Anotar" vuelve a enviar los mismos datos. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

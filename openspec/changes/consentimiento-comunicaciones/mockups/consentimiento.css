@@ -1,0 +1,185 @@
+/* C-17: propuesta del módulo NN-consentimiento-comunicaciones.css. Solo usa tokens de la Revision 5 del design system.
+   Las reglas marcadas "Solo mockups" no pasan al módulo. */
+
+/* ---- Página Cuenta del paciente ---- */
+.cuenta-datos {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--ds-espacio-1) var(--ds-espacio-3);
+  margin: 0;
+}
+
+.cuenta-datos div {
+  display: grid;
+  gap: var(--ds-espacio-0);
+  min-width: 0;
+}
+
+.cuenta-datos dt {
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.cuenta-datos dd {
+  margin: 0;
+  font-weight: var(--ds-peso-fuerte);
+  overflow-wrap: anywhere;
+}
+
+.cuenta-datos .sin-dato {
+  font-weight: normal;
+  color: var(--ds-texto-suave);
+}
+
+@media (min-width: 48rem) {
+  .cuenta-datos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.cuenta-ayuda {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+/* ---- Estado del consentimiento (paciente y recepción) ---- */
+.mensajes-estado {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  margin: 0;
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.mensajes-estado .icono {
+  flex: none;
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.mensajes-estado.si {
+  color: var(--ds-ok);
+}
+
+.mensajes-estado.no {
+  color: var(--ds-texto-suave);
+}
+
+.mensajes-fecha {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.mensajes-que {
+  margin: 0;
+  padding-left: var(--ds-espacio-3);
+  display: grid;
+  gap: var(--ds-espacio-0);
+}
+
+/* ---- Línea de consentimiento debajo del paciente elegido (recepción) ---- */
+.consentimiento-linea {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--ds-espacio-1);
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  border: 1px solid var(--ds-borde);
+  border-radius: var(--ds-radio);
+  background: var(--ds-superficie);
+}
+
+.consentimiento-linea .mensajes-estado {
+  font-size: var(--ds-texto-sm);
+}
+
+/* ---- Diálogo del medio ---- */
+.medio-opciones {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.medio-opciones legend {
+  margin-bottom: var(--ds-espacio-1);
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.medio-opcion {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  min-height: var(--ds-alto-control);
+  padding: 0 var(--ds-espacio-2);
+  border: 1px solid var(--ds-borde);
+  border-radius: var(--ds-radio);
+}
+
+.medio-opcion input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--ds-acento-500);
+}
+
+.medio-opcion .icono {
+  width: 1.25rem;
+  height: 1.25rem;
+  color: var(--ds-texto-suave);
+}
+
+/* ---- Casilla del registro ---- */
+.casilla-mensajes {
+  align-items: flex-start;
+  padding-top: var(--ds-espacio-1);
+}
+
+.casilla-mensajes input {
+  flex: none;
+  margin-top: 0.15rem;
+}
+
+/* ---- Solo mockups ---- */
+.nota-mockup {
+  margin: 0;
+  font-size: var(--ds-texto-xs);
+  color: var(--ds-texto-suave);
+  max-width: 48rem;
+}
+
+.nota-mockup b {
+  color: var(--ds-alerta);
+}
+
+.rotulo-estado {
+  margin: var(--ds-espacio-3) 0 var(--ds-espacio-1);
+  font-size: var(--ds-texto-sm);
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-alerta);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.dialogo-estatico {
+  position: static;
+  display: block;
+  margin: 0;
+  max-height: none;
+  overflow: visible;
+  box-shadow: var(--ds-sombra-3);
+}
+
+.nota-contexto {
+  min-height: 4rem;
+  padding: var(--ds-espacio-2);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  color: var(--ds-texto-suave);
+  border: 1px dashed var(--ds-borde);
+  border-radius: var(--ds-radio);
+}

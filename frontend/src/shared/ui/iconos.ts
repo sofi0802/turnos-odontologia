@@ -27,6 +27,10 @@ export type NombreIcono =
   | 'espera'
   | 'credencial'
   | 'cuenta'
+  | 'mensaje'
+  | 'mensaje-no'
+  | 'telefono'
+  | 'persona'
   | 'firma'
   | 'verificado'
   | 'alterado'
@@ -100,6 +104,11 @@ const TRAZOS: Readonly<Record<NombreIcono, readonly Trazo[]>> = {
     ['path', { d: 'M6 16c.5-1.4 1.6-2 3-2s2.5.6 3 2M14 10h4M14 14h3' }],
   ],
   cuenta: [['circle', { cx: '12', cy: '8', r: '4' }], ['path', { d: 'M4 21c1-4 4.5-6 8-6s7 2 8 6' }]],
+  // C-17: consentimiento de comunicaciones.
+  mensaje: [['path', { d: 'M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.6A8 8 0 1 1 21 12z' }]],
+  'mensaje-no': [['path', { d: 'M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.6A8 8 0 1 1 21 12z' }], ['path', { d: 'M4 4l16 16' }]],
+  telefono: [['path', { d: 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z' }]],
+  persona: [['circle', { cx: '12', cy: '7', r: '3.5' }], ['path', { d: 'M5 21v-1a7 7 0 0 1 14 0v1' }]],
   // C-48: consentimientos (lapicera de la firma, escudo de "Íntegro", triángulo de "Alterado" y candado del bloqueo).
   firma: [['path', { d: 'M16.5 3.5l4 4L9 19l-5 1 1-5z' }], ['path', { d: 'M14 6l4 4M3 22h18' }]],
   verificado: [['path', { d: 'M12 3l7 3v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V6z' }], ['path', { d: 'M8.5 12l2.5 2.5 4.5-5' }]],

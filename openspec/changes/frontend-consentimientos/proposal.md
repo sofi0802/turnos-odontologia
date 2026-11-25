@@ -45,7 +45,7 @@ C-27 dejó en el backend los consentimientos informados con **firma electrónica
   - `frontend/src/pages/configuracion.ts` y `frontend/src/configuracion/permisos.ts`: la pestaña y el permiso `gestionaConsentimientos`.
   - `frontend/src/pages/pacientes.ts`: monta la sección después de las imágenes, llama a `destruir()` al cambiar de paciente y vacía la ficha al bloquear.
   - `frontend/src/shared/ui/mensajes.ts` (cinco códigos) e `iconos.ts` (íconos de firma, verificado, alterado y candado).
-  - Un módulo de estilos nuevo, `frontend/src/styles/26-consentimientos.css` (del 22 al 25 ya están en `master`: caja, lista de espera, coberturas y presupuestos).
+  - Un módulo de estilos nuevo, `frontend/src/styles/28-consentimientos.css` (del 22 al 27 ya están en `master`: caja, lista de espera, coberturas, presupuestos, señas y consentimiento de comunicaciones).
 - **Avisos**:
   - `frontend/` es de Enzo: se le avisa y revisa el PR.
   - C-49 (`frontend-obras-sociales`, Juan Sebastián) también toca `configuracion.ts`, `permisos.ts`, `pacientes.ts`, `styles.css` y el requisito "Secciones según el rol". **No es una dependencia**: C-48 no usa nada de C-49. El delta de C-48 va contra el spec principal actual; el que se archive segundo incluye la pestaña del otro y el que se aplique segundo rebasa (design D2).

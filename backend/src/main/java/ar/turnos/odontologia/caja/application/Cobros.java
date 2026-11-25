@@ -23,5 +23,9 @@ public interface Cobros {
 
     List<CobroVista> deLosCargos(List<Long> cargoIds);
 
-    record CobroBloqueado(long id, long cajaId, boolean anulado) {}
+    /** C-23: el cobro de una seña imputada, con el medio {@code MERCADO_PAGO} y sin caja (RN-SE-08). */
+    long registrarSinCaja(long cargoId, BigDecimal importe, String usuario, Instant ahora);
+
+    /** @param cajaId {@code null} para el cobro de una seña, que no tiene caja */
+    record CobroBloqueado(long id, Long cajaId, boolean anulado) {}
 }
