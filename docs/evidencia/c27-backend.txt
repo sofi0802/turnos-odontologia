@@ -1,0 +1,58 @@
+C-27 consentimientos-firma-electronica: evidencia del backend
+Fecha: 2026-11-24. Comando: ./gradlew clean build integrationTest (PostgreSQL 16 real, perfil test).
+Resultado: código de salida 0.
+test: 917 tests, 0 fallas, 0 errores, 0 omitidos
+integrationTest: 1001 tests, 0 fallas, 0 errores, 0 omitidos
+Línea de base (misma máquina): master 1f2a180 test 837; con las tareas 1.1 a 2.2 test 891 e integrationTest 929.
+
+Tests de C-27 (integrationTest):
+  ConsentimientoIntegrationTest$DatosDeLosConsentimientosFueraDeLosCanalesExternos: 3 tests, 0 fallas, 0 errores
+  ConsentimientoIntegrationTest$DocumentoFirmadoBloqueado: 1 tests, 0 fallas, 0 errores
+  ConsentimientoIntegrationTest$ElDocumentoFirmadoGuardaSuPropiaCopiaDelTexto: 1 tests, 0 fallas, 0 errores
+  ConsentimientoIntegrationTest$EvidenciaDeLaFirma: 5 tests, 0 fallas, 0 errores
+  ConsentimientoIntegrationTest$FirmarUnConsentimientoEnElConsultorio: 10 tests, 0 fallas, 0 errores
+  ConsentimientoIntegrationTest$HashDelDocumentoFirmado: 1 tests, 0 fallas, 0 errores
+  ConsentimientoIntegrationTest$LaRecepcionYElPacienteNoAccedenALosConsentimientosFirmados: 4 tests, 0 fallas, 0 errores
+  ConsentimientoIntegrationTest$ListarYVerLosConsentimientosDelPaciente: 4 tests, 0 fallas, 0 errores
+  ConsentimientoIntegrationTest$RevocarUnConsentimientoConRegistro: 4 tests, 0 fallas, 0 errores
+  ConsentimientoIntegrationTest$VerificarElHashDeUnConsentimiento: 2 tests, 0 fallas, 0 errores
+  PlantillaConsentimientoIntegrationTest$ActivarYDesactivarUnaPlantilla: 4 tests, 0 fallas, 0 errores
+  PlantillaConsentimientoIntegrationTest$ConsultarLasPlantillas: 4 tests, 0 fallas, 0 errores
+  PlantillaConsentimientoIntegrationTest$CrearUnaPlantillaDeConsentimiento: 5 tests, 0 fallas, 0 errores
+  PlantillaConsentimientoIntegrationTest$EditarUnaPlantillaCreaUnaVersionNueva: 4 tests, 0 fallas, 0 errores
+  RegistroConsentimientosJdbcIntegrationTest: 5 tests, 0 fallas, 0 errores
+  RegistroPlantillasJdbcIntegrationTest: 4 tests, 0 fallas, 0 errores
+  V18MigrationIntegrationTest: 1 tests, 0 fallas, 0 errores
+  V18MigrationIntegrationTest$ActivarYDesactivarUnaPlantilla: 2 tests, 0 fallas, 0 errores
+  V18MigrationIntegrationTest$DocumentoFirmadoBloqueado: 1 tests, 0 fallas, 0 errores
+  V18MigrationIntegrationTest$EditarUnaPlantillaCreaUnaVersionNueva: 1 tests, 0 fallas, 0 errores
+  V18MigrationIntegrationTest$LosCheckRechazanValoresInvalidos: 3 tests, 0 fallas, 0 errores
+  V18MigrationIntegrationTest$LosUniqueRechazanDuplicados: 2 tests, 0 fallas, 0 errores
+  V18MigrationIntegrationTest$RevocarUnConsentimientoConRegistro: 1 tests, 0 fallas, 0 errores
+
+Tests unitarios nuevos (test):
+  ClinicaExceptionHandlerTest: 13 tests, 0 fallas, 0 errores
+  ConsentimientoFirmadoDominioTest$EvidenciaDeLaFirma: 8 tests, 0 fallas, 0 errores
+  ConsentimientoFirmadoDominioTest$FirmarUnConsentimientoEnElConsultorio: 8 tests, 0 fallas, 0 errores
+  ConsentimientoFirmadoDominioTest$RevocarUnConsentimientoConRegistro: 3 tests, 0 fallas, 0 errores
+  ContenidoCanonicoTest$HashDelDocumentoFirmado: 6 tests, 0 fallas, 0 errores
+  PlantillaConsentimientoDominioTest$CrearUnaPlantillaDeConsentimiento: 6 tests, 0 fallas, 0 errores
+  PlantillaConsentimientoDominioTest$EditarUnaPlantillaCreaUnaVersionNueva: 5 tests, 0 fallas, 0 errores
+  PlantillaConsentimientoDominioTest$FirmarSobreUnaVersion: 2 tests, 0 fallas, 0 errores
+  PlantillaConsentimientoDominioTest$Normalizacion: 3 tests, 0 fallas, 0 errores
+  ServicioConsentimientosTest: 15 tests, 0 fallas, 0 errores
+  ServicioPlantillasTest: 11 tests, 0 fallas, 0 errores
+
+Prueba manual contra el backend levantado (tarea 6.3): jar con el perfil test (base turnos_test) en el puerto 18080,
+datos ficticios ("Paciente Uno", DNI 99.000.001 escrito con puntos, User-Agent "Navegador de prueba 1.0"):
+  el ADMIN crea "Extracción dental" con el texto en CR LF: 201, versión 1, texto guardado solo con LF
+  ana.ejemplo registra la firma de "Paciente Uno": 201, tipoFirma ELECTRONICA, algoritmo SHA-256, DNI 99000001
+  verificación: 200, integro true
+  SHA-256 del contenido canónico v1 armado a mano (fuera de Java) con los datos de la respuesta
+    = hash de la respuesta = hashGuardado = hashCalculado
+    hash: e50150d1e6c797187143e4a9dc8b0b157fbd71c64b9c1ae7993cd45ac1c8fabf
+  el log de la aplicación de esa corrida no contiene el nombre, el DNI, el texto ni el dispositivo
+
+Revisiones:
+  6.2 git grep -n "log\." -- backend/src/main/java/ar/turnos/odontologia/clinica: ningún log nuevo
+  6.4 git grep -n -i "firma digital": solo aparece para decir que esta firma no lo es

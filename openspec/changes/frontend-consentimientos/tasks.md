@@ -38,7 +38,7 @@
 - [x] 4.1 Escribir los tests de "Sección de consentimientos en la ficha" y "Listado de consentimientos firmados", y después `consentimientos/seccion.ts` y su montaje en `pages/pacientes.ts` después de las imágenes, con `destruir()`; verificar con `npm test` y que los tests de C-44, C-46 y C-47 sigan pasando
 - [x] 4.2 Escribir los tests de "Ver un consentimiento firmado" y "Verificar al abrir" (incluida la verificación lenta, que no muestra "Íntegro" antes de tiempo), y después `consentimientos/documento.ts` (design D7); verificar con `npm test`
 - [x] 4.3 Escribir los tests de "Revocar un consentimiento", y después el diálogo de revocación (design D8); verificar con `npm test`
-- [x] 4.4 Crear `styles/25-consentimientos.css` a partir de los mockups aprobados, importarlo en `styles.css` y registrarlo en `MODULOS` de `test/estilos.ts` y en `REGLAS_POR_MODULO` de `test/estilos-modulos.test.ts`; verificar con `npm test` y `npm run build` (design D10)
+- [x] 4.4 Crear `styles/26-consentimientos.css` a partir de los mockups aprobados, importarlo en `styles.css` y registrarlo en `MODULOS` de `test/estilos.ts` y en `REGLAS_POR_MODULO` de `test/estilos-modulos.test.ts`; verificar con `npm test` y `npm run build` (design D10)
 
 ## 5. Firma
 

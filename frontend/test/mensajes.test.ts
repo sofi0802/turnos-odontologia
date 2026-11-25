@@ -165,6 +165,20 @@ describe('Mensajes de las coberturas (C-49, design D8)', () => {
   });
 });
 
+describe('Mensajes de los presupuestos (C-50, design D8)', () => {
+  it.each([
+    ['ARANCEL_INEXISTENTE', 'Una de las prestaciones ya no tiene precio. Revisá los aranceles.'],
+    ['PRESUPUESTO_VENCIDO', 'El presupuesto venció: ya no se puede aceptar. Emití uno nuevo.'],
+    ['PRESUPUESTO_CERRADO', 'Ese presupuesto ya estaba aceptado o rechazado.'],
+    ['CODIGO_NOMENCLADOR_REQUERIDO', 'Una de las prestaciones tiene varios códigos: elegí uno.'],
+    ['CODIGO_NOMENCLADOR_INVALIDO', 'El código elegido no corresponde a la prestación o está inactivo.'],
+  ])('%s tiene su mensaje propio', (codigo, mensaje) => {
+    expect(MENSAJES_POR_CODIGO[codigo]).toBe(mensaje);
+    expect(mensajeDeError(new ErrorNegocio(codigo, 'detalle del servidor'))).toBe(mensaje);
+    expect(mensajeDeError(new ErrorValidacion('detalle del servidor', codigo))).toBe(mensaje);
+  });
+});
+
 describe('Mensajes de los consentimientos (C-48, design D9)', () => {
   const MENSAJES: ReadonlyArray<readonly [string, string]> = [
     ['PLANTILLA_DUPLICADA', 'Ya existe una plantilla con ese título.'],

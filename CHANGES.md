@@ -1093,7 +1093,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/README.md` y `design-system/components.html`
 
 ### [C-27] `consentimientos-firma-electronica`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[~]` implementado (2026-11-24, SDD; propuesta aprobada en el PR #124, apply en su PR; `openspec/changes/consentimientos-firma-electronica/`, migración V18). Solo backend: plantillas con versiones, firma electrónica en el consultorio con hash SHA-256 y revocación con registro. Evidencia: `docs/evidencia/c27-backend.txt` (917 unitarios y 1001 de integración). Falta la revisión de la líder, el merge y el archive; las pantallas van en C-48
 - **Responsable**: Emanuel
 - **Scope**:
   - Plantillas de consentimiento informado y firma con hash, fecha, IP y dispositivo; documento bloqueado una vez firmado (Ley 25.506). **Migración V18**.

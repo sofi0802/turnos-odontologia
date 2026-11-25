@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuración · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="presupuestos.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="admin" data-rol="ADMIN" data-activa="configuracion">
+  <div class="pagina-config">
+    <h1 tabindex="-1">Configuración</h1>
+
+    <p class="rotulo-estado">1 · Pestaña "Obras sociales": cada plan suma "Cobertura"</p>
+    <div class="cob-bloque">
+      <div class="cabecera-seccion">
+        <h2>Obras sociales y prepagas</h2>
+        <button type="button" class="btn btn-principal">Agregar obra social</button>
+      </div>
+      <p class="aviso aviso-ok" role="status">Cobertura guardada.</p>
+      <ul class="cob-obras">
+        <li class="cob-obra">
+          <div class="cob-obra-cabecera">
+            <div>
+              <h3 class="cob-obra-nombre">Obra Social Ejemplo</h3>
+              <p class="cob-datos"><span class="cob-sigla">OSE</span><span class="cob-tipo">Obra social</span><span class="estado-activo">Activa</span></p>
+            </div>
+            <div class="item-acciones"><button type="button" class="btn btn-chico">Editar</button><button type="button" class="btn btn-chico btn-peligro">Desactivar</button></div>
+          </div>
+          <ul class="cob-planes" aria-label="Planes de Obra Social Ejemplo">
+            <li class="cob-plan">
+              <div><p class="cob-plan-nombre">Plan Base</p><span class="estado-activo">Activo</span></div>
+              <div class="item-acciones">
+                <button type="button" class="btn btn-chico" aria-label="Cobertura de Plan Base">Cobertura</button>
+                <button type="button" class="btn btn-chico">Editar</button>
+                <button type="button" class="btn btn-chico btn-peligro">Desactivar</button>
+              </div>
+            </li>
+            <li class="cob-plan cob-plan-inactivo">
+              <div><p class="cob-plan-nombre">Plan Integral</p><span class="estado-inactivo">Inactivo</span></div>
+              <div class="item-acciones">
+                <button type="button" class="btn btn-chico">Cobertura</button>
+                <button type="button" class="btn btn-chico">Editar</button>
+                <button type="button" class="btn btn-chico">Activar</button>
+              </div>
+            </li>
+          </ul>
+          <div><button type="button" class="btn btn-chico">Agregar plan</button></div>
+        </li>
+      </ul>
+    </div>
+
+    <p class="rotulo-estado">2 · Diálogo "Cobertura" de Plan Base</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="c1-t">
+      <h2 id="c1-t">Cobertura de Plan Base</h2>
+      <p class="dialogo-resumen">Obra Social Ejemplo. Porcentaje del precio particular que cubre el plan por código. Un código vacío no está cubierto (0 %).</p>
+      <form class="formulario cob-form" novalidate>
+        <p class="aviso aviso-error" role="alert"></p>
+        <ul class="pre-cob-lista">
+          <li class="pre-cob-fila">
+            <div><p class="pre-cob-codigo"><span class="cob-codigo">N-0101</span> Consulta</p></div>
+            <div class="campo"><label for="c1-1">Porcentaje<span class="solo-lectores"> de N-0101</span></label><div class="pre-porcentaje"><input id="c1-1" class="control" inputmode="numeric" value="100" /><span aria-hidden="true">%</span></div><p class="campo-error"></p></div>
+          </li>
+          <li class="pre-cob-fila">
+            <div><p class="pre-cob-codigo"><span class="cob-codigo">N-0201</span> Limpieza</p></div>
+            <div class="campo"><label for="c1-2">Porcentaje<span class="solo-lectores"> de N-0201</span></label><div class="pre-porcentaje"><input id="c1-2" class="control" inputmode="numeric" value="60" /><span aria-hidden="true">%</span></div><p class="campo-error"></p></div>
+          </li>
+          <li class="pre-cob-fila">
+            <div><p class="pre-cob-codigo"><span class="cob-codigo">N-0301</span> Extracción simple</p><p class="pre-cob-nota">No cubre (0 %)</p></div>
+            <div class="campo"><label for="c1-3">Porcentaje<span class="solo-lectores"> de N-0301</span></label><div class="pre-porcentaje"><input id="c1-3" class="control" inputmode="numeric" value="" /><span aria-hidden="true">%</span></div><p class="campo-error"></p></div>
+          </li>
+        </ul>
+        <p class="ayuda">Números enteros de 0 a 100. Para dejar de cubrir un código, cargá 0. Los presupuestos ya emitidos no cambian.</p>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Guardar</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">3 · Validación y falla a mitad del guardado</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="c2-t">
+      <h2 id="c2-t">Cobertura de Plan Base</h2>
+      <form class="formulario cob-form" novalidate>
+        <p class="aviso aviso-error" role="alert">No pudimos completar la operación. Probá de nuevo en unos minutos. Se guardó N-0101; falta N-0201.</p>
+        <ul class="pre-cob-lista">
+          <li class="pre-cob-fila">
+            <div><p class="pre-cob-codigo"><span class="cob-codigo">N-0101</span> Consulta</p></div>
+            <div class="campo"><label for="c2-1">Porcentaje<span class="solo-lectores"> de N-0101</span></label><div class="pre-porcentaje"><input id="c2-1" class="control" value="101" aria-invalid="true" aria-describedby="c2-e1" /><span aria-hidden="true">%</span></div><p class="campo-error" id="c2-e1">Usá un número entero de 0 a 100.</p></div>
+          </li>
+          <li class="pre-cob-fila">
+            <div><p class="pre-cob-codigo"><span class="cob-codigo">N-0201</span> Limpieza</p></div>
+            <div class="campo"><label for="c2-2">Porcentaje<span class="solo-lectores"> de N-0201</span></label><div class="pre-porcentaje"><input id="c2-2" class="control" value="" aria-invalid="true" aria-describedby="c2-e2" /><span aria-hidden="true">%</span></div><p class="campo-error" id="c2-e2">Para dejar de cubrirlo, cargá 0.</p></div>
+          </li>
+        </ul>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Guardar</button></div>
+      </form>
+    </dialog>
+
+    <p class="nota-mockup"><b>Mockup C-50.</b> Cobertura por plan (decisión a confirmar, design D2): un diálogo por plan con los códigos activos del nomenclador. Se manda un pedido por cada código que cambió; si uno falla, el diálogo dice qué ya quedó guardado. No hay borrado: se carga 0. El rótulo "Porcentaje" se ve; el código se suma solo para los lectores de pantalla. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

@@ -59,6 +59,8 @@ function responderFicha(ficha: object = FICHA_CARGADA, registros: unknown[] = []
   // C-48: y los consentimientos; acá el paciente todavía no firmó ninguno.
   servidor.responder('GET /pacientes/{id}/consentimientos', () => json(200, []));
   servidor.responder('GET /pacientes/{id}/afiliaciones', () => json(200, []));
+  // C-50: y los presupuestos; acá el paciente no tiene ninguno.
+  servidor.responder('GET /pacientes/{id}/presupuestos', () => json(200, []));
 }
 
 function abrir(hash = '#/pacientes'): void {

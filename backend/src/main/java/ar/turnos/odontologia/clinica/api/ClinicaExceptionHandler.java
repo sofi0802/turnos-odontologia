@@ -32,6 +32,10 @@ class ClinicaExceptionHandler {
             // C-26: el archivo supera los 10 MB (RN-CL-07) y la imagen ya estaba anulada (RN-CL-08, regla dura 9).
             case ARCHIVO_DEMASIADO_GRANDE -> HttpStatus.PAYLOAD_TOO_LARGE;
             case IMAGEN_YA_ANULADA -> HttpStatus.CONFLICT;
+            // C-27 (design D9): conflictos de estado de las plantillas y los consentimientos. FIRMANTE_NO_COINCIDE es
+            // un dato de entrada que no corresponde y queda en el 422 por defecto.
+            case PLANTILLA_DUPLICADA, VERSION_DESACTUALIZADA, PLANTILLA_INACTIVA, CONSENTIMIENTO_YA_REVOCADO ->
+                    HttpStatus.CONFLICT;
             default -> HttpStatus.UNPROCESSABLE_ENTITY;
         };
         return problema(status, e.codigo().name(), e.getMessage());

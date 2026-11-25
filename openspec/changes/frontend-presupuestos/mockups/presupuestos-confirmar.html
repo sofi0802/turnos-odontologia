@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pacientes · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="presupuestos.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="ana.ejemplo" data-rol="ODONTOLOGO" data-activa="pacientes">
+  <div class="pagina-ficha">
+    <h1 tabindex="-1">Pacientes</h1>
+
+    <p class="rotulo-estado">1 · "Aceptar" pide confirmación</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="c1-t">
+      <h2 id="c1-t">¿Aceptar el presupuesto?</h2>
+      <p class="dialogo-resumen">Paciente Uno · Presupuesto del 24/11/2026 · Copago $ 12.500,00. No se puede deshacer.</p>
+      <form class="formulario" novalidate>
+        <p class="aviso aviso-error" role="alert"></p>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Aceptar presupuesto</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">2 · "Rechazar" pide confirmación (acción de peligro)</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="c2-t">
+      <h2 id="c2-t">¿Rechazar el presupuesto?</h2>
+      <p class="dialogo-resumen">Paciente Uno · Presupuesto del 01/10/2026 (vencido) · Copago $ 30.000,00. Queda en el historial; no se puede deshacer.</p>
+      <form class="formulario" novalidate>
+        <p class="aviso aviso-error" role="alert"></p>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-peligro">Rechazar presupuesto</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">3 · Venció mientras estaba abierto (409 PRESUPUESTO_VENCIDO): se cierra, se recarga y se avisa</p>
+    <section class="panel ficha-seccion pre-seccion" aria-labelledby="t-pre">
+      <div class="ficha-seccion-cabecera"><h2 id="t-pre">Presupuestos</h2><button type="button" class="btn btn-principal">Nuevo presupuesto</button></div>
+      <p class="aviso aviso-error" role="alert">El presupuesto venció: ya no se puede aceptar. Emití uno nuevo.</p>
+      <ul class="pre-lista">
+        <li class="pre-presupuesto">
+          <div>
+            <p class="pre-cabecera"><span>Presupuesto del 25/10/2026</span><span class="etiqueta etiqueta-vencido">Vencido</span></p>
+            <p class="pre-meta">Venció el 24/11/2026 · Dra. Ana Ejemplo · Obra Social Ejemplo · Plan Base</p>
+          </div>
+          <div class="pre-acciones"><button type="button" class="btn btn-chico">Ver detalle</button><button type="button" class="btn btn-chico btn-peligro">Rechazar</button></div>
+          <dl class="pre-totales">
+            <div><dt>Precio</dt><dd>$ 25.000,00</dd></div>
+            <div><dt>Cobertura</dt><dd>$ 12.500,00</dd></div>
+            <div class="pre-copago"><dt>Copago</dt><dd>$ 12.500,00</dd></div>
+          </dl>
+        </li>
+      </ul>
+    </section>
+
+    <p class="rotulo-estado">4 · Otra persona ya lo cerró (409 PRESUPUESTO_CERRADO)</p>
+    <section class="panel ficha-seccion pre-seccion" aria-labelledby="t-pre2">
+      <div class="ficha-seccion-cabecera"><h2 id="t-pre2">Presupuestos</h2><button type="button" class="btn btn-principal">Nuevo presupuesto</button></div>
+      <p class="aviso aviso-error" role="alert">Ese presupuesto ya estaba aceptado o rechazado.</p>
+      <ul class="pre-lista">
+        <li class="pre-presupuesto pre-presupuesto-cerrado">
+          <div>
+            <p class="pre-cabecera"><span>Presupuesto del 24/11/2026</span><span class="etiqueta etiqueta-aceptado">Aceptado</span></p>
+            <p class="pre-meta">Dra. Ana Ejemplo · Obra Social Ejemplo · Plan Base</p>
+          </div>
+          <div class="pre-acciones"><button type="button" class="btn btn-chico">Ver detalle</button></div>
+          <dl class="pre-totales">
+            <div><dt>Precio</dt><dd>$ 40.000,00</dd></div>
+            <div><dt>Cobertura</dt><dd>$ 27.500,00</dd></div>
+            <div class="pre-copago"><dt>Copago</dt><dd>$ 12.500,00</dd></div>
+          </dl>
+        </li>
+      </ul>
+    </section>
+
+    <p class="nota-mockup"><b>Mockup C-50.</b> Aceptar y rechazar (decisión a confirmar, design D7): las dos piden confirmación porque no se pueden deshacer; "Rechazar" usa el botón de peligro. El foco vuelve al botón que abrió el diálogo. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

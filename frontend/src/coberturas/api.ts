@@ -32,7 +32,8 @@ export interface CodigoNomenclador {
 
 export interface Afiliacion {
   readonly id: number;
-  readonly obraSocial: { readonly nombre: string; readonly sigla: string | null };
+  /** `id` arma la ruta de la cobertura del plan (C-50, design D5); `null` si la respuesta no lo trae. */
+  readonly obraSocial: { readonly id: number | null; readonly nombre: string; readonly sigla: string | null };
   readonly plan: { readonly id: number; readonly nombre: string };
   readonly numeroAfiliado: string;
   readonly vigenteDesde: string;
@@ -178,7 +179,7 @@ function leerAfiliacion(elemento: unknown): Afiliacion | null {
   const sigla = texto(obra, 'sigla');
   return {
     id,
-    obraSocial: { nombre: obraNombre, sigla: sigla === null || sigla.trim() === '' ? null : sigla },
+    obraSocial: { id: entero(obra, 'id'), nombre: obraNombre, sigla: sigla === null || sigla.trim() === '' ? null : sigla },
     plan: { id: planId, nombre: planNombre },
     numeroAfiliado,
     vigenteDesde,
