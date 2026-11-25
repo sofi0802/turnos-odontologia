@@ -49,6 +49,7 @@ final class Despachador {
             case CONFIRMACION -> MensajeRecordatorio.confirmacion(turno.datosDelTurno(), consultorio, enlaces).texto();
             case CANCELACION -> MensajeRecordatorio.cancelacion(turno.datosDelTurno(), consultorio).texto();
             case REASIGNACION -> MensajeRecordatorio.reasignacion(turno.datosDelTurno(), consultorio).texto();
+            case REINTEGRO_SENA -> MensajeRecordatorio.reintegroSena(turno.datosDelTurno(), consultorio).texto();
         };
     }
 

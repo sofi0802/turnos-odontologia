@@ -58,6 +58,21 @@ app:
       # C-26: carpeta del almacén de imágenes clínicas (DD-17). Datos de salud: permisos solo para el proceso e
       # incluirla en los respaldos. El valor por defecto queda en backend/data/, ignorado por git.
       directorio: ${IMAGENES_DIRECTORIO:./data/imagenes}
+  pagos:
+    # C-23 (RN-SE-10, design D6): simulada (desarrollo y tests) o mercadopago (sandbox). Nunca credenciales de producción.
+    pasarela: ${PAGOS_PASARELA:simulada}
+    # URL pública del backend: Mercado Pago manda ahí la notificación del pago.
+    url-publica: ${PAGOS_URL_PUBLICA:http://localhost:8080}
+    # La vuelta desde Mercado Pago va al frontend, a "Mis turnos".
+    url-frontend: ${NOTIFICACIONES_BASE_URL:http://localhost:5173}
+    senas:
+      # Revisión periódica de las señas (design D4); el perfil de test la apaga y los tests la llaman a mano.
+      activo: ${PAGOS_SENAS_ACTIVO:true}
+      intervalo-ms: ${PAGOS_SENAS_INTERVALO_MS:60000}
+    mercadopago:
+      url: https://api.mercadopago.com
+      access-token: ${MERCADOPAGO_ACCESS_TOKEN:}
+      webhook-secret: ${MERCADOPAGO_WEBHOOK_SECRET:}
 ---
 spring:
   config:
@@ -117,3 +132,11 @@ app:
     imagenes:
       # C-26: los tests guardan los archivos en una carpeta temporal, nunca en la del desarrollo.
       directorio: ${java.io.tmpdir}/turnos-odontologia-imagenes-test
+  # C-23: la revisión de las señas la llaman los tests a mano, con la pasarela simulada y una clave de firma que no
+  # es secreta (solo existe para firmar las notificaciones de los tests).
+  pagos:
+    pasarela: simulada
+    senas:
+      activo: false
+    mercadopago:
+      webhook-secret: clave-de-prueba-no-secreta

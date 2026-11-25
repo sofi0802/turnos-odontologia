@@ -20,9 +20,18 @@ public class ReservarTurno {
     private final AsignadorDeReserva asignador;
     private final AgendaDeTurnos agenda;
     private final AvisoReservaOnline aviso;
+    private final SenasDeReserva senas;
 
     public ReservarTurno(CatalogoReserva catalogo, BuscadorDeHuecos buscador, AgendaDeTurnos agenda,
                          AvisoReservaOnline aviso, Clock reloj, ZoneId zona, int maximoAlternativas) {
+        this(catalogo, buscador, agenda, aviso, SenasDeReserva.NINGUNA, reloj, zona, maximoAlternativas);
+    }
+
+    /** C-23: con las señas del módulo de pagos (design D3). */
+    public ReservarTurno(CatalogoReserva catalogo, BuscadorDeHuecos buscador, AgendaDeTurnos agenda,
+                         AvisoReservaOnline aviso, SenasDeReserva senas, Clock reloj, ZoneId zona,
+                         int maximoAlternativas) {
+        this.senas = Objects.requireNonNull(senas, "senas");
         this.catalogo = Objects.requireNonNull(catalogo, "catalogo");
         this.asignador = new AsignadorDeReserva(catalogo, buscador, reloj, zona, maximoAlternativas);
         this.agenda = Objects.requireNonNull(agenda, "agenda");
@@ -40,6 +49,8 @@ public class ReservarTurno {
         String actor = ActorOnline.de(usuarioId);
         Turno turno = asignador.asignar(solicitud, combinacion -> agenda.crear(new CrearTurnoCommand(pacienteId,
                 combinacion.profesionalId(), combinacion.sillonId(), prestacionId, inicio), actor));
+        // C-23: la seña va fuera de la transacción de la agenda; si no se puede guardar, pagos cancela el turno.
+        senas.crearPara(turno.id(), pacienteId);
         aviso.reservado(turno.id());
         return VistaDelTurno.de(turno, solicitud.prestacion().nombre(), catalogo);
     }

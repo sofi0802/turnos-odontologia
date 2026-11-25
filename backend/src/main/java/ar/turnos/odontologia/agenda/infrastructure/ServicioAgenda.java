@@ -153,7 +153,7 @@ public class ServicioAgenda {
     public Turno cancelar(CancelarTurnoCommand comando, String actor) {
         Turno cancelado = enTransaccion(() -> {
             Turno turno = cancelarTurno.ejecutar(comando);
-            auditoria.registrar(turno.id(), Accion.CANCELAR, actor, null);
+            auditoria.registrarCancelacion(turno.id(), actor, comando.causa());
             return turno;
         });
         avisarLiberado(cancelado);

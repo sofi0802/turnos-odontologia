@@ -8,6 +8,7 @@ export const NOMBRE_MEDIO: Readonly<Record<MedioPago, string>> = {
   DEBITO: 'Débito',
   CREDITO: 'Crédito',
   TRANSFERENCIA: 'Transferencia',
+  MERCADO_PAGO: 'Mercado Pago',
 };
 
 /** "lunes 07/12" para una fecha `AAAA-MM-DD`. */
