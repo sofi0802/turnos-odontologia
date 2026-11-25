@@ -123,7 +123,7 @@
   - seguir el camino manual del README (`./gradlew bootRun` y, en otra terminal, `npm ci` y `npm run dev` con `VITE_API_BASE_URL`);
   - verificar que `curl` a `localhost:8080/api/v1/public/sesion` y a `localhost:5173` dan `200`.
 - [x] 6.3 Frontend en el host: `cd frontend && npm test && npm run build`, en verde (sin cambios de código; confirma que el plan B de 3.3, si se aplicó, no rompió nada).
-- [ ] 6.4 Correr `openspec validate docker-compose-completo --strict` (exit 0). Marcar `[x]` en la ficha de C-52 de `CHANGES.md` al abrir el PR a `master`.
+- [x] 6.4 Correr `openspec validate docker-compose-completo --strict` (exit 0). Marcar `[x]` en la ficha de C-52 de `CHANGES.md` al abrir el PR a `master`.
 
 ## Workflow follow-up
 
