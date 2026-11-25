@@ -1,6 +1,6 @@
 # Mockups de C-23 `senas-mercado-pago`
 
-- **Approval: pending**
+- **Approval: approved (2026-11-25, by user: Enzo)**
 - Design system: Revision 5 (`design-system/README.md`)
 - Base: el DOM real de las pantallas actuales, volcado por los tests de `frontend/test/` (confirmación de la reserva, "Mis turnos", Configuración y el diálogo "Cancelar turno" de la agenda), con los estilos actuales de `frontend/src/styles/` copiados en `mockups.css`. Lo nuevo de C-23 está en `delta.css`, que en el apply pasa a `src/styles/23-senas.css` (sin la regla `.dialogo-mock`, que es solo de los mockups).
 - Datos ficticios: "Paciente Dos" (DNI 99000002), "Ana Ejemplo", "Bruno Prueba", números de reserva inventados y la seña de `$ 4.500,00` (el 30 % de un copago de `$ 15.000,00`).

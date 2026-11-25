@@ -143,5 +143,5 @@ Los logs registran solo la acción, el id y la referencia de la seña, y el esta
 - Design system revision: 5 (aprobada el 2026-11-24 por Sofia Indovino)
 - Decision: yes (2026-11-25, política `system-and-mockups`)
 - Mockups: `openspec/changes/senas-mercado-pago/mockups/` (ver su README)
-- Approval: pending
+- Approval: approved (2026-11-25, by user: Enzo aprobó explícitamente la propuesta y los 7 mockups de la revisión 1; governance CRÍTICO)
 - Preview: rendered (2026-11-25, 7 pantallas en `mockups/previews/` a 390x844 y 1440x900, sin desplazamiento horizontal)

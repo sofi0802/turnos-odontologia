@@ -5,7 +5,7 @@ Acceptance criteria: los escenarios de los deltas `senas`, `frontend-senas`, `co
 ## 0. Antes del apply
 
 - [x] 0.1 Mockups con los tokens de la Revision 5, a 390 y 1440 px, con capturas en `mockups/previews/`: sección "Señas" de Configuración (normal y con error), confirmación de la reserva con seña (sin link se ve igual), "Mis turnos" con los cinco estados de la seña y el aviso de vuelta de Mercado Pago, y el diálogo "Cancelar turno" con "Causa" (normal y con el error de la causa)
-- [ ] 0.2 Aprobación explícita de la propuesta y de los mockups registrada en `design.md` (`Approval: approved`)
+- [x] 0.2 Aprobación explícita de la propuesta y de los mockups registrada en `design.md` (`Approval: approved`)
 - [ ] 0.3 La líder confirma la migración V23 en la tabla de dueños de `CHANGES.md`
 
 ## 1. Migración, dominio y configuración (backend)
