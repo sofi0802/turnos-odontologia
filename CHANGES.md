@@ -993,7 +993,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/03_actores_y_roles.md` §RBAC
 
 ### [C-23] `senas-mercado-pago`
-- **Estado**: `[ ]` KB propuesta el 2026-11-24 (dominio Señas: RN-SE-01 a RN-SE-12, US-202 y DD-21; PA-53 a PA-61, PA-63 y PA-65 respondidas por Enzo: solo la reserva online, un porcentaje del copago configurable por el `ADMIN` y desactivado al inicio, el turno ocupa el hueco con vencimiento, reintegro por Mercado Pago al cancelar a tiempo, retención si no viene o cancela tarde, la seña pasa al turno reprogramado y se imputa al cargo fuera de la caja). Pendientes para la líder: PA-62 (estado del turno con la seña pagada) y **PA-64 (excepción de CSRF solo para la notificación de Mercado Pago, regla dura 8)**. En revisión con la líder; después va el propose. Governance CRÍTICO: no se escribe código sin aprobación explícita
+- **Estado**: `[ ]` en propuesta (KB aprobada en el PR #133, con PA-62 y PA-64 decididas por la líder: el turno con seña pagada sigue `RESERVADO` y la notificación de Mercado Pago tiene una excepción de CSRF solo para su ruta). Propose y mockups en la rama `change/C-23-senas-mercado-pago`. Governance CRÍTICO: no se escribe código sin aprobación explícita
 - **Responsable**: Enzo (avisa a Juan Sebastián por `reserva/`, a Sofia por la cancelación y la reprogramación de `agenda/` y a Juan Cruz por los avisos de `notificaciones/`)
 - **Scope**:
   - Puerto `PasarelaPago` con adaptador Mercado Pago (modo sandbox, **sin credenciales reales en el repo**) y una pasarela simulada: link de pago para la seña al reservar y webhook de confirmación con validación de firma.

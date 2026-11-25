@@ -26,8 +26,6 @@
 | ID | Prioridad | Pregunta | Bloquea | Decisor |
 |---|---|---|---|---|
 | PA-11 | Media | ¿Quiénes del equipo tienen **Docker**? La líder sí. Sin Docker hay alternativas (SU-04). | Verify y README | Cada integrante |
-| PA-62 | Media | *(2026-11-24, C-23)* Con la seña pagada, ¿el turno pasa a `CONFIRMADO` o sigue `RESERVADO` y la confirmación de asistencia de RN-NO sigue aparte? Propuesta: sigue `RESERVADO` (RN-SE-04). | Propose de C-23 | Líder |
-| PA-64 | Alta | *(2026-11-24, C-23)* La notificación de Mercado Pago no puede llevar el token CSRF. ¿Se acepta una **excepción de CSRF solo para esa ruta**, autenticada por la firma y la consulta del pago (regla dura 8)? | Propose de C-23 | Líder |
 
 ### Resueltas (2026-11-20, respuestas de la líder)
 
@@ -93,7 +91,9 @@
 | PA-59 | ¿Cómo se usa la seña cuando el turno queda atendido? *(2026-11-24, C-23)* | **A cuenta del cargo**, como un cobro `MERCADO_PAGO` fuera de la caja y del arqueo | RN-SE-08, DD-21 |
 | PA-60 | ¿Qué pasa con la seña si se reprograma? *(2026-11-24, C-23)* | **Pasa al turno nuevo** sin volver a pagar ni pedir diferencia | RN-SE-07 |
 | PA-61 | ¿Qué pasa si el paciente no viene o pide cancelar con menos de 24 h? *(2026-11-24, C-23)* | La **retiene** el consultorio; al cancelar, el personal indica si la causa es del paciente o del consultorio | RN-SE-06 |
+| PA-62 | Con la seña pagada, ¿el turno pasa a `CONFIRMADO`? *(2026-11-24, C-23; decidida por la líder al revisar la KB)* | **No**: sigue `RESERVADO` y la confirmación de asistencia de RN-NO sigue aparte | RN-SE-04 |
 | PA-63 | ¿Qué pasa si la seña es mayor que el copago final? *(2026-11-24, C-23)* | Se imputa el copago y la **diferencia se reintegra** (no hay saldo a favor) | RN-SE-08, RN-SE-09 |
+| PA-64 | La notificación de Mercado Pago no puede llevar el token CSRF: ¿se acepta una excepción? *(2026-11-24, C-23; decidida por la líder al revisar la KB)* | **Sí**, una excepción de CSRF **solo para esa ruta**, autenticada por la firma y la consulta del pago; el resto de la API sigue con CSRF (regla dura 8) | RN-SE-10, DD-21 |
 | PA-65 | ¿Dónde se ve el estado de la seña? *(2026-11-24, C-23)* | En **"Mis turnos"** del paciente; el personal no la ve en la agenda en C-23 | RN-SE-12 |
 
 ## Puntos "No evidenciado" del Discovery
