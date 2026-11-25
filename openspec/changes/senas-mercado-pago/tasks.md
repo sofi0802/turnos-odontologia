@@ -52,8 +52,8 @@ Acceptance criteria: los escenarios de los deltas `senas`, `frontend-senas`, `co
 
 ## 7. Verificación
 
-- [ ] 7.1 Cada escenario de los siete deltas tiene exactamente un test con su nombre (`grep`)
-- [ ] 7.2 `npx tsc --noEmit`, `npm test` y `npm run build` en verde; la cantidad de tests no baja
+- [x] 7.1 Cada escenario de los siete deltas tiene exactamente un test con su nombre (`grep`)
+- [x] 7.2 `npx tsc --noEmit`, `npm test` y `npm run build` en verde; la cantidad de tests no baja
 - [ ] 7.3 Verificación visual contra el mockup aprobado, a 390 y 1440 px, con el backend de desarrollo, la pasarela simulada y datos ficticios; resultado en `design.md`
 - [ ] 7.4 `openspec validate senas-mercado-pago --strict` en verde, C-23 marcado en `CHANGES.md` y, en el PR, aviso a Juan Sebastián (`reserva/`, `shared/security/`), a Sofia (`agenda/`) y a Juan Cruz (`notificaciones/`)
 
