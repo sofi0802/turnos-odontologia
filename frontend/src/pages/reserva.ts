@@ -4,6 +4,7 @@ import {
   type PrestacionPublica,
   type ProfesionalPublico,
 } from '../paciente/catalogo.ts';
+import { abrirAnotarme, crearSinHorarios } from '../lista-espera/paciente.ts';
 import { consultarDisponibilidad, type Horario } from '../paciente/disponibilidad.ts';
 import { crearGrillaHorarios } from '../paciente/horarios.ts';
 import {
@@ -230,11 +231,34 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
     }
     zonaHorarios.removeAttribute('aria-busy');
     if (horarios.length === 0) {
-      const vacio = document.createElement('p');
-      vacio.className = 'vacio';
-      vacio.setAttribute('role', 'status');
-      vacio.textContent = MENSAJE_DIA_SIN_HORARIOS;
-      zonaHorarios.replaceChildren(vacio);
+      // C-15: un día sin horarios ofrece anotarse en la lista de espera.
+      zonaHorarios.replaceChildren(
+        crearSinHorarios({
+          texto: MENSAJE_DIA_SIN_HORARIOS,
+          hayPaciente: async () => {
+            const sesion = await contexto.sesionLista;
+            return sesion.autenticado && esPaciente(sesion.rol);
+          },
+          irAMiCuenta: (aviso) => contexto.irAMiCuenta(aviso),
+          abrir: (origen) => {
+            const prestacion = prestacionElegida();
+            if (prestacion === undefined) {
+              return;
+            }
+            abrirAnotarme(
+              contexto.api,
+              {
+                prestacionId: prestacion.id,
+                prestacionNombre: prestacion.nombre,
+                profesionalId: eleccion.profesionalId,
+                profesionalNombre: eleccion.profesionalId === null ? null : nombreProfesional(eleccion.profesionalId),
+                fecha: eleccion.fecha,
+              },
+              { contenedor: pagina, origen, sesionTerminada: () => contexto.irAMiCuenta(MENSAJE_SESION_TERMINADA) },
+            );
+          },
+        }),
+      );
       return;
     }
     const titulo = document.createElement('p');

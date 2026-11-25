@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Turno disponible · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="lista-espera.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="" data-rol="VISITANTE" data-activa="">
+  <div class="pagina-paciente">
+    <h1 tabindex="-1">Turno disponible</h1>
+
+    <p class="rotulo-estado">1 · Oferta pendiente (desde el link /oferta/{token})</p>
+    <section class="panel oferta">
+      <div class="oferta-turno">
+        <span data-icono="agenda"></span>
+        <div>
+          <p class="oferta-dia">jueves 3 de diciembre · 10:00</p>
+          <p class="oferta-con">con Ana Ejemplo</p>
+        </div>
+      </div>
+      <p>Se liberó un turno el jueves 3 de diciembre a las 10:00 con Ana Ejemplo.</p>
+      <p class="oferta-plazo">Podés aceptarlo hasta el martes 1 de diciembre a las 10:00.</p>
+      <div class="oferta-acciones"><button type="button" class="btn">No me interesa</button><button type="button" class="btn btn-principal">Aceptar el turno</button></div>
+    </section>
+
+    <p class="rotulo-estado">2 · Aceptado</p>
+    <section class="panel oferta">
+      <p class="aviso aviso-ok" role="status">Listo, tu turno quedó reservado para el jueves 3 de diciembre a las 10:00 con Ana Ejemplo. Tu número de reserva es <span class="oferta-numero">R-0042</span>.</p>
+      <p class="ayuda">Guardá el número de reserva: lo vas a necesitar para cancelar o cambiar el turno.</p>
+    </section>
+
+    <p class="rotulo-estado">3 · No me interesa</p>
+    <section class="panel oferta">
+      <p class="aviso aviso-ok" role="status">Listo, se lo ofrecemos a otra persona. Seguís en la lista de espera.</p>
+    </section>
+
+    <p class="rotulo-estado">4 · El horario ya se ocupó (409 OFERTA_NO_DISPONIBLE)</p>
+    <section class="panel oferta">
+      <p class="aviso aviso-alerta" role="alert">Ese horario ya se ocupó. Seguís en la lista de espera.</p>
+    </section>
+
+    <p class="rotulo-estado">5 · Venció (VENCIDA o 409 OFERTA_VENCIDA)</p>
+    <section class="panel oferta">
+      <p class="aviso aviso-alerta" role="alert">Esta oferta venció. Seguís en la lista de espera.</p>
+    </section>
+
+    <p class="rotulo-estado">6 · Ya respondida (409 OFERTA_YA_RESPONDIDA)</p>
+    <section class="panel oferta">
+      <p class="aviso aviso-info" role="status">Ya respondiste esta oferta.</p>
+    </section>
+
+    <p class="rotulo-estado">7 · Link inválido (404 OFERTA_INEXISTENTE)</p>
+    <section class="panel oferta">
+      <p class="aviso aviso-error" role="alert">El link no es válido. Revisá que esté completo.</p>
+    </section>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

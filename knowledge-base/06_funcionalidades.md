@@ -153,6 +153,19 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 - [ ] CA-1: el turno pasa a `CONFIRMADO`.
 - [ ] CA-2: el token es de un solo uso.
 
+## Épica 4b: Lista de espera (post-MVP v1.x)
+
+### US-100: Lista de espera automática al liberarse un horario [2026-11-24, C-15]
+**Como** paciente que no consiguió un turno cercano **quiero** anotarme en una lista de espera **para** que me ofrezcan un horario que se libere, sin tener que buscarlo todos los días. **Como** recepcionista **quiero** que los horarios cancelados se ofrezcan solos **para** no perder turnos sin llamar a los pacientes uno por uno.
+**Criterios de aceptación**:
+- [ ] CA-1: me anoto (o me anota la recepción) con la prestación, un profesional o "sin preferencia" y un rango de fechas de hasta 60 días; no puedo tener dos inscripciones activas para la misma prestación.
+- [ ] CA-2: cuando se cancela o se reprograma un turno, el horario se le ofrece al primer paciente compatible por orden de llegada, por su canal y sin datos de salud.
+- [ ] CA-3: desde el link del mensaje acepto y queda mi turno reservado, o digo que no me interesa; si no contesto en el plazo (2 h por defecto, configurable), se le ofrece al siguiente.
+- [ ] CA-4: si el horario se ocupó mientras tanto, al aceptar me avisa que ya no está disponible y sigo en la lista.
+- [ ] CA-5: veo mis inscripciones en Mis turnos y me doy de baja; la recepción ve la lista completa en orden, con las ofertas pendientes, y da de baja.
+- [ ] CA-6: el administrador cambia el plazo, entre 1 y 24 horas.
+**Reglas relacionadas**: RN-LE-01 a RN-LE-09, RN-NO-01 a RN-NO-03
+
 ## Épica 5: Ficha clínica (v1)
 
 ### US-040: Registrar la ficha básica
@@ -307,7 +320,7 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 
 | ID | Funcionalidad | Etapa | Change | Origen |
 |---|---|---|---|---|
-| US-100 | Lista de espera automática al liberarse un horario | v1.x | C-15 | Vacío del mercado: 0 de 16 sistemas (informe, C.3) |
+| US-100 | Lista de espera automática al liberarse un horario (detallada en la Épica 4b el 2026-11-24) | v1.x | C-15 | Vacío del mercado: 0 de 16 sistemas (informe, C.3) |
 | US-101 | Política de cancelación configurable por consultorio | v1.x | C-16 | Informe, C.4 |
 | US-102 | Registro de consentimiento para comunicaciones con una pantalla propia | v1.x | C-17 | Informe, D.3 |
 | US-200 | Obras sociales y prepagas (planes, nomencladores, liquidaciones; el catálogo y la afiliación pasaron a US-046 el 2026-11-24) | Posterior | C-18, C-20 | Informe, D.3 |

@@ -31,6 +31,7 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
                     │              └─1──*─ ConsentimientoFirmado ─1──0..1─ ConsentimientoRevocacion   (C-27)
                     ├──*─ Notificacion
                     └──*─ TurnoAuditoria
+ Paciente ─1──*─ InscripcionListaEspera ─1──*─ OfertaListaEspera ─*──1─ Turno (liberado)   (C-15)
 
  Profesional ─1──*─ BloqueoAgenda
  Profesional ─1──*─ HorarioTrabajo
@@ -106,6 +107,14 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
 ### Notificacion
 - `id` BIGINT identity, `turno_id` FK, `canal` enum (`WHATSAPP`, `EMAIL`), `tipo` enum (`RECORDATORIO`, `CONFIRMACION`, `CANCELACION`), `estado` enum (`PENDIENTE`, `ENVIADA`, `FALLIDA`), `programada_para`, `enviada_en`, `token_confirmacion` (único).
 - RN-NO-01: el contenido no incluye datos de salud.
+
+### InscripcionListaEspera [2026-11-24, C-15]
+- `id` BIGINT identity, `paciente_id` FK, `prestacion_id` FK, `profesional_id` FK nullable ("sin preferencia"), `desde` date, `hasta` date, `estado` enum (`ACTIVA`, `ASIGNADA`, `BAJA`, `VENCIDA`), `inscripta_en` timestamptz (orden de llegada), `inscripta_por` varchar (actor, sin datos personales: `paciente-online:<id>` o el usuario del personal), `cerrada_en` timestamptz nullable.
+- Constraints: `hasta >= desde`, `hasta <= desde + 60 días`. Única **activa** por (`paciente_id`, `prestacion_id`): índice único parcial `WHERE estado = 'ACTIVA'` (RN-LE-01).
+
+### OfertaListaEspera [2026-11-24, C-15]
+- `id` BIGINT identity, `inscripcion_id` FK, `profesional_id` FK, `inicio` timestamptz (del horario liberado), `turno_liberado_id` FK, `estado` enum (`PENDIENTE`, `ACEPTADA`, `RECHAZADA`, `VENCIDA`, `NO_DISPONIBLE`), `ofrecida_en` timestamptz, `vence_en` timestamptz, `respondida_en` timestamptz nullable, `token_hash` (único; el token no se guarda en claro), `turno_creado_id` FK nullable.
+- Como máximo una oferta `PENDIENTE` por horario liberado (`turno_liberado_id`) y por inscripción: índices únicos parciales (RN-LE-04).
 
 ### FichaClinica
 - `id` BIGINT identity, `paciente_id` FK (único), `antecedentes` text, `alergias` text, `medicacion` text, `actualizado_por`, `actualizado_en`.
@@ -242,6 +251,7 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
 ### Configuracion
 - `clave` varchar (PK), `valor` varchar. Por ejemplo, `margen_minutos = 10`.
 - Constraint aplicada en el servicio: `margen_minutos ≥ 10` (RN-AG-04).
+- `lista_espera_plazo_horas` (por defecto 2): plazo para aceptar una oferta, de 1 a 24 horas (RN-LE-05) [2026-11-24, C-15].
 
 ### TurnoAuditoria
 - `id`, `turno_id`, `accion` (`CREAR`, `CANCELAR`, `REPROGRAMAR`, `SOBRETURNO`, `CONFIRMAR`), `actor`, `fecha`, `detalle` jsonb.

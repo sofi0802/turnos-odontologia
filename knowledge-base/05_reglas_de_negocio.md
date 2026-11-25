@@ -69,6 +69,28 @@ Cada regla tiene un código `RN-{DOMINIO}-{NN}`. Entre paréntesis va el código
 - **RN-NO-03**: solo se envían comunicaciones a pacientes con `consentimiento_comunicaciones = true` (Ley 25.326; ver DD-07).
 - **RN-NO-04**: se envía **un recordatorio 24 h antes** del inicio de cada turno activo (`RESERVADO` o `CONFIRMADO`). Si el turno se reserva con menos de 24 h de anticipación, no se envía recordatorio; alcanza con la confirmación de la reserva.
 
+## Dominio: Lista de espera (RN-LE) [2026-11-24, C-15]
+
+- **RN-LE-01**: **inscripción**. El **paciente con cuenta** se anota a sí mismo (desde la reserva o Mis turnos), y la **recepción** o el **administrador** anotan a cualquier paciente (por ejemplo, cuando llama). La inscripción lleva la **prestación**, un **profesional** o "sin preferencia" (como RN-RO-04) y un **rango de fechas** preferido: desde hoy o después, de 60 días como máximo. El orden de llegada es la fecha y hora de la inscripción.
+  - Un paciente tiene **una sola inscripción activa por prestación**; otra se rechaza con `YA_EN_LISTA_DE_ESPERA`.
+  - Solo se anota a un paciente con `consentimiento_comunicaciones = true`, porque la oferta llega por mensaje (RN-NO-03); si no, se rechaza con `SIN_CONSENTIMIENTO`.
+  - El profesional elegido tiene que estar activo y habilitado para la prestación (RN-AG-11, RN-AG-15).
+- **RN-LE-02**: **qué libera un horario**. Cuando un turno activo se **cancela** (por el personal, por el paciente online o desde el link del recordatorio) o se **reprograma**, el horario viejo se ofrece a la lista (RN-AG-08). No disparan ofertas la ausencia del paciente (RN-AG-17), la reasignación por ausencia o bloqueo del profesional (RN-AG-16, RN-AG-19) ni un horario que ya empezó.
+- **RN-LE-03**: **paciente compatible**. Una inscripción activa sirve para el horario liberado si:
+  1. la fecha del horario está dentro de su rango;
+  2. pidió el mismo profesional del turno liberado o "sin preferencia";
+  3. un turno de **su prestación**, con ese profesional y el mismo inicio, cumple **todas las reglas de la agenda** en ese momento (RN-AG-01 a RN-AG-05, RN-AG-09 a RN-AG-11, RN-AG-13 y RN-AG-15), con el sillón asignado como en la reserva online (RN-RO-06). La prestación del paciente puede ser distinta de la del turno liberado, siempre que entre;
+  4. el paciente no tiene otra oferta pendiente.
+- **RN-LE-04**: **una oferta a la vez, por orden de llegada**. El sistema le ofrece el horario al **primer** paciente compatible según el orden de inscripción. Un horario liberado tiene como máximo **una oferta pendiente**. Si el paciente no acepta (rechaza o vence el plazo), se le ofrece al **siguiente** compatible, evaluado otra vez en ese momento. Si no queda nadie, el horario queda libre como cualquier otro.
+- **RN-LE-05**: **plazo para aceptar**. Lo configura el administrador (`lista_espera_plazo_horas`, de 1 a 24 horas; por defecto **2**). La oferta **vence** al cumplirse el plazo o al llegar el inicio del horario, lo que pase primero.
+- **RN-LE-06**: **el horario no se reserva mientras se ofrece**. Durante la oferta, el horario sigue libre para cualquier reserva (DD-22). Al aceptar, el turno se crea con las mismas validaciones atómicas que cualquier otro (RN-AG-12). Si el horario ya se ocupó o dejó de cumplir las reglas, la aceptación se rechaza con `OFERTA_NO_DISPONIBLE`, la inscripción sigue activa y no se le ofrece a nadie más.
+- **RN-LE-07**: **respuesta del paciente**. El mensaje de la oferta lleva un **link con token** a una pantalla con **Aceptar** y **No me interesa**, igual que la confirmación (C-08): funciona sin cuenta, y solo un `POST` consume el token.
+  - **Aceptar**: se crea el turno `RESERVADO` a nombre del paciente, con su número de reserva y el actor `lista-espera:<id de la oferta>` en la auditoría, sin datos personales (el paciente puede no tener cuenta), y la inscripción pasa a `ASIGNADA`. Mientras RN-RE-05 no cambie, los reportes cuentan ese turno como del consultorio.
+  - **No me interesa**: la oferta queda rechazada, la inscripción sigue activa y el horario pasa al siguiente.
+  - Un token que no existe responde `OFERTA_INEXISTENTE`; una oferta vencida, `OFERTA_VENCIDA`; una ya respondida, `OFERTA_YA_RESPONDIDA`.
+- **RN-LE-08**: **mensaje de la oferta**. Va por el canal del paciente (RN-NO-02) y **sin datos de salud** (RN-NO-01): la fecha, la hora, el consultorio, hasta cuándo puede aceptar y el link. **No nombra la prestación**, y tampoco al paciente ni al profesional, igual que el aviso de la reserva online: el profesional se ve en la pantalla de la oferta.
+- **RN-LE-09**: **fin de la inscripción**. Termina como `ASIGNADA` (aceptó una oferta), `BAJA` (se dio de baja el paciente, o lo hizo la recepción o el administrador) o `VENCIDA` (pasó el último día de su rango). Una tarea programada vence las ofertas y las inscripciones y pasa los horarios al siguiente paciente.
+
 ## Dominio: Clínica (RN-CL)
 
 - **RN-CL-01**: la ficha clínica y el odontograma solo los ve y los edita el rol `ODONTOLOGO` (y `ADMIN` en modo lectura). La recepción no accede (Ley 26.529, datos sensibles).

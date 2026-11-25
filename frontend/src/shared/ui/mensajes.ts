@@ -73,6 +73,15 @@ export const MENSAJES_POR_CODIGO: Readonly<Record<string, string>> = {
   TIPO_ARCHIVO_NO_PERMITIDO: 'Solo se aceptan archivos JPEG, PNG o PDF.',
   ARCHIVO_DEMASIADO_GRANDE: 'El archivo supera los 10 MB.',
   IMAGEN_YA_ANULADA: 'La imagen ya estaba anulada.',
+  // Lista de espera (C-15).
+  YA_EN_LISTA_DE_ESPERA: 'El paciente ya está en la lista de espera para esta prestación.',
+  SIN_CONSENTIMIENTO: 'El paciente no aceptó recibir mensajes: no le podemos avisar las ofertas.',
+  INSCRIPCION_NO_ACTIVA: 'Esta inscripción ya no estaba activa.',
+  PLAZO_INVALIDO: 'Ingresá un número entero de 1 a 24.',
+  OFERTA_NO_DISPONIBLE: 'Ese horario ya se ocupó. Seguís en la lista de espera.',
+  OFERTA_VENCIDA: 'Esta oferta venció. Seguís en la lista de espera.',
+  OFERTA_YA_RESPONDIDA: 'Ya respondiste esta oferta.',
+  OFERTA_INEXISTENTE: 'El link no es válido. Revisá que esté completo.',
 };
 
 export const MENSAJE_SIN_PERMISO = 'No tenés permiso para esta acción.';

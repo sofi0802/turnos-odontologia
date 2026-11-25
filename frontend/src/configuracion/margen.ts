@@ -1,3 +1,4 @@
+import { montarPlazo } from '../lista-espera/plazo.ts';
 import { crearAviso, crearBoton, crearCampo, crearEntrada } from '../shared/ui/campos.ts';
 import { cargarEn, crearCabecera, guardando, mostrarErrorEnFormulario, type ContextoSeccion } from './ui.ts';
 
@@ -54,6 +55,7 @@ function dibujar(contenedor: HTMLElement, inicial: number, contexto: ContextoSec
     soloLectura.className = 'ayuda';
     soloLectura.textContent = 'Solo el administrador puede cambiar el margen.';
     caja.append(soloLectura);
+    montarPlazo(caja, contexto);
     return;
   }
 
@@ -72,6 +74,7 @@ function dibujar(contenedor: HTMLElement, inicial: number, contexto: ContextoSec
   const ok = crearAviso('status');
   const error = crearAviso('alert');
   caja.append(formulario, ok, error);
+  montarPlazo(caja, contexto);
 
   formulario.addEventListener('submit', (evento) => {
     evento.preventDefault();
