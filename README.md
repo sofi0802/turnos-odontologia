@@ -75,20 +75,20 @@ El estado detallado de la fundación está en [`.active-orchestrator-state.json`
 
 | Herramienta | Versión | Para qué |
 |---|---|---|
-| Java (JDK) | 21 | Backend. Si no lo tenés, el toolchain de Gradle lo descarga la primera vez |
-| Node.js | 20.19 o más | Frontend |
-| Docker | Cualquiera con `docker compose` | PostgreSQL para correr la aplicación y los tests de integración. Alternativa: un PostgreSQL 15 o más instalado, con la extensión `btree_gist` |
+| Docker | Cualquiera con `docker compose` | La aplicación completa (base, backend y frontend) con un solo comando. También da la base para los tests de integración |
+| Java (JDK) | 21 | Solo para correr el backend o sus tests fuera de Docker. Si no lo tenés, el toolchain de Gradle lo descarga la primera vez |
+| Node.js | 20.19 o más | Solo para correr el frontend o sus tests fuera de Docker |
 
-No hace falta instalar Gradle: el repo trae el wrapper (`gradlew` y `gradlew.bat`).
+Sin Docker también se puede: un PostgreSQL 15 o más instalado, con la extensión `btree_gist`, más Java y Node (ver [Correr la aplicación sin Docker](#correr-la-aplicación-sin-docker)). No hace falta instalar Gradle: el repo trae el wrapper (`gradlew` y `gradlew.bat`).
 
-### 1. Variables de entorno
+### Variables de entorno
 
 Copiá `.env.example` a `.env` en la raíz del repo y completá los valores. El `.env` no se sube al repo.
 
 | Variable | Obligatoria | Uso |
 |---|---|---|
 | `DB_USER`, `DB_PASSWORD` | Sí | Usuario y contraseña de PostgreSQL. `docker compose` crea el usuario con estos valores |
-| `DB_URL` | Sí | Base de desarrollo: `jdbc:postgresql://localhost:5432/turnos` |
+| `DB_URL` | Sí | Base de desarrollo vista **desde tu máquina** (`bootRun`): `jdbc:postgresql://localhost:5432/turnos`. Dentro de Docker, el compose la reemplaza por `jdbc:postgresql://postgres:5432/turnos` |
 | `DB_TEST_URL` | Para los tests de integración | Base de los tests: `jdbc:postgresql://localhost:5432/turnos_test`. **Nunca** la apuntes a `turnos`: los tests vacían las tablas |
 | `APP_ADMIN_USERNAME`, `APP_ADMIN_PASSWORD` | Para el primer ingreso | Crean la cuenta ADMIN inicial al arrancar, solo si todavía no hay ningún administrador. La contraseña tiene que cumplir la política de contraseñas |
 | `APP_CORS_ORIGENES` | No (por defecto `http://localhost:5173`) | Origen del frontend |
@@ -97,17 +97,51 @@ Copiá `.env.example` a `.env` en la raíz del repo y completá los valores. El 
 | `NOTIFICACIONES_BASE_URL`, `NOTIFICACIONES_RUTA_CANCELAR`, `NOTIFICACIONES_RUTA_REPROGRAMAR` | No | Links de los recordatorios hacia el frontend |
 | `AGENDA_ASISTENCIA_ACTIVO`, `AGENDA_ASISTENCIA_INTERVALO_MS` | No (por defecto `true` y 5 minutos) | Tarea que pasa a ATENDIDO los turnos con llegada registrada que ya terminaron |
 | `CONSULTORIO_NOMBRE`, `CONSULTORIO_DIRECCION` | No | Datos del consultorio que muestran los mensajes |
-| `VITE_API_BASE_URL` | Sí, para el frontend | Dirección de la API: `http://localhost:8080/api/v1`. Vite la lee de la terminal o de `frontend/.env.local` |
+| `IMAGENES_DIRECTORIO` | No (por defecto `./data/imagenes`) | Dónde guarda el backend las imágenes clínicas. En Docker, el compose la fija en un volumen propio |
+| `VITE_API_BASE_URL` | Solo fuera de Docker | Dirección de la API: `http://localhost:8080/api/v1`. En Docker la fija el compose; fuera de Docker, Vite la lee de la terminal o de `frontend/.env.local` |
 
-### 2. Base de datos
+## Correr la aplicación con Docker
 
-Desde la raíz del repo:
+Desde la raíz del repo, con el `.env` completo:
 
 ```bash
-docker compose up -d
+docker compose up -d --build
 ```
 
-La primera vez que se crea el volumen, `docker/initdb/01-crear-turnos-test.sql` crea las dos bases (`turnos` y `turnos_test`). Flyway crea las tablas al arrancar el backend o los tests. La base queda expuesta solo en `127.0.0.1`, no en la red local.
+Levanta tres servicios:
+
+| Servicio | Dirección | Qué hace |
+|---|---|---|
+| `postgres` | `127.0.0.1:5432` | PostgreSQL 16. La primera vez que se crea el volumen, `docker/initdb/01-crear-turnos-test.sql` crea las bases `turnos` y `turnos_test` |
+| `backend` | `http://localhost:8080` | Arranca cuando la base está lista, aplica las migraciones de Flyway y carga el seed ficticio (perfil `dev`). La API está en `/api/v1` |
+| `frontend` | `http://localhost:5173` | Vite en modo desarrollo: recarga sola cuando guardás un archivo de `frontend/` o `design-system/` |
+
+Abrí `http://localhost:5173`. Ingresá con la cuenta ADMIN inicial desde **Mi cuenta** y creá desde **Configuración** las cuentas de recepción y de los odontólogos. Los pacientes crean su cuenta desde Mi cuenta. Usá solo datos ficticios.
+
+Todo se publica solo en `127.0.0.1`, no en la red local. Las credenciales llegan desde el `.env` al arrancar y nunca quedan dentro de las imágenes. La base y las imágenes clínicas viven en volúmenes (`turnos-pgdata` y `turnos-imagenes`), así que sobreviven a `docker compose down` y a reconstruir las imágenes.
+
+La primera construcción tarda varios minutos: descarga Gradle, las dependencias del backend y las del frontend. Las siguientes reutilizan la caché.
+
+**Comandos útiles:**
+
+| Para | Comando |
+|---|---|
+| Ver los logs | `docker compose logs -f backend` (o `frontend`, `postgres`) |
+| Aplicar un cambio en el código Java | `docker compose up -d --build backend` |
+| Renovar `node_modules` tras cambiar `package-lock.json` | `docker compose up -d --build -V frontend` |
+| Apagar todo (los datos quedan) | `docker compose down` |
+| Borrar también la base y las imágenes clínicas | `docker compose down -v` |
+
+**Si un puerto está ocupado** (por ejemplo, ya tenés un PostgreSQL instalado en el 5432), creá un `docker-compose.override.yml` local, que no se sube al repo, y publicá la base en otro puerto:
+
+```yaml
+services:
+  postgres:
+    ports: !override
+      - "127.0.0.1:5433:5432"
+```
+
+El backend del compose no cambia, porque se conecta a la base por la red interna. Lo que sí tenés que cambiar es el `DB_URL` y el `DB_TEST_URL` de tu `.env` (al 5433), que usan `bootRun` y los tests desde tu máquina. No corras `bootRun` ni `npm run dev` mientras el compose está levantado: chocan en el 8080 y el 5173.
 
 **Si ya tenías el contenedor de antes** (el volumen ya existía), `turnos_test` no se crea sola. Creala una vez, con el usuario de tu `.env`:
 
@@ -115,7 +149,15 @@ La primera vez que se crea el volumen, `docker/initdb/01-crear-turnos-test.sql` 
 docker exec turnos-postgres psql -U <DB_USER> -c "CREATE DATABASE turnos_test;"
 ```
 
-### 3. Cargar el `.env` en la terminal
+## Correr la aplicación sin Docker
+
+Sirve para quien no tiene Docker o prefiere correr el backend y el frontend en su máquina. La base puede ser un PostgreSQL instalado (15 o más, con `btree_gist` y las bases `turnos` y `turnos_test`) o solo el servicio `postgres` del compose:
+
+```bash
+docker compose up -d postgres
+```
+
+### 1. Cargar el `.env` en la terminal
 
 El backend lee las variables del entorno, no del archivo. Antes de correr Gradle, cargalas en la terminal desde `backend/`:
 
@@ -131,32 +173,34 @@ cd backend
 Get-Content ..\.env | ForEach-Object { if ($_ -match '^\s*([^#=\s]+)\s*=\s*(.*)$') { [Environment]::SetEnvironmentVariable($Matches[1], $Matches[2], 'Process') } }
 ```
 
-## Correr la aplicación
+### 2. Backend
 
-1. **Backend** (en la terminal con el `.env` cargado, desde `backend/`):
+En la terminal con el `.env` cargado, desde `backend/`:
 
-   ```bash
-   ./gradlew bootRun        # en Windows: .\gradlew.bat bootRun
-   ```
+```bash
+./gradlew bootRun        # en Windows: .\gradlew.bat bootRun
+```
 
-   Arranca en `http://localhost:8080` con el perfil `dev`, que carga el seed ficticio (profesionales, sillones, prestaciones y horarios). La API está en `/api/v1`.
+Arranca en `http://localhost:8080` con el perfil `dev`, que carga el seed ficticio (profesionales, sillones, prestaciones y horarios). La API está en `/api/v1`.
 
-2. **Frontend** (en otra terminal, desde `frontend/`):
+### 3. Frontend
 
-   ```bash
-   npm ci
-   VITE_API_BASE_URL=http://localhost:8080/api/v1 npm run dev
-   ```
+En otra terminal, desde `frontend/`:
 
-   En PowerShell:
+```bash
+npm ci
+VITE_API_BASE_URL=http://localhost:8080/api/v1 npm run dev
+```
 
-   ```powershell
-   $env:VITE_API_BASE_URL='http://localhost:8080/api/v1'; npm run dev
-   ```
+En PowerShell:
 
-   Abrí `http://localhost:5173`. Ingresá con la cuenta ADMIN inicial desde **Mi cuenta** y creá desde **Configuración** las cuentas de recepción y de los odontólogos. Los pacientes crean su cuenta desde Mi cuenta. Usá solo datos ficticios.
+```powershell
+$env:VITE_API_BASE_URL='http://localhost:8080/api/v1'; npm run dev
+```
 
-Para un jar (`./gradlew bootJar`), pasá la zona horaria canónica: `java -Duser.timezone=America/Argentina/Buenos_Aires -jar build/libs/<jar>.jar`. En Windows, Java usa un alias viejo de la zona que PostgreSQL 16 rechaza; `bootRun` y los tests ya la fijan.
+Abrí `http://localhost:5173` e ingresá como se explica en [Correr la aplicación con Docker](#correr-la-aplicación-con-docker).
+
+Para un jar (`./gradlew bootJar`), pasá la zona horaria canónica: `java -Duser.timezone=America/Argentina/Buenos_Aires -jar build/libs/<jar>.jar`. En Windows, Java usa un alias viejo de la zona que PostgreSQL 16 rechaza; `bootRun`, los tests y la imagen de Docker ya la fijan.
 
 ## Tests
 
@@ -171,7 +215,7 @@ No necesitan PostgreSQL ni el `.env`. Cada escenario GIVEN/WHEN/THEN de las spec
 
 ### Backend: tests de integración (PostgreSQL real)
 
-Llevan `@Tag("integration")` y usan PostgreSQL real, porque H2 no soporta `btree_gist`. **No** forman parte de `build`. Con la base levantada (paso 2) y el `.env` cargado (paso 3):
+Llevan `@Tag("integration")` y usan PostgreSQL real, porque H2 no soporta `btree_gist`. **No** forman parte de `build`. Con la base levantada (`docker compose up -d`, o solo `docker compose up -d postgres`) y el `.env` cargado (ver [Cargar el `.env` en la terminal](#1-cargar-el-env-en-la-terminal)):
 
 ```bash
 ./gradlew integrationTest

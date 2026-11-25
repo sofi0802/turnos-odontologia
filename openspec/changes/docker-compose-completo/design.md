@@ -109,3 +109,12 @@ Ver `proposal.md` (Why). Estado actual observado en el repo:
 - Approval: no aplica
 - Preview: no aplica
 - Visual verify: no aplica
+
+## Notas del apply (2026-11-25)
+
+1. **Imagen de ejecución del backend: JDK en lugar de JRE (cambia D1).** `eclipse-temurin:21-jre` no incluye el módulo `jdk.random`, y la reserva usa `RandomGenerator.getDefault()` (`L32X64MixRandom`): el backend fallaba al arrancar con "No implementation of the random number generator algorithm". Como el change no toca código de la aplicación, la etapa de ejecución usa `eclipse-temurin:21-jdk`. Sigue copiando solo el jar y corriendo con un usuario sin privilegios. Alternativa para más adelante: un runtime armado con `jlink` que sume `jdk.random`.
+2. **`/app/data/imagenes` existe vacío en la imagen**: es el punto de montaje del volumen `turnos-imagenes`, creado con dueño `turnos` para que el volumen herede los permisos. No contiene datos.
+3. **Recarga del frontend**: con `CHOKIDAR_USEPOLLING=true` alcanzó; Vite registró `hmr update` al guardar en Windows con Docker Desktop. No hizo falta el plan B ni tocar `vite.config.ts`.
+4. **`container_name: turnos-postgres`** (de C-03) impide levantar dos proyectos a la vez: la copia de prueba de la tarea 2.2 (`-p turnos-verif`) se corrió después de `docker compose down` del entorno de trabajo. Se dejó el nombre, porque el README lo usa en `docker exec turnos-postgres`.
+5. **Tarea 2.5** se verificó sin iniciar sesión: la cantidad de turnos de la base y un archivo ficticio en el volumen de imágenes clínicas siguieron iguales después de `docker compose down`, `docker compose build` y `docker compose up -d`.
+6. **Tarea 4.5**: en PowerShell, `$env:DB_PASSWORD=''` borra la variable y el compose toma la del `.env`. La verificación usó un `--env-file` temporal con `DB_PASSWORD` vacío: falló con "required variable DB_PASSWORD is missing a value" y no creó contenedores.

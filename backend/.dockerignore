@@ -1,0 +1,6 @@
+# Contexto de build del backend (C-52, design D4): nada local ni secreto entra en la imagen.
+.env
+.env.*
+build
+.gradle
+data
