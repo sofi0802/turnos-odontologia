@@ -109,11 +109,17 @@ Al abrir `#/mis-turnos`, la aplicación SHALL consultar `GET /api/v1/public/sesi
 - **AND** no se envía ningún pedido a `/api/v1/paciente/turnos`
 
 ### Requirement: Cuenta del paciente con sesión iniciada
-Al abrir `#/mi-cuenta` con una sesión de paciente, la aplicación MUST mostrar la página "Mis turnos" en lugar de los formularios de ingreso y registro; con una sesión del personal, MUST mostrar la página "Agenda".
+Al abrir `#/mi-cuenta` con una sesión de paciente, la aplicación MUST mostrar la página "Mi cuenta" con la sección "Mi cobertura", en lugar de los formularios de ingreso y registro; con una sesión del personal, MUST mostrar la página "Agenda". Al ingresar desde el formulario, el paciente sigue yendo a "Mis turnos" (o a la reserva pendiente).
 
 #### Scenario: Paciente con sesión abre su cuenta
 - **GIVEN** una sesión de `paciente.uno@example.com`
 - **WHEN** se abre la aplicación en `#/mi-cuenta`
+- **THEN** se muestra la página "Mi cuenta" en `#/mi-cuenta` con la sección "Mi cobertura"
+- **AND** no se muestran los formularios de ingreso ni de registro
+
+#### Scenario: El paciente ingresa y va a Mis turnos
+- **GIVEN** la página `#/mi-cuenta` abierta sin sesión y sin reserva pendiente
+- **WHEN** "Paciente Uno" ingresa correctamente
 - **THEN** se muestra la página "Mis turnos" en `#/mis-turnos`
 
 #### Scenario: Personal con sesión abre su cuenta

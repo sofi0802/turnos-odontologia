@@ -78,7 +78,7 @@
 
 ## 8. Cierre
 
-- [ ] 8.1 Después del merge del PR (no antes), marcar `[x]` C-50 en `CHANGES.md` en un PR aparte o en el que indique la líder
+- [x] 8.1 Después del merge del PR (no antes), marcar `[x]` C-50 en `CHANGES.md` en un PR aparte o en el que indique la líder
 
 ## Workflow follow-up
 
