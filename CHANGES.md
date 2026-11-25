@@ -659,7 +659,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/components.html` (secciones "Reserva online" y "Formularios y avisos")
 
 ### [C-39] `frontend-uniformidad-visual`
-- **Estado**: `[ ]` en curso: cuatro etapas mergeadas, cada una con su PR: A tokens y CSS modular (PR #74, 2026-11-23), B barra lateral y componentes (PR #77, 2026-11-23; 471 tests), C pantallas del paciente (PR #79, 2026-11-24; 474 tests) y D pantallas del personal (PR #83, 2026-11-24; 484 tests), todas con mockups aprobados, y la etapa E, agenda semanal en grilla horaria (PR #95, 2026-11-24; sin mockups previos por pedido del usuario). Las 31 tareas están hechas (A.5, 7.1 y 7.2 cerradas el 2026-11-24: 952 tests, un test por cada uno de los 34 escenarios y `openspec validate --strict` válido), y la líder ya renovó la aprobación del design system (Revision 5). Falta solo el archive. Proposal, specs, design y tasks en `openspec/changes/frontend-uniformidad-visual/`
+- **Estado**: `[x]` completo (2026-11-25, archive en el PR #151). Spec `openspec/specs/frontend-sistema-visual/` (nueva) y `frontend-navegacion/` actualizada; change archivado en `openspec/changes/archive/2026-11-25-frontend-uniformidad-visual/`. Historia: cuatro etapas mergeadas, cada una con su PR: A tokens y CSS modular (PR #74, 2026-11-23), B barra lateral y componentes (PR #77, 2026-11-23; 471 tests), C pantallas del paciente (PR #79, 2026-11-24; 474 tests) y D pantallas del personal (PR #83, 2026-11-24; 484 tests), todas con mockups aprobados, y la etapa E, agenda semanal en grilla horaria (PR #95, 2026-11-24; sin mockups previos por pedido del usuario). Las 31 tareas están hechas (A.5, 7.1 y 7.2 cerradas el 2026-11-24: 952 tests, un test por cada uno de los 34 escenarios y `openspec validate --strict` válido), y la líder ya renovó la aprobación del design system (Revision 5).
 - **Responsable**: Juan Cruz (avisa a Enzo)
 - **Scope**:
   - **Barra lateral desplegable** con los botones del menú ("Reservar turno", "Mis turnos", "Agenda", "Configuración"), que muestra solo las opciones del rol que ingresó. En el celular es un cajón con un botón de menú. Sin sesión se mantiene un encabezado simple con "Acceso personal" arriba a la derecha.
@@ -904,7 +904,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `docs/discovery/sources/relevamiento-fuentes.md` §DentalTec, §DentalCore, §Dentalink
 
 ### [C-19] `presupuestos-y-cobertura`
-- **Estado**: `[ ]` KB aprobada (2026-11-24, PR #108; dominio Presupuestos: RN-PR-01 a RN-PR-07, US-047 y DD-15; PA-23 a PA-28 respondidas: arma el odontólogo, la recepción lo ve sin pieza ni cara, cobertura solo por porcentaje, vence a los 30 días, el paciente ve los suyos, precio sin historial). Sigue el propose
+- **Estado**: `[x]` completo (2026-11-25, solo backend; propuesta en el PR #110, apply en el PR #117 y archive en el PR #151; migración V13). Specs `openspec/specs/presupuestos/` y `aranceles-y-cobertura-planes/` (nuevos); change archivado en `openspec/changes/archive/2026-11-25-presupuestos-y-cobertura/`. Antes: KB aprobada (2026-11-24, PR #108; dominio Presupuestos: RN-PR-01 a RN-PR-07, US-047 y DD-15; PA-23 a PA-28 respondidas: arma el odontólogo, la recepción lo ve sin pieza ni cara, cobertura solo por porcentaje, vence a los 30 días, el paciente ve los suyos, precio sin historial)
 - **Responsable**: Juan Sebastián
 - **Scope**:
   - Presupuesto por paciente a partir de las prestaciones del odontograma, separando la parte que cubre la obra social y el copago. **Migración V13**.
@@ -916,7 +916,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `docs/discovery/informe-discovery.md` §A.3 (presupuestos)
 
 ### [C-20] `liquidaciones-obras-sociales`
-- **Estado**: `[ ]` KB aprobada (2026-11-24, PR #120; dominio Liquidaciones: RN-LQ-01 a RN-LQ-08, US-049 y DD-19; se liquidan los turnos atendidos; PA-38 a PA-42 respondidas: el ADMIN elige el código si hay varios, solo el ADMIN las maneja, precio del cargo de caja de C-22, exportación CSV, no se reabre una presentada). Sigue el propose
+- **Estado**: `[x]` completo (2026-11-25, solo backend; propuesta en el PR #122, apply en el PR #125 y archive en el PR #151; migración V14). Specs `openspec/specs/liquidaciones-obras-sociales/` y `conciliacion-liquidaciones/` (nuevos); change archivado en `openspec/changes/archive/2026-11-25-liquidaciones-obras-sociales/`. Antes: KB aprobada (2026-11-24, PR #120; dominio Liquidaciones: RN-LQ-01 a RN-LQ-08, US-049 y DD-19; se liquidan los turnos atendidos; PA-38 a PA-42 respondidas: el ADMIN elige el código si hay varios, solo el ADMIN las maneja, precio del cargo de caja de C-22, exportación CSV, no se reabre una presentada)
 - **Responsable**: Juan Sebastián
 - **Scope**:
   - Liquidación mensual por obra social y plan, con exportación a PDF o CSV y conciliación de lo cobrado. **Migración V14**.
