@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bloqueo · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="consentimientos.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div class="bloqueo-pantalla mockup-pagina">
+  <section class="bloqueo-tarjeta" aria-labelledby="bl-t">
+    <span class="bloqueo-icono" data-icono="candado" aria-hidden="true"></span>
+    <h1 id="bl-t">Devolvé el equipo al profesional</h1>
+    <p class="bloqueo-caso" role="status">Listo: la firma quedó registrada.</p>
+    <form class="bloqueo-form" novalidate aria-labelledby="bl-f">
+      <p id="bl-f">Para seguir, el profesional escribe su contraseña.</p>
+      <p class="bloqueo-usuario">Usuario: <strong>ana.ejemplo</strong></p>
+      <div class="campo">
+        <label for="bl-pass">Contraseña</label>
+        <input id="bl-pass" type="password" autocomplete="off" aria-describedby="bl-e" />
+        <p class="campo-error" id="bl-e"></p>
+      </div>
+      <button type="submit" class="btn btn-principal" data-icono="candado">Desbloquear</button>
+    </form>
+  </section>
+  <p class="nota-mockup"><b>Mockup C-48.</b> Después de una firma correcta (201): la vista de firma y la ficha ya no están en la página y la sesión se cerró (<code>POST /api/v1/logout</code>). En la aplicación el bloqueo es fijo, tapa todo y no se cierra con Escape (design D12). No muestra nada del paciente ni del consentimiento. Datos ficticios.</p>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

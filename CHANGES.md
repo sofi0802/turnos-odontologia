@@ -1120,6 +1120,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - **Acceso**: según la matriz de roles que defina C-27. Ningún dato de salud en la URL, en `localStorage` ni en la consola (regla dura 6).
   - Sin cambios de backend ni migraciones.
   - Cambio visual: modo `system-and-mockups`, con mockups a 390 y 1440 px aprobados antes del apply.
+- **Coordinación con C-49** (`frontend-obras-sociales`, Juan Sebastián): no es dependencia. Los dos modifican el requisito "Secciones según el rol" de `frontend-configuracion-consultorio` y tocan `configuracion.ts`, `permisos.ts`, `pacientes.ts` y `styles.css`. El que se archive segundo incluye la pestaña del otro en su `MODIFIED`; el que se aplique segundo rebasa y resuelve esos archivos y el orden de la ficha. C-48 usa `23-consentimientos.css` (C-49 reservó el 22).
 - **Dependencias**: `C-27`, `C-44`
 - **Governance**: CRITICO (validez legal de la firma)
 - **Leer antes**:

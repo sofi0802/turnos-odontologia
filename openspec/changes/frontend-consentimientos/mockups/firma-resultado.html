@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resultado de la firma · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="consentimientos.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="ana.ejemplo" data-rol="ODONTOLOGO" data-activa="pacientes">
+  <div class="pagina-ficha">
+    <h1 tabindex="-1">Pacientes</h1>
+    <p class="rotulo-estado">1 · Después de desbloquear tras un envío dudoso: comprobando</p>
+    <section class="panel ficha-seccion" aria-labelledby="r1-t">
+      <div class="ficha-seccion-cabecera">
+        <div>
+          <h2 id="r1-t">Consentimientos</h2>
+          <p class="cons-contador">2 firmados</p>
+        </div>
+        <div class="cons-cabecera-acciones"><button type="button" class="btn btn-principal" data-icono="firma">Firmar consentimiento</button></div>
+      </div>
+      <div class="cons-resultado cons-resultado-pendiente" role="status">
+        <h3 data-icono="reloj">Comprobando si la firma quedó guardada…</h3>
+        <p>Consentimiento para extracción dentaria, versión 3.</p>
+      </div>
+    </section>
+    <p class="rotulo-estado">2 · Hay una firma nueva de esa plantilla y versión que no estaba antes</p>
+    <section class="panel ficha-seccion" aria-labelledby="r2-t">
+      <div class="ficha-seccion-cabecera">
+        <div>
+          <h2 id="r2-t">Consentimientos</h2>
+          <p class="cons-contador">2 firmados</p>
+        </div>
+        <div class="cons-cabecera-acciones"><button type="button" class="btn btn-principal" data-icono="firma">Firmar consentimiento</button></div>
+      </div>
+      <div class="cons-resultado cons-resultado-ok" role="status">
+        <h3 data-icono="verificado">La firma quedó guardada.</h3>
+        <p><strong>Consentimiento para extracción dentaria</strong>, versión 3, firmado hoy a las 10:30.</p>
+        <div class="cons-resultado-acciones"><button type="button" class="btn" data-icono="ver" aria-label="Ver Consentimiento para extracción dentaria del 24/11/2026">Ver</button></div>
+      </div>
+    </section>
+    <p class="rotulo-estado">3 · No hay una firma nueva</p>
+    <section class="panel ficha-seccion" aria-labelledby="r3-t">
+      <div class="ficha-seccion-cabecera">
+        <div>
+          <h2 id="r3-t">Consentimientos</h2>
+          <p class="cons-contador">2 firmados</p>
+        </div>
+        <div class="cons-cabecera-acciones"><button type="button" class="btn btn-principal" data-icono="firma">Firmar consentimiento</button></div>
+      </div>
+      <div class="cons-resultado cons-resultado-error" role="alert">
+        <h3 data-icono="alterado">La firma no se guardó.</h3>
+        <p>Consentimiento para extracción dentaria, versión 3. Si hace falta, volvé a hacerla firmar.</p>
+        <div class="cons-resultado-acciones"><button type="button" class="btn btn-principal" data-icono="firma">Hacer firmar de nuevo</button></div>
+      </div>
+    </section>
+    <p class="rotulo-estado">4 · Falla el listado: nunca dice "no se guardó" sin comprobarlo</p>
+    <section class="panel ficha-seccion" aria-labelledby="r4-t">
+      <div class="ficha-seccion-cabecera">
+        <div>
+          <h2 id="r4-t">Consentimientos</h2>
+          <p class="cons-contador">2 firmados</p>
+        </div>
+        <div class="cons-cabecera-acciones"><button type="button" class="btn btn-principal" data-icono="firma">Firmar consentimiento</button></div>
+      </div>
+      <div class="cons-resultado cons-resultado-pendiente" role="alert">
+        <h3 data-icono="alterado">No pudimos comprobar si la firma quedó guardada.</h3>
+        <p>Revisá la conexión y probá de nuevo antes de volver a hacerla firmar.</p>
+        <div class="cons-resultado-acciones"><button type="button" class="btn btn-principal">Comprobar de nuevo</button></div>
+      </div>
+    </section>
+    <p class="rotulo-estado">5 · La sesión había vencido al firmar (401): no se guardó, sin comprobar</p>
+    <section class="panel ficha-seccion" aria-labelledby="r5-t">
+      <div class="ficha-seccion-cabecera">
+        <div>
+          <h2 id="r5-t">Consentimientos</h2>
+          <p class="cons-contador">2 firmados</p>
+        </div>
+        <div class="cons-cabecera-acciones"><button type="button" class="btn btn-principal" data-icono="firma">Firmar consentimiento</button></div>
+      </div>
+      <p role="alert" class="aviso aviso-error">La firma no se guardó porque la sesión había vencido. Si hace falta, hacela firmar de nuevo.</p>
+    </section>
+    <p class="rotulo-estado">6 · Aviso antes de firmar dos veces (vigente, misma plantilla y versión, firmado hoy)</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="dd-t">
+      <h2 id="dd-t">Ya firmó este consentimiento hoy</h2>
+      <p class="dialogo-resumen">“Consentimiento para extracción dentaria”, versión 3, quedó firmado hoy a las 10:30 y está vigente. ¿Hacerlo firmar otra vez?</p>
+      <div class="dialogo-acciones"><button type="button" class="btn" autofocus>No firmar</button><button type="button" class="btn btn-principal" data-icono="firma">Firmar otra vez</button></div>
+    </dialog>
+    <p class="nota-mockup"><b>Mockup C-48.</b> La sección "Consentimientos" de la ficha después de desbloquear (design D13) y la pregunta de doble firma, que ve el odontólogo antes de darle el equipo al paciente (design D14). El listado de abajo no cambia y no se repite. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

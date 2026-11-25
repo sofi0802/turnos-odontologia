@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuración · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="consentimientos.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="admin" data-rol="ADMIN" data-activa="configuracion">
+  <div class="pagina-config">
+    <h1 tabindex="-1">Configuración</h1>
+    <p class="rotulo-estado">1 · Nueva plantilla, recién abierta</p>
+    <dialog class="dialogo dialogo-estatico cons-editor" open aria-labelledby="n-t">
+      <h2 id="n-t">Nueva plantilla</h2>
+      
+      <p role="alert" class="aviso aviso-error"></p>
+      <form class="cons-form" novalidate>
+        <div class="campo-suave">
+          <div class="campo-suave-cabecera"><label for="n-titulo">Título</label><span class="contador" id="n-ct"></span></div>
+          <input id="n-titulo" type="text" value="" data-contador="n-ct" data-limite="120" data-largo="0" aria-describedby="n-ct n-et" />
+          <p class="campo-error" id="n-et"></p>
+        </div>
+        <div class="campo-suave cons-texto-editor">
+          <div class="campo-suave-cabecera"><label for="n-texto">Texto del consentimiento</label><span class="contador" id="n-cx"></span></div>
+          <textarea id="n-texto" rows="16" data-contador="n-cx" data-limite="20000" data-largo="0" aria-describedby="n-cx n-ayuda n-ex" placeholder="Escribí el texto que el paciente va a leer y aceptar."></textarea>
+          <p class="cons-ayuda" id="n-ayuda">Texto plano: se respetan los saltos de línea; no se aplica formato ni HTML.</p>
+          <p class="campo-error" id="n-ex"></p>
+        </div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Guardar</button></div>
+      </form>
+    </dialog>
+    <p class="rotulo-estado">2 · Editar: se guarda como versión nueva</p>
+    <dialog class="dialogo dialogo-estatico cons-editor" open aria-labelledby="e-t">
+      <h2 id="e-t">Editar «Consentimiento para extracción dentaria»</h2>
+      <p class="dialogo-resumen">Se guarda como versión 4. Lo que ya se firmó con versiones anteriores no cambia.</p>
+      <p role="alert" class="aviso aviso-error"></p>
+      <form class="cons-form" novalidate>
+        <div class="campo-suave">
+          <div class="campo-suave-cabecera"><label for="e-titulo">Título</label><span class="contador" id="e-ct"></span></div>
+          <input id="e-titulo" type="text" value="Consentimiento para extracción dentaria" data-contador="e-ct" data-limite="120" data-largo="39" aria-describedby="e-ct e-et" />
+          <p class="campo-error" id="e-et"></p>
+        </div>
+        <div class="campo-suave cons-texto-editor">
+          <div class="campo-suave-cabecera"><label for="e-texto">Texto del consentimiento</label><span class="contador" id="e-cx"></span></div>
+          <textarea id="e-texto" rows="16" data-contador="e-cx" data-limite="20000" data-largo="1060" aria-describedby="e-cx e-ayuda e-ex" placeholder="Escribí el texto que el paciente va a leer y aceptar.">Yo, el paciente que firma este documento, declaro que el profesional me explicó en lenguaje claro el tratamiento propuesto: la extracción de una pieza dentaria.
+
+Qué es el tratamiento
+La extracción consiste en retirar la pieza de su alvéolo con anestesia local. Puede requerir separar la pieza en partes o hacer una pequeña incisión en la encía.
+
+Riesgos y molestias posibles
+- Dolor, inflamación o hematoma durante algunos días.
+- Sangrado leve en las primeras horas.
+- Alveolitis (inflamación del alvéolo), que se trata en el consultorio.
+- Con menor frecuencia: sensibilidad en el labio o la lengua, que suele ser pasajera.
+
+Alternativas
+Me informaron las alternativas posibles, incluida la de no hacer el tratamiento, y sus consecuencias.
+
+Cuidados después
+Me comprometo a seguir las indicaciones escritas que me entrega el profesional y a consultar ante cualquier síntoma que me preocupe.
+
+Puedo hacer todas las preguntas que necesite antes de firmar y puedo revocar este consentimiento en cualquier momento antes del tratamiento, avisando al profesional.</textarea>
+          <p class="cons-ayuda" id="e-ayuda">Texto plano: se respetan los saltos de línea; no se aplica formato ni HTML.</p>
+          <p class="campo-error" id="e-ex"></p>
+        </div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Guardar</button></div>
+      </form>
+    </dialog>
+    <p class="rotulo-estado">3 · Errores de validación: título vacío y texto de más de 20.000 caracteres (no se recorta)</p>
+    <dialog class="dialogo dialogo-estatico cons-editor" open aria-labelledby="v-t">
+      <h2 id="v-t">Nueva plantilla</h2>
+      
+      <p role="alert" class="aviso aviso-error"></p>
+      <form class="cons-form" novalidate>
+        <div class="campo-suave">
+          <div class="campo-suave-cabecera"><label for="v-titulo">Título</label><span class="contador" id="v-ct"></span></div>
+          <input id="v-titulo" type="text" value="" data-contador="v-ct" data-limite="120" data-largo="0" aria-describedby="v-ct v-et" aria-invalid="true" />
+          <p class="campo-error" id="v-et">Escribí el título.</p>
+        </div>
+        <div class="campo-suave cons-texto-editor">
+          <div class="campo-suave-cabecera"><label for="v-texto">Texto del consentimiento</label><span class="contador" id="v-cx"></span></div>
+          <textarea id="v-texto" rows="16" data-contador="v-cx" data-limite="20000" data-largo="20001" aria-describedby="v-cx v-ayuda v-ex" aria-invalid="true" placeholder="Escribí el texto que el paciente va a leer y aceptar.">Yo, el paciente que firma este documento, declaro que el profesional me explicó en lenguaje claro el tratamiento propuesto: la extracción de una pieza dentaria.
+
+Qué es el tratamiento
+La extracción consiste en retirar la pieza de su alvéolo con anestesia local. Puede requerir separar la pieza en partes o hacer una pequeña incisión en la encía.
+
+Riesgos y molestias posibles
+- Dolor, inflamación o hematoma durante algunos días.
+- Sangrado leve en las primeras horas.
+- Alveolitis (inflamación del alvéolo), que se trata en el consultorio.
+- Con menor frecuencia: sensibilidad en el labio o la lengua, que suele ser pasajera.
+
+Alternativas
+Me informaron las alternativas posibles, incluida la de no hacer el tratamiento, y sus consecuencias.
+
+Cuidados después
+Me comprometo a seguir las indicaciones escritas que me entrega el profesional y a consultar ante cualquier síntoma que me preocupe.
+
+Puedo hacer todas las preguntas que necesite antes de firmar y puedo revocar este consentimiento en cualquier momento antes del tratamiento, avisando al profesional.</textarea>
+          <p class="cons-ayuda" id="v-ayuda">Texto plano: se respetan los saltos de línea; no se aplica formato ni HTML.</p>
+          <p class="campo-error" id="v-ex">El texto supera los 20.000 caracteres.</p>
+        </div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Guardar</button></div>
+      </form>
+    </dialog>
+    <p class="rotulo-estado">4 · Título repetido (409 PLANTILLA_DUPLICADA)</p>
+    <dialog class="dialogo dialogo-estatico cons-editor" open aria-labelledby="d-t">
+      <h2 id="d-t">Nueva plantilla</h2>
+      
+      <p role="alert" class="aviso aviso-error"></p>
+      <form class="cons-form" novalidate>
+        <div class="campo-suave">
+          <div class="campo-suave-cabecera"><label for="d-titulo">Título</label><span class="contador" id="d-ct"></span></div>
+          <input id="d-titulo" type="text" value="Consentimiento para extracción dentaria" data-contador="d-ct" data-limite="120" data-largo="39" aria-describedby="d-ct d-et" aria-invalid="true" />
+          <p class="campo-error" id="d-et">Ya existe una plantilla con ese título.</p>
+        </div>
+        <div class="campo-suave cons-texto-editor">
+          <div class="campo-suave-cabecera"><label for="d-texto">Texto del consentimiento</label><span class="contador" id="d-cx"></span></div>
+          <textarea id="d-texto" rows="16" data-contador="d-cx" data-limite="20000" data-largo="1060" aria-describedby="d-cx d-ayuda d-ex" placeholder="Escribí el texto que el paciente va a leer y aceptar.">Yo, el paciente que firma este documento, declaro que el profesional me explicó en lenguaje claro el tratamiento propuesto: la extracción de una pieza dentaria.
+
+Qué es el tratamiento
+La extracción consiste en retirar la pieza de su alvéolo con anestesia local. Puede requerir separar la pieza en partes o hacer una pequeña incisión en la encía.
+
+Riesgos y molestias posibles
+- Dolor, inflamación o hematoma durante algunos días.
+- Sangrado leve en las primeras horas.
+- Alveolitis (inflamación del alvéolo), que se trata en el consultorio.
+- Con menor frecuencia: sensibilidad en el labio o la lengua, que suele ser pasajera.
+
+Alternativas
+Me informaron las alternativas posibles, incluida la de no hacer el tratamiento, y sus consecuencias.
+
+Cuidados después
+Me comprometo a seguir las indicaciones escritas que me entrega el profesional y a consultar ante cualquier síntoma que me preocupe.
+
+Puedo hacer todas las preguntas que necesite antes de firmar y puedo revocar este consentimiento en cualquier momento antes del tratamiento, avisando al profesional.</textarea>
+          <p class="cons-ayuda" id="d-ayuda">Texto plano: se respetan los saltos de línea; no se aplica formato ni HTML.</p>
+          <p class="campo-error" id="d-ex"></p>
+        </div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Guardar</button></div>
+      </form>
+    </dialog>
+    <p class="rotulo-estado">5 · Conflicto de versión (409 VERSION_DESACTUALIZADA): lo escrito se conserva</p>
+    <dialog class="dialogo dialogo-estatico cons-editor" open aria-labelledby="c-t">
+      <h2 id="c-t">Editar «Consentimiento para extracción dentaria»</h2>
+      <p class="dialogo-resumen">Se guarda como versión 4. Lo que ya se firmó con versiones anteriores no cambia.</p>
+      <p role="alert" class="aviso aviso-error">Otra persona guardó una versión nueva de esta plantilla mientras la editabas. Copiá tus cambios, cerrá y volvé a abrirla.</p>
+      <form class="cons-form" novalidate>
+        <div class="campo-suave">
+          <div class="campo-suave-cabecera"><label for="c-titulo">Título</label><span class="contador" id="c-ct"></span></div>
+          <input id="c-titulo" type="text" value="Consentimiento para extracción dentaria" data-contador="c-ct" data-limite="120" data-largo="39" aria-describedby="c-ct c-et" />
+          <p class="campo-error" id="c-et"></p>
+        </div>
+        <div class="campo-suave cons-texto-editor">
+          <div class="campo-suave-cabecera"><label for="c-texto">Texto del consentimiento</label><span class="contador" id="c-cx"></span></div>
+          <textarea id="c-texto" rows="16" data-contador="c-cx" data-limite="20000" data-largo="1108" aria-describedby="c-cx c-ayuda c-ex" placeholder="Escribí el texto que el paciente va a leer y aceptar.">Yo, el paciente que firma este documento, declaro que el profesional me explicó en lenguaje claro el tratamiento propuesto: la extracción de una pieza dentaria.
+
+Qué es el tratamiento
+La extracción consiste en retirar la pieza de su alvéolo con anestesia local. Puede requerir separar la pieza en partes o hacer una pequeña incisión en la encía.
+
+Riesgos y molestias posibles
+- Dolor, inflamación o hematoma durante algunos días.
+- Sangrado leve en las primeras horas.
+- Alveolitis (inflamación del alvéolo), que se trata en el consultorio.
+- Con menor frecuencia: sensibilidad en el labio o la lengua, que suele ser pasajera.
+
+Alternativas
+Me informaron las alternativas posibles, incluida la de no hacer el tratamiento, y sus consecuencias.
+
+Cuidados después
+Me comprometo a seguir las indicaciones escritas que me entrega el profesional y a consultar ante cualquier síntoma que me preocupe.
+
+Recibí una copia de las indicaciones escritas.
+
+Puedo hacer todas las preguntas que necesite antes de firmar y puedo revocar este consentimiento en cualquier momento antes del tratamiento, avisando al profesional.</textarea>
+          <p class="cons-ayuda" id="c-ayuda">Texto plano: se respetan los saltos de línea; no se aplica formato ni HTML.</p>
+          <p class="campo-error" id="c-ex"></p>
+        </div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Guardar</button></div>
+      </form>
+    </dialog>
+    <p class="rotulo-estado">6 · Cancelar con cambios sin guardar</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="x-t">
+      <h2 id="x-t">¿Descartar los cambios?</h2>
+      <p class="dialogo-resumen">Hay cambios sin guardar en la plantilla. ¿Descartarlos?</p>
+      <div class="dialogo-acciones"><button type="button" class="btn">Seguir editando</button><button type="button" class="btn btn-peligro">Descartar</button></div>
+    </dialog>
+    <p class="rotulo-estado">7 · Avisos después de guardar</p>
+    <div class="panel">
+      <p role="status" class="aviso aviso-ok">Plantilla creada.</p>
+      <p role="status" class="aviso aviso-ok">Plantilla guardada como versión 4.</p>
+      <p role="status" class="aviso aviso-info">No hubo cambios: la plantilla sigue en la versión 3.</p>
+    </div>
+    <p class="nota-mockup"><b>Mockup C-48.</b> Diálogo del editor de plantillas y sus estados, apilados para revisarlos juntos. El área de texto es grande, con el contador de 20.000 caracteres y sin recortar lo pegado. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

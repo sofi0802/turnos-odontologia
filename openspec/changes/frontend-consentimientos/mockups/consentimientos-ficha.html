@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pacientes · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="consentimientos.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="ana.ejemplo" data-rol="ODONTOLOGO" data-activa="pacientes">
+  <div class="pagina-ficha">
+    <h1 tabindex="-1">Pacientes</h1>
+    <section class="panel ficha-paciente" aria-labelledby="paciente-nombre">
+      <div class="ficha-paciente-datos">
+        <div>
+          <h2 class="ficha-paciente-nombre" id="paciente-nombre">Paciente Uno</h2>
+          <p class="ficha-paciente-dni">DNI 99000001</p>
+        </div>
+        <button type="button" class="btn">Cambiar de paciente</button>
+      </div>
+    </section>
+    <div class="nota-contexto">Odontograma (C-44), periodontograma (C-46) e imágenes y estudios (C-47), sin cambios</div>
+    <section class="panel ficha-seccion" aria-labelledby="t-cons">
+      <div class="ficha-seccion-cabecera">
+        <div>
+          <h2 id="t-cons">Consentimientos</h2>
+          <p class="cons-contador">2 firmados</p>
+        </div>
+        <div class="cons-cabecera-acciones"><button type="button" class="btn btn-principal" data-icono="firma">Firmar consentimiento</button></div>
+      </div>
+      <p role="status" class="aviso aviso-ok">Consentimiento firmado: Consentimiento para extracción dentaria, versión 3, a las 10:30.</p>
+      <ul class="cons-lista" aria-label="Consentimientos de Paciente Uno">
+        <li class="cons-fila">
+          <span class="cons-tipo" data-icono="documento"></span>
+          <div class="cons-datos">
+            <p class="cons-titulo"><span>Consentimiento para extracción dentaria</span><span class="etiqueta etiqueta-vigente">Vigente</span></p>
+            <p class="cons-meta">Versión 3 · Firmado el 24/11/2026 a las 10:30 · Ana Ejemplo</p>
+          </div>
+          <div class="cons-acciones">
+            <button type="button" class="btn" data-icono="ver" aria-label="Ver Consentimiento para extracción dentaria del 24/11/2026">Ver</button>
+            <button type="button" class="btn btn-peligro" aria-label="Revocar Consentimiento para extracción dentaria del 24/11/2026">Revocar</button>
+          </div>
+        </li>
+        <li class="cons-fila cons-fila-revocada">
+          <span class="cons-tipo" data-icono="documento"></span>
+          <div class="cons-datos">
+            <p class="cons-titulo"><span>Consentimiento para blanqueamiento</span><span class="etiqueta etiqueta-revocado">Revocado</span></p>
+            <p class="cons-meta">Versión 1 · Firmado el 01/10/2026 a las 16:05 · Ana Ejemplo</p>
+          </div>
+          <div class="cons-acciones">
+            <button type="button" class="btn" data-icono="ver" aria-label="Ver Consentimiento para blanqueamiento del 01/10/2026">Ver</button>
+            
+          </div>
+        </li>
+      </ul>
+    </section>
+    <p class="rotulo-estado">"Firmar consentimiento": elegir la plantilla activa</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="el-t">
+      <h2 id="el-t">Elegí el consentimiento</h2>
+      <p class="dialogo-resumen">Después se abre la pantalla de firma, que tapa la ficha: dásela al paciente para que lea y firme. Al terminar, el equipo queda bloqueado hasta que escribas tu contraseña.</p>
+      <p role="alert" class="aviso aviso-error"></p>
+      <form class="cons-form" novalidate>
+        <fieldset class="cons-opciones">
+          <legend class="solo-lectores">Plantillas activas</legend>
+          <label class="cons-opcion"><input type="radio" name="el-p" checked /><span class="cons-opcion-texto">Consentimiento para extracción dentaria<small>Versión 3</small></span></label>
+          <label class="cons-opcion"><input type="radio" name="el-p" /><span class="cons-opcion-texto">Consentimiento para tratamiento de conducto<small>Versión 1</small></span></label>
+        </fieldset>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Continuar</button></div>
+      </form>
+    </dialog>
+    <p class="nota-mockup"><b>Mockup C-48.</b> Odontólogo, después de desbloquear: sección "Consentimientos" después de "Imágenes y estudios", con un consentimiento vigente y uno revocado (el estado se lee en la etiqueta). Abajo, el diálogo para elegir la plantilla. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

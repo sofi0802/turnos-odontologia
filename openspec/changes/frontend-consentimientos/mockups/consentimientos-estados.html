@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pacientes · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="consentimientos.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="ana.ejemplo" data-rol="ODONTOLOGO" data-activa="pacientes">
+  <div class="pagina-ficha">
+    <h1 tabindex="-1">Pacientes</h1>
+
+    <p class="rotulo-estado">1 · Paciente sin consentimientos</p>
+    <section class="panel ficha-seccion" aria-labelledby="t-cons">
+      <div class="ficha-seccion-cabecera">
+        <div>
+          <h2 id="t-cons">Consentimientos</h2>
+          <p class="cons-contador">Ninguno firmado</p>
+        </div>
+        <div class="cons-cabecera-acciones"><button type="button" class="btn btn-principal" data-icono="firma">Firmar consentimiento</button></div>
+      </div>
+      <div class="estado-vacio chico"><p class="estado-vacio-texto">Todavía no hay consentimientos firmados.</p></div>
+    </section>
+
+    <p class="rotulo-estado">2 · Cargando</p>
+    <section class="panel ficha-seccion" aria-labelledby="t-c2"><h2 id="t-c2">Consentimientos</h2><p class="cargando" role="status">Cargando consentimientos…</p></section>
+
+    <p class="rotulo-estado">3 · Falla la carga (el resto de la ficha se sigue viendo)</p>
+    <section class="panel ficha-seccion" aria-labelledby="t-c3">
+      <h2 id="t-c3">Consentimientos</h2>
+      <p role="alert" class="aviso aviso-error">No pudimos cargar los consentimientos. Revisá la conexión e intentá de nuevo.</p>
+      <div><button type="button" class="btn btn-principal">Reintentar</button></div>
+    </section>
+
+    <p class="rotulo-estado">4 · Elegir plantilla: no hay plantillas activas</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="sp-t">
+      <h2 id="sp-t">Elegí el consentimiento</h2>
+      <p role="alert" class="aviso aviso-alerta">No hay plantillas activas. Pedile al administrador que cargue una en Configuración → Consentimientos.</p>
+      <div class="dialogo-acciones"><button type="button" class="btn btn-principal">Cerrar</button></div>
+    </dialog>
+
+    <p class="rotulo-estado">5 · Elegir plantilla: se desactivó antes de abrirla (404)</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="e2-t">
+      <h2 id="e2-t">Elegí el consentimiento</h2>
+      <p class="dialogo-resumen">Después se abre la pantalla de firma, que tapa la ficha: dásela al paciente para que lea y firme. Al terminar, el equipo queda bloqueado hasta que escribas tu contraseña.</p>
+      <p role="alert" class="aviso aviso-error">Esa plantilla ya no está disponible. Elegí otra.</p>
+      <form class="cons-form" novalidate>
+        <fieldset class="cons-opciones">
+          <legend class="solo-lectores">Plantillas activas</legend>
+          <label class="cons-opcion"><input type="radio" name="e2-p" checked /><span class="cons-opcion-texto">Consentimiento para extracción dentaria<small>Versión 3</small></span></label>
+          <label class="cons-opcion"><input type="radio" name="e2-p" /><span class="cons-opcion-texto">Consentimiento para tratamiento de conducto<small>Versión 1</small></span></label>
+        </fieldset>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Continuar</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">6 · Revocar: pide el motivo</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="r-t">
+      <h2 id="r-t">¿Revocar el consentimiento?</h2>
+      <p class="dialogo-resumen">Consentimiento para extracción dentaria, firmado el 24/11/2026. El documento no se borra ni cambia: queda como revocado, con tu nombre, la fecha y el motivo.</p>
+      <p role="alert" class="aviso aviso-error"></p>
+      <form class="cons-form" novalidate>
+        <div class="campo-suave">
+          <div class="campo-suave-cabecera"><label for="r-motivo">Motivo</label><span class="contador" id="r-c">0/200</span></div>
+          <textarea id="r-motivo" rows="3" aria-invalid="true" aria-describedby="r-c r-e" placeholder="Ej.: el paciente decidió no hacer el tratamiento"></textarea>
+          <p class="campo-error" id="r-e">Escribí el motivo de la revocación.</p>
+        </div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Volver</button><button type="submit" class="btn btn-peligro">Revocar</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">7 · Avisos después de revocar</p>
+    <section class="panel ficha-seccion" aria-label="Avisos de la revocación">
+      <p role="status" class="aviso aviso-ok">Consentimiento revocado.</p>
+      <p role="alert" class="aviso aviso-error">El consentimiento ya estaba revocado.</p>
+    </section>
+
+    <p class="rotulo-estado">8 · Ver: la verificación todavía no respondió</p>
+    <dialog class="dialogo dialogo-estatico cons-documento" open aria-labelledby="vv-t">
+      <h2 id="vv-t">Consentimiento para extracción dentaria</h2>
+      <div class="cons-doc-cuerpo">
+        <div class="cons-doc-principal">
+          <p class="cons-doc-etiquetas"><span class="etiqueta etiqueta-vigente">Vigente</span><span class="etiqueta etiqueta-firma">Firma electrónica</span><span class="etiqueta etiqueta-version">Versión 3</span></p>
+          
+          <dl class="cons-doc-datos">
+            <dt>Firmante</dt><dd>Paciente Uno</dd>
+            <dt>DNI</dt><dd>99000001</dd>
+            <dt>Firmado</dt><dd>24/11/2026 10:30</dd>
+            <dt>Profesional</dt><dd>Ana Ejemplo</dd>
+          </dl>
+        </div>
+          <aside class="cons-verificacion" aria-labelledby="vv-v">
+            <p class="cons-verif-estado" id="vv-v" role="status">Verificando…</p>
+            <p>Se recalcula el hash con los datos guardados.</p>
+          </aside>
+        <div class="cons-doc-principal">
+          <h3 class="solo-lectores">Texto firmado</h3>
+          <div class="cons-texto">Yo, el paciente que firma este documento, declaro que el profesional me explicó en lenguaje claro el tratamiento propuesto: la extracción de una pieza dentaria.
+
+Qué es el tratamiento
+La extracción consiste en retirar la pieza de su alvéolo con anestesia local. Puede requerir separar la pieza en partes o hacer una pequeña incisión en la encía.
+
+Riesgos y molestias posibles
+- Dolor, inflamación o hematoma durante algunos días.
+- Sangrado leve en las primeras horas.
+- Alveolitis (inflamación del alvéolo), que se trata en el consultorio.
+- Con menor frecuencia: sensibilidad en el labio o la lengua, que suele ser pasajera.
+
+Alternativas
+Me informaron las alternativas posibles, incluida la de no hacer el tratamiento, y sus consecuencias.
+
+Cuidados después
+Me comprometo a seguir las indicaciones escritas que me entrega el profesional y a consultar ante cualquier síntoma que me preocupe.
+
+Puedo hacer todas las preguntas que necesite antes de firmar y puedo revocar este consentimiento en cualquier momento antes del tratamiento, avisando al profesional.</div>
+          <details class="cons-evidencia">
+            <summary>Evidencia de la firma</summary>
+            <dl class="cons-doc-datos">
+              <dt>IP</dt><dd>192.0.2.10</dd>
+              <dt>Dispositivo</dt><dd>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36</dd>
+              <dt>Algoritmo</dt><dd>SHA-256 · formato 1</dd>
+              <dt>Hash</dt><dd class="cons-hash">3f9a7c1e5b2d4086a1c9e7f30b6d2a845e1c7f9b0a3d6e2c8f4b1a7d9e0c5b2f</dd>
+            </dl>
+          </details>
+        </div>
+      </div>
+      <div class="dialogo-acciones"><button type="button" class="btn btn-principal">Cerrar</button></div>
+    </dialog>
+
+    <p class="rotulo-estado">9 · Ver: falla la verificación (nunca se muestra "Íntegro" sin verificar)</p>
+    <dialog class="dialogo dialogo-estatico cons-documento" open aria-labelledby="vf-t">
+      <h2 id="vf-t">Consentimiento para extracción dentaria</h2>
+      <div class="cons-doc-cuerpo">
+        <div class="cons-doc-principal">
+          <p class="cons-doc-etiquetas"><span class="etiqueta etiqueta-vigente">Vigente</span><span class="etiqueta etiqueta-firma">Firma electrónica</span><span class="etiqueta etiqueta-version">Versión 3</span></p>
+          
+          <dl class="cons-doc-datos">
+            <dt>Firmante</dt><dd>Paciente Uno</dd>
+            <dt>DNI</dt><dd>99000001</dd>
+            <dt>Firmado</dt><dd>24/11/2026 10:30</dd>
+            <dt>Profesional</dt><dd>Ana Ejemplo</dd>
+          </dl>
+        </div>
+          <aside class="cons-verificacion" aria-labelledby="vf-v">
+            <p class="cons-verif-estado" id="vf-v">Sin verificar</p>
+            <p role="alert">No pudimos verificar el documento. Intentá de nuevo.</p>
+            <div><button type="button" class="btn">Verificar de nuevo</button></div>
+          </aside>
+        <div class="cons-doc-principal">
+          <h3 class="solo-lectores">Texto firmado</h3>
+          <div class="cons-texto">Yo, el paciente que firma este documento, declaro que el profesional me explicó en lenguaje claro el tratamiento propuesto: la extracción de una pieza dentaria.
+
+Qué es el tratamiento
+La extracción consiste en retirar la pieza de su alvéolo con anestesia local. Puede requerir separar la pieza en partes o hacer una pequeña incisión en la encía.
+
+Riesgos y molestias posibles
+- Dolor, inflamación o hematoma durante algunos días.
+- Sangrado leve en las primeras horas.
+- Alveolitis (inflamación del alvéolo), que se trata en el consultorio.
+- Con menor frecuencia: sensibilidad en el labio o la lengua, que suele ser pasajera.
+
+Alternativas
+Me informaron las alternativas posibles, incluida la de no hacer el tratamiento, y sus consecuencias.
+
+Cuidados después
+Me comprometo a seguir las indicaciones escritas que me entrega el profesional y a consultar ante cualquier síntoma que me preocupe.
+
+Puedo hacer todas las preguntas que necesite antes de firmar y puedo revocar este consentimiento en cualquier momento antes del tratamiento, avisando al profesional.</div>
+          <details class="cons-evidencia">
+            <summary>Evidencia de la firma</summary>
+            <dl class="cons-doc-datos">
+              <dt>IP</dt><dd>192.0.2.10</dd>
+              <dt>Dispositivo</dt><dd>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36</dd>
+              <dt>Algoritmo</dt><dd>SHA-256 · formato 1</dd>
+              <dt>Hash</dt><dd class="cons-hash">3f9a7c1e5b2d4086a1c9e7f30b6d2a845e1c7f9b0a3d6e2c8f4b1a7d9e0c5b2f</dd>
+            </dl>
+          </details>
+        </div>
+      </div>
+      <div class="dialogo-acciones"><button type="button" class="btn btn-principal">Cerrar</button></div>
+    </dialog>
+    <p class="nota-mockup"><b>Mockup C-48.</b> Estados de la sección en una sola página para revisarlos juntos. En la aplicación cada uno se ve por separado. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>
