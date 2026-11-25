@@ -196,7 +196,7 @@ describe('Estado de la caja', () => {
 
 describe('Grilla de la caja en el celular', () => {
   it('la columna única no crece con la tabla de la cuenta corriente (la tabla se desplaza en su panel)', () => {
-    const css = textoDeModulo('21-caja.css');
+    const css = textoDeModulo('22-caja.css');
     const antesDelEscritorio = css.slice(0, css.indexOf('@media'));
     const reglaBase = /\.caja-grilla\s*\{([^}]*)\}/.exec(antesDelEscritorio)?.[1] ?? '';
     const reglaPanel = /\.caja-grilla \.panel\s*\{([^}]*)\}/.exec(antesDelEscritorio)?.[1] ?? '';

@@ -44,7 +44,14 @@ class CoberturasExceptionHandler {
             Map.entry("cobertura_plan_porcentaje_valido", CoberturaException.datosInvalidos("porcentaje", "El porcentaje no es válido")),
             Map.entry("presupuesto_item_cantidad", CoberturaException.datosInvalidos("items", "La cantidad no es válida")),
             Map.entry("presupuesto_item_pieza_fdi", CoberturaException.datosInvalidos("items", "La pieza no está en la notación FDI")),
-            Map.entry("presupuesto_item_cara_", CoberturaException.datosInvalidos("items", "La cara no es válida para la pieza")));
+            Map.entry("presupuesto_item_cara_", CoberturaException.datosInvalidos("items", "La cara no es válida para la pieza")),
+            // C-20 (design D11): dos generaciones de la misma liquidación; lo cobrado y el motivo si la base los frena.
+            Map.entry("liquidacion_periodo_unico", new CoberturaException(CodigoCobertura.LIQUIDACION_EXISTENTE,
+                    "Ya existe la liquidación de esa obra social para el período")),
+            Map.entry("liquidacion_linea_cobrado", new CoberturaException(CodigoCobertura.MONTO_COBRADO_INVALIDO,
+                    "El monto cobrado no es válido")),
+            Map.entry("liquidacion_linea_motivo", new CoberturaException(CodigoCobertura.MOTIVO_REQUERIDO,
+                    "Una línea rechazada necesita un motivo")));
 
     @ExceptionHandler(CoberturaException.class)
     ProblemDetail cobertura(CoberturaException e) {

@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pacientes · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="imagenes.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="admin" data-rol="ADMIN" data-activa="pacientes">
+  <div class="pagina-ficha">
+    <h1 tabindex="-1">Pacientes</h1>
+
+    <section class="panel ficha-paciente" aria-labelledby="paciente-nombre">
+      <div class="ficha-paciente-datos">
+        <div>
+          <h2 class="ficha-paciente-nombre" id="paciente-nombre">Paciente Uno</h2>
+          <p class="ficha-paciente-dni">DNI 99000001</p>
+        </div>
+        <button type="button" class="btn">Cambiar de paciente</button>
+      </div>
+      <p class="aviso aviso-info">Solo lectura: la ficha clínica la edita el odontólogo.</p>
+    </section>
+
+    <div class="nota-contexto">Odontograma (C-44) y periodontograma (C-46), sin cambios</div>
+
+    <section class="panel ficha-seccion" aria-labelledby="t-imagenes">
+      <div class="ficha-seccion-cabecera">
+        <div>
+          <h2 id="t-imagenes">Imágenes y estudios</h2>
+          <p class="img-contador">2 vigentes · 1 anulada</p>
+        </div>
+      </div>
+
+      <div class="img-filtros" role="group" aria-label="Filtros de las imágenes">
+        <div class="campo">
+          <label for="f-pieza">Pieza</label>
+          <select id="f-pieza"><option>Todas las piezas</option><option>36</option></select>
+        </div>
+        <label class="img-check"><input type="checkbox" checked /> Mostrar anuladas</label>
+      </div>
+
+      <ul class="img-lista" aria-label="Imágenes y estudios de Paciente Uno">
+        <li class="img-fila">
+          <span class="img-tipo" data-icono="imagen"></span>
+          <div class="img-datos">
+            <p class="img-titulo"><span>Radiografía</span><span class="etiqueta">Pieza 36</span></p>
+            <p class="img-meta">Tomada el 30/11/2026 · Cargó Ana Ejemplo · JPEG, 312 KB</p>
+            <p class="img-descripcion">Control de la endodoncia</p>
+          </div>
+          <div class="img-acciones">
+            <button type="button" class="btn" data-icono="ver" aria-label="Ver radiografía de la pieza 36 del 30/11/2026">Ver</button>
+            <button type="button" class="btn" data-icono="descarga" aria-label="Descargar radiografía de la pieza 36 del 30/11/2026">Descargar</button>
+          </div>
+        </li>
+        <li class="img-fila img-fila-anulada">
+          <span class="img-tipo" data-icono="imagen"></span>
+          <div class="img-datos">
+            <p class="img-titulo"><span>Fotografía</span><span class="etiqueta">Pieza 36</span><span class="etiqueta etiqueta-anulada">Anulada</span></p>
+            <p class="img-meta">Tomada el 30/11/2026 · Cargó Ana Ejemplo · PNG, 1,1 MB</p>
+            <p class="img-anulacion">Anulada por Bruno Prueba el 30/11/2026 a las 17:20: Duplicada</p>
+          </div>
+          <div class="img-acciones">
+            <button type="button" class="btn" data-icono="ver" aria-label="Ver fotografía anulada de la pieza 36 del 30/11/2026">Ver</button>
+            <button type="button" class="btn" data-icono="descarga" aria-label="Descargar fotografía anulada de la pieza 36 del 30/11/2026">Descargar</button>
+          </div>
+        </li>
+        <li class="img-fila">
+          <span class="img-tipo img-tipo-pdf" data-icono="documento"></span>
+          <div class="img-datos">
+            <p class="img-titulo"><span>Estudio</span><span class="etiqueta">PDF</span></p>
+            <p class="img-meta">Tomado el 01/10/2026 · Cargó Ana Ejemplo · PDF, 840 KB</p>
+          </div>
+          <div class="img-acciones">
+            <button type="button" class="btn" data-icono="descarga" aria-label="Descargar estudio del 01/10/2026">Descargar</button>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <p class="nota-mockup"><b>Mockup C-47.</b> Administrador: ve, filtra y descarga, sin "Cargar imagen" ni "Anular". Con "Mostrar anuladas", la anulada se marca con la etiqueta, el texto tachado, el borde punteado y quién la anuló, cuándo y por qué. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

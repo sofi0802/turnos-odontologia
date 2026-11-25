@@ -72,6 +72,16 @@
 | PA-40 | ¿Con qué precio se liquida? *(2026-11-24, C-20)* | El del **cargo de caja del turno** (C-22) si existe; si no, el precio vigente al generar, guardado como copia | RN-LQ-03 |
 | PA-41 | ¿CSV, PDF o los dos? *(2026-11-24, C-20)* | **CSV** en C-20; el PDF queda para después | RN-LQ-05 |
 | PA-42 | ¿Se reabre una liquidación presentada? *(2026-11-24, C-20)* | **No**; se corrige en la del mes siguiente | RN-LQ-04 |
+| PA-43 | ¿Quién inicia la firma de un consentimiento? *(2026-11-24, C-27; confirmada por Emanuel)* | **solo el `ODONTOLOGO`** vinculado a un profesional, con su sesión; el `ADMIN` solo ve y verifica | RN-CL-10 |
+| PA-44 | ¿Quién ve las plantillas? *(2026-11-24, C-27; confirmada por Emanuel)* | el `ADMIN` todas con sus versiones; el odontólogo solo las activas; la recepción y el paciente no | RN-CL-09 |
+| PA-45 | ¿Quién registra la revocación y se vuelve a confirmar la identidad del paciente? *(2026-11-24, C-27; confirmada por Emanuel)* | la registra **el odontólogo** con un motivo, **sin** volver a pedir el DNI; queda su profesional como responsable | RN-CL-11 |
+| PA-46 | ¿El nombre y el DNI escritos tienen que coincidir con la ficha? *(2026-11-24, C-27; confirmada por Emanuel)* | el **DNI sí**, sin puntos ni espacios (`FIRMANTE_NO_COINCIDE`); el **nombre no** se compara y se guarda como lo escribió | RN-CL-10 |
+| PA-47 | ¿Puede firmar un representante (menor de edad o persona con capacidad restringida)? *(2026-11-24, C-27; confirmada por Emanuel)* | **no en C-27**; firma solo el propio paciente y el representante queda para un change futuro | C-27 |
+| PA-48 | ¿Qué hash y qué sello? *(2026-11-24, C-27; confirmada por Emanuel)* | **SHA-256** sobre el contenido canónico con longitudes (formato 1), sin HMAC ni sellado de tiempo de un tercero | DD-20 |
+| PA-49 | ¿Cómo se toma la IP detrás de un proxy? *(2026-11-24, C-27; confirmada por Emanuel)* | la que ve el servidor (`getRemoteAddr`), sin confiar en `X-Forwarded-For`; configurar `forward-headers-strategy` con proxies de confianza es global y queda para el despliegue | despliegue |
+| PA-50 | ¿La firma se asocia a un turno? *(2026-11-24, C-27; confirmada por Emanuel)* | **no**; solo al paciente y a la versión de la plantilla | C-27 |
+| PA-51 | ¿Una plantilla se puede desactivar y qué pasa si se edita sin cambios? *(2026-11-24, C-27; confirmada por Emanuel)* | **sí** se desactiva y se reactiva, nunca se borra; una edición sin cambios no crea versión y responde `200` | RN-CL-09 |
+| PA-52 | ¿Hace falta un endpoint de verificación y quién lo usa? ¿El paciente recibe una copia? *(2026-11-24, C-27; confirmada por Emanuel)* | **sí**, lo usan el `ADMIN` y el odontólogo; el paciente **no** recibe copia por email ni WhatsApp en C-27 | RN-CL-11 y C-48 |
 
 ## Puntos "No evidenciado" del Discovery
 

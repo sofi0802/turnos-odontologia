@@ -18,6 +18,11 @@ export type NombreIcono =
   | 'volver'
   | 'pacientes'
   | 'reportes'
+  | 'imagen'
+  | 'documento'
+  | 'descarga'
+  | 'ver'
+  | 'subir'
   | 'caja';
 
 type Trazo = readonly [etiqueta: 'path' | 'rect' | 'circle', atributos: Readonly<Record<string, string>>];
@@ -61,6 +66,22 @@ const TRAZOS: Readonly<Record<NombreIcono, readonly Trazo[]>> = {
   ],
   // C-32: "Reportes", barras de un gráfico.
   reportes: [['path', { d: 'M4 20V10M10 20V4M16 20v-7M21 20H3' }]],
+  // C-47: imágenes y estudios de la ficha.
+  imagen: [
+    ['rect', { x: '3', y: '4', width: '18', height: '16', rx: '2' }],
+    ['circle', { cx: '9', cy: '10', r: '2' }],
+    ['path', { d: 'M21 16l-5-5-9 9' }],
+  ],
+  documento: [
+    ['path', { d: 'M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z' }],
+    ['path', { d: 'M14 3v5h5M9 13h6M9 17h6' }],
+  ],
+  descarga: [['path', { d: 'M12 4v11M7 10l5 5 5-5M5 20h14' }]],
+  ver: [
+    ['path', { d: 'M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z' }],
+    ['circle', { cx: '12', cy: '12', r: '3' }],
+  ],
+  subir: [['path', { d: 'M12 20V9M7 14l5-5 5 5M5 4h14' }]],
   // C-22: "Caja", una caja registradora.
   caja: [['rect', { x: '3', y: '7', width: '18', height: '13', rx: '2' }], ['path', { d: 'M3 11h18M8 7V4h8v3M12 15h.01' }]],
 };

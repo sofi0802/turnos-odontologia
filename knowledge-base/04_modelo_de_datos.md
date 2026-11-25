@@ -8,7 +8,7 @@
 | **Agenda** | Turnos, bloqueos, sobreturnos y la verificación de solapamiento con margen |
 | **Pacientes** | Datos de contacto y preferencia de canal |
 | **Notificaciones** | Recordatorios y confirmaciones por WhatsApp o email |
-| **Clínica** | Ficha básica, odontograma y periodontograma (C-25) |
+| **Clínica** | Ficha básica, odontograma y periodontograma (C-25); imágenes (C-26); plantillas y consentimientos firmados (C-27) |
 | **Coberturas** | Obras sociales y prepagas, sus planes, el nomenclador de prácticas y la afiliación de cada paciente (C-18); aranceles, cobertura por plan y presupuestos con copago (C-19); liquidaciones mensuales a cada obra social y su conciliación (C-20) |
 | **Caja** [2026-11-24, C-22, en revisión] | Caja diaria con apertura, cierre y arqueo, cargos por turno atendido y cobros (C-22) |
 | **Seguridad y auditoría** | Usuarios del personal, roles, registro de cambios en turnos |
@@ -26,7 +26,8 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
                     ├──1─ Sillon
                     ├──1─ Paciente ─1──0..1─ FichaClinica ─1──*─ OdontogramaRegistro
                     │              ├─1──*─ PeriodontogramaVersion ─1──*─ PeriodontogramaPieza ─1──*─ PeriodontogramaSitio
-                    │              └─1──*─ ImagenClinica   (C-26; el archivo va al almacén, DD-17)
+                    │              ├─1──*─ ImagenClinica   (C-26; el archivo va al almacén, DD-17)
+                    │              └─1──*─ ConsentimientoFirmado ─1──0..1─ ConsentimientoRevocacion   (C-27)
                     ├──*─ Notificacion
                     └──*─ TurnoAuditoria
 
@@ -41,6 +42,7 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
  Plan ─1──*─ CoberturaPlan ─*──1─ Nomenclador   (porcentaje cubierto, C-19)
  Paciente ─1──*─ Presupuesto ─1──*─ PresupuestoItem ─*──1─ Prestacion   (C-19)
  ObraSocial ─1──*─ Liquidacion ─1──*─ LiquidacionLinea ─0..1──1─ Turno (ATENDIDO)   (C-20)
+ PlantillaConsentimiento ─1──*─ PlantillaConsentimientoVersion ─1──*─ ConsentimientoFirmado   (C-27; el firmado guarda su copia del texto)
  Usuario(PACIENTE) ─1──1─ Paciente
 ```
 
@@ -131,6 +133,25 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
 - **Anulación**: `anulada_en` timestamptz, `anulada_por` FK a profesional, `motivo_anulacion` varchar(200). Las tres son nulas o están todas.
 - No se borra ni se modifica. Lo único que se registra después de la carga es la anulación, una sola vez (RN-CL-08). Cuelga del paciente, como el odontograma y el periodontograma.
 
+### PlantillaConsentimiento [2026-11-24, C-27]
+- `id` BIGINT identity, `activa` boolean, `creada_en` timestamptz, `creada_por` FK a `usuario` (el `ADMIN`).
+- Lo único que cambia es `activa`. No se borra (RN-CL-09). El título y el texto viven en sus versiones.
+
+### PlantillaConsentimientoVersion [2026-11-24, C-27]
+- `id` BIGINT identity, `plantilla_id` FK, `numero` integer (1, 2, 3…; único por plantilla), `titulo` text (1–120), `texto` text plano (1–20 000), `creada_en` timestamptz, `creada_por` FK a `usuario`.
+- Solo agregado: no se modifica ni se borra (trigger). Cada edición de la plantilla crea una fila nueva (RN-CL-09).
+
+### ConsentimientoFirmado [2026-11-24, C-27]
+- **Identidad y autoría**: `id` BIGINT identity, `paciente_id` FK, `plantilla_version_id` FK (la versión firmada), `profesional_id` FK (la sesión del odontólogo que inició la firma).
+- **Copia del documento**: `titulo` y `texto`, copiados de la versión al firmar.
+- **Firmante y evidencia**: `firmante_nombre` text (3–200, como lo escribió), `firmante_dni` text (7 u 8 dígitos, igual al del paciente), `firmado_en` timestamptz (del servidor, en microsegundos), `ip_origen` text (la IP como la ve el servidor), `dispositivo` text (User-Agent, hasta 512, puede ser vacío).
+- **Integridad**: `tipo_firma` (`ELECTRONICA`), `formato_canonico` smallint (1), `hash_algoritmo` (`SHA-256`), `hash` char(64) en hexadecimal sobre el contenido canónico (DD-20).
+- Bloqueado: no se modifica ni se borra, sin excepciones (trigger; RN-CL-11). La revocación va en otra tabla.
+
+### ConsentimientoRevocacion [2026-11-24, C-27]
+- `id` BIGINT identity, `consentimiento_id` FK **único** (una sola revocación), `revocado_en` timestamptz, `revocado_por` FK a profesional, `motivo` text (1–200, no en blanco).
+- Solo agregado: no se modifica ni se borra (trigger). No entra en el hash del documento (RN-CL-11).
+
 ### ObraSocial [2026-11-24, C-18]
 - `id` BIGINT identity, `nombre` varchar(120) (único, sin distinguir mayúsculas), `sigla` varchar(20) (nullable), `tipo` enum (`OBRA_SOCIAL`, `PREPAGA`), `activa` boolean.
 - Es un catálogo como los de C-04: se da de alta, se edita y se activa o desactiva, pero no se borra (RN-OS-01).
@@ -188,12 +209,12 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
 - Constraints: `importe > 0`; si `anulado`, `anulado_por`, `anulado_en` y `motivo_anulacion` obligatorios (RN-CA-07). La suma de los cobros no anulados de un cargo no supera su `copago` (en el servicio, con bloqueo del cargo; RN-CA-04).
 - No se borra: se anula.
 
-### Liquidacion [2026-11-24, C-20, en revisión]
+### Liquidacion [2026-11-24, C-20]
 - `id` BIGINT identity, `obra_social_id` FK, `periodo` date (el día 1 del mes liquidado), `estado` enum (`BORRADOR`, `PRESENTADA`, `CERRADA`), `total_solicitado` y `total_cobrado` numeric(12,2), `generada_en`, `presentada_en` y `cerrada_en` timestamptz (las dos últimas nullable).
 - Constraints: `UNIQUE (obra_social_id, periodo)` (una liquidación por obra social y mes, RN-LQ-02) y `periodo` siempre el día 1.
 - No se borra. Una vez `PRESENTADA` sus líneas no cambian; solo se registra lo cobrado (RN-LQ-04, RN-LQ-06).
 
-### LiquidacionLinea [2026-11-24, C-20, en revisión]
+### LiquidacionLinea [2026-11-24, C-20]
 - `id` BIGINT identity, `liquidacion_id` FK, `turno_id` FK (único: un turno se liquida una sola vez), `paciente_id` FK, `plan_id` FK.
 - Copia del momento en que se generó (como DD-15): `fecha` (la del turno), nombre y DNI del paciente, `numero_afiliado`, nombre del plan, `nomenclador_id` y código, nombre de la prestación, `precio` y `porcentaje`, y `monto_solicitado` numeric(12,2).
 - Conciliación (RN-LQ-06): `monto_cobrado` numeric(12,2) nullable, `resultado` enum nullable (`COBRADA`, `PARCIAL`, `RECHAZADA`) y `motivo_rechazo` varchar(200) nullable.

@@ -73,6 +73,8 @@ function apiControlada(): { api: ClienteApi; pedir: string[]; responder(ruta: st
     crear: noUsada,
     actualizar: noUsada,
     borrar: noUsada,
+    enviarFormulario: noUsada,
+    obtenerArchivo: noUsada,
     obtener: <T>(ruta: string) =>
       new Promise<T | undefined>((resolver) => {
         pedir.push(ruta);
@@ -378,6 +380,8 @@ describe('Falla de la búsqueda', () => {
       crear: () => Promise.reject(falla),
       actualizar: () => Promise.reject(falla),
       borrar: () => Promise.reject(falla),
+      enviarFormulario: () => Promise.reject(falla),
+      obtenerArchivo: () => Promise.reject(falla),
     });
     sesionVencida.mockReturnValue(true);
 
@@ -395,6 +399,8 @@ describe('Falla de la búsqueda', () => {
       crear: () => Promise.reject(falla),
       actualizar: () => Promise.reject(falla),
       borrar: () => Promise.reject(falla),
+      enviarFormulario: () => Promise.reject(falla),
+      obtenerArchivo: () => Promise.reject(falla),
     });
 
     await buscarYEsperar('fict');

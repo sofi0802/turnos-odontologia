@@ -5,8 +5,8 @@
 | Actor | Descripción | Cómo interactúa |
 |---|---|---|
 | **Recepcionista o secretaria** (`RECEPCIONISTA`) | Personal administrativo del consultorio | Panel web: carga, mueve y cancela turnos; carga sobreturnos; registra la llegada y la ausencia de los pacientes (RN-AG-17, RN-AG-20); administra los datos de contacto de los pacientes |
-| **Odontólogo** (`ODONTOLOGO`) | Profesional que atiende | Panel web: ve **solo** su agenda (RN-AG-18), bloquea horarios, carga sobreturnos, registra la ficha, el odontograma, el periodontograma y las imágenes |
-| **Administrador del consultorio** (`ADMIN`) | Dueño o encargado (puede ser el mismo odontólogo) | Panel web: configura profesionales, sillones, prestaciones y usuarios |
+| **Odontólogo** (`ODONTOLOGO`) | Profesional que atiende | Panel web: ve **solo** su agenda (RN-AG-18), bloquea horarios, carga sobreturnos, registra la ficha, el odontograma, el periodontograma y las imágenes; inicia la firma de los consentimientos del paciente en el consultorio [2026-11-24, C-27] |
+| **Administrador del consultorio** (`ADMIN`) | Dueño o encargado (puede ser el mismo odontólogo) | Panel web: configura profesionales, sillones, prestaciones y usuarios; edita las plantillas de consentimiento [2026-11-24, C-27] |
 | **Paciente** (`PACIENTE`, cuenta propia, no es personal) | Persona que se atiende | Con **su cuenta**: reserva, ve sus turnos, cancela o reprograma con el número de reserva (RN-AG-07, RN-RO-08). Sin cuenta: confirma desde el link del recordatorio o llama al consultorio, que valida DNI y número de reserva |
 | **Sistema de notificaciones** (actor técnico) | Tarea programada | Envía recordatorios por WhatsApp o email y procesa las confirmaciones |
 
@@ -37,11 +37,13 @@ C = crear, R = leer, U = modificar, D = eliminar o desactivar. "Propio" = solo s
 | Ficha clínica y odontograma | R | **—** | CRUD | — |
 | Periodontograma (RN-CL-04) [2026-11-24] | R | **—** | C y R (cada carga es una versión nueva; no se edita ni se borra) | — |
 | Imágenes y radiografías (RN-CL-07, RN-CL-08) [2026-11-24, C-26] | R | **—** | C, R y anular con motivo (no se edita ni se borra) | — |
+| Plantillas de consentimiento (RN-CL-09) [2026-11-24, C-27] | CRUD sin borrar (cada edición es una versión nueva; desactiva y reactiva) | **—** (PA-44) | R (solo las activas) | **—** |
+| Consentimientos firmados (RN-CL-10, RN-CL-11) [2026-11-24, C-27] | R y verificar | **—** | C (inicia la firma del paciente en el consultorio), R, verificar y registrar la revocación con motivo (no se edita ni se borra) | **—** |
 | Obras sociales, planes y nomenclador (RN-OS-01) [2026-11-24, C-18] | CRUD (sin borrar) | R | R | — |
 | Afiliación del paciente (RN-OS-02) [2026-11-24, C-18] | CRUD (sin borrar) | CRUD (sin borrar; la carga al dar de alta o al atender al paciente) | R | R propia, en "Mi cuenta" (PA-21) |
 | Aranceles y cobertura por plan (RN-PR-01, RN-PR-02) [2026-11-24, C-19] | CRUD (sin borrar) | R | R | — |
 | Presupuesto (RN-PR-04 a RN-PR-06) [2026-11-24, C-19] | R | R, sin pieza ni cara (PA-24) | C y R, y cambia el estado | R propios, en "Mi cuenta" (PA-27) |
-| Liquidación a obras sociales y conciliación (RN-LQ-02 a RN-LQ-06) [2026-11-24, C-20, en revisión] | CRUD (sin borrar) y descarga | — (PA-39) | — | — |
+| Liquidación a obras sociales y conciliación (RN-LQ-02 a RN-LQ-06) [2026-11-24, C-20] | CRUD (sin borrar) y descarga | — (PA-39) | — | — |
 | Reportes: ocupación, origen, ausencias y cancelaciones (RN-RE-01) [2026-11-24, C-32, en revisión] | R (todo el consultorio) | R (todo el consultorio; PA-29) | **—** (su agenda sigue en RN-AG-18) | **—** |
 | Caja, cobros y cuenta corriente del paciente (RN-CA-01) [2026-11-24, C-22, en revisión] | R, y anula cobros con motivo (RN-CA-07) | C y R: abre la caja, cobra y la cierra (PA-32) | **—** | **—** |
 

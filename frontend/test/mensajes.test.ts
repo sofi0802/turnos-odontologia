@@ -114,6 +114,18 @@ describe('Mensajes de rechazo de la reprogramación', () => {
   );
 });
 
+describe('Mensajes de las imágenes clínicas (C-47)', () => {
+  it.each([
+    ['TIPO_ARCHIVO_NO_PERMITIDO', 'Solo se aceptan archivos JPEG, PNG o PDF.'],
+    ['ARCHIVO_DEMASIADO_GRANDE', 'El archivo supera los 10 MB.'],
+    ['IMAGEN_YA_ANULADA', 'La imagen ya estaba anulada.'],
+  ])('%s tiene su mensaje propio', (codigo, mensaje) => {
+    expect(MENSAJES_POR_CODIGO[codigo]).toBe(mensaje);
+    expect(mensajeDeError(new ErrorValidacion('detalle del servidor', codigo))).toBe(mensaje);
+    expect(mensajeDeError(new ErrorNegocio(codigo, 'detalle del servidor'))).toBe(mensaje);
+  });
+});
+
 describe('Mensajes de configuración del consultorio (C-34)', () => {
   it.each([
     ['MATRICULA_DUPLICADA', 'Ya existe un profesional con esa matrícula.'],

@@ -40,17 +40,20 @@ export interface ErrorCampo {
   readonly mensaje: string;
 }
 
-/** Respuesta 422: los datos enviados no son válidos. */
+/** Respuesta 422 (o 413, archivo demasiado grande): los datos enviados no son válidos. */
 export class ErrorValidacion extends ErrorApi {
   readonly codigo: string | null;
   readonly detalle: string;
   readonly errores: readonly ErrorCampo[];
+  /** 422, o 413 si el servidor cortó el pedido por el tamaño del archivo (C-47). */
+  readonly estado: number;
 
-  constructor(detalle: string, codigo: string | null, errores: readonly ErrorCampo[] = []) {
+  constructor(detalle: string, codigo: string | null, errores: readonly ErrorCampo[] = [], estado = 422) {
     super(detalle || 'Los datos enviados no son válidos.');
     this.codigo = codigo;
     this.detalle = detalle;
     this.errores = errores;
+    this.estado = estado;
   }
 }
 

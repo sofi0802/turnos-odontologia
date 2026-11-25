@@ -166,7 +166,7 @@ Diferencias encontradas:
 
 - **Mayor, corregida**: a 390 px la tabla de la cuenta corriente ensanchaba la página (485 px) en vez de desplazarse
   dentro de su panel. `.caja-grilla` y `.caja-grilla .panel` usaban una columna implícita `auto`; ahora usan
-  `minmax(0, 1fr)` (`21-caja.css`). Venía del `delta.css` del mockup y no se veía con los datos cortos de las capturas.
+  `minmax(0, 1fr)` (`22-caja.css`). Venía del `delta.css` del mockup y no se veía con los datos cortos de las capturas.
 - **Menor, corregida**: faltaban las ayudas "El efectivo con el que arranca el día." y "Podés cobrar una parte; lo que
   falta queda como deuda." (ahora enlazadas con `aria-describedby`).
 - **Menor, corregida**: la columna "Turno" de la cuenta corriente mostraba "martes 24/11 09:00"; ahora "24/11".

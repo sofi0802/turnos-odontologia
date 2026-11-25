@@ -1,0 +1,253 @@
+/* C-47: imágenes y estudios de la ficha (design D9). Solo usa tokens de la Revision 5 del design system. */
+
+/* ---- Cabecera de la sección: título, contador y "Cargar imagen" ---- */
+.img-cabecera-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1);
+}
+
+.img-contador {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+/* ---- Filtros ---- */
+.img-filtros {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: var(--ds-espacio-2) var(--ds-espacio-3);
+  padding: var(--ds-espacio-2);
+  background: var(--ds-superficie-2);
+  border-radius: var(--ds-radio);
+}
+
+.img-filtros .campo {
+  margin: 0;
+  min-width: 11rem;
+}
+
+.img-check {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  min-height: var(--ds-alto-control);
+  font-size: var(--ds-texto-sm);
+  cursor: pointer;
+}
+
+.img-check input {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  accent-color: var(--ds-acento-600);
+}
+
+/* ---- Listado ---- */
+.img-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--ds-espacio-1);
+}
+
+.img-fila {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--ds-espacio-1) var(--ds-espacio-2);
+  align-items: start;
+  padding: var(--ds-espacio-2);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio);
+  background: var(--ds-superficie);
+}
+
+.img-tipo {
+  display: grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border-radius: var(--ds-radio);
+  background: var(--ds-acento-50);
+  color: var(--ds-acento-700);
+}
+
+.img-tipo .icono {
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+}
+
+.img-tipo-pdf {
+  background: var(--ds-info-fondo);
+  color: var(--ds-info);
+}
+
+.img-datos {
+  min-width: 0;
+  display: grid;
+  gap: var(--ds-espacio-0);
+}
+
+.img-titulo {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--ds-espacio-0) var(--ds-espacio-1);
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.img-meta {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.img-descripcion {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+
+.img-acciones {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1);
+}
+
+.img-acciones .btn {
+  min-height: var(--ds-alto-control);
+  flex: 1 1 0;
+  justify-content: center;
+}
+
+@media (min-width: 48rem) {
+  .img-fila {
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+  }
+
+  .img-acciones {
+    grid-column: auto;
+    justify-content: flex-end;
+  }
+
+  .img-acciones .btn {
+    flex: 0 0 auto;
+  }
+}
+
+/* Anulada: se lee por la etiqueta y el texto, no solo por el estilo. */
+.img-fila-anulada {
+  background: var(--ds-superficie-2);
+  border-style: dashed;
+}
+
+.img-fila-anulada .img-titulo span:first-child {
+  text-decoration: line-through;
+  text-decoration-thickness: 1px;
+}
+
+.etiqueta-anulada {
+  background: var(--ds-error-fondo);
+  color: var(--ds-error);
+}
+
+.img-anulacion {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-error);
+}
+
+/* ---- Visor de imágenes ---- */
+.img-visor {
+  inline-size: min(64rem, calc(100vw - 2 * var(--ds-espacio-2)));
+  max-inline-size: none;
+}
+
+.img-visor-marco {
+  display: grid;
+  place-items: center;
+  min-block-size: 12rem;
+  max-block-size: 70vh;
+  padding: var(--ds-espacio-1);
+  background: var(--ds-texto);
+  border-radius: var(--ds-radio);
+  overflow: auto;
+}
+
+.img-visor-marco img {
+  display: block;
+  max-inline-size: 100%;
+  max-block-size: calc(70vh - 2 * var(--ds-espacio-1));
+  object-fit: contain;
+}
+
+.img-visor-pie {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+/* ---- Diálogo de carga ---- */
+.img-form {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.img-form-fila {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+@media (min-width: 40rem) {
+  .img-form-fila {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.img-archivo {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  padding: var(--ds-espacio-3) var(--ds-espacio-2);
+  border: 2px dashed var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio-lg);
+  background: var(--ds-superficie-2);
+  text-align: center;
+  justify-items: center;
+}
+
+.img-archivo[aria-invalid='true'],
+.img-archivo.con-error {
+  border-color: var(--ds-error);
+  background: var(--ds-error-fondo);
+}
+
+.img-archivo .icono {
+  inline-size: 2rem;
+  block-size: 2rem;
+  color: var(--ds-acento-600);
+}
+
+/* El input del archivo queda oculto a la vista: el foco se muestra en su botón. */
+.img-archivo:focus-within label.btn {
+  outline: var(--ds-foco-ancho) solid var(--ds-foco-color);
+  outline-offset: var(--ds-foco-separacion);
+}
+
+.img-archivo-elegido {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  margin: 0;
+  font-weight: var(--ds-peso-medio);
+  overflow-wrap: anywhere;
+}
+
+.img-archivo-ayuda {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}

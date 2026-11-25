@@ -58,6 +58,10 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `backend/.../clinica/` periodontograma, imágenes, consentimientos, FHIR | Emanuel | V16, V17, V18 |
 | `frontend/` periodontograma en la ficha clínica (C-46) | Sofia (avisa a Enzo, dueño de `frontend/`) | — |
 | `frontend/` imágenes y radiografías en la ficha clínica (C-47) | Emanuel (avisa a Enzo, dueño de `frontend/`) | — |
+| `frontend/` consentimientos informados: plantillas y firma (C-48) | Emanuel (avisa a Enzo, dueño de `frontend/`) | — |
+| `frontend/` obras sociales y cobertura del paciente (C-49) | Juan Sebastián (avisa a Enzo, dueño de `frontend/`) | — |
+| `frontend/` aranceles y presupuestos (C-50) | Juan Sebastián (avisa a Enzo, dueño de `frontend/`) | — |
+| `frontend/` liquidaciones a obras sociales (C-51) | Juan Sebastián (avisa a Enzo, dueño de `frontend/`) | — |
 | `backend/.../sucursales/` (transversal) | Sofia | V19 |
 | `backend/.../integraciones/` Google Calendar, asistente IA | Juan Cruz | — |
 
@@ -112,8 +116,11 @@ v1.x
 
 Obras sociales, cobros y facturación
   C-04 + C-05 ── C-18 obras-sociales-y-planes      [Juan Sebastián]
+                   │     └── C-49 frontend-obras-sociales [Juan Sebastián]   ← + C-34, C-44; C-18 hizo solo el backend
                    ├── C-19 presupuestos-y-cobertura [Juan Sebastián] ← + C-13
+                   │     ├── C-50 frontend-presupuestos [Juan Sebastián]   ← + C-49; C-19 hizo solo el backend
                    │     └── C-20 liquidaciones-obras-sociales [Juan Sebastián]
+                   │           └── C-51 frontend-liquidaciones [Juan Sebastián]   ← + C-49; C-20 hizo solo el backend
                    └── C-21 validacion-online-obras-sociales [Juan Sebastián]
   C-06 ───────── C-22 caja-y-cobros                [Enzo]
                    ├── C-23 senas-mercado-pago     [Enzo]   ← + C-10
@@ -125,6 +132,7 @@ Clínica avanzada (todas desde C-13)
          ├── C-26 imagenes-y-radiografias          [Emanuel]
          │     └── C-47 frontend-imagenes-y-radiografias [Emanuel]   ← + C-44; C-26 hace solo el backend
          ├── C-27 consentimientos-firma-electronica [Emanuel]
+         │     └── C-48 frontend-consentimientos   [Emanuel]   ← + C-44; C-27 hace solo el backend
          └── C-28 exportacion-hl7-fhir             [Emanuel]
 
 Escala, integraciones e inteligencia
@@ -230,8 +238,13 @@ GATE 9: C-19 ✓ + C-22 ✓                                       ← FORK
   → C-29 multisucursal                       [Agente A · Sofia]
   → C-31 asistente-ia-whatsapp               [Agente B · Juan Cruz]
   → C-20 liquidaciones-obras-sociales        [Agente B · Juan Sebastián]
+  → C-49 frontend-obras-sociales             [Agente C · Juan Sebastián — si C-18 ✓]
+  → C-50 frontend-presupuestos               [Agente C · Juan Sebastián — si C-19 ✓ y C-49 ✓]
+  → C-51 frontend-liquidaciones              [Agente C · Juan Sebastián — si C-20 ✓ y C-49 ✓]
+  (C-49 a C-51 tocan frontend/ y styles.css: un PR por vez, en este orden)
   → C-24 facturacion-electronica-arca        [Agente C · Enzo]
   → C-27 consentimientos-firma-electronica   [Agente B · Emanuel]
+  → C-48 frontend-consentimientos            [Agente C · Emanuel — si C-27 ✓]
 
 GATE 10: resto del post-MVP
   → C-28 exportacion-hl7-fhir                [Agente B · Emanuel]
@@ -286,8 +299,8 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 |---|---|---|
 | **Sofia Indovino** (líder) | **C-01** (OPSX), C-06, C-35, C-42, C-43, C-14 + revisión de todos los PR | C-15, C-16, C-25, C-29, C-46 |
 | **Juan Cruz** | C-03, C-08, C-11, C-33, C-37, C-38, C-39 | C-17, C-30, C-31 |
-| **Emanuel** | C-04, C-07, C-13, C-12, C-34, C-44 | C-26, C-47, C-27, C-28 |
-| **Juan Sebastián** | C-05, C-10, C-36 | C-18, C-19, C-20, C-21 |
+| **Emanuel** | C-04, C-07, C-13, C-12, C-34, C-44 | C-26, C-47, C-27, C-48, C-28 |
+| **Juan Sebastián** | C-05, C-10, C-36 | C-18, C-19, C-20, C-21, C-49, C-50, C-51 |
 | **Enzo** | C-02, C-09, C-40, C-41, C-45 | C-22, C-23, C-24, C-32 (backend y pantallas de administración) |
 
 ---
@@ -643,7 +656,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/components.html` (secciones "Reserva online" y "Formularios y avisos")
 
 ### [C-39] `frontend-uniformidad-visual`
-- **Estado**: `[ ]` en curso: cuatro etapas mergeadas, cada una con su PR: A tokens y CSS modular (PR #74, 2026-11-23), B barra lateral y componentes (PR #77, 2026-11-23; 471 tests), C pantallas del paciente (PR #79, 2026-11-24; 474 tests) y D pantallas del personal (PR #83, 2026-11-24; 484 tests), todas con mockups aprobados, y la etapa E, agenda semanal en grilla horaria (hecha en la rama `change/C-39-frontend-uniformidad-visual`, 2026-11-24; sin mockups previos por pedido del usuario; falta el PR). Falta el archive, con sus tareas A.5, 7.1 y 7.2, y que la líder renueve la aprobación del design system (Revision 3, sin cambios en los valores de los tokens). Proposal, specs, design y tasks en `openspec/changes/frontend-uniformidad-visual/`
+- **Estado**: `[ ]` en curso: cuatro etapas mergeadas, cada una con su PR: A tokens y CSS modular (PR #74, 2026-11-23), B barra lateral y componentes (PR #77, 2026-11-23; 471 tests), C pantallas del paciente (PR #79, 2026-11-24; 474 tests) y D pantallas del personal (PR #83, 2026-11-24; 484 tests), todas con mockups aprobados, y la etapa E, agenda semanal en grilla horaria (PR #95, 2026-11-24; sin mockups previos por pedido del usuario). Las 31 tareas están hechas (A.5, 7.1 y 7.2 cerradas el 2026-11-24: 952 tests, un test por cada uno de los 34 escenarios y `openspec validate --strict` válido), y la líder ya renovó la aprobación del design system (Revision 5). Falta solo el archive. Proposal, specs, design y tasks en `openspec/changes/frontend-uniformidad-visual/`
 - **Responsable**: Juan Cruz (avisa a Enzo)
 - **Scope**:
   - **Barra lateral desplegable** con los botones del menú ("Reservar turno", "Mis turnos", "Agenda", "Configuración"), que muestra solo las opciones del rol que ingresó. En el celular es un cajón con un botón de menú. Sin sesión se mantiene un encabezado simple con "Acceso personal" arriba a la derecha.
@@ -707,7 +720,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 
 
 ### [C-42] `frontend-turnos-sin-registrar`
-- **Estado**: `[x]` mergeado (2026-11-24, PR #85; mockups revisión 2 aprobados por la líder); falta archivarlo. Change `openspec/changes/frontend-turnos-sin-registrar/`. Evidencia: 495 tests y verificación contra el backend de desarrollo en `mockups/verify/`. Sin migración ni cambios de backend
+- **Estado**: `[x]` completo (2026-11-24, PR #85; mockups revisión 2 aprobados por la líder). Archivado en `openspec/changes/archive/2026-11-24-frontend-turnos-sin-registrar/`. Evidencia: 495 tests y verificación contra el backend de desarrollo en `mockups/verify/`. Sin migración ni cambios de backend
 - **Responsable**: Sofia Indovino
 - **Scope**:
   - En "Mis turnos" del paciente, un turno `RESERVADO` o `CONFIRMADO` cuyo horario ya terminó se muestra como **"Sin registrar"**, con el texto "El consultorio todavía no registró la asistencia.". Hoy queda como "Reservado" para siempre, porque nadie registra la asistencia.
@@ -786,7 +799,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 ## FASE 6: Entrega
 
 ### [C-14] `entrega-readme-y-evidencia`
-- **Estado**: `[x]` hecho (2026-11-24, ODD acordado con la líder, sin change de OpenSpec; PR pendiente de merge). README reproducible y verificación final en `docs/evidencia/c14-entrega.md`: 605 tests y 568 de integración en el backend, 547 en el frontend, sin secretos en el repo. Quedan los archives de OpenSpec de los changes mergeados (ver el documento)
+- **Estado**: `[x]` hecho (2026-11-24, ODD acordado con la líder, sin change de OpenSpec; mergeado en el PR #91). README reproducible y verificación final en `docs/evidencia/c14-entrega.md`: 605 tests y 568 de integración en el backend, 547 en el frontend, sin secretos en el repo. Quedan los archives de OpenSpec de los changes mergeados (ver el documento)
 - **Responsable**: Sofia Indovino
 - **Scope**:
   - `README.md` reproducible: requisitos (Java 21, opcional Docker o PostgreSQL), cómo correr `./gradlew test` (tests de dominio sin base) y los tests de integración.
@@ -881,7 +894,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `docs/discovery/informe-discovery.md` §A.3 (presupuestos)
 
 ### [C-20] `liquidaciones-obras-sociales`
-- **Estado**: `[ ]` KB propuesta el 2026-11-24 (dominio Liquidaciones: RN-LQ-01 a RN-LQ-08, US-049 y DD-19; se liquidan los turnos atendidos; PA-38 a PA-42 respondidas: el ADMIN elige el código si hay varios, solo el ADMIN las maneja, precio del cargo de caja de C-22, exportación CSV, no se reabre una presentada), en revisión con la líder; después va el propose
+- **Estado**: `[ ]` KB aprobada (2026-11-24, PR #120; dominio Liquidaciones: RN-LQ-01 a RN-LQ-08, US-049 y DD-19; se liquidan los turnos atendidos; PA-38 a PA-42 respondidas: el ADMIN elige el código si hay varios, solo el ADMIN las maneja, precio del cargo de caja de C-22, exportación CSV, no se reabre una presentada). Sigue el propose
 - **Responsable**: Juan Sebastián
 - **Scope**:
   - Liquidación mensual por obra social y plan, con exportación a PDF o CSV y conciliación de lo cobrado. **Migración V14**.
@@ -903,6 +916,68 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 - **Leer antes**:
   - `knowledge-base/02_descripcion_general.md` §Integraciones externas
   - `docs/discovery/sources/relevamiento-fuentes.md` §DentalTec
+
+### [C-49] `frontend-obras-sociales`
+- **Estado**: `[ ]` pendiente
+- **Responsable**: Juan Sebastián (avisa a Enzo, dueño de `frontend/`)
+- **Scope**:
+  - C-18 hizo el backend de obras sociales, planes, nomenclador y afiliaciones, pero ninguna pantalla lo usa.
+  - **Configuración** (solo `ADMIN`): una pestaña "Obras sociales" con las obras sociales y prepagas, sus planes y el nomenclador. Alta, edición, activar y desactivar; nada se borra. Sobre `/api/v1/obras-sociales`, `/{id}/planes` y `/api/v1/nomenclador`.
+  - **Ficha del paciente** (`#/pacientes`, C-44): la cobertura vigente o "Particular" y el historial de afiliaciones. El `ADMIN` y la recepción afilian, corrigen y cierran; el odontólogo solo lee. Sobre `/api/v1/pacientes/{id}/afiliaciones` y `/cobertura`.
+  - **Mi cuenta** (paciente): su cobertura vigente, solo lectura, sobre `/api/v1/paciente/cobertura` (PA-21).
+  - Muestra los errores de la API con su mensaje (`VIGENCIA_SUPERPUESTA`, `AFILIADO_DUPLICADO`, `PLAN_INACTIVO`, `OBRA_SOCIAL_INACTIVA`, `*_EXISTENTE`).
+  - Sin cambios de backend ni migraciones: usa la API tal como quedó. Si falta un endpoint, se agrega en un change de backend aparte.
+  - Cambio visual: modo `system-and-mockups`, mockups a 390 y 1440 px aprobados por la líder antes del apply.
+  - Ningún dato personal ni de salud en la URL, en `localStorage` ni en la consola (reglas duras 1 y 6).
+- **Dependencias**: `C-18`, `C-34`, `C-44`
+- **Governance**: MEDIO (datos personales)
+- **Leer antes**:
+  - `knowledge-base/05_reglas_de_negocio.md` §Coberturas (RN-OS-01 a RN-OS-07)
+  - `knowledge-base/06_funcionalidades.md` §US-046
+  - `openspec/specs/catalogo-coberturas/spec.md` y `openspec/specs/afiliaciones-pacientes/spec.md`
+  - `design-system/README.md` y `design-system/components.html`
+
+### [C-50] `frontend-presupuestos`
+- **Estado**: `[ ]` pendiente
+- **Responsable**: Juan Sebastián (avisa a Enzo, dueño de `frontend/`)
+- **Scope**:
+  - C-19 hizo el backend de aranceles, cobertura por plan y presupuestos, pero ninguna pantalla lo usa.
+  - **Configuración** (solo `ADMIN`): el precio particular de cada prestación y el porcentaje que cubre cada plan por código, sobre `/api/v1/aranceles` y `.../planes/{planId}/coberturas`.
+  - **Ficha del paciente**: una sección "Presupuestos". El odontólogo arma uno con las piezas sugeridas del odontograma (`/sugerencias`), elige la prestación y el código de cada ítem y ve el importe, la cobertura y el copago antes de emitir; después lo acepta o lo rechaza. Muestra los vencidos (RN-PR-05). El `ADMIN` solo lee; la recepción ve los presupuestos **sin pieza ni cara** (PA-24).
+  - **Mi cuenta** (paciente): sus presupuestos, solo lectura (PA-27).
+  - Muestra los errores de la API (`ARANCEL_INEXISTENTE`, `PRESTACION_INACTIVA`, `PRESUPUESTO_VENCIDO`, `PRESUPUESTO_CERRADO`, `CODIGO_NOMENCLADOR_REQUERIDO`).
+  - Sin cambios de backend ni migraciones: usa la API tal como quedó. Si falta un endpoint, se agrega en un change de backend aparte.
+  - Cambio visual: modo `system-and-mockups`, mockups a 390 y 1440 px aprobados por la líder antes del apply.
+  - Ningún dato personal ni de salud en la URL, en `localStorage` ni en la consola (reglas duras 1 y 6).
+- **Dependencias**: `C-19`, `C-49`
+- **Governance**: ALTO (datos de salud y dinero)
+- **Leer antes**:
+  - `knowledge-base/05_reglas_de_negocio.md` §Presupuestos (RN-PR-01 a RN-PR-07)
+  - `knowledge-base/06_funcionalidades.md` §US-047
+  - `openspec/changes/presupuestos-y-cobertura/specs/` (después del archive, `openspec/specs/aranceles-y-cobertura-planes/` y `presupuestos/`)
+  - `design-system/README.md` y `design-system/components.html`
+
+### [C-51] `frontend-liquidaciones`
+- **Estado**: `[ ]` pendiente
+- **Responsable**: Juan Sebastián (avisa a Enzo, dueño de `frontend/`)
+- **Scope**:
+  - C-20 hizo el backend de las liquidaciones a obras sociales, pero ninguna pantalla lo usa.
+  - **Pantalla "Liquidaciones"** (solo `ADMIN`, entrada propia en la barra lateral o dentro de Configuración, a decidir en el propose):
+    - lista por obra social y período, con estado y totales;
+    - generar para una obra social y un mes cerrado;
+    - en borrador: regenerar, quitar líneas y elegir el código de las líneas sin código;
+    - presentar, descargar el CSV, conciliar cada línea (cobrada, parcial o rechazada con motivo) y cerrar.
+  - Sobre `/api/v1/liquidaciones` y sus acciones. Muestra los errores de la API (`LIQUIDACION_EXISTENTE`, `PERIODO_NO_CERRADO`, `LIQUIDACION_VACIA`, `LINEA_SIN_CODIGO`, `CONCILIACION_INCOMPLETA`, `MONTO_COBRADO_INVALIDO`, `MOTIVO_REQUERIDO`).
+  - Sin cambios de backend ni migraciones: usa la API tal como quedó. Si falta un endpoint, se agrega en un change de backend aparte.
+  - Cambio visual: modo `system-and-mockups`, mockups a 390 y 1440 px aprobados por la líder antes del apply.
+  - Ningún dato personal ni de salud en la URL, en `localStorage` ni en la consola (reglas duras 1 y 6).
+- **Dependencias**: `C-20`, `C-49`
+- **Governance**: ALTO (dinero)
+- **Leer antes**:
+  - `knowledge-base/05_reglas_de_negocio.md` §Liquidaciones (RN-LQ-01 a RN-LQ-08)
+  - `knowledge-base/06_funcionalidades.md` §US-049
+  - `openspec/changes/liquidaciones-obras-sociales/specs/` (después del archive, en `openspec/specs/`)
+  - `design-system/README.md` y `design-system/components.html`
 
 ### [C-22] `caja-y-cobros`
 - **Estado**: `[x]` implementado (2026-11-24; KB en el PR #118, propuesta y mockups en el PR #121, apply en la rama `change/C-22-caja-y-cobros-apply`; el archive va en un PR aparte después del merge). Change `openspec/changes/caja-y-cobros/`: capabilities nuevas `caja`, `cobros-pacientes` y `frontend-caja`, y delta de `frontend-navegacion`. Migración V15. Evidencia: `docs/evidencia/c22-backend.txt` (853 unitarios y 985 de integración) y 793 tests del frontend; verificación visual en `design.md` (passed, con dos correcciones de la pantalla a 390 px y las ayudas de los importes)
@@ -948,7 +1023,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 > Los cuatro changes pueden ir en paralelo con el MVP completo. Todos tocan `clinica/` (dueño: Emanuel).
 
 ### [C-25] `periodontograma`
-- **Estado**: `[~]` implementado (2026-11-24, SDD; `openspec/changes/periodontograma/`, migración V16). PR pendiente de merge; después falta archivarlo
+- **Estado**: `[x]` completo (2026-11-24, SDD, PR #100; migración V16). Archivado en `openspec/changes/archive/2026-11-24-periodontograma/`
 - **Responsable**: Sofia Indovino (reasignado desde Emanuel el 2026-11-24; `clinica/` sigue siendo módulo de Emanuel, que revisa los cambios)
 - **Scope**:
   - Sondaje de 6 puntos por pieza (MV, V, DV, ML, L, DL), recesión, sangrado, placa, movilidad y furcación, con versiones por visita. **Migración V16**.
@@ -961,7 +1036,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/06_funcionalidades.md` §US-045, `knowledge-base/04_modelo_de_datos.md` §Periodontograma y `knowledge-base/09_decisiones_y_supuestos.md` §DD-13
 
 ### [C-46] `frontend-periodontograma`
-- **Estado**: `[~]` implementado (2026-11-24, SDD; `openspec/changes/frontend-periodontograma/`, design system Revision 5). PR pendiente, después del de C-25; después falta archivarlo
+- **Estado**: `[x]` completo (2026-11-24, SDD, PR #101; design system Revision 5). Archivado en `openspec/changes/archive/2026-11-24-frontend-periodontograma/`
 - **Responsable**: Sofia Indovino (avisa a Enzo, dueño de `frontend/`, y a Emanuel por la ficha clínica)
 - **Scope**:
   - C-25 hizo el backend del periodontograma, pero ninguna pantalla lo usa. Este change suma la interfaz sobre `POST/GET /api/v1/pacientes/{id}/periodontograma` y `GET .../{versionId}`, sin cambiar su contrato.
@@ -992,7 +1067,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/08_arquitectura_propuesta.md` §Seguridad
 
 ### [C-47] `frontend-imagenes-y-radiografias`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[~]` implementado (2026-11-24, SDD; propuesta y mockups en el PR #119, aprobados por Emanuel; apply en su PR; `openspec/changes/frontend-imagenes-y-radiografias/`). 949 tests del frontend y verificación visual en `mockups/verify/`. Falta la revisión de la líder y de Enzo, el merge y el archive
 - **Responsable**: Emanuel (avisa a Enzo, dueño de `frontend/`)
 - **Scope**:
   - C-26 hace el backend de las imágenes, pero ninguna pantalla lo usa. Este change suma la interfaz sobre `/api/v1/pacientes/{id}/imagenes`, sin cambiar su contrato.
@@ -1020,11 +1095,35 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 - **Scope**:
   - Plantillas de consentimiento informado y firma con hash, fecha, IP y dispositivo; documento bloqueado una vez firmado (Ley 25.506). **Migración V18**.
   - Tests: no se puede modificar un documento firmado; verificación del hash.
+  - **Decisiones de Emanuel (2026-11-24)**:
+    - **Solo backend**: API, dominio y migración. Las pantallas van en C-48.
+    - **Firma electrónica en el consultorio** (Ley 25.506 art. 5, no firma digital con certificado): en la computadora del consultorio, con la sesión del odontólogo, el paciente lee el texto, escribe su nombre y DNI y acepta. Se guardan el hash, la fecha, la IP y el dispositivo.
+    - **Plantillas editables por el `ADMIN`**, con una versión nueva por cada cambio. El documento firmado guarda su propia copia del texto.
+    - **Revocación con registro**: quién la registró, cuándo y el motivo. El documento firmado no cambia y su hash sigue verificando.
 - **Dependencias**: `C-13`
 - **Governance**: CRITICO (validez legal)
 - **Leer antes**:
   - `docs/discovery/sources/relevamiento-fuentes.md` §Bilog
   - `knowledge-base/05_reglas_de_negocio.md` §Clínica
+
+### [C-48] `frontend-consentimientos`
+- **Estado**: `[ ]` pendiente
+- **Responsable**: Emanuel (avisa a Enzo, dueño de `frontend/`)
+- **Scope**:
+  - C-27 hace el backend de los consentimientos, pero ninguna pantalla lo usa. Este change suma la interfaz, sin cambiar el contrato de la API.
+  - **Plantillas** (solo `ADMIN`): crear una plantilla y editarla (cada cambio es una versión nueva), y ver sus versiones.
+  - **Firma en el consultorio**: una sección "Consentimientos" en la ficha clínica de C-44 (`#/pacientes`). El odontólogo elige la plantilla y el paciente lee el texto, escribe su nombre y DNI y acepta.
+  - **Consulta**: los consentimientos firmados del paciente, con la verificación del hash, y la **revocación con motivo**.
+  - **Acceso**: según la matriz de roles que defina C-27. Ningún dato de salud en la URL, en `localStorage` ni en la consola (regla dura 6).
+  - Sin cambios de backend ni migraciones.
+  - Cambio visual: modo `system-and-mockups`, con mockups a 390 y 1440 px aprobados antes del apply.
+- **Dependencias**: `C-27`, `C-44`
+- **Governance**: CRITICO (validez legal de la firma)
+- **Leer antes**:
+  - `knowledge-base/05_reglas_de_negocio.md` §Clínica (las reglas de consentimientos que suma C-27)
+  - `knowledge-base/06_funcionalidades.md` §US-208
+  - la spec de consentimientos de C-27 (después del archive, en `openspec/specs/`) y `openspec/specs/frontend-ficha-clinica/spec.md`
+  - `design-system/README.md` y `design-system/components.html`
 
 ### [C-28] `exportacion-hl7-fhir`
 - **Estado**: `[ ]` pendiente
