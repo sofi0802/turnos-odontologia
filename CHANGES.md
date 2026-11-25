@@ -720,7 +720,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 
 
 ### [C-42] `frontend-turnos-sin-registrar`
-- **Estado**: `[x]` mergeado (2026-11-24, PR #85; mockups revisión 2 aprobados por la líder); falta archivarlo. Change `openspec/changes/frontend-turnos-sin-registrar/`. Evidencia: 495 tests y verificación contra el backend de desarrollo en `mockups/verify/`. Sin migración ni cambios de backend
+- **Estado**: `[x]` completo (2026-11-24, PR #85; mockups revisión 2 aprobados por la líder). Archivado en `openspec/changes/archive/2026-11-24-frontend-turnos-sin-registrar/`. Evidencia: 495 tests y verificación contra el backend de desarrollo en `mockups/verify/`. Sin migración ni cambios de backend
 - **Responsable**: Sofia Indovino
 - **Scope**:
   - En "Mis turnos" del paciente, un turno `RESERVADO` o `CONFIRMADO` cuyo horario ya terminó se muestra como **"Sin registrar"**, con el texto "El consultorio todavía no registró la asistencia.". Hoy queda como "Reservado" para siempre, porque nadie registra la asistencia.
@@ -799,7 +799,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 ## FASE 6: Entrega
 
 ### [C-14] `entrega-readme-y-evidencia`
-- **Estado**: `[x]` hecho (2026-11-24, ODD acordado con la líder, sin change de OpenSpec; PR pendiente de merge). README reproducible y verificación final en `docs/evidencia/c14-entrega.md`: 605 tests y 568 de integración en el backend, 547 en el frontend, sin secretos en el repo. Quedan los archives de OpenSpec de los changes mergeados (ver el documento)
+- **Estado**: `[x]` hecho (2026-11-24, ODD acordado con la líder, sin change de OpenSpec; mergeado en el PR #91). README reproducible y verificación final en `docs/evidencia/c14-entrega.md`: 605 tests y 568 de integración en el backend, 547 en el frontend, sin secretos en el repo. Quedan los archives de OpenSpec de los changes mergeados (ver el documento)
 - **Responsable**: Sofia Indovino
 - **Scope**:
   - `README.md` reproducible: requisitos (Java 21, opcional Docker o PostgreSQL), cómo correr `./gradlew test` (tests de dominio sin base) y los tests de integración.
@@ -1023,7 +1023,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 > Los cuatro changes pueden ir en paralelo con el MVP completo. Todos tocan `clinica/` (dueño: Emanuel).
 
 ### [C-25] `periodontograma`
-- **Estado**: `[~]` implementado (2026-11-24, SDD; `openspec/changes/periodontograma/`, migración V16). PR pendiente de merge; después falta archivarlo
+- **Estado**: `[x]` completo (2026-11-24, SDD, PR #100; migración V16). Archivado en `openspec/changes/archive/2026-11-24-periodontograma/`
 - **Responsable**: Sofia Indovino (reasignado desde Emanuel el 2026-11-24; `clinica/` sigue siendo módulo de Emanuel, que revisa los cambios)
 - **Scope**:
   - Sondaje de 6 puntos por pieza (MV, V, DV, ML, L, DL), recesión, sangrado, placa, movilidad y furcación, con versiones por visita. **Migración V16**.
@@ -1036,7 +1036,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/06_funcionalidades.md` §US-045, `knowledge-base/04_modelo_de_datos.md` §Periodontograma y `knowledge-base/09_decisiones_y_supuestos.md` §DD-13
 
 ### [C-46] `frontend-periodontograma`
-- **Estado**: `[~]` implementado (2026-11-24, SDD; `openspec/changes/frontend-periodontograma/`, design system Revision 5). PR pendiente, después del de C-25; después falta archivarlo
+- **Estado**: `[x]` completo (2026-11-24, SDD, PR #101; design system Revision 5). Archivado en `openspec/changes/archive/2026-11-24-frontend-periodontograma/`
 - **Responsable**: Sofia Indovino (avisa a Enzo, dueño de `frontend/`, y a Emanuel por la ficha clínica)
 - **Scope**:
   - C-25 hizo el backend del periodontograma, pero ninguna pantalla lo usa. Este change suma la interfaz sobre `POST/GET /api/v1/pacientes/{id}/periodontograma` y `GET .../{versionId}`, sin cambiar su contrato.
