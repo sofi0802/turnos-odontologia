@@ -108,7 +108,7 @@
   - logs, reconstrucción del backend, renovación de `node_modules` (`-V`), puertos ocupados y override local, y que la primera construcción tarda.
 
   Verificar siguiendo el README tal cual en una terminal nueva: los comandos corren como están escritos.
-- [ ] 5.2 Actualizar `.env.example` (solo nombres y valores de ejemplo, regla dura 4):
+- [x] 5.2 Actualizar `.env.example` (solo nombres y valores de ejemplo, regla dura 4):
   - aclarar que `DB_URL` y `DB_TEST_URL` son las del host;
   - aclarar que el compose reemplaza `DB_URL` e `IMAGENES_DIRECTORIO` dentro del contenedor y fija `VITE_API_BASE_URL` para el frontend.
 
