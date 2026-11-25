@@ -8,7 +8,7 @@
 
 ## 1. Preparación
 
-- [ ] 1.1 Avisar a Enzo (dueño de `frontend/`) y a Juan Sebastián (C-49 toca `configuracion.ts`, `permisos.ts`, `pacientes.ts`, `styles.css` y "Secciones según el rol"), y verificar que los avisos queden en la descripción del PR
+- [x] 1.1 Avisar a Enzo (dueño de `frontend/`) y a Juan Sebastián (C-49 toca `configuracion.ts`, `permisos.ts`, `pacientes.ts`, `styles.css` y "Secciones según el rol"), y verificar que los avisos queden en la descripción del PR
 - [x] 1.2 Coordinar con C-49 según design D2 (no es una dependencia):
   - antes del apply, ver si C-49 ya está mergeado en `master` y, si lo está, rebasar y resolver `configuracion.ts` ("Obras sociales" antes de "Consentimientos"), `permisos.ts` (los dos permisos), `pacientes.ts` (cabecera, Cobertura, odontograma, periodontograma, imágenes, Consentimientos), `styles.css` y `MODULOS`/`REGLAS_POR_MODULO` (22 y 23);
   - antes del archive, si C-49 ya se archivó, sumar "Obras sociales" al `MODIFIED` de "Secciones según el rol" (la lista del `ADMIN`, "sin las tres últimas" y el escenario "El odontólogo no ve Obras sociales"); si C-48 se archiva primero, dejarlo como está y avisarle a Juan Sebastián que su delta tiene que sumar "Consentimientos";
@@ -68,7 +68,7 @@
   - crear y editar una plantilla, ver sus versiones, desactivarla; firmar, desbloquear, ver con "Íntegro", revocar; cancelar una firma; una contraseña mala en el bloqueo; el aviso de doble firma;
   - comparar cada pantalla con su mockup, revisar la consola y los pedidos fallidos, y que la dirección, `localStorage` y `sessionStorage` no tengan datos;
   - guardar las capturas en `mockups/verify/` y anotar las diferencias en `design.md`.
-- [ ] 8.3 Marcar C-48 en `CHANGES.md` y abrir el PR a `master` con Enzo y Sofia como revisores
+- [x] 8.3 Marcar C-48 en `CHANGES.md` y abrir el PR a `master` con Enzo y Sofia como revisores
 
 ## Workflow follow-up
 
