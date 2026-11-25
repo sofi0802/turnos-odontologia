@@ -18,7 +18,7 @@
   - D7: confirmación al aceptar y rechazar.
 
   Registrar su respuesta y `Approval: approved (<fecha>, by <persona>)` en `design.md` y `mockups/README.md`, y verificar que ambos lo digan antes de seguir.
-- [ ] 0.2 Avisar a Enzo (dueño de `frontend/`) y a Emanuel (ficha de C-44 en `pages/pacientes.ts` y Configuración de C-34) qué archivos se tocan; verificar que el aviso quede en la descripción del PR
+- [x] 0.2 Avisar a Enzo (dueño de `frontend/`) y a Emanuel (ficha de C-44 en `pages/pacientes.ts` y Configuración de C-34) qué archivos se tocan; verificar que el aviso quede en la descripción del PR
 - [x] 0.3 Si la líder cambia una decisión "(a confirmar)", actualizar specs, design, mockups y capturas con `openspec-update-change` y verificar con `openspec validate frontend-presupuestos --strict`
 
 ## 1. Mensajes y modelo
@@ -74,7 +74,7 @@
   - usuarios `admin`, `recepcion`, `ana.ejemplo` y un paciente, a 390 × 844 y 1440 × 900;
   - comparar cada pantalla con su mockup aprobado y revisar la consola y los pedidos fallidos;
   - guardar las capturas en `mockups/verify/` y anotar en `design.md` `Visual verify:` con las diferencias (blocker / major / minor) y lo no revisado.
-- [ ] 7.3 Mergear `master` en la rama si avanzó, resolver conflictos y repetir 7.1; abrir el PR a `master` con Enzo, Emanuel y Sofia como revisores, y verificar que la descripción liste las decisiones confirmadas y los avisos de 0.2
+- [x] 7.3 Mergear `master` en la rama si avanzó, resolver conflictos y repetir 7.1; abrir el PR a `master` con Enzo, Emanuel y Sofia como revisores, y verificar que la descripción liste las decisiones confirmadas y los avisos de 0.2
 
 ## 8. Cierre
 
