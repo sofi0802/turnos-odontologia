@@ -29,7 +29,7 @@ Sin inscripciones, SHALL mostrar "No hay pacientes en la lista de espera." con l
 #### Scenario: Orden del menú del administrador con Coberturas
 - **GIVEN** la sesión de `admin` con rol `ADMIN` y la página "Coberturas" de C-49 disponible
 - **WHEN** se abre la aplicación en `#/agenda`
-- **THEN** la barra lateral tiene los enlaces "Agenda", "Lista de espera", "Pacientes", "Coberturas", "Reportes" y "Configuración", en ese orden
+- **THEN** la barra lateral tiene los enlaces "Agenda", "Lista de espera", "Pacientes", "Coberturas", "Reportes", "Caja" y "Configuración", en ese orden
 
 #### Scenario: La lista en orden con una oferta pendiente
 - **GIVEN** la API responde "Paciente Dos" (inscripto el 2026-11-28) con una oferta del jueves 3 de diciembre a las 10:00 que vence a las 10:00 del 1 de diciembre, y "Paciente Uno" (inscripto el 2026-11-30) sin oferta

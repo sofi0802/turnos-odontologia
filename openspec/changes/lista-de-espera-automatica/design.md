@@ -14,10 +14,10 @@
 **Goals:**
 - Inscripción, ofertas de a una por orden de llegada, plazo configurable, aceptación y rechazo por link, vencimientos y bajas, según RN-LE-01 a RN-LE-09.
 - Pantallas para la recepción, para el paciente, la pública de la oferta y el plazo en Configuración.
-- Sin tocar las garantías contra solapamientos ni los estados del turno (regla dura 5, DD-21).
+- Sin tocar las garantías contra solapamientos ni los estados del turno (regla dura 5, DD-22).
 
 **Non-Goals:**
-- Reservar el horario mientras se ofrece (DD-21).
+- Reservar el horario mientras se ofrece (DD-22).
 - Ofertas por ausencia del paciente, por reasignación o por un sobreturno.
 - Ofrecer un horario parcial: el turno ofrecido empieza en el mismo inicio del liberado.
 - Cambiar RN-RE-05: los turnos aceptados desde la lista cuentan como del consultorio en los reportes.
@@ -90,19 +90,19 @@ La compatibilidad solo ofrece inicios que caen en la grilla de horarios del prof
 - Los dos `INSERT` usan `ON CONFLICT DO NOTHING RETURNING`. Así una carrera contra un índice único no aborta la transacción de PostgreSQL.
 
 ### D10. Frontend
-- **Página `#/lista-espera`**: `pages/lista-espera.ts` y `lista-espera/` (api, tabla, diálogo de alta). Va en la barra lateral inmediatamente después de "Agenda", con `roles: ['ADMIN', 'RECEPCIONISTA']`. El orden final, con "Coberturas" de C-49 (Juan Sebastián), es: Agenda, Lista de espera, Pacientes, Coberturas, Reportes y Configuración. "Coberturas" queda donde la define C-49 (después de "Pacientes" y antes de "Reportes"), así que los dos changes no se contradicen. El que se mergee segundo resuelve el conflicto en el orden de páginas de `app.ts`. El diálogo reusa el buscador de pacientes de C-36 y el catálogo público de prestaciones y profesionales habilitados (`paciente/catalogo.ts`).
+- **Página `#/lista-espera`**: `pages/lista-espera.ts` y `lista-espera/` (api, tabla, diálogo de alta). Va en la barra lateral inmediatamente después de "Agenda", con `roles: ['ADMIN', 'RECEPCIONISTA']`. El orden final, con "Coberturas" de C-49 (Juan Sebastián), es: Agenda, Lista de espera, Pacientes, Coberturas, Reportes, Caja (C-22) y Configuración. "Coberturas" queda donde la define C-49 (después de "Pacientes" y antes de "Reportes"), así que los dos changes no se contradicen. El que se mergee segundo resuelve el conflicto en el orden de páginas de `app.ts`. El diálogo reusa el buscador de pacientes de C-36 y el catálogo público de prestaciones y profesionales habilitados (`paciente/catalogo.ts`).
 - **`#/reserva`**: en el estado vacío del día, el botón "Anotarme en la lista de espera" abre un diálogo (`lista-espera/paciente.ts`).
 - **`#/mis-turnos`**: la sección "Lista de espera" pide la lista en paralelo con los turnos. Un error en la lista no rompe la página.
 - **`#/oferta`**: `pages/oferta.ts`. `entrada.ts` suma `LINK_OFERTA = /\/oferta\/([^/]+)\/?$/`, con el token solo en memoria, igual que la confirmación.
 - **Configuración, pestaña "Margen"**: suma el bloque del plazo (`lista-espera/plazo.ts`, que monta `configuracion/margen.ts`).
 - **Acceso**: la página usa `roles` y el aviso de administración y recepción, como Reportes (C-32). Por eso un `PACIENTE` que abre `#/lista-espera` recibe el aviso general de "solo para el personal", igual que en Reportes.
-- **Estilos**: un módulo nuevo `22-lista-espera.css`, registrado en `test/estilos.ts` y en `estilos-modulos.test.ts`. Solo usa tokens `--ds-*`.
+- **Estilos**: un módulo nuevo `23-lista-espera.css`, registrado en `test/estilos.ts` y en `estilos-modulos.test.ts`. Solo usa tokens `--ds-*`.
 - **Mensajes**: `mensajes.ts` suma los códigos nuevos.
 - **Navegación**: "Menú según la sesión" de `frontend-navegacion` no se modifica en este change, porque ya lo modifican C-22 y `frontend-uniformidad-visual`. La página entra con su requisito propio en `frontend-lista-espera`, y antes del archive se reconcilia con un delta MODIFIED sobre el texto vigente (tarea 11.3).
 
 ## Risks / Trade-offs
 
-- **[Riesgo] La oferta llega y el horario ya no está.** → Es la consecuencia aceptada de DD-21. El mensaje lo explica y el paciente sigue en la lista.
+- **[Riesgo] La oferta llega y el horario ya no está.** → Es la consecuencia aceptada de DD-22. El mensaje lo explica y el paciente sigue en la lista.
 - **[Riesgo] La cancelación se hace más lenta** porque busca candidatos en la misma transacción. → Se recorre en orden de llegada con un límite de 50 inscripciones activas evaluadas por horario, en la lista filtrada por prestación habilitada, profesional y rango. Es suficiente para un consultorio chico (DD-05).
 - **[Riesgo] Un error en la oferta podría tumbar una cancelación.** → D2 la ofrece después del commit, en su propia transacción, la aísla en un `try` y deja en el log solo el id del turno.
 - **[Riesgo] El proceso se corta entre el commit de la cancelación y la oferta.** → El horario queda libre sin oferta. Es raro y no pierde datos: el turno sigue cancelado y se puede reservar como cualquier otro.
@@ -138,4 +138,4 @@ La compatibilidad solo ofrece inicios que caen en la grilla de horarios del prof
 
 ## Open Questions
 
-- Ninguna bloqueante. Las decisiones de la líder del 2026-11-24 están en RN-LE-01 a RN-LE-09 y en DD-21.
+- Ninguna bloqueante. Las decisiones de la líder del 2026-11-24 están en RN-LE-01 a RN-LE-09 y en DD-22.

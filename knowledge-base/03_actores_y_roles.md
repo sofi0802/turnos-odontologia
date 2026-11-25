@@ -48,6 +48,8 @@ C = crear, R = leer, U = modificar, D = eliminar o desactivar. "Propio" = solo s
 | Liquidación a obras sociales y conciliación (RN-LQ-02 a RN-LQ-06) [2026-11-24, C-20] | CRUD (sin borrar) y descarga | — (PA-39) | — | — |
 | Reportes: ocupación, origen, ausencias y cancelaciones (RN-RE-01) [2026-11-24, C-32, en revisión] | R (todo el consultorio) | R (todo el consultorio; PA-29) | **—** (su agenda sigue en RN-AG-18) | **—** |
 | Caja, cobros y cuenta corriente del paciente (RN-CA-01) [2026-11-24, C-22, en revisión] | R, y anula cobros con motivo (RN-CA-07) | C y R: abre la caja, cobra y la cierra (PA-32) | **—** | **—** |
+| Señas: configuración (RN-SE-01) [2026-11-24, C-23, en revisión] | R y U: las activa y fija el porcentaje y el plazo (PA-53) | **—** | **—** | **—** |
+| Señas de los turnos (RN-SE-04 a RN-SE-12) [2026-11-24, C-23, en revisión] | Indica la causa al cancelar un turno con seña pagada (RN-SE-06); la ve como cobro en la cuenta corriente | Igual que el `ADMIN` | **—** | Paga y ve el estado de las propias en "Mis turnos" (PA-65) |
 
 > **Lección de la verificación de fuentes:** en la demo de VecDent, un rol "paciente" armado a mano veía el dashboard con estadísticas de la clínica y el menú de configuración (informe, verificación de fuentes, fila 5). El paciente **no es un rol del personal con menos permisos**: solo accede a endpoints públicos y a sus propios turnos.
 

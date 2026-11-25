@@ -11,6 +11,7 @@
 | **Clínica** | Ficha básica, odontograma y periodontograma (C-25); imágenes (C-26); plantillas y consentimientos firmados (C-27) |
 | **Coberturas** | Obras sociales y prepagas, sus planes, el nomenclador de prácticas y la afiliación de cada paciente (C-18); aranceles, cobertura por plan y presupuestos con copago (C-19); liquidaciones mensuales a cada obra social y su conciliación (C-20) |
 | **Caja** [2026-11-24, C-22, en revisión] | Caja diaria con apertura, cierre y arqueo, cargos por turno atendido y cobros (C-22) |
+| **Señas** [2026-11-24, C-23, en revisión] | Seña de la reserva online pagada con Mercado Pago, su vencimiento, reintegros e imputación al cargo del turno (C-23) |
 | **Seguridad y auditoría** | Usuarios del personal, roles, registro de cambios en turnos |
 
 Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
@@ -217,6 +218,20 @@ Un despliegue corresponde a **un consultorio** (single-tenant en v1, ver DD-05).
 - `id` BIGINT identity, `cargo_id` FK, `caja_id` FK, `importe` numeric(12,2), `medio` enum (`EFECTIVO`, `DEBITO`, `CREDITO`, `TRANSFERENCIA`), `registrado_por` varchar(120), `registrado_en` timestamptz, `anulado` boolean, `anulado_por` varchar(120) nullable, `anulado_en` timestamptz nullable, `motivo_anulacion` varchar(255) nullable.
 - Constraints: `importe > 0`; si `anulado`, `anulado_por`, `anulado_en` y `motivo_anulacion` obligatorios (RN-CA-07). La suma de los cobros no anulados de un cargo no supera su `copago` (en el servicio, con bloqueo del cargo; RN-CA-04).
 - No se borra: se anula.
+- **Cambio de C-23** [2026-11-24, en revisión]: el `medio` suma `MERCADO_PAGO` y `caja_id` pasa a nullable, con la constraint `caja_id IS NULL ⇔ medio = MERCADO_PAGO` (la seña imputada no pasa por la caja, RN-SE-08). Va en una migración nueva de C-23, sin editar V15.
+
+### Sena [2026-11-24, C-23, en revisión]
+- `id` BIGINT identity, `turno_id` FK (el turno vigente: cambia si se reprograma, RN-SE-07), `paciente_id` FK, `porcentaje` smallint, `copago_base` numeric(12,2), `importe` numeric(12,2), `estado` enum (`PENDIENTE`, `PAGADA`, `VENCIDA`, `IMPUTADA`, `DEVUELTA`, `RETENIDA`), `vence_en` timestamptz, `pagada_en` timestamptz nullable, `referencia` varchar(40) (opaca, única, la que se manda a Mercado Pago), `pago_externo_id` varchar(40) nullable (único), `cobro_id` FK nullable (el cobro de RN-SE-08), `importe_reintegrado` numeric(12,2), `causa_cancelacion` enum nullable (`PACIENTE`, `CONSULTORIO`), `creada_en` timestamptz.
+- Constraints: `porcentaje BETWEEN 1 AND 100`, `importe > 0`, `0 ≤ importe_reintegrado ≤ importe`; una sola seña no terminal por turno (índice único parcial sobre `turno_id` con estado `PENDIENTE` o `PAGADA`); `PAGADA` e `IMPUTADA` ⇒ `pago_externo_id` y `pagada_en` obligatorios; `IMPUTADA` ⇒ `cobro_id` obligatorio.
+- Es una foto del cálculo (RN-SE-03). No se borra.
+
+### SenaMovimiento [2026-11-24, C-23, en revisión]
+- `id` BIGINT identity, `sena_id` FK, `tipo` enum (`NOTIFICACION`, `PAGO`, `REINTEGRO`, `REINTEGRO_FALLIDO`, `VENCIMIENTO`, `REPROGRAMACION`), `id_externo` varchar(60) nullable, `importe` numeric(12,2) nullable, `registrado_en` timestamptz, `detalle` varchar(255) nullable (sin datos del paciente).
+- Constraints: `UNIQUE (tipo, id_externo)` cuando `id_externo` no es nulo, para que una notificación o un reintegro repetidos no se apliquen dos veces (RN-SE-05, RN-SE-09).
+- Es el registro de todo lo que pasó con la seña; solo se agregan filas.
+
+### Configuración de las señas [2026-11-24, C-23, en revisión]
+- Claves de `Configuracion`: `senas_activas` (`false` al inicio), `senas_porcentaje` y `senas_plazo_minutos` (RN-SE-01).
 
 ### Liquidacion [2026-11-24, C-20]
 - `id` BIGINT identity, `obra_social_id` FK, `periodo` date (el día 1 del mes liquidado), `estado` enum (`BORRADOR`, `PRESENTADA`, `CERRADA`), `total_solicitado` y `total_cobrado` numeric(12,2), `generada_en`, `presentada_en` y `cerrada_en` timestamptz (las dos últimas nullable).

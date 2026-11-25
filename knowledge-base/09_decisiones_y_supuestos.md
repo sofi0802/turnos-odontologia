@@ -191,7 +191,25 @@ Como el margen es configurable (con mínimo 10), se guarda la columna `fin_con_m
 
 **Impacto**: RN-CL-09 a RN-CL-11, US-208, dos filas de la matriz de 03 y las entidades `PlantillaConsentimiento`, `PlantillaConsentimientoVersion`, `ConsentimientoFirmado` y `ConsentimientoRevocacion` (migración V18).
 
-### DD-21: La oferta de la lista de espera no reserva el horario [2026-11-24, C-15]
+### DD-21: La seña reserva el hueco con vencimiento, se confirma con la notificación verificada y se imputa al cargo [2026-11-24, C-23, en revisión]
+**Decisión**: en la reserva online con las señas activas, el turno ocupa el hueco y la seña queda pendiente con un vencimiento; si vence sin pago, el turno se cancela solo (RN-SE-04). La seña se da por pagada solo con la notificación de Mercado Pago con firma válida y el pago consultado a Mercado Pago (RN-SE-05). Cuando el turno queda atendido, la seña se imputa al cargo de C-22 como un cobro `MERCADO_PAGO` sin caja (RN-SE-08). Los reintegros también van por Mercado Pago (RN-SE-09).
+**Contexto**: Enzo decidió el alcance el 2026-11-24 (PA-53 a PA-61, PA-63 y PA-65). El cargo de C-22 es la base prevista para las señas (DD-18). DentalSoft y AgendaPro ofrecen Mercado Pago (`10_preguntas_abiertas.md`, NE-08), sin publicar cómo manejan el vencimiento.
+**Alternativas consideradas**:
+1. Crear el turno recién al confirmarse el pago: el hueco no queda tomado y otro paciente puede ganarlo mientras el primero paga.
+2. Dar por pagada la seña con la vuelta del navegador desde Mercado Pago: el paciente puede fabricar esa vuelta; solo la notificación del servidor, verificada, prueba el pago.
+3. Registrar la seña como un cobro en la caja del día: mezclaría dinero que no está en la caja física con el arqueo del efectivo.
+**Justificación**:
+- El vencimiento corto evita que una reserva sin pagar bloquee un horario, y las garantías contra solapamientos siguen aplicando al turno pendiente.
+- La firma y la consulta a Mercado Pago, con un registro idempotente de las notificaciones, evitan pagos falsos o aplicados dos veces.
+- Imputar la seña al cargo reusa la cuenta corriente de C-22 sin tocar el arqueo.
+**Trade-offs aceptados**:
+- El endpoint de la notificación es público y no puede llevar el token CSRF: necesita una excepción acotada a esa ruta, autenticada por la firma (PA-64, aceptada por la líder al revisar la KB: solo esa ruta; regla dura 8).
+- `Cobro.caja_id` pasa a nullable para los cobros `MERCADO_PAGO` (cambio del modelo de C-22, en una migración nueva).
+- En C-23 el personal no ve la seña en la agenda (PA-65); la ve en la cuenta corriente recién cuando se imputa.
+- Toca módulos de otros dueños: `reserva/` (Juan Sebastián), la cancelación y la reprogramación de `agenda/` (Sofia) y los avisos de `notificaciones/` (Juan Cruz). El propose define los puntos de contacto.
+**Impacto**: RN-SE-01 a RN-SE-12, US-202, dos filas de la matriz de 03, las entidades `Sena` y `SenaMovimiento`, tres claves de `Configuracion`, el cambio de `Cobro` y cuatro variables de entorno (migración nueva, número a reservar).
+
+### DD-22: La oferta de la lista de espera no reserva el horario [2026-11-24, C-15]
 **Decisión**: mientras un horario liberado se le ofrece a un paciente de la lista, sigue **libre** para cualquier reserva. La aceptación crea el turno con las validaciones de siempre, y si el horario ya se ocupó, se rechaza con `OFERTA_NO_DISPONIBLE` (RN-LE-06).
 **Contexto**: reservar el horario durante el plazo exigiría un turno provisional que las restricciones `EXCLUDE USING gist` (DD-03) contarían como activo, o una excepción a esas restricciones.
 **Alternativas consideradas**:

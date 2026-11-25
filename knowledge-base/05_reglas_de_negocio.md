@@ -83,7 +83,7 @@ Cada regla tiene un código `RN-{DOMINIO}-{NN}`. Entre paréntesis va el código
   4. el paciente no tiene otra oferta pendiente.
 - **RN-LE-04**: **una oferta a la vez, por orden de llegada**. El sistema le ofrece el horario al **primer** paciente compatible según el orden de inscripción. Un horario liberado tiene como máximo **una oferta pendiente**. Si el paciente no acepta (rechaza o vence el plazo), se le ofrece al **siguiente** compatible, evaluado otra vez en ese momento. Si no queda nadie, el horario queda libre como cualquier otro.
 - **RN-LE-05**: **plazo para aceptar**. Lo configura el administrador (`lista_espera_plazo_horas`, de 1 a 24 horas; por defecto **2**). La oferta **vence** al cumplirse el plazo o al llegar el inicio del horario, lo que pase primero.
-- **RN-LE-06**: **el horario no se reserva mientras se ofrece**. Durante la oferta, el horario sigue libre para cualquier reserva (DD-21). Al aceptar, el turno se crea con las mismas validaciones atómicas que cualquier otro (RN-AG-12). Si el horario ya se ocupó o dejó de cumplir las reglas, la aceptación se rechaza con `OFERTA_NO_DISPONIBLE`, la inscripción sigue activa y no se le ofrece a nadie más.
+- **RN-LE-06**: **el horario no se reserva mientras se ofrece**. Durante la oferta, el horario sigue libre para cualquier reserva (DD-22). Al aceptar, el turno se crea con las mismas validaciones atómicas que cualquier otro (RN-AG-12). Si el horario ya se ocupó o dejó de cumplir las reglas, la aceptación se rechaza con `OFERTA_NO_DISPONIBLE`, la inscripción sigue activa y no se le ofrece a nadie más.
 - **RN-LE-07**: **respuesta del paciente**. El mensaje de la oferta lleva un **link con token** a una pantalla con **Aceptar** y **No me interesa**, igual que la confirmación (C-08): funciona sin cuenta, y solo un `POST` consume el token.
   - **Aceptar**: se crea el turno `RESERVADO` a nombre del paciente, con su número de reserva y el actor `lista-espera:<id de la oferta>` en la auditoría, sin datos personales (el paciente puede no tener cuenta), y la inscripción pasa a `ASIGNADA`. Mientras RN-RE-05 no cambie, los reportes cuentan ese turno como del consultorio.
   - **No me interesa**: la oferta queda rechazada, la inscripción sigue activa y el horario pasa al siguiente.
@@ -275,6 +275,57 @@ Cada regla tiene un código `RN-{DOMINIO}-{NN}`. Entre paréntesis va el código
   - Cuando todas las líneas tienen resultado, la liquidación se puede cerrar.
 - **RN-LQ-07**: **lo que no cubre la obra social**. La diferencia entre lo solicitado y lo cobrado no se le cobra automáticamente al paciente: los cobros al paciente son de C-22. La facturación electrónica (ARCA) tampoco es parte de C-20.
 - **RN-LQ-08**: **privacidad**. Una liquidación tiene datos personales (nombre, DNI y número de afiliado) y de salud (la prestación). No se incluye en mensajes ni logs (RN-NO-01), y solo la maneja el `ADMIN` (PA-39).
+
+## Dominio: Señas (RN-SE) [2026-11-24, C-23, en revisión]
+
+- **RN-SE-01**: **configuración** (PA-53).
+  - Solo el `ADMIN` activa o desactiva las señas, y fija el **porcentaje** (entero de 1 a 100) y el **plazo para pagar** (minutos, mayor que cero).
+  - Las señas vienen **desactivadas**. Mientras lo estén, la reserva online funciona como antes de C-23.
+  - Un cambio de la configuración vale para las reservas nuevas; las señas ya creadas no cambian.
+- **RN-SE-02**: **qué reservas piden seña** (PA-54).
+  - Solo la **reserva online del paciente** (RN-RO-08), con las señas activas. Los turnos que carga el personal y los sobreturnos no piden seña.
+  - No hay seña si el copago es cero (cobertura del 100 %) ni si la prestación no tiene arancel ("Sin precio", RN-CA-03).
+- **RN-SE-03**: **monto** (PA-55). Es el porcentaje configurado del **copago** del turno, calculado al reservar como en RN-CA-03 (precio particular menos la cobertura del plan vigente del paciente en la fecha del turno), redondeado a dos decimales. Se guarda como una foto: no cambia aunque después cambien los aranceles, la cobertura o el porcentaje.
+- **RN-SE-04**: **turno pendiente de seña** (PA-56).
+  - La reserva crea el turno `RESERVADO` y **ocupa el hueco** con las dos garantías contra solapamientos (RN-AG-01 a RN-AG-05, DD-03). La seña queda **pendiente** con un vencimiento: el momento de la reserva más el plazo configurado.
+  - Si vence sin pago, el sistema **cancela el turno** (`CANCELADO`, con el sistema como actor en `TurnoAuditoria`, RN-GL-03), el hueco queda libre (RN-AG-08) y la seña queda **vencida**.
+  - Con la seña pagada el turno **queda firme**: ya no vence. El turno sigue `RESERVADO`: la confirmación de asistencia (RN-NO) sigue aparte (PA-62).
+- **RN-SE-05**: **pago con Mercado Pago**.
+  - El paciente paga con el link de Mercado Pago que ve al terminar la reserva y en "Mis turnos" mientras la seña está pendiente. El sistema no guarda datos de tarjetas ni de cuentas.
+  - Una seña se da por **pagada** solo con la notificación de Mercado Pago **verificada**: firma válida y el pago consultado a Mercado Pago, aprobado y por el importe de la seña. Una notificación repetida no aplica el pago dos veces.
+  - **Pago tardío** (PA-58): si el pago llega con la seña vencida o el turno ya cancelado, el turno no se recupera y el pago se **reintegra** completo (RN-SE-09).
+- **RN-SE-06**: **cancelación** (PA-57, PA-61). Con la seña pagada:
+  - Se **reintegra** completa si el paciente cancela online dentro del plazo (RN-AG-07), si el personal cancela con 24 h o más de anticipación, o si el personal cancela por una causa **del consultorio** en cualquier momento.
+  - La **retiene** el consultorio si el personal cancela **a pedido del paciente** con menos de 24 h, o si el turno queda `AUSENTE` (RN-AG-17).
+  - Al cancelar un turno con seña pagada, el personal indica si la causa es **del paciente** o **del consultorio**.
+- **RN-SE-07**: **reprogramación** (PA-60). La seña pagada **pasa al turno nuevo** sin volver a pagar. Si el copago del turno nuevo es mayor, no se pide diferencia; si es menor, el sobrante se resuelve al imputarla (RN-SE-08).
+- **RN-SE-08**: **imputación al cargo** (PA-59, PA-63). Cuando el turno queda `ATENDIDO` y nace su cargo (RN-CA-03):
+  - La seña pagada se registra como un **cobro** del cargo con el medio `MERCADO_PAGO`, **sin caja**: no entra en la caja del día, en sus totales ni en el arqueo (RN-CA-06). En la caja se cobra solo el resto.
+  - Se imputa como máximo el copago del cargo (RN-CA-04, sin saldo a favor). Si la seña es mayor, la diferencia se **reintegra** (RN-SE-09).
+  - Ese cobro no se anula desde la caja (RN-CA-07 vale para los cobros de una caja abierta).
+- **RN-SE-09**: **reintegros**. Se hacen por Mercado Pago, completos o por la diferencia de RN-SE-08, y la seña queda **devuelta**. Si Mercado Pago rechaza el reintegro, se reintenta y el intento queda registrado; nunca se reintegra dos veces.
+- **RN-SE-10**: **seguridad**.
+  - Las credenciales de Mercado Pago son de **sandbox** y van solo en variables de entorno (`08_arquitectura_propuesta.md`), nunca en el repositorio. Los tests usan una pasarela simulada detrás de un puerto.
+  - La notificación de Mercado Pago llega a un endpoint público sin sesión: se acepta solo con la firma válida, y el estado del pago se confirma consultándolo a Mercado Pago. Esa ruta, y solo esa, queda fuera de la protección CSRF; el resto de la API la mantiene (PA-64, regla dura 8).
+- **RN-SE-11**: **privacidad** (RN-CA-08, RN-NO-01).
+  - A Mercado Pago se le manda solo el importe, una descripción genérica ("Seña de turno") y una referencia opaca de la seña: ni la prestación (dato de salud) ni el nombre o el DNI del paciente.
+  - El importe de la seña no va en recordatorios, mensajes ni logs. Un aviso de reintegro solo dice que se hizo el reintegro de la seña del turno de tal fecha, y solo con consentimiento (RN-NO-03).
+- **RN-SE-12**: **visibilidad** (PA-65). El paciente ve en "Mis turnos" el estado de la seña de cada turno (pendiente, con el link y el vencimiento; pagada; vencida; devuelta; retenida). La agenda del personal no muestra la seña en C-23; la cuenta corriente la muestra como un cobro con el medio `MERCADO_PAGO`.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Pendiente: reserva online con señas activas (RN-SE-02)
+    Pendiente --> Vencida: vence sin pago; el turno se cancela (RN-SE-04)
+    Pendiente --> Pagada: notificación de Mercado Pago verificada (RN-SE-05)
+    Vencida --> Devuelta: llega un pago tardío y se reintegra (RN-SE-05)
+    Pagada --> Pagada: reprogramación, pasa al turno nuevo (RN-SE-07)
+    Pagada --> Devuelta: cancelación con reintegro (RN-SE-06)
+    Pagada --> Retenida: ausente o cancelación tardía a pedido del paciente (RN-SE-06)
+    Pagada --> Imputada: turno atendido, cobro del cargo (RN-SE-08)
+    Imputada --> [*]: si sobra, se reintegra la diferencia (RN-SE-09)
+    Devuelta --> [*]
+    Retenida --> [*]
+```
 
 ## Dominio: Excepciones globales
 

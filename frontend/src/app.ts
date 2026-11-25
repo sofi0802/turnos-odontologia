@@ -10,6 +10,7 @@ import { paginaMisTurnos } from './pages/mis-turnos.ts';
 import { paginaOferta } from './pages/oferta.ts';
 import { paginaPacientes } from './pages/pacientes.ts';
 import { paginaReportes } from './pages/reportes.ts';
+import { paginaCaja } from './pages/caja.ts';
 import { crearTitulo, type ContextoPagina, type Pagina } from './pages/pagina.ts';
 import { paginaReserva } from './pages/reserva.ts';
 import { api as apiPorDefecto, type ClienteApi } from './shared/api/cliente.ts';
@@ -34,6 +35,7 @@ export const PAGINAS: readonly Pagina[] = [
   paginaListaEspera,
   paginaPacientes,
   paginaReportes,
+  paginaCaja,
   paginaConfiguracion,
   paginaCambiarContrasena,
   paginaReserva,

@@ -1,8 +1,10 @@
+# cobros-pacientes Specification
+
 ## Purpose
 
 Lo que deben los pacientes y lo que pagan: un cargo por el copago de cada turno atendido, los cobros imputados a ese cargo, su anulación y la cuenta corriente (RN-CA-03 a RN-CA-05, RN-CA-07, RN-CA-08, DD-18). En los escenarios, con datos ficticios, hoy es el lunes 2026-12-07; "Consulta o control" tiene un arancel de `15000.00` y el código del nomenclador `01.01`; "Paciente Uno" está afiliado al plan "Plan 40" de la obra social "OS Ficticia", que cubre el 40 % de `01.01`; "Paciente Dos" es particular. Las cuentas son las de la spec `caja`.
 
-## ADDED Requirements
+## Requirements
 
 ### Requirement: Cargo por turno atendido
 Cuando un turno queda `ATENDIDO`, el sistema SHALL generar un cargo para su paciente por el copago de su prestación: precio particular menos la cobertura del plan vigente en la fecha del turno, con la fórmula de C-19 (RN-PR-03) y cantidad 1. Un turno `AUSENTE` o `CANCELADO` MUST NOT generar cargo, y un turno MUST generar como máximo un cargo.
@@ -82,7 +84,7 @@ Un cobro mayor que el saldo del cargo MUST responder `409 IMPORTE_SUPERA_SALDO`,
 - **WHEN** `recepcion` lo cobra con `importe` `6000.00`
 - **THEN** la respuesta es `409` con el código `IMPORTE_SUPERA_SALDO`
 
-#### Scenario: Sin caja abierta
+#### Scenario: Cobro sin caja abierta
 - **GIVEN** que no hay ninguna caja abierta
 - **WHEN** `recepcion` cobra un cargo
 - **THEN** la respuesta es `409` con el código `SIN_CAJA_ABIERTA`

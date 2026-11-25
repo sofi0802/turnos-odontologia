@@ -2,14 +2,14 @@
 
 ## Why
 
-Cuando un paciente cancela, el horario queda libre (RN-AG-08), pero nadie se entera. Si la cancelación es con poca anticipación, el sillón queda vacío mientras otros pacientes esperan un turno más cercano. Ninguno de los 16 sistemas del Discovery ofrece una lista de espera automática (informe, C.3), y es el primer diferenciador del post-MVP (C-15, US-100). La KB se amplió el 2026-11-24 con las decisiones de la líder: RN-LE-01 a RN-LE-09, Flujo 5 y DD-21.
+Cuando un paciente cancela, el horario queda libre (RN-AG-08), pero nadie se entera. Si la cancelación es con poca anticipación, el sillón queda vacío mientras otros pacientes esperan un turno más cercano. Ninguno de los 16 sistemas del Discovery ofrece una lista de espera automática (informe, C.3), y es el primer diferenciador del post-MVP (C-15, US-100). La KB se amplió el 2026-11-24 con las decisiones de la líder: RN-LE-01 a RN-LE-09, Flujo 5 y DD-22.
 
 ## What Changes
 
 - **Inscripción** en la lista de espera con la prestación, un profesional o "sin preferencia" y un rango de fechas de hasta 60 días. El paciente se anota desde su cuenta; la recepción y el administrador anotan a cualquier paciente. Una sola inscripción activa por paciente y prestación, y solo con consentimiento de comunicaciones (RN-LE-01).
 - **Ofertas automáticas**: al cancelar o reprogramar un turno activo que no empezó, el horario se le ofrece al primer paciente compatible por orden de llegada, de a uno por vez (RN-LE-02 a RN-LE-04). Compatible = su prestación entra en ese horario con ese profesional y cumple todas las reglas de la agenda.
 - **Plazo para aceptar** configurable por el administrador: de 1 a 24 h, 2 h por defecto. La oferta vence con el plazo o con el inicio del horario (RN-LE-05).
-- **Respuesta desde un link con token**, sin cuenta: Aceptar crea el turno `RESERVADO`, y "No me interesa" pasa el horario al siguiente. El horario no se reserva mientras se ofrece (DD-21): si se ocupó, la aceptación se rechaza con `OFERTA_NO_DISPONIBLE` (RN-LE-06, RN-LE-07).
+- **Respuesta desde un link con token**, sin cuenta: Aceptar crea el turno `RESERVADO`, y "No me interesa" pasa el horario al siguiente. El horario no se reserva mientras se ofrece (DD-22): si se ocupó, la aceptación se rechaza con `OFERTA_NO_DISPONIBLE` (RN-LE-06, RN-LE-07).
 - **Mensaje sin datos de salud** por el canal del paciente: no nombra la prestación (RN-LE-08).
 - **Tarea programada** que vence ofertas e inscripciones y pasa los horarios al siguiente (RN-LE-09).
 - **Frontend**:

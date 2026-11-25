@@ -144,4 +144,36 @@ Son records de `caja/api`, nunca entidades.
 - Mockups: `openspec/changes/caja-y-cobros/mockups/` (ver su README)
 - Approval: approved (2026-11-24, by user: Enzo aprobó explícitamente la propuesta y los 6 mockups de la revisión 1; governance CRÍTICO)
 - Preview: rendered (2026-11-24, 6 pantallas en `mockups/previews/` a 390x844 y 1440x900, sin desplazamiento horizontal ni paneles desbordados)
-- Visual verify: pending
+- Visual verify: passed (2026-11-24, después de corregir dos diferencias; capturas en `mockups/verify/`)
+
+### Verificación visual (tarea 5.3)
+
+Backend de desarrollo con el código de C-22 (puerto 8081, V15 aplicada), Vite en el 5173 y solo datos ficticios
+(Paciente Dos particular, Paciente Tres con cobertura; turnos `ATENDIDO` cargados a mano en la base local). Se
+recorrieron las 6 pantallas con las sesiones de recepción y de admin, a 1440x900 y 390x844; la consola y la red no
+mostraron errores de la app.
+
+| Pantalla | 1440 | 390 | Resultado |
+|---|---|---|---|
+| Sin caja (recepción) | `caja-sin-abrir-1440.jpg` | `caja-sin-abrir-390.jpg` | Coincide; pendientes sin "Cobrar" |
+| Sin caja (admin) | `caja-sin-abrir-admin-1440.jpg` | `caja-sin-abrir-admin-390.jpg` | Coincide; sin "Abrir caja" |
+| Caja abierta (recepción) | `caja-abierta-1440.jpg` | `caja-abierta-390.jpg` | Coincide; totales, efectivo esperado y "Cobrar" |
+| Caja abierta (admin) y cuenta corriente | `caja-abierta-admin-1440.jpg` | `caja-abierta-admin-390.jpg` | Coincide tras las correcciones; "Anular", cobro anulado tachado |
+| Cobrar (parcial, débito) | `caja-cobrar-1440.jpg` | — | Coincide tras las correcciones |
+| Cerrar con diferencia e historial | `caja-cerrar-1440.jpg`, `caja-historial-1440.jpg` | — | Coincide; motivo obligatorio y "Diferencia: -$ 500,00 (Faltante sin explicar)" |
+
+Diferencias encontradas:
+
+- **Mayor, corregida**: a 390 px la tabla de la cuenta corriente ensanchaba la página (485 px) en vez de desplazarse
+  dentro de su panel. `.caja-grilla` y `.caja-grilla .panel` usaban una columna implícita `auto`; ahora usan
+  `minmax(0, 1fr)` (`22-caja.css`). Venía del `delta.css` del mockup y no se veía con los datos cortos de las capturas.
+- **Menor, corregida**: faltaban las ayudas "El efectivo con el que arranca el día." y "Podés cobrar una parte; lo que
+  falta queda como deuda." (ahora enlazadas con `aria-describedby`).
+- **Menor, corregida**: la columna "Turno" de la cuenta corriente mostraba "martes 24/11 09:00"; ahora "24/11".
+- **Menor, aceptada**: la búsqueda de la cuenta corriente reusa el buscador de pacientes de C-36 (lupa y ayuda "Buscá
+  por DNI o por nombre y apellido.") en vez del placeholder del mockup.
+- **Menor, aceptada**: el historial dice "recepcionista abrió · recepcionista cerró" y "martes 24/11" donde el mockup
+  dice "recepcion abrió y cerró" y "Viernes 04/12"; el spec no fija esos textos.
+
+No verificado en el navegador: el grupo "Sin precio" (todas las prestaciones de la base local tienen arancel); lo
+cubre el test del escenario "Turno sin precio".

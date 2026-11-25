@@ -109,6 +109,10 @@ app:
       activo: false
   lista-espera:
     activo: false
+  # C-22: el barrido de cargos lo llaman los tests a mano.
+  caja:
+    cargos:
+      activo: false
   clinica:
     imagenes:
       # C-26: los tests guardan los archivos en una carpeta temporal, nunca en la del desarrollo.

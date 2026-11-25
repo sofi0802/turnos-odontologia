@@ -82,6 +82,19 @@
 | PA-50 | ¿La firma se asocia a un turno? *(2026-11-24, C-27; confirmada por Emanuel)* | **no**; solo al paciente y a la versión de la plantilla | C-27 |
 | PA-51 | ¿Una plantilla se puede desactivar y qué pasa si se edita sin cambios? *(2026-11-24, C-27; confirmada por Emanuel)* | **sí** se desactiva y se reactiva, nunca se borra; una edición sin cambios no crea versión y responde `200` | RN-CL-09 |
 | PA-52 | ¿Hace falta un endpoint de verificación y quién lo usa? ¿El paciente recibe una copia? *(2026-11-24, C-27; confirmada por Emanuel)* | **sí**, lo usan el `ADMIN` y el odontólogo; el paciente **no** recibe copia por email ni WhatsApp en C-27 | RN-CL-11 y C-48 |
+| PA-53 | ¿Quién configura las señas y cómo vienen? *(2026-11-24, C-23)* | Solo el `ADMIN`: las activa y fija el porcentaje y el plazo; vienen **desactivadas** | RN-SE-01 |
+| PA-54 | ¿Qué reservas piden seña? *(2026-11-24, C-23)* | Solo la **reserva online** del paciente; ni los turnos del personal ni los sobreturnos | RN-SE-02 |
+| PA-55 | ¿Cómo se calcula la seña? *(2026-11-24, C-23)* | Un **porcentaje del copago** al reservar; sin seña si el copago es cero o no hay arancel | RN-SE-02, RN-SE-03 |
+| PA-56 | ¿Qué pasa con el turno mientras la seña no está pagada? *(2026-11-24, C-23)* | Ocupa el hueco con un **vencimiento**; si vence sin pago se cancela solo y el hueco se libera | RN-SE-04, DD-21 |
+| PA-57 | ¿Se devuelve la seña si se cancela a tiempo? *(2026-11-24, C-23)* | **Sí**, por Mercado Pago, si el paciente cancela en plazo o si cancela el consultorio | RN-SE-06, RN-SE-09 |
+| PA-58 | ¿Qué pasa con un pago que llega después del vencimiento? *(2026-11-24, C-23)* | El turno no se recupera y el pago se **reintegra** | RN-SE-05 |
+| PA-59 | ¿Cómo se usa la seña cuando el turno queda atendido? *(2026-11-24, C-23)* | **A cuenta del cargo**, como un cobro `MERCADO_PAGO` fuera de la caja y del arqueo | RN-SE-08, DD-21 |
+| PA-60 | ¿Qué pasa con la seña si se reprograma? *(2026-11-24, C-23)* | **Pasa al turno nuevo** sin volver a pagar ni pedir diferencia | RN-SE-07 |
+| PA-61 | ¿Qué pasa si el paciente no viene o pide cancelar con menos de 24 h? *(2026-11-24, C-23)* | La **retiene** el consultorio; al cancelar, el personal indica si la causa es del paciente o del consultorio | RN-SE-06 |
+| PA-62 | Con la seña pagada, ¿el turno pasa a `CONFIRMADO`? *(2026-11-24, C-23; decidida por la líder al revisar la KB)* | **No**: sigue `RESERVADO` y la confirmación de asistencia de RN-NO sigue aparte | RN-SE-04 |
+| PA-63 | ¿Qué pasa si la seña es mayor que el copago final? *(2026-11-24, C-23)* | Se imputa el copago y la **diferencia se reintegra** (no hay saldo a favor) | RN-SE-08, RN-SE-09 |
+| PA-64 | La notificación de Mercado Pago no puede llevar el token CSRF: ¿se acepta una excepción? *(2026-11-24, C-23; decidida por la líder al revisar la KB)* | **Sí**, una excepción de CSRF **solo para esa ruta**, autenticada por la firma y la consulta del pago; el resto de la API sigue con CSRF (regla dura 8) | RN-SE-10, DD-21 |
+| PA-65 | ¿Dónde se ve el estado de la seña? *(2026-11-24, C-23)* | En **"Mis turnos"** del paciente; el personal no la ve en la agenda en C-23 | RN-SE-12 |
 
 ## Puntos "No evidenciado" del Discovery
 

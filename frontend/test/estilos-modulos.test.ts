@@ -32,8 +32,10 @@ const REGLAS_POR_MODULO: Readonly<Record<string, string>> = {
   '20-reportes.css': '.medidor-relleno {',
   // C-47: imágenes y estudios de la ficha.
   '21-imagenes.css': '.img-fila-anulada {',
+  // C-22: caja y cobros.
+  '22-caja.css': '.caja-grilla {',
   // C-15: lista de espera.
-  '22-lista-espera.css': '.le-fila {',
+  '23-lista-espera.css': '.le-fila {',
 };
 
 function importaciones(): string[] {
@@ -86,23 +88,24 @@ describe('Módulo de imágenes (C-47)', () => {
     expect(modulo).toMatch(/\.img-check \{[^}]*min-height: var\(--ds-alto-control\)/);
   });
 
-  it('Se importa al final de styles.css, después del módulo de reportes', () => {
+  it('Se importa justo después del módulo de reportes', () => {
+    // C-22 agregó 22-caja.css después de este módulo: ya no es el último, pero sigue inmediatamente después de reportes.
     const importaciones = [...textoPrincipal.matchAll(/@import\s+'([^']+)';/g)].map((m) => m[1]);
-    const posicion = importaciones.indexOf('./styles/21-imagenes.css');
-    expect(posicion).toBeGreaterThan(0);
-    expect(importaciones[posicion - 1]).toBe('./styles/20-reportes.css');
+    const reportes = importaciones.indexOf('./styles/20-reportes.css');
+    expect(reportes).toBeGreaterThan(-1);
+    expect(importaciones[reportes + 1]).toBe('./styles/21-imagenes.css');
   });
 });
 
 describe('Módulo de la lista de espera (C-15)', () => {
-  it('Se importa al final de styles.css, después del de imágenes', () => {
+  it('Se importa al final de styles.css, después del de caja', () => {
     const importaciones = [...textoPrincipal.matchAll(/@import\s+'([^']+)';/g)].map((m) => m[1]);
-    expect(importaciones.at(-1)).toBe('./styles/22-lista-espera.css');
-    expect(importaciones.at(-2)).toBe('./styles/21-imagenes.css');
+    expect(importaciones.at(-1)).toBe('./styles/23-lista-espera.css');
+    expect(importaciones.at(-2)).toBe('./styles/22-caja.css');
   });
 
   it('La fila pasa a tres columnas desde 768 px y las acciones de la oferta se apilan en el teléfono', () => {
-    const modulo = textoDeModulo('22-lista-espera.css');
+    const modulo = textoDeModulo('23-lista-espera.css');
     expect(modulo).toMatch(/@media \(min-width: 768px\) \{\s*\.le-fila \{[^}]*grid-template-columns: auto 1fr auto/);
     expect(modulo).toMatch(/\.oferta-acciones \{[^}]*flex-direction: column-reverse/);
   });

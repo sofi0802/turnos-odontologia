@@ -47,7 +47,7 @@
 
 - [x] 7.1 `lista-espera/api.ts` con los tipos y las funciones de la API, sin `any`.
 - [x] 7.2 Mensajes de `YA_EN_LISTA_DE_ESPERA`, `SIN_CONSENTIMIENTO`, `INSCRIPCION_NO_ACTIVA`, `PLAZO_INVALIDO` y los de la oferta en `mensajes.ts`, con sus tests.
-- [x] 7.3 Estilos `22-lista-espera.css` desde los mockups aprobados, registrados en `test/estilos.ts` y `estilos-modulos.test.ts`.
+- [x] 7.3 Estilos `23-lista-espera.css` desde los mockups aprobados, registrados en `test/estilos.ts` y `estilos-modulos.test.ts`.
 
 ## 8. Frontend: pantallas del personal
 

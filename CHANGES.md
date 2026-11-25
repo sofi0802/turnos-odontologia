@@ -54,7 +54,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `backend/.../agenda/` lista de espera, `configuracion/` política de cancelación | Sofia (C-16 avisa a Emanuel) | V9, V10 |
 | `backend/.../notificaciones/` consentimiento | Juan Cruz | V11 |
 | `backend/.../coberturas/` (obras sociales, presupuestos, liquidaciones) | Juan Sebastián | V12, V13, V14 |
-| `backend/.../caja/`, `pagos/`, `facturacion/`, `reportes/` | Enzo | V15 |
+| `backend/.../caja/`, `pagos/`, `facturacion/`, `reportes/` | Enzo | V15, V23 (señas de C-23, propuesta a confirmar por la líder) |
 | `backend/.../clinica/` periodontograma, imágenes, consentimientos, FHIR | Emanuel | V16, V17, V18 |
 | `frontend/` periodontograma en la ficha clínica (C-46) | Sofia (avisa a Enzo, dueño de `frontend/`) | — |
 | `frontend/` imágenes y radiografías en la ficha clínica (C-47) | Emanuel (avisa a Enzo, dueño de `frontend/`) | — |
@@ -656,7 +656,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/components.html` (secciones "Reserva online" y "Formularios y avisos")
 
 ### [C-39] `frontend-uniformidad-visual`
-- **Estado**: `[ ]` en curso: cuatro etapas mergeadas, cada una con su PR: A tokens y CSS modular (PR #74, 2026-11-23), B barra lateral y componentes (PR #77, 2026-11-23; 471 tests), C pantallas del paciente (PR #79, 2026-11-24; 474 tests) y D pantallas del personal (PR #83, 2026-11-24; 484 tests), todas con mockups aprobados, y la etapa E, agenda semanal en grilla horaria (hecha en la rama `change/C-39-frontend-uniformidad-visual`, 2026-11-24; sin mockups previos por pedido del usuario; falta el PR). Falta el archive, con sus tareas A.5, 7.1 y 7.2, y que la líder renueve la aprobación del design system (Revision 3, sin cambios en los valores de los tokens). Proposal, specs, design y tasks en `openspec/changes/frontend-uniformidad-visual/`
+- **Estado**: `[ ]` en curso: cuatro etapas mergeadas, cada una con su PR: A tokens y CSS modular (PR #74, 2026-11-23), B barra lateral y componentes (PR #77, 2026-11-23; 471 tests), C pantallas del paciente (PR #79, 2026-11-24; 474 tests) y D pantallas del personal (PR #83, 2026-11-24; 484 tests), todas con mockups aprobados, y la etapa E, agenda semanal en grilla horaria (PR #95, 2026-11-24; sin mockups previos por pedido del usuario). Las 31 tareas están hechas (A.5, 7.1 y 7.2 cerradas el 2026-11-24: 952 tests, un test por cada uno de los 34 escenarios y `openspec validate --strict` válido), y la líder ya renovó la aprobación del design system (Revision 5). Falta solo el archive. Proposal, specs, design y tasks en `openspec/changes/frontend-uniformidad-visual/`
 - **Responsable**: Juan Cruz (avisa a Enzo)
 - **Scope**:
   - **Barra lateral desplegable** con los botones del menú ("Reservar turno", "Mis turnos", "Agenda", "Configuración"), que muestra solo las opciones del rol que ingresó. En el celular es un cajón con un botón de menú. Sin sesión se mantiene un encabezado simple con "Acceso personal" arriba a la derecha.
@@ -980,7 +980,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/README.md` y `design-system/components.html`
 
 ### [C-22] `caja-y-cobros`
-- **Estado**: `[ ]` en propuesta (KB aprobada en el PR #118; propose y mockups en la rama `change/C-22-caja-y-cobros`, aprobados explícitamente por Enzo el 2026-11-24). Change `openspec/changes/caja-y-cobros/`: capabilities nuevas `caja`, `cobros-pacientes` y `frontend-caja`, y delta de `frontend-navegacion`. Migración V15
+- **Estado**: `[x]` completo (2026-11-24; KB en el PR #118, propuesta y mockups en el PR #121, apply en el PR #131, archive el mismo día). Specs: `openspec/specs/caja/`, `cobros-pacientes/` y `frontend-caja/` (nuevos) y `frontend-navegacion/` (actualizado: "Caja" en el menú de `ADMIN` y `RECEPCIONISTA`); change archivado en `openspec/changes/archive/2026-11-24-caja-y-cobros/`. Migración V15. Evidencia: `docs/evidencia/c22-backend.txt` (después del merge de master: 962 unitarios y 1133 de integración) y 991 tests del frontend; verificación visual en `design.md` (passed, con correcciones de la pantalla a 390 px, las ayudas de los importes y la fecha de la cuenta corriente). El módulo de estilos es `22-caja.css` (C-47 ya tenía el 21). Pendiente en `coberturas/` (Juan Sebastián): reemplazar el adaptador `SinCargosDeCaja` de C-20 por uno que lea la tabla `cargo`, para que las liquidaciones usen el precio del cargo. Aviso a C-39: su delta de `frontend-navegacion` modifica "Menú según la sesión" con una versión anterior a C-22; hay que actualizarlo antes de su archive para no perder "Caja"
 - **Responsable**: Enzo
 - **Scope**:
   - Caja diaria (apertura, cierre, arqueo), cobros por turno y cuenta corriente del paciente. **Migración V15**.
@@ -993,14 +993,17 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/03_actores_y_roles.md` §RBAC
 
 ### [C-23] `senas-mercado-pago`
-- **Estado**: `[ ]` pendiente
-- **Responsable**: Enzo
+- **Estado**: `[ ]` en propuesta (KB aprobada en el PR #133, con PA-62 y PA-64 decididas por la líder: el turno con seña pagada sigue `RESERVADO` y la notificación de Mercado Pago tiene una excepción de CSRF solo para su ruta). Propose y mockups en la rama `change/C-23-senas-mercado-pago`. Governance CRÍTICO: no se escribe código sin aprobación explícita
+- **Responsable**: Enzo (avisa a Juan Sebastián por `reserva/`, a Sofia por la cancelación y la reprogramación de `agenda/` y a Juan Cruz por los avisos de `notificaciones/`)
 - **Scope**:
-  - Puerto `PasarelaPago` con adaptador Mercado Pago (modo sandbox, **sin credenciales reales en el repo**): link de pago para la seña al reservar y webhook de confirmación con validación de firma.
+  - Puerto `PasarelaPago` con adaptador Mercado Pago (modo sandbox, **sin credenciales reales en el repo**) y una pasarela simulada: link de pago para la seña al reservar y webhook de confirmación con validación de firma.
+  - Seña con vencimiento, reintegros, traslado al reprogramar e imputación al cargo de C-22 (RN-SE-01 a RN-SE-12).
   - Tests: seña pagada confirma el turno; seña vencida lo libera; webhook con firma inválida rechazado.
+- **Migración**: V23 (propuesta en este PR, a confirmar por la líder): `sena`, `sena_movimiento` y el cambio de `cobro` (`MERCADO_PAGO` y `caja_id` nullable), sin editar V15
 - **Dependencias**: `C-10, C-22`
 - **Governance**: CRITICO (pagos)
 - **Leer antes**:
+  - `knowledge-base/05_reglas_de_negocio.md` §Dominio: Señas, DD-21 en `09_decisiones_y_supuestos.md`
   - `knowledge-base/02_descripcion_general.md` §Integraciones externas
   - `knowledge-base/08_arquitectura_propuesta.md` §Seguridad, §Variables de entorno
 

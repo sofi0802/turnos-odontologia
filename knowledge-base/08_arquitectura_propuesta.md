@@ -76,3 +76,7 @@ turnos-odontologia/
 | `SMTP_HOST` / `SMTP_PORT` | Servidor de email (de desarrollo) | `localhost` / `1025` | N |
 | `VITE_API_BASE_URL` | URL de la API para el frontend | `http://localhost:8080/api/v1` | N |
 | `IMAGENES_DIRECTORIO` | Carpeta del almacén de imágenes clínicas (C-26, DD-17). Contiene datos de salud: permisos solo para el proceso e incluirla en los respaldos | `./data/imagenes` | N |
+| `PAGOS_PASARELA` | Pasarela de las señas (C-23, RN-SE-10): `simulada` (desarrollo y tests) o `mercadopago` (sandbox) | `simulada` | N |
+| `MERCADOPAGO_ACCESS_TOKEN` | Token de **sandbox** de Mercado Pago (C-23). Nunca uno de producción en el TP | `(solo en .env local)` | **Y** |
+| `MERCADOPAGO_WEBHOOK_SECRET` | Clave para validar la firma de las notificaciones de Mercado Pago (C-23, RN-SE-05) | `(solo en .env local)` | **Y** |
+| `PAGOS_URL_PUBLICA` | URL pública del backend para la notificación y la vuelta del pago (C-23) | `http://localhost:8080` | N |
