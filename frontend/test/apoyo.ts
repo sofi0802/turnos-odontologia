@@ -34,6 +34,8 @@ export interface Pedido {
   /** El cuerpo multipart de un pedido con archivos (C-47), o `undefined`. */
   readonly formulario?: FormData;
   readonly encabezados: Headers;
+  /** La señal de cancelación del pedido (C-48: la firma espera 30 segundos), o `undefined`. */
+  readonly senal?: AbortSignal | null;
 }
 
 type Manejador = (pedido: Pedido) => Response | Promise<Response>;
@@ -103,6 +105,7 @@ export class ServidorFalso {
         cuerpo: texto === null ? undefined : (JSON.parse(texto) as unknown),
         ...(opciones?.body instanceof FormData ? { formulario: opciones.body } : {}),
         encabezados: new Headers(opciones?.headers),
+        ...(opciones?.signal === undefined ? {} : { senal: opciones.signal }),
       };
       this.pedidos.push(pedido);
       const manejador = this.manejadores.get(`${metodo} ${ruta}`) ?? this.buscarConId(metodo, ruta);

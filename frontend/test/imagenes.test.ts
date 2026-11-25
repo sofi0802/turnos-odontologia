@@ -38,9 +38,10 @@ describe('Sección de imágenes en la ficha', () => {
     const seccion = entorno.seccion();
     expect(seccion.querySelector('h2')?.textContent).toBe('Imágenes y estudios');
     expect(seccion.getAttribute('aria-labelledby')).toBe(seccion.querySelector('h2')?.id);
-    // Debajo del periodontograma y arriba del resto de la ficha.
+    // Debajo del periodontograma y arriba de los consentimientos (C-48) y del resto de la ficha.
     expect(entorno.main().querySelector('.perio-seccion')?.nextElementSibling).toBe(seccion);
-    expect(seccion.nextElementSibling?.classList.contains('ficha-columnas')).toBe(true);
+    expect(seccion.nextElementSibling?.classList.contains('cons-seccion')).toBe(true);
+    expect(seccion.nextElementSibling?.nextElementSibling?.classList.contains('ficha-columnas')).toBe(true);
     expect(entorno.servidor.a('GET', '/pacientes/1/imagenes')).toHaveLength(1);
   });
 

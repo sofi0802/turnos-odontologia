@@ -99,6 +99,12 @@ export const MENSAJES_POR_CODIGO: Readonly<Record<string, string>> = {
   PRESUPUESTO_CERRADO: 'Ese presupuesto ya estaba aceptado o rechazado.',
   CODIGO_NOMENCLADOR_REQUERIDO: 'Una de las prestaciones tiene varios códigos: elegí uno.',
   CODIGO_NOMENCLADOR_INVALIDO: 'El código elegido no corresponde a la prestación o está inactivo.',
+  // Consentimientos informados (C-48, design D9). Ninguno repite el DNI escrito ni el del paciente.
+  PLANTILLA_DUPLICADA: 'Ya existe una plantilla con ese título.',
+  VERSION_DESACTUALIZADA: 'La plantilla cambió mientras la usabas.',
+  PLANTILLA_INACTIVA: 'Esta plantilla se desactivó y ya no se puede firmar.',
+  CONSENTIMIENTO_YA_REVOCADO: 'El consentimiento ya estaba revocado.',
+  FIRMANTE_NO_COINCIDE: 'El DNI no coincide con el del paciente. Revisalo.',
 };
 
 export const MENSAJE_SIN_PERMISO = 'No tenés permiso para esta acción.';

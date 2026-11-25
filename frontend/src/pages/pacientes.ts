@@ -1,6 +1,11 @@
 import { crearBuscadorPacientes, type PacienteEncontrado } from '../agenda/buscador-pacientes.ts';
 import { crearSeccionCobertura, type SeccionCobertura } from '../coberturas/seccion.ts';
 import { crearSeccionPresupuestos, type SeccionPresupuestos } from '../presupuestos/seccion.ts';
+import { mostrarBloqueo } from '../consentimientos/bloqueo.ts';
+import type { FinDeFirma } from '../consentimientos/firma.ts';
+import type { ResultadoPrevio } from '../consentimientos/modelo.ts';
+import { dejarResultado, tomarResultado } from '../consentimientos/pendiente.ts';
+import { crearConsentimientos, type SeccionConsentimientos } from '../consentimientos/seccion.ts';
 import { crearAusencias, marcarAusenteDisponible } from '../ficha/ausencias.ts';
 import {
   guardarFicha,
@@ -18,7 +23,7 @@ import { anularImagen, cargarImagen, descargarArchivo, listarImagenes } from '..
 import { crearOdontograma, type Odontograma } from '../ficha/odontograma.ts';
 import { crearPeriodontograma, MENSAJE_DESCARTAR_PERIODONTOGRAMA, type SeccionPeriodontograma } from '../ficha/periodontograma.ts';
 import { listarVersiones, obtenerVersion, registrarVersion } from '../ficha/periodontograma-api.ts';
-import { tomarSeleccion, type SeleccionFicha } from '../ficha/seleccion.ts';
+import { dejarSeleccion, tomarSeleccion, type SeleccionFicha } from '../ficha/seleccion.ts';
 import { ErrorNoEncontrado, ErrorPermiso, ErrorSesion } from '../shared/api/errores.ts';
 import { crearAviso, crearBoton } from '../shared/ui/campos.ts';
 import { abrirDialogo } from '../shared/ui/dialogo.ts';
@@ -52,6 +57,8 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
   const este = dibujo;
   const vigente = (): boolean => este === dibujo && contenedor.isConnected;
   const editable = contexto.sesion.rol === 'ODONTOLOGO';
+  // C-48: lo que dejó una firma antes del bloqueo se muestra una sola vez, en la ficha que se reabre al desbloquear.
+  let previoDeLaFicha: ResultadoPrevio | null = tomarResultado();
 
   const pagina = document.createElement('div');
   pagina.className = 'pagina-ficha';
@@ -66,6 +73,7 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
   let periodontograma: SeccionPeriodontograma | null = null;
   let imagenes: SeccionImagenes | null = null;
   let cobertura: SeccionCobertura | null = null;
+  let consentimientos: SeccionConsentimientos | null = null;
   // C-49: el administrador carga la cobertura aunque la ficha clínica sea de solo lectura para él.
   const editaCobertura = contexto.sesion.rol === 'ADMIN' || contexto.sesion.rol === 'RECEPCIONISTA';
 
@@ -77,6 +85,44 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
     // C-50: los presupuestos se sueltan junto con la cobertura.
     presupuestos?.destruir();
     presupuestos = null;
+  }
+
+  function soltarConsentimientos(): void {
+    consentimientos?.destruir();
+    consentimientos = null;
+  }
+
+  /**
+   * La firma de un consentimiento terminó: se quita la ficha de la página (en memoria solo queda el usuario de la
+   * sesión) y se muestra "Devolvé el equipo al profesional" (C-48, design D12).
+   */
+  function bloquearEquipo(seleccion: SeleccionFicha, fin: FinDeFirma, previo: ResultadoPrevio | null): void {
+    odontograma = null;
+    periodontograma = null;
+    imagenes?.destruir();
+    imagenes = null;
+    soltarCobertura();
+    soltarConsentimientos();
+    exito.textContent = '';
+    error.textContent = '';
+    cuerpo.replaceChildren();
+    mostrarBloqueo({
+      api: contexto.api,
+      usuario: contexto.sesion.username ?? '',
+      fin: fin.tipo,
+      alDesbloquear() {
+        // Se reabre la ficha del mismo paciente por el camino de siempre: la selección y lo que dejó la firma.
+        dejarSeleccion({ paciente: seleccion.paciente, turno: null });
+        dejarResultado(previo);
+        contexto.irA(paginaPacientes.ruta);
+      },
+      alIngreso(aviso) {
+        contexto.irAMiCuenta(aviso);
+      },
+      alCambioDeContrasena() {
+        contexto.irA('cambiar-contrasena');
+      },
+    });
   }
 
   function sesionVencida(causa: unknown): boolean {
@@ -93,6 +139,7 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
     imagenes?.destruir();
     imagenes = null;
     soltarCobertura();
+    soltarConsentimientos();
     const panel = document.createElement('section');
     panel.className = 'panel ficha-seccion';
     const titulo = document.createElement('h2');
@@ -228,6 +275,7 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
     imagenes?.destruir();
     imagenes = null;
     soltarCobertura();
+    soltarConsentimientos();
     if (limpiarAvisos) {
       exito.textContent = '';
     }
@@ -296,6 +344,19 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
           mensajeDeError: (causa) => (sesionVencida(causa) ? '' : mensajeDeError(causa)),
           vigente,
         });
+        // C-48: los consentimientos van después de las imágenes y también cargan aparte (design D3).
+        consentimientos = crearConsentimientos({
+          pacienteId,
+          paciente: seleccion.paciente,
+          editable,
+          profesionalId: contexto.sesion.profesionalId ?? null,
+          previo: previoDeLaFicha,
+          alTerminarFirma: (fin, previo) => bloquearEquipo(seleccion, fin, previo),
+          api: contexto.api,
+          mensajeDeError: (causa) => (sesionVencida(causa) ? '' : mensajeDeError(causa)),
+          vigente,
+        });
+        previoDeLaFicha = null;
         const columnas = document.createElement('div');
         columnas.className = 'ficha-columnas';
         const derecha = document.createElement('div');
@@ -309,6 +370,7 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
           odontograma.elemento,
           periodontograma.contenedor,
           imagenes.contenedor,
+          consentimientos.contenedor,
           columnas,
         );
       } catch (causa) {

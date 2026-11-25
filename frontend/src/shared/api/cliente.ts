@@ -18,7 +18,8 @@ export type MetodoHttp = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 const METODOS_QUE_MODIFICAN: ReadonlySet<MetodoHttp> = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 
 export interface ClienteApi {
-  solicitar<T>(metodo: MetodoHttp, ruta: string, cuerpo?: unknown): Promise<T | undefined>;
+  /** `senal` corta el pedido si se cancela (C-48, D13): la firma de un consentimiento espera 30 segundos como mucho. */
+  solicitar<T>(metodo: MetodoHttp, ruta: string, cuerpo?: unknown, senal?: AbortSignal): Promise<T | undefined>;
   obtener<T>(ruta: string): Promise<T | undefined>;
   crear<T>(ruta: string, cuerpo?: unknown): Promise<T | undefined>;
   actualizar<T>(ruta: string, cuerpo?: unknown): Promise<T | undefined>;
@@ -99,7 +100,14 @@ export function crearClienteApi(
   const base = normalizarBase(urlBase);
 
   /** Hace el pedido con la sesión y el token CSRF; una respuesta no exitosa se traduce a su error. */
-  async function pedir(metodo: MetodoHttp, ruta: string, aceptar: string, cuerpo: BodyInit | null, tipoCuerpo?: string): Promise<Response> {
+  async function pedir(
+    metodo: MetodoHttp,
+    ruta: string,
+    aceptar: string,
+    cuerpo: BodyInit | null,
+    tipoCuerpo?: string,
+    senal?: AbortSignal,
+  ): Promise<Response> {
     const encabezados = new Headers({ Accept: aceptar });
     if (tipoCuerpo !== undefined) {
       encabezados.set('Content-Type', tipoCuerpo);
@@ -118,6 +126,7 @@ export function crearClienteApi(
         credentials: 'include',
         headers: encabezados,
         body: cuerpo,
+        ...(senal === undefined ? {} : { signal: senal }),
       });
     } catch {
       throw new ErrorGenerico(null);
@@ -129,13 +138,14 @@ export function crearClienteApi(
     return respuesta;
   }
 
-  async function solicitar<T>(metodo: MetodoHttp, ruta: string, cuerpo?: unknown): Promise<T | undefined> {
+  async function solicitar<T>(metodo: MetodoHttp, ruta: string, cuerpo?: unknown, senal?: AbortSignal): Promise<T | undefined> {
     const respuesta = await pedir(
       metodo,
       ruta,
       'application/json',
       cuerpo === undefined ? null : JSON.stringify(cuerpo),
       cuerpo === undefined ? undefined : 'application/json',
+      senal,
     );
     return (await leerCuerpo(respuesta)) as T | undefined;
   }

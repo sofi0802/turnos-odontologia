@@ -1132,7 +1132,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/05_reglas_de_negocio.md` §Clínica
 
 ### [C-48] `frontend-consentimientos`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-25, SDD, solo frontend; sin migraciones). Propuesta y mockups aprobados en el PR #137; apply en `change/C-48-frontend-consentimientos-apply`, sobre C-23 y C-17. Change en `openspec/changes/frontend-consentimientos/`; el archive queda para después del merge (regla del segundo con C-49, design D2). Pestaña "Consentimientos" del `ADMIN` después de "Señas" y módulo de estilos `28-consentimientos.css`. Evidencia: 1694 tests del frontend, `tsc` y build en verde; prueba manual (6.4) y verificación visual a 1440 y 390 px contra el backend de desarrollo en `design.md` (differences: el reloj de "Versiones", corregido, y dos hallazgos menores) con capturas en `mockups/verify/`
 - **Responsable**: Emanuel (avisa a Enzo, dueño de `frontend/`)
 - **Scope**:
   - C-27 hace el backend de los consentimientos, pero ninguna pantalla lo usa. Este change suma la interfaz, sin cambiar el contrato de la API.

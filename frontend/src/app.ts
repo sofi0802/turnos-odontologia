@@ -1,3 +1,4 @@
+import { borrarMarca, hayMarca, MENSAJE_SESION_CERRADA_AL_ARRANCAR } from './consentimientos/marca.ts';
 import { borrarReservaPendiente } from './paciente/reserva.ts';
 import { paginaAgenda } from './pages/agenda.ts';
 import { paginaCambiarContrasena } from './pages/cambiar-contrasena.ts';
@@ -74,8 +75,8 @@ function conCambioPendiente(base: ClienteApi, alPendiente: () => void): ClienteA
     }
   }
   return {
-    solicitar: <T>(metodo: Parameters<ClienteApi['solicitar']>[0], ruta: string, cuerpo?: unknown) =>
-      vigilar(base.solicitar<T>(metodo, ruta, cuerpo)),
+    solicitar: <T>(metodo: Parameters<ClienteApi['solicitar']>[0], ruta: string, cuerpo?: unknown, senal?: AbortSignal) =>
+      vigilar(base.solicitar<T>(metodo, ruta, cuerpo, senal)),
     obtener: <T>(ruta: string) => vigilar(base.obtener<T>(ruta)),
     crear: <T>(ruta: string, cuerpo?: unknown) => vigilar(base.crear<T>(ruta, cuerpo)),
     actualizar: <T>(ruta: string, cuerpo?: unknown) => vigilar(base.actualizar<T>(ruta, cuerpo)),
@@ -225,6 +226,17 @@ export function iniciarApp(raiz: HTMLElement, apiBase: ClienteApi = apiPorDefect
     },
     REDIRECCIONES,
   );
-  router.actualizar();
+  if (hayMarca()) {
+    // C-48, design D12: había una firma en curso (recarga u otra pestaña). Antes de dibujar cualquier página se cierra
+    // la sesión del odontólogo, se borra la marca y se muestra el ingreso con el aviso.
+    void cerrarSesion(api).then(() => {
+      borrarMarca();
+      avisoPendiente = MENSAJE_SESION_CERRADA_AL_ARRANCAR;
+      history.replaceState(history.state, '', `#/${paginaMiCuenta.ruta}`);
+      router.actualizar();
+    });
+  } else {
+    router.actualizar();
+  }
   return router;
 }

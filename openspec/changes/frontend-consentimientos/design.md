@@ -49,7 +49,7 @@ En el frontend:
   - El requisito "Secciones según el rol" (los dos lo reemplazan entero con `MODIFIED`).
   - `pages/configuracion.ts` y `configuracion/permisos.ts` (cada uno suma una pestaña y un permiso: `gestionaCoberturas` y `gestionaConsentimientos`).
   - `pages/pacientes.ts`: C-49 monta "Cobertura" entre la cabecera y el odontograma; C-48 monta "Consentimientos" después de "Imágenes y estudios". No compiten por el mismo lugar, pero los dos cambian el armado de la ficha y su `destruir()`.
-  - `styles.css` y `test/estilos-modulos.test.ts` (`REGLAS_POR_MODULO`): C-49 ya está en `master` con `24-coberturas.css` (el 22 y el 23 son de C-22 y C-15).
+  - `styles.css` y `test/estilos-modulos.test.ts` (`REGLAS_POR_MODULO`): en `master` ya están `22-caja.css` (C-22), `23-lista-espera.css` (C-15), `24-coberturas.css` (C-49) y `25-presupuestos.css` (C-50).
 - **Regla de coordinación**:
   - **Archive**: el que se archive **segundo** incluye la pestaña del otro en su `MODIFIED` de "Secciones según el rol" (la lista del `ADMIN`, "sin las N últimas" de los otros roles y los escenarios del otro, como "El odontólogo no ve Obras sociales"), porque `MODIFIED` reemplaza el requisito entero y si no borraría la pestaña del primero. Se verifica con `openspec validate --strict` y leyendo el spec principal después del archive.
   - **Apply**: el que se mergee **segundo** rebasa sobre `master` y resuelve `configuracion.ts` (las dos pestañas, "Obras sociales" antes de "Consentimientos"), `permisos.ts` (los dos campos), `pacientes.ts` (el orden de la ficha: cabecera, Cobertura, odontograma, periodontograma, imágenes, Consentimientos) y `styles.css` y `REGLAS_POR_MODULO` (los dos módulos). Los tests de los dos siguen pasando.
@@ -118,7 +118,7 @@ Nuevos en `MENSAJES_POR_CODIGO`:
 El editor y la vista de firma reemplazan `VERSION_DESACTUALIZADA` por su texto específico (specs). Los textos del bloqueo, la comprobación y la doble firma son propios de `firma.ts` y `bloqueo.ts` (specs). Ningún mensaje incluye datos escritos ni el DNI.
 
 ### D10. Estilos e íconos
-- Un módulo nuevo `frontend/src/styles/25-consentimientos.css`, importado al final de `styles.css` (después de `24-coberturas.css`) y registrado en `MODULOS` de `test/estilos.ts` y en `REGLAS_POR_MODULO` de `test/estilos-modulos.test.ts`. Usa el **25** porque en `master` ya están `22-caja.css` (C-22), `23-lista-espera.css` (C-15) y `24-coberturas.css` (C-49). `MODULOS_EN_DISCO` lee los archivos que hay y los ordena, sin exigir números seguidos. Es el `mockups/consentimientos.css` sin las reglas "Solo mockups".
+- Un módulo nuevo `frontend/src/styles/26-consentimientos.css`, importado al final de `styles.css` (después de `25-presupuestos.css`) y registrado en `MODULOS` de `test/estilos.ts` y en `REGLAS_POR_MODULO` de `test/estilos-modulos.test.ts`. Usa el **26** porque en `master` ya están `22-caja.css` (C-22), `23-lista-espera.css` (C-15), `24-coberturas.css` (C-49) y `25-presupuestos.css` (C-50). `MODULOS_EN_DISCO` lee los archivos que hay y los ordena, sin exigir números seguidos. Es el `mockups/consentimientos.css` sin las reglas "Solo mockups".
 - Solo tokens de la Revision 5, sin `outline: none`. **No hace falta un token nuevo**: la vista de firma y el bloqueo usan `--ds-fondo` y `--ds-superficie`; "Íntegro" y "La firma quedó guardada" usan `--ds-ok`/`--ds-ok-fondo`; "Alterado" y "La firma no se guardó", `--ds-error`/`--ds-error-fondo`; "Comprobando…" y la doble firma, `--ds-alerta` (patrón `aviso-alerta`); "Revocado", el patrón de anulada de C-47 (borde punteado y `--ds-superficie-2`); el hash, `--ds-fuente-mono`.
 - `shared/ui/iconos.ts` suma `firma`, `verificado`, `alterado` y `candado`, con el trazo de los existentes y `aria-hidden`; reusa `documento`, `ver` y `reloj`.
 
@@ -208,7 +208,7 @@ Sin migraciones ni cambios de backend. El apply necesita C-27 (PR #128) mergeado
 - Mockups: `openspec/changes/frontend-consentimientos/mockups/` (ver su `README.md`). Revisados el 2026-11-24 con las respuestas de Emanuel: vista de firma con el nombre del paciente y el DNI vacío, bloqueo y desbloqueo, comprobación del envío y aviso de doble firma.
 - Approval: approved (2026-11-25, by user: Emanuel). La líder los revisa en el PR; son el criterio de aceptación visual.
 - Preview: rendered (2026-11-24). 14 pantallas, 28 capturas de página completa (9 vueltas a capturar el 2026-11-24 tras la revisión: 3 nuevas y 6 cambiadas) en `mockups/previews/`, a 390 × 844 y 1440 × 900, con Playwright sobre un servidor estático local: sin desplazamiento horizontal a 390 px, sin errores de consola y sin controles de menos de 44 px.
-- Visual verify: pendiente (después del apply).
+- Visual verify: differences (2026-11-25). Detalle en "Verificación visual (tarea 8.2)", al final; capturas en `mockups/verify/`.
 
 ## Open Questions
 
@@ -230,3 +230,57 @@ Respondidas por Emanuel el 2026-11-25:
 11. **Intentos del desbloqueo**: resuelta. En esta primera versión **no se limitan los intentos de ingreso en el servidor**; quedan los tres intentos de la pantalla y no se abre un change de `seguridad-autenticacion` por ahora.
 12. **Sesión abierta durante la firma**: resuelta. **Se acepta el riesgo** de las herramientas del navegador mientras el paciente firma y queda anotado en Riesgos; no se propone el "modo firma" en el backend.
 13. **Contraseña guardada en el navegador**: resuelta. **No se avisa** en la pantalla ni en el manual: si el consultorio guarda la contraseña en el navegador, asume ese riesgo.
+
+## Notas del apply
+
+Desvíos y decisiones del apply (2026-11-25), sin cambiar el comportamiento aprobado en los specs:
+
+1. **`shared/api/cliente.ts` y `app.ts`**: `ClienteApi.solicitar` suma un cuarto parámetro opcional `senal?: AbortSignal` (y el envoltorio de `app.ts` lo pasa). Es aditivo: ningún pedido existente cambia. Hace falta para que la firma se corte a los 30 segundos (D13); el no-objetivo "cambiar el cliente de la API" se refería a su comportamiento, no a este parámetro.
+2. **Diálogos con el molde**: `test/dialogo.test.ts` exige que ningún archivo fuera de `shared/ui/dialogo.ts` cree un `<dialog>`. Por eso la vista de firma (D5) sale de `abrirDialogo` y se reacomoda (clase `firma-pantalla` en lugar de `dialogo`, `Cancelar` y `Firmar` como sus dos botones, el aviso del molde como aviso de la vista), y los diálogos de versiones y del documento son `abrirDialogo` sin el botón principal. D5 decía que la vista no usaba `abrirDialogo`; el resultado visual y de accesibilidad es el mismo.
+3. **Capa del bloqueo**: `mockups/consentimientos.css` usaba `z-index: var(--ds-capa-modal)`, pero ese token es un color (el velo de los diálogos, `rgb(29 42 51 / 45%)`) y no sirve como `z-index`. `26-consentimientos.css` usa una capa numérica (`1000`) y un test lo cuida. Conviene corregir el mockup.
+4. **`pagehide` sin `keepalive`**: el cliente de la API no ofrece `keepalive`, así que, con el logout pendiente, al salir de la página se vuelve a pedir `POST /logout` con el cliente (mejor esfuerzo). Cubre menos que el `fetch` con `keepalive` de D12; para cubrirlo habría que sumarlo al cliente.
+5. **Edición de plantillas, `201` y `200`**: el cliente no entrega el estado HTTP, así que "sin cambios" se decide porque la respuesta trae el mismo número de versión que `versionBase`. Tras `409 VERSION_DESACTUALIZADA`, "Guardar" queda deshabilitado (se conserva lo escrito y "Cancelar" sigue disponible).
+6. **Clasificación del envío de la firma** (D13): `401` y `403` son "no se guardó"; red, tiempo agotado, `5xx`, respuesta ilegible o un error que no es de la API son dudosos; un `4xx` que no es de los listados (`404`, `400`, `413`) se avisa dentro de la vista, sin bloquear, porque el servidor lo rechazó antes de guardar. El `403` de `CAMBIO_DE_CONTRASENA_PENDIENTE` sigue llevando al cambio de contraseña por el envoltorio de `app.ts`.
+7. **Reabrir la ficha**: al desbloquear, `pacientes.ts` deja la selección (`ficha/seleccion.ts`) y lo que dejó la firma (`consentimientos/pendiente.ts`, en memoria y de un solo uso) y navega a `#/pacientes`; así también funciona si el profesional usó "atrás" durante el bloqueo. Con la contraseña temporal pendiente (C-41) va a `#/cambiar-contrasena` sin reabrir la ficha.
+8. **Aviso de "firmada"**: "Consentimiento firmado: Título, versión N, a las HH:MM." (el spec pide el título, la versión y la hora).
+9. **"Hacer firmar de nuevo"** repite el camino de "Continuar" con la misma plantilla (pide la plantilla y el listado y pasa por el aviso de doble firma).
+10. **Arranque con la marca y el logout caído**: se borra la marca igual y se sigue; con la sesión todavía abierta, Mi cuenta lleva a la agenda, nunca a la ficha.
+11. **Salir de la página**: como en C-47 y C-49, la sección se destruye al cambiar de paciente o al volver a dibujar la ficha; `vigente()` frena los pedidos viejos. Con "atrás" mientras hay un diálogo del documento abierto, ese diálogo no se cierra solo (hallazgo menor, no cubierto por los specs).
+12. **Tests de otros changes ajustados, solo para sumar lo nuevo**: `configuracion-pestanas.test.ts` (pestaña "Consentimientos" y permiso `gestionaConsentimientos`), `imagenes.test.ts` (la sección de consentimientos va entre las imágenes y `ficha-columnas`), `ficha-pacientes.test.ts` (respuesta por defecto del listado de consentimientos) y `estilos-modulos.test.ts` (el test de C-49 "Se importa al final de styles.css" pasó a "Se importa después del módulo de la lista de espera", como ya hizo C-22 con el de imágenes, porque ahora el último módulo es el 25).
+13. **Merge con C-50 (frontend-presupuestos)**: C-50 se mergeó antes y tomó `25-presupuestos.css`, así que el módulo de C-48 pasó a `26-consentimientos.css`. En la ficha, "Presupuestos" va debajo de "Cobertura" y "Consentimientos" sigue después de "Imágenes y estudios". El test de C-50 "Se importa al final de styles.css" pasó a "Se importa justo después del módulo de coberturas", y el de C-49 ahora comprueba solo que sigue a la lista de espera (el mismo patrón de C-22 y C-15). Los códigos de error de los dos changes conviven en `MENSAJES_POR_CODIGO`.
+14. **Merge con C-23 (señas) y C-17 (consentimiento de comunicaciones), 2026-11-25**: los dos se mergearon antes y tomaron `26-senas.css` y `27-consentimiento.css`, así que el módulo de C-48 pasó a `28-consentimientos.css` y sigue siendo el último de `styles.css`. En Configuración, el orden del `ADMIN` queda "Usuarios", "Obras sociales", "Señas" y "Consentimientos": C-48 va última, como pedía D2. Conviven los permisos `configuraSenas` y `gestionaConsentimientos` y los íconos de C-17 (`mensaje`, `mensaje-no`, `telefono`, `persona`) con los de C-48. Tests ajustados solo para sumar lo nuevo: `configuracion-pestanas.test.ts` (la última pestaña del administrador es "Consentimientos", después de "Señas"), `consentimientos-plantillas.test.ts` ("va después de Señas") y `estilos-modulos.test.ts` (el de C-50 ya no exige que 27 sea el último). Como C-23 ya está archivado, el delta de `frontend-configuracion-consultorio` se reescribió contra la spec principal con "Señas" (tarea 1.2); C-49 todavía no está archivado, así que "Obras sociales" queda fuera del delta según D2. Resultado tras el merge: 1693 tests, `tsc` y `build` en verde.
+
+## Prueba manual (tarea 6.4)
+
+2026-11-25, con Docker (`docker compose up -d`: base, backend de `master` con C-27 y el frontend de esta rama), navegador integrado del cliente, sesión de `ana.ejemplo` y el paciente ficticio "Paciente Uno" (DNI 99000001).
+
+| Acción | Momento | Resultado |
+|---|---|---|
+| Escape dos veces | bloqueo después de firmar | El bloqueo sigue; la raíz queda `inert`; ni el nombre ni el DNI del paciente están en el DOM. |
+| Escape | vista de firma | Cancela la firma y pasa al bloqueo: "La firma se canceló. No se guardó nada." |
+| Atrás | bloqueo | Pasa por `#/agenda` a `#/mi-cuenta` con el bloqueo encima; ni la ficha ni el buscador quedan visibles. |
+| Abrir otra pestaña en `#/pacientes` | bloqueo | Muestra el ingreso con "Por seguridad, la sesión se cerró…"; nunca la ficha. |
+| Recargar | bloqueo | Cierra la sesión, borra la marca `turnos.firmaEnCurso` y muestra el ingreso con el mismo aviso. |
+
+Hallazgo menor: al recargar, el `POST /api/v1/logout` del arranque responde `403` porque la sesión ya se había cerrado al bloquear (sin token CSRF vigente). No cambia el resultado (la marca se borra y queda el ingreso), pero deja un error en la consola.
+
+## Verificación visual (tarea 8.2)
+
+Mismo entorno que la 6.4. Capturas en `mockups/verify/`. Pedidos a `/api/v1/consentimientos` y `/api/v1/pacientes/4/consentimientos`: todos `2xx`, salvo el `422 FIRMANTE_NO_COINCIDE` provocado a propósito, el `401` de la contraseña mala y el `403` del logout descrito arriba. La dirección quedó siempre en `#/configuracion` o `#/pacientes`, `sessionStorage` vacío y `localStorage` vacío salvo la marca `"1"` mientras dura la firma o el bloqueo.
+
+| Pantalla (mockup) | 1440 | 390 | Resultado |
+|---|---|---|---|
+| Lista de plantillas (`plantillas-lista`) | sí | sí | Igual, salvo el ícono del reloj en "Versiones", que faltaba (**menor, corregido** con su test en `consentimientos-plantillas.test.ts`). Sin desplazamiento horizontal a 390. |
+| Editor: nueva y edición (`plantillas-editor`) | sí | nueva | Igual: contador, "Se guarda como versión 2", aviso "Plantilla guardada como versión 2.". |
+| Versiones (`plantillas-estados`) | sí | — | Igual. |
+| Desactivar (`plantillas-estados`) | — | sí | Igual: "Plantilla desactivada." y la fila "Inactiva" con "Activar". La plantilla inactiva no se ofrece al firmar. |
+| Sección de la ficha (`consentimientos-ficha`) | vacía y firmada | firmada y revocada | Igual. |
+| Elegir plantilla y aviso de doble firma (`firma-estados`) | sí | elegir | Igual. |
+| Vista de firma vacía, completa, errores y DNI que no coincide (`firma-vacia`, `firma-completa`, `firma-errores`) | sí | vacía y completa | Igual. A 390 ocupa todo el ancho (390 px), sin desplazamiento horizontal y con los controles de 44 px o más. |
+| Bloqueo: firmada, cancelada y contraseña incorrecta (`firma-bloqueo`, `firma-bloqueo-estados`) | sí | firmada | Igual; "Te quedan 2 intentos". |
+| Documento: "Íntegro" y revocado (`consentimiento-ver`) | íntegro | revocado | Igual, con el motivo y quién revocó. |
+| Revocar (`consentimientos-estados`) | — | sí | Igual. |
+
+Hallazgo menor fuera de C-48: con 11 pestañas, la tira de Configuración se desplaza y, a 390, la pestaña elegida no se lleva a la vista al cambiar el tamaño (componente `crearPestanas` de C-34).
+
+No verificados a 390 px: los errores de la firma, el aviso de doble firma y la contraseña incorrecta (iguales a 1440 y cubiertos por los tests). No verificada en el navegador: la vista de solo lectura del administrador en la ficha (cubierta por los tests de 7.1).

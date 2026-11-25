@@ -56,6 +56,8 @@ function responderFicha(ficha: object = FICHA_CARGADA, registros: unknown[] = []
   servidor.responder('GET /pacientes/{id}/imagenes', () => json(200, []));
   // C-49: y la cobertura; acá el paciente es particular y sin afiliaciones.
   servidor.responder('GET /pacientes/{id}/cobertura', () => json(200, { particular: true, afiliacion: null }));
+  // C-48: y los consentimientos; acá el paciente todavía no firmó ninguno.
+  servidor.responder('GET /pacientes/{id}/consentimientos', () => json(200, []));
   servidor.responder('GET /pacientes/{id}/afiliaciones', () => json(200, []));
   // C-50: y los presupuestos; acá el paciente no tiene ninguno.
   servidor.responder('GET /pacientes/{id}/presupuestos', () => json(200, []));

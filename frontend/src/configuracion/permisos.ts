@@ -31,6 +31,8 @@ export interface Permisos {
   readonly gestionaCoberturas: boolean;
   /** Configurar las señas de la reserva online: solo `ADMIN` (C-23, RN-SE-01). */
   readonly configuraSenas: boolean;
+  /** Administrar las plantillas de consentimiento informado (pestaña "Consentimientos"): solo `ADMIN` (C-48, D2). */
+  readonly gestionaConsentimientos: boolean;
 }
 
 const NINGUNO: Permisos = {
@@ -47,6 +49,7 @@ const NINGUNO: Permisos = {
   gestionaUsuarios: false,
   gestionaCoberturas: false,
   configuraSenas: false,
+  gestionaConsentimientos: false,
 };
 
 export function permisos(sesion: Sesion): Permisos {
@@ -66,6 +69,7 @@ export function permisos(sesion: Sesion): Permisos {
         gestionaUsuarios: true,
         gestionaCoberturas: true,
         configuraSenas: true,
+        gestionaConsentimientos: true,
       };
     case 'RECEPCIONISTA':
       return { ...NINGUNO, gestionaAusencias: true, reasigna: true, veBloqueos: true, veTodos: true };
