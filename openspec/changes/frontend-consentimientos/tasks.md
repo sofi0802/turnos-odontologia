@@ -51,7 +51,7 @@
 - [x] 6.1 Escribir los tests de "Devolver el equipo al profesional", "Desbloquear con la contraseña del profesional" y "Contraseña incorrecta en el bloqueo", y después `consentimientos/bloqueo.ts` (design D12): ficha vaciada, bloqueo en `document.body` con la raíz `inert`, `POST /api/v1/logout` con reintento, `iniciarSesion` con el usuario fijo, comprobación del usuario y el rol, tres intentos y errores de red; verificar con `npm test`
 - [x] 6.2 Escribir los tests de "Marca de firma en curso" y "Recargar durante la firma o el bloqueo", y después la marca en `firma.ts` y `bloqueo.ts` y el logout al arrancar en `app.ts` (design D12); verificar con `npm test` y que los tests de navegación y sesión sigan pasando
 - [x] 6.3 Escribir los tests de "Sesión vencida durante la firma", "Envío dudoso de la firma" y "Comprobar si la firma quedó guardada" (incluido que nunca dice "no se guardó" sin una respuesta del listado), y después la comprobación en `seccion.ts` (design D13); verificar con `npm test`
-- [ ] 6.4 Probar a mano en el navegador, con la sesión de desarrollo, que Escape (dos veces), atrás, recargar y abrir otra pestaña durante la firma y el bloqueo no muestran la ficha ni el buscador de pacientes; anotar el resultado en `design.md`
+- [x] 6.4 Probar a mano en el navegador, con la sesión de desarrollo, que Escape (dos veces), atrás, recargar y abrir otra pestaña durante la firma y el bloqueo no muestran la ficha ni el buscador de pacientes; anotar el resultado en `design.md`
 
 ## 7. Permisos, accesibilidad y privacidad
 

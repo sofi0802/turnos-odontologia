@@ -115,6 +115,19 @@ describe('Lista de plantillas', () => {
     expect(visible(segunda)).toContain('Inactiva');
   });
 
+  it('"Versiones" lleva el ícono del reloj, como en el mockup, y "Editar" y "Desactivar" no llevan ícono', async () => {
+    const { panel } = await abrirPestana();
+
+    const versiones = boton(panel, `Versiones de ${TITULO_EXTRACCION}`);
+    const icono = versiones.querySelector('svg');
+    expect(icono).not.toBeNull();
+    expect(icono?.getAttribute('aria-hidden')).toBe('true');
+    expect(icono?.querySelector('circle')).not.toBeNull();
+    expect(versiones.textContent?.trim()).toBe('Versiones');
+    expect(boton(panel, `Editar ${TITULO_EXTRACCION}`).querySelector('svg')).toBeNull();
+    expect(boton(panel, `Desactivar ${TITULO_EXTRACCION}`).querySelector('svg')).toBeNull();
+  });
+
   it('conserva el orden de la API', async () => {
     const servidor = servidorAdmin();
     servidor.responder('GET /consentimientos/plantillas', () => json(200, [...PLANTILLAS].reverse()));

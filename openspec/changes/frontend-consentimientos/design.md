@@ -208,7 +208,7 @@ Sin migraciones ni cambios de backend. El apply necesita C-27 (PR #128) mergeado
 - Mockups: `openspec/changes/frontend-consentimientos/mockups/` (ver su `README.md`). Revisados el 2026-11-24 con las respuestas de Emanuel: vista de firma con el nombre del paciente y el DNI vacío, bloqueo y desbloqueo, comprobación del envío y aviso de doble firma.
 - Approval: approved (2026-11-25, by user: Emanuel). La líder los revisa en el PR; son el criterio de aceptación visual.
 - Preview: rendered (2026-11-24). 14 pantallas, 28 capturas de página completa (9 vueltas a capturar el 2026-11-24 tras la revisión: 3 nuevas y 6 cambiadas) en `mockups/previews/`, a 390 × 844 y 1440 × 900, con Playwright sobre un servidor estático local: sin desplazamiento horizontal a 390 px, sin errores de consola y sin controles de menos de 44 px.
-- Visual verify: pendiente (después del apply).
+- Visual verify: differences (2026-11-25). Detalle en "Verificación visual (tarea 8.2)", al final; capturas en `mockups/verify/`.
 
 ## Open Questions
 
@@ -249,3 +249,38 @@ Desvíos y decisiones del apply (2026-11-25), sin cambiar el comportamiento apro
 12. **Tests de otros changes ajustados, solo para sumar lo nuevo**: `configuracion-pestanas.test.ts` (pestaña "Consentimientos" y permiso `gestionaConsentimientos`), `imagenes.test.ts` (la sección de consentimientos va entre las imágenes y `ficha-columnas`), `ficha-pacientes.test.ts` (respuesta por defecto del listado de consentimientos) y `estilos-modulos.test.ts` (el test de C-49 "Se importa al final de styles.css" pasó a "Se importa después del módulo de la lista de espera", como ya hizo C-22 con el de imágenes, porque ahora el último módulo es el 25).
 13. **Merge con C-50 (frontend-presupuestos)**: C-50 se mergeó antes y tomó `25-presupuestos.css`, así que el módulo de C-48 pasó a `26-consentimientos.css`. En la ficha, "Presupuestos" va debajo de "Cobertura" y "Consentimientos" sigue después de "Imágenes y estudios". El test de C-50 "Se importa al final de styles.css" pasó a "Se importa justo después del módulo de coberturas", y el de C-49 ahora comprueba solo que sigue a la lista de espera (el mismo patrón de C-22 y C-15). Los códigos de error de los dos changes conviven en `MENSAJES_POR_CODIGO`.
 14. **Merge con C-23 (señas) y C-17 (consentimiento de comunicaciones), 2026-11-25**: los dos se mergearon antes y tomaron `26-senas.css` y `27-consentimiento.css`, así que el módulo de C-48 pasó a `28-consentimientos.css` y sigue siendo el último de `styles.css`. En Configuración, el orden del `ADMIN` queda "Usuarios", "Obras sociales", "Señas" y "Consentimientos": C-48 va última, como pedía D2. Conviven los permisos `configuraSenas` y `gestionaConsentimientos` y los íconos de C-17 (`mensaje`, `mensaje-no`, `telefono`, `persona`) con los de C-48. Tests ajustados solo para sumar lo nuevo: `configuracion-pestanas.test.ts` (la última pestaña del administrador es "Consentimientos", después de "Señas"), `consentimientos-plantillas.test.ts` ("va después de Señas") y `estilos-modulos.test.ts` (el de C-50 ya no exige que 27 sea el último). Como C-23 ya está archivado, el delta de `frontend-configuracion-consultorio` se reescribió contra la spec principal con "Señas" (tarea 1.2); C-49 todavía no está archivado, así que "Obras sociales" queda fuera del delta según D2. Resultado tras el merge: 1693 tests, `tsc` y `build` en verde.
+
+## Prueba manual (tarea 6.4)
+
+2026-11-25, con Docker (`docker compose up -d`: base, backend de `master` con C-27 y el frontend de esta rama), navegador integrado del cliente, sesión de `ana.ejemplo` y el paciente ficticio "Paciente Uno" (DNI 99000001).
+
+| Acción | Momento | Resultado |
+|---|---|---|
+| Escape dos veces | bloqueo después de firmar | El bloqueo sigue; la raíz queda `inert`; ni el nombre ni el DNI del paciente están en el DOM. |
+| Escape | vista de firma | Cancela la firma y pasa al bloqueo: "La firma se canceló. No se guardó nada." |
+| Atrás | bloqueo | Pasa por `#/agenda` a `#/mi-cuenta` con el bloqueo encima; ni la ficha ni el buscador quedan visibles. |
+| Abrir otra pestaña en `#/pacientes` | bloqueo | Muestra el ingreso con "Por seguridad, la sesión se cerró…"; nunca la ficha. |
+| Recargar | bloqueo | Cierra la sesión, borra la marca `turnos.firmaEnCurso` y muestra el ingreso con el mismo aviso. |
+
+Hallazgo menor: al recargar, el `POST /api/v1/logout` del arranque responde `403` porque la sesión ya se había cerrado al bloquear (sin token CSRF vigente). No cambia el resultado (la marca se borra y queda el ingreso), pero deja un error en la consola.
+
+## Verificación visual (tarea 8.2)
+
+Mismo entorno que la 6.4. Capturas en `mockups/verify/`. Pedidos a `/api/v1/consentimientos` y `/api/v1/pacientes/4/consentimientos`: todos `2xx`, salvo el `422 FIRMANTE_NO_COINCIDE` provocado a propósito, el `401` de la contraseña mala y el `403` del logout descrito arriba. La dirección quedó siempre en `#/configuracion` o `#/pacientes`, `sessionStorage` vacío y `localStorage` vacío salvo la marca `"1"` mientras dura la firma o el bloqueo.
+
+| Pantalla (mockup) | 1440 | 390 | Resultado |
+|---|---|---|---|
+| Lista de plantillas (`plantillas-lista`) | sí | sí | Igual, salvo el ícono del reloj en "Versiones", que faltaba (**menor, corregido** con su test en `consentimientos-plantillas.test.ts`). Sin desplazamiento horizontal a 390. |
+| Editor: nueva y edición (`plantillas-editor`) | sí | nueva | Igual: contador, "Se guarda como versión 2", aviso "Plantilla guardada como versión 2.". |
+| Versiones (`plantillas-estados`) | sí | — | Igual. |
+| Desactivar (`plantillas-estados`) | — | sí | Igual: "Plantilla desactivada." y la fila "Inactiva" con "Activar". La plantilla inactiva no se ofrece al firmar. |
+| Sección de la ficha (`consentimientos-ficha`) | vacía y firmada | firmada y revocada | Igual. |
+| Elegir plantilla y aviso de doble firma (`firma-estados`) | sí | — | Igual. |
+| Vista de firma vacía, errores y DNI que no coincide (`firma-vacia`, `firma-errores`) | sí | — | Igual. |
+| Bloqueo: firmada, cancelada y contraseña incorrecta (`firma-bloqueo`, `firma-bloqueo-estados`) | sí | — | Igual; "Te quedan 2 intentos". |
+| Documento: "Íntegro" y revocado (`consentimiento-ver`) | íntegro | revocado | Igual, con el motivo y quién revocó. |
+| Revocar (`consentimientos-estados`) | — | sí | Igual. |
+
+Hallazgo menor fuera de C-48: con 11 pestañas, la tira de Configuración se desplaza y, a 390, la pestaña elegida no se lleva a la vista al cambiar el tamaño (componente `crearPestanas` de C-34).
+
+No verificadas a 390 px: la vista de firma y el bloqueo (hacen falta otra firma y otro desbloqueo con la contraseña del profesional). No verificadas en el navegador: la vista de solo lectura del administrador en la ficha (cubierta por los tests de 7.1).

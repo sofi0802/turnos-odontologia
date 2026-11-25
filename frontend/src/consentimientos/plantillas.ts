@@ -3,6 +3,7 @@ import { fechaNumerica } from '../ficha/formato.ts';
 import { ErrorNegocio } from '../shared/api/errores.ts';
 import { crearAviso, crearBoton } from '../shared/ui/campos.ts';
 import { crearEstadoVacio } from '../shared/ui/estado-vacio.ts';
+import { crearIcono } from '../shared/ui/iconos.ts';
 import { mensajeDeError } from '../shared/ui/mensajes.ts';
 import { formatearHora } from '../shared/fecha/zona.ts';
 import {
@@ -137,6 +138,8 @@ export function montarConsentimientos(panel: HTMLElement, contexto: ContextoSecc
     editar.setAttribute('aria-label', `Editar ${plantilla.titulo}`);
     editar.addEventListener('click', () => void abrirEdicion(editar, plantilla));
     const versiones = botonChico('Versiones');
+    // El reloj del mockup (plantillas-lista.html, data-icono="reloj").
+    versiones.prepend(crearIcono('reloj'));
     versiones.setAttribute('aria-label', `Versiones de ${plantilla.titulo}`);
     versiones.addEventListener('click', () => void abrirVersiones(versiones, plantilla));
     const estado = plantilla.activa ? botonChico('Desactivar', 'peligro') : botonChico('Activar');
