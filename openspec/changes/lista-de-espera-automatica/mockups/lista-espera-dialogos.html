@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lista de espera: diálogos y plazo · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="lista-espera.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="admin" data-rol="ADMIN" data-activa="lista-espera">
+  <h1 tabindex="-1">Lista de espera</h1>
+
+  <p class="rotulo-estado">1 · Anotar paciente</p>
+  <dialog open class="dialogo mockup-dialogo" aria-labelledby="d1">
+    <h2 id="d1">Anotar paciente</h2>
+    <p class="dialogo-resumen">Le avisamos por mensaje cuando se libere un horario que le sirva.</p>
+    <form class="formulario" novalidate>
+      <div class="campo">
+        <label for="d1-paciente">Paciente</label>
+        <input id="d1-paciente" class="control" type="search" value="Paciente Uno · DNI 99000001" />
+      </div>
+      <div class="campo">
+        <label for="d1-prestacion">Prestación</label>
+        <select id="d1-prestacion" class="control"><option>Limpieza (30 min)</option></select>
+      </div>
+      <div class="campo">
+        <label for="d1-profesional">Profesional</label>
+        <select id="d1-profesional" class="control"><option>Sin preferencia</option><option>Ana Ejemplo</option><option>Bruno Prueba</option></select>
+      </div>
+      <div class="le-rango">
+        <div class="campo"><label for="d1-desde">Desde</label><input id="d1-desde" class="control" type="date" value="2026-12-01" /></div>
+        <div class="campo"><label for="d1-hasta">Hasta</label><input id="d1-hasta" class="control" type="date" value="2026-12-15" /></div>
+      </div>
+      <p class="ayuda">Hasta 60 días. Una sola inscripción por prestación.</p>
+      <div class="dialogo-acciones"><button type="button" class="btn">Volver</button><button type="submit" class="btn btn-principal">Anotar</button></div>
+    </form>
+  </dialog>
+
+  <p class="rotulo-estado">2 · Rango demasiado largo</p>
+  <dialog open class="dialogo mockup-dialogo" aria-labelledby="d2">
+    <h2 id="d2">Anotar paciente</h2>
+    <form class="formulario" novalidate>
+      <div class="le-rango">
+        <div class="campo"><label for="d2-desde">Desde</label><input id="d2-desde" class="control" type="date" value="2026-12-01" /></div>
+        <div class="campo"><label for="d2-hasta">Hasta</label><input id="d2-hasta" class="control" type="date" value="2027-02-15" aria-invalid="true" aria-describedby="d2-error" /><p id="d2-error" class="campo-error">El rango puede ser de hasta 60 días.</p></div>
+      </div>
+      <div class="dialogo-acciones"><button type="button" class="btn">Volver</button><button type="submit" class="btn btn-principal">Anotar</button></div>
+    </form>
+  </dialog>
+
+  <p class="rotulo-estado">3 · Paciente sin consentimiento (409 SIN_CONSENTIMIENTO)</p>
+  <dialog open class="dialogo mockup-dialogo" aria-labelledby="d3">
+    <h2 id="d3">Anotar paciente</h2>
+    <p class="aviso aviso-error" role="alert">El paciente no aceptó recibir mensajes: no le podemos avisar las ofertas.</p>
+    <form class="formulario" novalidate>
+      <div class="campo"><label for="d3-paciente">Paciente</label><input id="d3-paciente" class="control" type="search" value="Paciente Tres · DNI 99000003" /></div>
+      <div class="dialogo-acciones"><button type="button" class="btn">Volver</button><button type="submit" class="btn btn-principal">Anotar</button></div>
+    </form>
+  </dialog>
+
+  <p class="rotulo-estado">4 · Confirmar la baja</p>
+  <dialog open class="dialogo mockup-dialogo" aria-labelledby="d4">
+    <h2 id="d4">¿Dar de baja a Paciente Dos de la lista de espera?</h2>
+    <p class="dialogo-resumen">Tiene una oferta pendiente: se le ofrece al siguiente de la lista.</p>
+    <form class="formulario" novalidate>
+      <div class="dialogo-acciones"><button type="button" class="btn">Volver</button><button type="submit" class="btn btn-peligro">Dar de baja</button></div>
+    </form>
+  </dialog>
+
+  <p class="rotulo-estado">5 · Configuración, pestaña Margen (administrador)</p>
+  <div class="panel">
+    <p class="ayuda">Tiempo mínimo entre dos turnos del mismo profesional o del mismo sillón.</p>
+    <p>Margen vigente: <span class="margen-valor">10</span> minutos</p>
+    <section class="le-plazo" aria-labelledby="p1">
+      <h3 id="p1">Plazo para aceptar una oferta de la lista de espera</h3>
+      <p class="ayuda">Si el paciente no acepta en este plazo, el horario se le ofrece al siguiente.</p>
+      <p>Plazo vigente: <span class="margen-valor">2</span> horas</p>
+      <form class="campo-margen" novalidate>
+        <div class="campo"><label for="p1-horas">Nuevo plazo</label><input id="p1-horas" class="control" type="number" min="1" max="24" value="4" /></div>
+        <button type="submit" class="btn btn-principal">Guardar plazo</button>
+      </form>
+      <p class="aviso aviso-ok" role="status">Guardaste el plazo: 4 horas.</p>
+    </section>
+  </div>
+
+  <p class="rotulo-estado">6 · Plazo fuera de rango</p>
+  <div class="panel">
+    <section class="le-plazo" aria-labelledby="p2">
+      <h3 id="p2">Plazo para aceptar una oferta de la lista de espera</h3>
+      <form class="campo-margen" novalidate>
+        <div class="campo"><label for="p2-horas">Nuevo plazo</label><input id="p2-horas" class="control" type="number" value="30" aria-invalid="true" aria-describedby="p2-error" /><p id="p2-error" class="campo-error">Ingresá un número entero de 1 a 24.</p></div>
+        <button type="submit" class="btn btn-principal">Guardar plazo</button>
+      </form>
+    </section>
+  </div>
+
+  <p class="rotulo-estado">7 · Plazo en solo lectura (recepción)</p>
+  <div class="panel">
+    <section class="le-plazo" aria-labelledby="p3">
+      <h3 id="p3">Plazo para aceptar una oferta de la lista de espera</h3>
+      <p>Plazo vigente: <span class="margen-valor">2</span> horas</p>
+      <p class="ayuda">Solo el administrador puede cambiar el plazo.</p>
+    </section>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

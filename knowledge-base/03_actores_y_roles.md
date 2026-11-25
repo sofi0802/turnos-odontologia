@@ -33,6 +33,8 @@ C = crear, R = leer, U = modificar, D = eliminar o desactivar. "Propio" = solo s
 | Llegada del paciente (RN-AG-20) [2026-11-24] | — | U (desde la agenda) | — | — |
 | Ausencia del paciente (RN-AG-17) [2026-11-24] | — | U (desde la agenda) | U propio (desde la ficha) | — |
 | Deshacer la ausencia del paciente (RN-AG-17) [2026-11-24] | — | U (si el horario sigue libre) | — (ve en la ficha que se deshizo) | — |
+| Lista de espera (RN-LE-01, RN-LE-09) [2026-11-24, C-15] | CRUD (anota, ve y da de baja) | CRUD (anota, ve y da de baja) | — | C, R y baja propias; acepta o rechaza la oferta desde el link, sin sesión (RN-LE-07) |
+| Plazo para aceptar una oferta de la lista de espera (RN-LE-05) [2026-11-24, C-15] | U (de 1 a 24 h) | R | — | — |
 | Paciente (datos de contacto) | CRUD | CRUD | R | R/U propio (al reservar) |
 | Ficha clínica y odontograma | R | **—** | CRUD | — |
 | Periodontograma (RN-CL-04) [2026-11-24] | R | **—** | C y R (cada carga es una versión nueva; no se edita ni se borra) | — |
@@ -61,5 +63,6 @@ Accesibles sin sesión del personal:
 - `GET /api/v1/paciente/turnos`: sus turnos.
 - `POST /api/v1/paciente/reservas/{numeroReserva}/cancelar` y `/reprogramar`: hasta 24 h antes (RN-AG-07).
 - `POST /api/v1/public/confirmaciones/{token}`: confirmación desde el link del recordatorio.
+- `GET /api/v1/public/ofertas/{token}` y `POST /api/v1/public/ofertas/{token}/aceptar` o `/rechazar`: oferta de la lista de espera desde el link del mensaje; el `GET` no consume el token (RN-LE-07) [2026-11-24, C-15].
 - `POST /api/v1/webhooks/whatsapp`: webhook del proveedor. Valida la firma.
 - Frontend: página de reserva del paciente.

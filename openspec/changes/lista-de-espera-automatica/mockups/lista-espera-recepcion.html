@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lista de espera · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="lista-espera.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="recepcion" data-rol="RECEPCIONISTA" data-activa="lista-espera">
+  <div class="le-cabecera">
+    <h1 tabindex="-1">Lista de espera</h1>
+    <button type="button" class="btn btn-principal">Anotar paciente</button>
+  </div>
+  <p class="le-intro">Cuando se cancela o se reprograma un turno, el horario se le ofrece al primer paciente compatible, en este orden. Tiene 2 horas para aceptarlo desde el mensaje.</p>
+
+  <p class="rotulo-estado">1 · Lista con una oferta pendiente</p>
+  <p class="aviso aviso-ok" role="status">Anotaste a Paciente Tres en la lista de espera.</p>
+  <ol class="le-lista" aria-label="Pacientes en la lista de espera, en orden de llegada">
+    <li class="le-fila">
+      <span class="le-orden" aria-label="Orden 1">1</span>
+      <div class="le-datos">
+        <p class="le-meta"><span class="le-paciente">Paciente Dos</span> <span class="le-dni">DNI 99000002</span></p>
+        <p class="le-meta"><span>Limpieza</span><span>Sin preferencia</span><span>Del 28/11 al 12/12</span><span>Anotado el 28/11</span></p>
+        <p class="le-oferta"><span data-icono="espera"></span>Oferta enviada: jueves 3 de diciembre a las 10:00, vence a las 10:00</p>
+      </div>
+      <div class="le-acciones"><button type="button" class="btn btn-chico">Dar de baja</button></div>
+    </li>
+    <li class="le-fila">
+      <span class="le-orden" aria-label="Orden 2">2</span>
+      <div class="le-datos">
+        <p class="le-meta"><span class="le-paciente">Paciente Uno</span> <span class="le-dni">DNI 99000001</span></p>
+        <p class="le-meta"><span>Limpieza</span><span>Ana Ejemplo</span><span>Del 30/11 al 14/12</span><span>Anotado el 30/11</span></p>
+      </div>
+      <div class="le-acciones"><button type="button" class="btn btn-chico">Dar de baja</button></div>
+    </li>
+    <li class="le-fila">
+      <span class="le-orden" aria-label="Orden 3">3</span>
+      <div class="le-datos">
+        <p class="le-meta"><span class="le-paciente">Paciente Tres</span> <span class="le-dni">DNI 99000003</span></p>
+        <p class="le-meta"><span>Control</span><span>Bruno Prueba</span><span>Del 01/12 al 15/12</span><span>Anotado hoy</span></p>
+      </div>
+      <div class="le-acciones"><button type="button" class="btn btn-chico">Dar de baja</button></div>
+    </li>
+  </ol>
+
+  <p class="rotulo-estado">2 · Lista vacía</p>
+  <div class="estado-vacio">
+    <p class="estado-vacio-titulo">No hay pacientes en la lista de espera.</p>
+    <p class="estado-vacio-texto">Anotá a un paciente que quiera un turno antes del primero libre.</p>
+    <button type="button" class="btn btn-principal">Anotar paciente</button>
+  </div>
+
+  <p class="rotulo-estado">3 · Cargando</p>
+  <div class="cargando" role="status"><span class="rueda" aria-hidden="true"></span>Cargando la lista de espera…</div>
+
+  <p class="rotulo-estado">4 · Error al cargar</p>
+  <p class="aviso aviso-error" role="alert">No pudimos completar la operación. Probá de nuevo en unos minutos.</p>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>
