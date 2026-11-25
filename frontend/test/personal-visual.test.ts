@@ -42,7 +42,7 @@ function turno(): TurnoAgenda {
 
 describe('Pantallas del personal', () => {
   it('Fondo suave en las pantallas del personal', async () => {
-    for (const hash of ['#/agenda', '#/configuracion']) {
+    for (const hash of ['#/agenda', '#/lista-espera', '#/configuracion']) {
       router?.detener();
       const servidor = new ServidorFalso();
       servidor.responder('GET /public/sesion', () => json(200, { autenticado: true, username: 'recepcion', rol: 'RECEPCIONISTA' }));

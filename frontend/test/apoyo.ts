@@ -79,6 +79,10 @@ export class ServidorFalso {
       );
     });
     this.responder('POST /logout', () => json(204));
+    // C-15: por defecto, la lista de espera está vacía y el plazo es el de fábrica.
+    this.responder('GET /lista-espera', () => json(200, []));
+    this.responder('GET /paciente/lista-espera', () => json(200, []));
+    this.responder('GET /configuracion/lista-espera', () => json(200, { plazoHoras: 2 }));
     const fetchFalso = vi.fn<typeof fetch>(async (entrada, opciones) => {
       const url = new URL(String(entrada));
       const metodo = opciones?.method ?? 'GET';

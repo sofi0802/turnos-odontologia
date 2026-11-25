@@ -1,5 +1,6 @@
 package ar.turnos.odontologia.notificaciones.domain;
 
+import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
@@ -12,7 +13,8 @@ import java.util.Objects;
  * <ul>
  *   <li>recordatorio: links de confirmar, cancelar y reprogramar;</li>
  *   <li>confirmación (reserva o reprogramación online): links de cancelar y reprogramar;</li>
- *   <li>cancelación y reasignación: sin links.</li>
+ *   <li>cancelación y reasignación: sin links;</li>
+ *   <li>oferta de la lista de espera (C-15): el vencimiento y el link de la oferta.</li>
  * </ul>
  */
 public final class MensajeRecordatorio {
@@ -25,6 +27,9 @@ public final class MensajeRecordatorio {
             + "Para cancelarlo: %s. Para reprogramarlo: %s";
     static final String PLANTILLA_CANCELACION = "Tu turno del %s a las %s en %s (%s) fue cancelado.";
     static final String PLANTILLA_REASIGNACION = "Tu turno fue reasignado: ahora es el %s a las %s en %s (%s).";
+
+    static final String PLANTILLA_OFERTA = "Se liberó un turno el %s a las %s en %s (%s). "
+            + "Podés aceptarlo hasta el %s a las %s acá: %s";
 
     private static final DateTimeFormatter FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy").withZone(ZONA);
     private static final DateTimeFormatter HORA = DateTimeFormatter.ofPattern("HH:mm").withZone(ZONA);
@@ -59,6 +64,19 @@ public final class MensajeRecordatorio {
     public static MensajeRecordatorio reasignacion(DatosDelTurno turno, Consultorio consultorio) {
         return new MensajeRecordatorio(PLANTILLA_REASIGNACION.formatted(fecha(turno), hora(turno),
                 consultorio.nombre(), consultorio.direccion()));
+    }
+
+    /**
+     * Oferta de la lista de espera (C-15): el horario liberado, hasta cuándo se puede aceptar y el link con el token.
+     * Como el resto, sin la prestación ni nombres.
+     */
+    public static MensajeRecordatorio oferta(Instant inicio, Instant venceEn, Consultorio consultorio,
+                                             Enlaces enlaces, String token) {
+        Objects.requireNonNull(inicio, "inicio");
+        Objects.requireNonNull(venceEn, "venceEn");
+        return new MensajeRecordatorio(PLANTILLA_OFERTA.formatted(FECHA.format(inicio), HORA.format(inicio),
+                consultorio.nombre(), consultorio.direccion(), FECHA.format(venceEn), HORA.format(venceEn),
+                enlaces.oferta(token)));
     }
 
     public String texto() {

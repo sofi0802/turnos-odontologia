@@ -186,9 +186,10 @@ describe('Lista de mis turnos', () => {
     }
     expect(texto(anteriores)).not.toContain('Reservado');
     expect(texto(anteriores)).not.toContain('Confirmado');
-    expect(servidor.pedidos.map((p) => `${p.metodo} ${p.ruta}`).filter((p) => p !== 'GET /public/sesion')).toEqual([
-      'GET /paciente/turnos',
-    ]);
+    // Ningún pedido por turno: solo la lista de turnos y, desde C-15, la lista de espera del paciente.
+    expect(
+      servidor.pedidos.map((p) => `${p.metodo} ${p.ruta}`).filter((p) => p !== 'GET /public/sesion').sort(),
+    ).toEqual(['GET /paciente/lista-espera', 'GET /paciente/turnos']);
   });
 
   it('Turno en curso', async () => {

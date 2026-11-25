@@ -273,7 +273,7 @@ describe('Menú adaptable a pantallas chicas', () => {
     abrirEn('#/agenda');
     await esperarTitulo('Agenda');
     // C-32: la recepción también ve "Reportes" (delta de frontend-navegacion).
-    expect(enlacesVisibles()).toEqual(['Agenda', 'Reportes', 'Configuración']);
+    expect(enlacesVisibles()).toEqual(['Agenda', 'Lista de espera', 'Reportes', 'Configuración']);
     expect(menu().hidden).toBe(false);
   });
 });
@@ -296,7 +296,7 @@ describe('Menú según la sesión', () => {
     await esperarTitulo('Agenda');
 
     // C-32: la recepción también ve "Reportes" (delta de frontend-navegacion).
-    expect(enlacesVisibles()).toEqual(['Agenda', 'Reportes', 'Configuración']);
+    expect(enlacesVisibles()).toEqual(['Agenda', 'Lista de espera', 'Reportes', 'Configuración']);
     expect(enlacesActivos()).toEqual(['Agenda']);
     expect(barraLateral().hidden).toBe(false);
   });
@@ -340,7 +340,7 @@ describe('Página "Reportes" para administración y recepción (C-32)', () => {
     abrirEn('#/agenda', conSesion(SESION_ADMIN));
 
     await vi.waitFor(() =>
-      expect(enlacesVisibles()).toEqual(['Agenda', 'Pacientes', 'Reportes', 'Configuración']),
+      expect(enlacesVisibles()).toEqual(['Agenda', 'Lista de espera', 'Pacientes', 'Reportes', 'Configuración']),
     );
   });
 

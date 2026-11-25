@@ -51,7 +51,7 @@ Un paciente MUST NOT tener dos inscripciones `ACTIVA` para la misma prestación:
 - **THEN** la respuesta es `409` con el código `PROFESIONAL_NO_HABILITADO`
 
 ### Requirement: Un horario liberado se ofrece al primer paciente compatible
-Cuando un turno activo que todavía no empezó se cancela (por el personal, por el paciente online o desde el link del recordatorio) o se reprograma, el sistema SHALL ofrecer ese horario, en la misma transacción, a la **primera** inscripción `ACTIVA` compatible por orden de llegada. Es compatible si:
+Cuando un turno activo que todavía no empezó se cancela (por el personal, por el paciente online o desde el link del recordatorio) o se reprograma, el sistema SHALL ofrecer ese horario, apenas se confirma la cancelación y sin poder deshacerla, a la **primera** inscripción `ACTIVA` compatible por orden de llegada. Es compatible si:
 - la fecha del horario está dentro de su rango;
 - pidió ese profesional o "sin preferencia";
 - un turno de su prestación, con ese profesional y ese inicio, cumple todas las reglas de la agenda, con el sillón asignado como en la reserva online;
@@ -175,7 +175,7 @@ La oferta SHALL vencer al cumplirse el plazo configurado o al llegar el inicio d
 - **AND** el paciente sigue con un solo turno
 
 ### Requirement: Rechazar la oferta
-`POST /api/v1/public/ofertas/{token}/rechazar` SHALL marcar la oferta como `RECHAZADA` sin cambiar la inscripción, que sigue `ACTIVA`. En la misma transacción, SHALL ofrecer el horario a la siguiente inscripción compatible, evaluada en ese momento. Una oferta vencida o ya respondida MUST responder igual que al aceptar.
+`POST /api/v1/public/ofertas/{token}/rechazar` SHALL marcar la oferta como `RECHAZADA` sin cambiar la inscripción, que sigue `ACTIVA`. Enseguida, SHALL ofrecer el horario a la siguiente inscripción compatible, evaluada en ese momento. Una oferta vencida o ya respondida MUST responder igual que al aceptar.
 
 #### Scenario: No me interesa
 - **GIVEN** una oferta `PENDIENTE` para "Paciente Uno" y "Paciente Dos" compatible después en la lista

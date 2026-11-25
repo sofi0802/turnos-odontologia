@@ -22,7 +22,8 @@ export type NombreIcono =
   | 'documento'
   | 'descarga'
   | 'ver'
-  | 'subir';
+  | 'subir'
+  | 'espera';
 
 type Trazo = readonly [etiqueta: 'path' | 'rect' | 'circle', atributos: Readonly<Record<string, string>>];
 
@@ -81,6 +82,8 @@ const TRAZOS: Readonly<Record<NombreIcono, readonly Trazo[]>> = {
     ['circle', { cx: '12', cy: '12', r: '3' }],
   ],
   subir: [['path', { d: 'M12 20V9M7 14l5-5 5 5M5 4h14' }]],
+  // C-15: lista de espera (reloj de arena).
+  espera: [['path', { d: 'M6 3h12M6 21h12M7 3c0 5 10 7 10 9s-10 4-10 9M17 3c0 5-10 7-10 9s10 4 10 9' }]],
 };
 
 export function crearIcono(nombre: NombreIcono): SVGElement {

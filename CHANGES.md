@@ -819,7 +819,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 > Arranca con el MVP completo (C-01 a C-14). Los tres changes pueden ir en paralelo.
 
 ### [C-15] `lista-de-espera-automatica`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-24, SDD, backend y frontend; migración V9). Change en `openspec/changes/lista-de-espera-automatica/`; el archive queda para después del merge (reconciliar "Menú según la sesión", tarea 11.3)
 - **Responsable**: Sofia Indovino
 - **Scope**:
   - Entidad `ListaEspera` (paciente, prestación, profesional opcional, rango de fechas preferido). **Migración V9**.

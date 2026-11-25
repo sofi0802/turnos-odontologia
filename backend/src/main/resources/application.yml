@@ -46,6 +46,10 @@ app:
       # C-43: tarea que pasa a ATENDIDO los turnos con llegada cuyo margen terminó (el perfil de test la apaga)
       activo: ${AGENDA_ASISTENCIA_ACTIVO:true}
       intervalo-ms: ${AGENDA_ASISTENCIA_INTERVALO_MS:300000}
+  lista-espera:
+    # C-15: tarea que vence las ofertas y los avisos de la lista de espera (el perfil de test la apaga)
+    activo: ${APP_LISTA_ESPERA_ACTIVO:true}
+    intervalo-ms: ${APP_LISTA_ESPERA_INTERVALO_MS:60000}
   consultorio:
     nombre: ${CONSULTORIO_NOMBRE:Consultorio odontológico}
     direccion: ${CONSULTORIO_DIRECCION:Dirección a confirmar}
@@ -103,6 +107,8 @@ app:
   agenda:
     asistencia:
       activo: false
+  lista-espera:
+    activo: false
   clinica:
     imagenes:
       # C-26: los tests guardan los archivos en una carpeta temporal, nunca en la del desarrollo.

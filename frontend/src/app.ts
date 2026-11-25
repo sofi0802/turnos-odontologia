@@ -4,8 +4,10 @@ import { paginaCambiarContrasena } from './pages/cambiar-contrasena.ts';
 import { paginaConfiguracion } from './pages/configuracion.ts';
 import { paginaConfirmar } from './pages/confirmar.ts';
 import { paginaInicio } from './pages/inicio.ts';
+import { paginaListaEspera } from './pages/lista-espera.ts';
 import { paginaMiCuenta } from './pages/mi-cuenta.ts';
 import { paginaMisTurnos } from './pages/mis-turnos.ts';
+import { paginaOferta } from './pages/oferta.ts';
 import { paginaPacientes } from './pages/pacientes.ts';
 import { paginaReportes } from './pages/reportes.ts';
 import { crearTitulo, type ContextoPagina, type Pagina } from './pages/pagina.ts';
@@ -29,6 +31,7 @@ import { crearRouter, type Router } from './shared/ui/router.ts';
 export const PAGINAS: readonly Pagina[] = [
   paginaInicio,
   paginaAgenda,
+  paginaListaEspera,
   paginaPacientes,
   paginaReportes,
   paginaConfiguracion,
@@ -37,6 +40,7 @@ export const PAGINAS: readonly Pagina[] = [
   paginaMisTurnos,
   paginaMiCuenta,
   paginaConfirmar,
+  paginaOferta,
 ];
 
 export const MENSAJE_SOLO_PERSONAL = 'Esta sección es solo para el personal del consultorio.';
