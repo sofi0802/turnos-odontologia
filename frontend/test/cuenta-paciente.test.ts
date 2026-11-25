@@ -295,13 +295,18 @@ describe('Páginas del paciente solo con sesión de paciente', () => {
 });
 
 describe('Cuenta del paciente con sesión iniciada', () => {
+  // C-49 (delta de frontend-cuenta-paciente): con sesión de paciente, "Mi cuenta" muestra "Mi cobertura".
   it('Paciente con sesión abre su cuenta', async () => {
     servidor.responder('GET /public/sesion', () => json(200, SESION_PACIENTE));
+    servidor.responder('GET /paciente/cobertura', () => json(200, { particular: true, afiliacion: null }));
 
     app = abrirApp(servidor, '#/mi-cuenta');
 
-    await vi.waitFor(() => expect(titulo()).toBe('Mis turnos'));
-    expect(window.location.hash).toBe('#/mis-turnos');
+    await vi.waitFor(() => expect(raiz().querySelector('main h2')?.textContent).toBe('Mi cobertura'));
+    expect(titulo()).toBe('Mi cuenta');
+    expect(window.location.hash).toBe('#/mi-cuenta');
+    expect(raiz().querySelector('form[aria-label="Ingresar"]')).toBeNull();
+    expect(raiz().querySelector('form[aria-label="Crear cuenta"]')).toBeNull();
   });
 });
 

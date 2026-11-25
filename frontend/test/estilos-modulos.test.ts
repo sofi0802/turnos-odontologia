@@ -36,6 +36,8 @@ const REGLAS_POR_MODULO: Readonly<Record<string, string>> = {
   '22-caja.css': '.caja-grilla {',
   // C-15: lista de espera.
   '23-lista-espera.css': '.le-fila {',
+  // C-49: obras sociales, cobertura del paciente y "Mi cobertura".
+  '24-coberturas.css': '.cob-afiliacion {',
 };
 
 function importaciones(): string[] {
@@ -100,14 +102,39 @@ describe('Módulo de imágenes (C-47)', () => {
 describe('Módulo de la lista de espera (C-15)', () => {
   it('Se importa al final de styles.css, después del de caja', () => {
     const importaciones = [...textoPrincipal.matchAll(/@import\s+'([^']+)';/g)].map((m) => m[1]);
-    expect(importaciones.at(-1)).toBe('./styles/23-lista-espera.css');
-    expect(importaciones.at(-2)).toBe('./styles/22-caja.css');
+    // C-49 suma 24-coberturas.css después: la lista de espera sigue inmediatamente después de caja.
+    const caja = importaciones.indexOf('./styles/22-caja.css');
+    expect(caja).toBeGreaterThan(-1);
+    expect(importaciones[caja + 1]).toBe('./styles/23-lista-espera.css');
   });
 
   it('La fila pasa a tres columnas desde 768 px y las acciones de la oferta se apilan en el teléfono', () => {
     const modulo = textoDeModulo('23-lista-espera.css');
     expect(modulo).toMatch(/@media \(min-width: 768px\) \{\s*\.le-fila \{[^}]*grid-template-columns: auto 1fr auto/);
     expect(modulo).toMatch(/\.oferta-acciones \{[^}]*flex-direction: column-reverse/);
+  });
+});
+
+describe('Módulo de coberturas (C-49, design D10)', () => {
+  it('Sin las reglas que son solo de los mockups', () => {
+    const modulo = textoDeModulo('24-coberturas.css');
+    for (const regla of ['.nota-mockup', '.rotulo-estado', '.dialogo-estatico', '.nota-contexto', 'Solo mockups']) {
+      expect(modulo, regla).not.toContain(regla);
+    }
+  });
+
+  it('Sin quitar el foco y con las piezas de los mockups', () => {
+    const modulo = textoDeModulo('24-coberturas.css');
+    expect(modulo).not.toMatch(/outline:\s*none/);
+    for (const regla of ['.cob-obra {', '.cob-planes {', '.cob-tarjeta {', '.cob-tarjeta-particular {', '.etiqueta-proxima {', '.mi-cobertura {']) {
+      expect(modulo, regla).toContain(regla);
+    }
+  });
+
+  it('Se importa al final de styles.css, después del módulo de la lista de espera', () => {
+    const importaciones = [...textoPrincipal.matchAll(/@import\s+'([^']+)';/g)].map((m) => m[1]);
+    expect(importaciones.at(-1)).toBe('./styles/24-coberturas.css');
+    expect(importaciones.at(-2)).toBe('./styles/23-lista-espera.css');
   });
 });
 

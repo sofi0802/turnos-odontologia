@@ -3,6 +3,7 @@ import { paginaAgenda } from './pages/agenda.ts';
 import { paginaCambiarContrasena } from './pages/cambiar-contrasena.ts';
 import { paginaConfiguracion } from './pages/configuracion.ts';
 import { paginaConfirmar } from './pages/confirmar.ts';
+import { paginaCoberturas } from './pages/coberturas.ts';
 import { paginaInicio } from './pages/inicio.ts';
 import { paginaListaEspera } from './pages/lista-espera.ts';
 import { paginaMiCuenta } from './pages/mi-cuenta.ts';
@@ -34,6 +35,7 @@ export const PAGINAS: readonly Pagina[] = [
   paginaAgenda,
   paginaListaEspera,
   paginaPacientes,
+  paginaCoberturas,
   paginaReportes,
   paginaCaja,
   paginaConfiguracion,

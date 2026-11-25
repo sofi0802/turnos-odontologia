@@ -140,10 +140,9 @@ describe('Página "Lista de espera" para administración y recepción', () => {
     servidor.responder('GET /public/sesion', () => json(200, SESION_ADMIN));
     app = abrirApp(servidor, '#/agenda');
 
-    // "Coberturas" (C-49) todavía no está en master: cuando llegue, va entre "Pacientes" y "Reportes".
-    // "Caja" (C-22) va después de "Reportes".
+    // "Coberturas" (C-49) va entre "Pacientes" y "Reportes"; "Caja" (C-22) va después de "Reportes".
     await vi.waitFor(() =>
-      expect(enlacesDelMenu()).toEqual(['Agenda', 'Lista de espera', 'Pacientes', 'Reportes', 'Caja', 'Configuración']),
+      expect(enlacesDelMenu()).toEqual(['Agenda', 'Lista de espera', 'Pacientes', 'Coberturas', 'Reportes', 'Caja', 'Configuración']),
     );
   });
 

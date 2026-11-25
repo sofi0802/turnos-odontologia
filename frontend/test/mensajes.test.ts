@@ -145,3 +145,22 @@ describe('Mensajes de configuración del consultorio (C-34)', () => {
     expect(mensajeDeError(new ErrorNegocio(codigo, 'detalle'))).toBe(mensaje);
   });
 });
+
+describe('Mensajes de las coberturas (C-49, design D8)', () => {
+  it.each([
+    ['OBRA_SOCIAL_EXISTENTE', 'Ya existe una obra social o prepaga con ese nombre.'],
+    ['PLAN_EXISTENTE', 'Esa obra social ya tiene un plan con ese nombre.'],
+    ['CODIGO_NOMENCLADOR_EXISTENTE', 'Ya existe ese código en el nomenclador.'],
+    ['PRESTACION_INEXISTENTE', 'La prestación elegida ya no existe.'],
+    ['VIGENCIA_SUPERPUESTA', 'El paciente ya tiene una cobertura en esas fechas. Cerrá la vigente o cambiá las fechas.'],
+    ['AFILIADO_DUPLICADO', 'Ese número ya lo tiene otro paciente de la misma obra social.'],
+    ['PLAN_INACTIVO', 'El plan está inactivo. Elegí otro.'],
+    ['OBRA_SOCIAL_INACTIVA', 'La obra social está inactiva. Elegí otra.'],
+    ['VIGENCIA_INVALIDA', 'La fecha de fin no puede ser anterior a la de inicio.'],
+    ['AFILIACION_CERRADA', 'Esa afiliación ya estaba cerrada.'],
+  ])('%s tiene su mensaje propio', (codigo, mensaje) => {
+    expect(MENSAJES_POR_CODIGO[codigo]).toBe(mensaje);
+    expect(mensajeDeError(new ErrorNegocio(codigo, 'detalle del servidor'))).toBe(mensaje);
+    expect(mensajeDeError(new ErrorValidacion('detalle del servidor', codigo))).toBe(mensaje);
+  });
+});

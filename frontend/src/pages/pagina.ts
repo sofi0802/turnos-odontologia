@@ -44,6 +44,10 @@ export interface Pagina {
   readonly roles?: readonly Rol[];
   /** C-32: aviso para los roles que no están en `roles`; sin esto, el de C-44 (odontólogos y administradores). */
   readonly avisoSinRol?: string;
+  /**
+   * C-49: la opción del menú se ve solo con sesión, aunque la página sea pública (Mi cuenta sigue siendo el ingreso).
+   */
+  readonly soloConSesion?: boolean;
   render(contenedor: HTMLElement, contexto: ContextoPagina): void;
 }
 

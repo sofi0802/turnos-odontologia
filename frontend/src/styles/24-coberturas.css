@@ -1,0 +1,341 @@
+/* C-49 (design D10): obras sociales y planes en Configuración, sección "Cobertura" del paciente, página "Coberturas"
+   y "Mi cobertura". Sale de openspec/changes/frontend-obras-sociales/mockups/coberturas.css sin las reglas que eran
+   solo de los mockups. Solo usa tokens de la Revision 5 del design system. */
+
+/* ---- Configuración → Obras sociales ---- */
+.cob-bloque + .cob-bloque {
+  margin-top: var(--ds-espacio-4);
+}
+
+.cob-bloque > .ayuda {
+  margin: 0 0 var(--ds-espacio-2);
+}
+
+.cob-obras {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.cob-obra {
+  display: grid;
+  gap: var(--ds-espacio-2);
+  padding: var(--ds-espacio-2);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-lg);
+}
+
+.cob-obra-cabecera {
+  display: grid;
+  gap: var(--ds-espacio-1);
+}
+
+.cob-obra-nombre {
+  margin: 0;
+  font-size: var(--ds-texto-base);
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.cob-datos {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-espacio-0) var(--ds-espacio-1);
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.cob-sigla {
+  font-family: var(--ds-fuente-mono);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-texto);
+}
+
+.cob-tipo {
+  padding: 0 var(--ds-espacio-1);
+  font-size: var(--ds-texto-xs);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-acento-700);
+  background: var(--ds-acento-50);
+  border-radius: var(--ds-radio-pill);
+}
+
+.cob-obra-inactiva .cob-obra-nombre,
+.cob-plan-inactivo .cob-plan-nombre {
+  color: var(--ds-texto-suave);
+}
+
+.cob-obra-inactiva {
+  background: var(--ds-superficie-2);
+}
+
+/* Planes: una lista con sangría y borde a la izquierda, debajo de su obra social. */
+.cob-planes {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 var(--ds-espacio-2);
+  border-left: 3px solid var(--ds-acento-100);
+  display: grid;
+  gap: var(--ds-espacio-1);
+}
+
+.cob-plan {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  padding: var(--ds-espacio-1) 0;
+}
+
+.cob-plan + .cob-plan {
+  border-top: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.cob-plan-nombre {
+  margin: 0;
+  font-weight: var(--ds-peso-medio);
+}
+
+.cob-planes-vacio {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.cob-codigo {
+  font-family: var(--ds-fuente-mono);
+  font-weight: var(--ds-peso-fuerte);
+}
+
+@media (min-width: 48rem) {
+  .cob-obra-cabecera,
+  .cob-plan {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+}
+
+/* ---- Sección "Cobertura" del paciente ---- */
+.cob-seccion {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.cob-tarjeta {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--ds-espacio-1) var(--ds-espacio-2);
+  align-items: start;
+  padding: var(--ds-espacio-2);
+  background: var(--ds-acento-50);
+  border: var(--ds-borde-ancho) solid var(--ds-acento-100);
+  border-radius: var(--ds-radio-lg);
+}
+
+.cob-tarjeta-icono {
+  display: grid;
+  place-items: center;
+  inline-size: 3rem;
+  block-size: 3rem;
+  border-radius: var(--ds-radio);
+  background: var(--ds-superficie);
+  color: var(--ds-acento-700);
+}
+
+.cob-tarjeta-icono .icono {
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+}
+
+.cob-tarjeta-datos {
+  min-width: 0;
+  display: grid;
+  gap: var(--ds-espacio-0);
+}
+
+.cob-tarjeta-rotulo {
+  margin: 0;
+  font-size: var(--ds-texto-xs);
+  font-weight: var(--ds-peso-fuerte);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ds-texto-suave);
+}
+
+.cob-tarjeta-titulo {
+  margin: 0;
+  font-size: var(--ds-texto-lg);
+  font-weight: var(--ds-peso-fuerte);
+  overflow-wrap: anywhere;
+}
+
+.cob-tarjeta-plan {
+  margin: 0;
+  font-weight: var(--ds-peso-medio);
+}
+
+.cob-numero {
+  font-family: var(--ds-fuente-mono);
+  font-weight: var(--ds-peso-fuerte);
+  overflow-wrap: anywhere;
+}
+
+.cob-vigencia {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.cob-tarjeta-acciones {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1);
+}
+
+.cob-tarjeta-acciones .btn {
+  flex: 1 1 auto;
+  justify-content: center;
+}
+
+/* Particular: tarjeta neutra, se lee por el texto. */
+.cob-tarjeta-particular {
+  background: var(--ds-superficie-2);
+  border-color: var(--ds-borde);
+}
+
+.cob-tarjeta-particular .cob-tarjeta-icono {
+  color: var(--ds-texto-suave);
+}
+
+@media (min-width: 48rem) {
+  .cob-tarjeta {
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+  }
+
+  .cob-tarjeta-acciones {
+    grid-column: auto;
+    justify-content: flex-end;
+  }
+
+  .cob-tarjeta-acciones .btn {
+    flex: 0 0 auto;
+  }
+}
+
+/* ---- Historial de afiliaciones ---- */
+.cob-historial-titulo {
+  margin: 0;
+  font-size: var(--ds-texto-base);
+}
+
+.cob-historial {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-lg);
+}
+
+.cob-afiliacion {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  padding: var(--ds-espacio-2);
+}
+
+.cob-afiliacion + .cob-afiliacion {
+  border-top: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.cob-afiliacion-titulo {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--ds-espacio-0) var(--ds-espacio-1);
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.cob-afiliacion-meta {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.cob-afiliacion-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1);
+}
+
+.cob-afiliacion-finalizada .cob-afiliacion-titulo {
+  color: var(--ds-texto-suave);
+}
+
+.etiqueta-vigente {
+  color: var(--ds-ok);
+  background: var(--ds-ok-fondo);
+}
+
+.etiqueta-proxima {
+  color: var(--ds-info);
+  background: var(--ds-info-fondo);
+}
+
+.etiqueta-finalizada {
+  color: var(--ds-texto-suave);
+  background: var(--ds-superficie-2);
+}
+
+@media (min-width: 48rem) {
+  .cob-afiliacion {
+    grid-template-columns: 1fr auto;
+    align-items: center;
+  }
+}
+
+/* ---- Página "Coberturas" ---- */
+.pagina-coberturas {
+  display: grid;
+  gap: var(--ds-espacio-3);
+  max-width: 64rem;
+}
+
+.pagina-coberturas h1 {
+  margin-bottom: 0;
+}
+
+/* ---- Diálogos de afiliación ---- */
+.cob-form {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.cob-form-fila {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+@media (min-width: 40rem) {
+  .cob-form-fila {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.cob-form .ayuda {
+  margin: 0;
+}
+
+/* ---- Mi cobertura (paciente) ---- */
+.mi-cobertura {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.mi-cobertura h2 {
+  margin: 0;
+}
