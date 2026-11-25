@@ -13,6 +13,52 @@ services:
       - turnos-pgdata:/var/lib/postgresql/data
       # Crea turnos_test la primera vez que se inicializa el volumen
       - ./docker/initdb:/docker-entrypoint-initdb.d:ro
+    # C-52: el backend espera a que la base acepte conexiones ($$ evita que el compose interpole)
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d turnos"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # C-52 (design D1 y D3): backend con el perfil dev y el seed ficticio.
+  backend:
+    build: ./backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    # Las mismas variables que usa bootRun; las credenciales nunca entran en la imagen (regla dura 4)
+    env_file: .env
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      # Red interna del compose: no depende del puerto que publique la base en el host
+      DB_URL: jdbc:postgresql://postgres:5432/turnos
+      # Imágenes clínicas (datos de salud) en un volumen, nunca dentro de la imagen
+      IMAGENES_DIRECTORIO: /app/data/imagenes
+    ports:
+      - "127.0.0.1:8080:8080"
+    volumes:
+      - turnos-imagenes:/app/data/imagenes
+
+  # C-52 (design D2 y D3): Vite en modo desarrollo; recarga al editar frontend/ o design-system/.
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    depends_on:
+      - backend
+    # El navegador del host es el que llama a la API: mismos orígenes que el arranque manual,
+    # así que la cookie HttpOnly, el CSRF y el CORS no cambian (regla dura 8). Sin el .env.
+    environment:
+      VITE_API_BASE_URL: http://localhost:8080/api/v1
+      CHOKIDAR_USEPOLLING: "true"
+    ports:
+      - "127.0.0.1:5173:5173"
+    volumes:
+      - ./frontend:/app/frontend
+      - ./design-system:/app/design-system:ro
+      # node_modules de Linux, separado del de Windows del host
+      - /app/frontend/node_modules
 
 volumes:
   turnos-pgdata:
+  turnos-imagenes:

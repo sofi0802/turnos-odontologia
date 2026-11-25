@@ -816,7 +816,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/09_decisiones_y_supuestos.md` §SU-04
 
 ### [C-52] `docker-compose-completo`
-- **Estado**: `[ ]` en propuesta (2026-11-25, SDD; rama `change/C-52-docker-compose-completo`)
+- **Estado**: `[x]` implementado (2026-11-25, SDD; propuesta en el PR #144 y apply en su PR). `docker compose up -d` levanta `postgres`, `backend` y `frontend`. Verificados los 17 escenarios de `entorno-desarrollo` con Docker (detalle en `openspec/changes/docker-compose-completo/design.md`, "Notas del apply"), 1099 tests unitarios y 1317 de integración del backend y 1379 del frontend. Sin código de la aplicación ni migraciones. Falta el archive
 - **Responsable**: Emanuel (avisa a Juan Cruz, dueño de `docker-compose.yml`, y a Enzo, dueño de `frontend/`)
 - **Scope**:
   - Hoy `docker compose up` levanta solo PostgreSQL; el backend y el frontend se arrancan a mano (README, pasos 3 y 4). Este change suma los dos al `docker-compose.yml` para que la aplicación completa arranque con un solo comando.
