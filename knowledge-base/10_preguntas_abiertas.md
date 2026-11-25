@@ -25,7 +25,7 @@
 
 | ID | Prioridad | Pregunta | Bloquea | Decisor |
 |---|---|---|---|---|
-| PA-11 | Media | ¿Quiénes del equipo tienen **Docker**? La líder sí. Sin Docker hay alternativas (SU-04). | Verify y README | Cada integrante |
+| PA-11 | Media | ¿Quiénes del equipo tienen **Docker**? La líder sí. Sin Docker hay alternativas (SU-04). Desde C-52 (2026-11-25), `docker compose up -d` levanta la aplicación completa (base, backend y frontend); quien no tenga Docker sigue el arranque manual del README. | Verify y README | Cada integrante |
 
 ### Resueltas (2026-11-20, respuestas de la líder)
 

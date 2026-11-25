@@ -257,6 +257,8 @@ Como el margen es configurable (con mínimo 10), se guarda la columna `fin_con_m
 2. **PostgreSQL instalado localmente** (instalador oficial para Windows): los tests de integración apuntan a esa base con variables de entorno.
 3. Tests de integración con un **tag aparte** (`@Tag("integration")`): quien no tenga base los saltea, y los corre al menos la líder antes de cada merge.
 
+**Actualización (C-52, 2026-11-25)**: con Docker, `docker compose up -d` levanta la aplicación completa (base, backend y frontend; spec `entorno-desarrollo`). Los tests de integración siguen corriendo en el host contra la base del compose, y las alternativas 2 y 3 siguen vigentes: el arranque manual sin Docker está documentado en el README.
+
 ### SU-05: El frontend usa Vite como bundler de TypeScript vanilla
 **Origen**: "TypeScript vanilla" no define cómo se compila; Vite tiene una plantilla `vanilla-ts` sin framework.
 **Cómo validar**: confirmarlo con el equipo en el change de base del frontend.

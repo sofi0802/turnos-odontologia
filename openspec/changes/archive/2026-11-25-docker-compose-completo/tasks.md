@@ -113,7 +113,7 @@
   - aclarar que el compose reemplaza `DB_URL` e `IMAGENES_DIRECTORIO` dentro del contenedor y fija `VITE_API_BASE_URL` para el frontend.
 
   Verificar con `git diff .env.example`: no agrega valores reales.
-- [ ] 5.3 Registrar en `knowledge-base/10_preguntas_abiertas.md` y en `09_decisiones_y_supuestos.md` (SU-04), si la líder lo aprueba en el PR, que el entorno completo corre con Docker y que el camino manual sigue documentado. Verificar con `git diff knowledge-base/`.
+- [x] 5.3 Hecha en el PR del archive (2026-11-25): la líder aprobó la nota después del merge del PR #147; se actualizaron PA-11 y SU-04. Tarea original: Registrar en `knowledge-base/10_preguntas_abiertas.md` y en `09_decisiones_y_supuestos.md` (SU-04), si la líder lo aprueba en el PR, que el entorno completo corre con Docker y que el camino manual sigue documentado. Verificar con `git diff knowledge-base/`.
 
 ## 6. Verificación integral
 
