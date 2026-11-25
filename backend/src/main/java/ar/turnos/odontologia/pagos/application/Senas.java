@@ -26,6 +26,9 @@ public interface Senas {
 
     Optional<Sena> porReferenciaBloqueada(String referencia);
 
+    /** La seña con {@code FOR UPDATE SKIP LOCKED}: vacía si otra transacción la tiene tomada (design D4). */
+    Optional<Sena> porIdSinEspera(long id);
+
     /** La seña no terminal (pendiente o pagada) de cada turno, o la última si no hay ninguna no terminal. */
     Map<Long, Sena> deTurnos(Collection<Long> turnoIds);
 

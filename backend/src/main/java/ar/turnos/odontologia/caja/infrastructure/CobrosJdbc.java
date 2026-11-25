@@ -39,10 +39,20 @@ class CobrosJdbc implements Cobros {
     }
 
     @Override
+    public long registrarSinCaja(long cargoId, BigDecimal importe, String usuario, Instant ahora) {
+        Long id = jdbc.queryForObject("INSERT INTO cobro(cargo_id, caja_id, importe, medio, registrado_por, "
+                        + "registrado_en) VALUES (:cargo, NULL, :importe, 'MERCADO_PAGO', :usuario, :ahora) RETURNING id",
+                new MapSqlParameterSource().addValue("cargo", cargoId).addValue("importe", importe)
+                        .addValue("usuario", usuario).addValue("ahora", Fechas.aOffset(ahora)), Long.class);
+        return id == null ? 0 : id;
+    }
+
+    @Override
     public Optional<CobroBloqueado> bloquear(long cobroId) {
         return jdbc.query("SELECT id, caja_id, anulado FROM cobro WHERE id = :id FOR UPDATE",
                 new MapSqlParameterSource("id", cobroId),
-                (rs, n) -> new CobroBloqueado(rs.getLong("id"), rs.getLong("caja_id"), rs.getBoolean("anulado")))
+                (rs, n) -> new CobroBloqueado(rs.getLong("id"), rs.getObject("caja_id", Long.class),
+                        rs.getBoolean("anulado")))
                 .stream().findFirst();
     }
 

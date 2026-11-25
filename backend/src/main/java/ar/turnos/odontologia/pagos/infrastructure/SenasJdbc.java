@@ -58,6 +58,12 @@ class SenasJdbc implements Senas {
     }
 
     @Override
+    public Optional<Sena> porIdSinEspera(long id) {
+        return jdbc.query("SELECT " + COLUMNAS + " WHERE s.id = ? FOR UPDATE OF s SKIP LOCKED", FILA, id).stream()
+                .findFirst();
+    }
+
+    @Override
     public Optional<Sena> porReferenciaBloqueada(String referencia) {
         return jdbc.query("SELECT " + COLUMNAS + " WHERE s.referencia = ? FOR UPDATE OF s", FILA, referencia).stream()
                 .findFirst();

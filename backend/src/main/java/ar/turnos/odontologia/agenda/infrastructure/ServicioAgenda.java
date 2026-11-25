@@ -19,9 +19,6 @@ import ar.turnos.odontologia.agenda.application.ReasignarTurnoCommand;
 import ar.turnos.odontologia.agenda.application.ReprogramarTurno;
 import ar.turnos.odontologia.agenda.application.ReprogramarTurnoCommand;
 import ar.turnos.odontologia.agenda.application.SillonTomadoException;
-import ar.turnos.odontologia.agenda.application.SenasDeAgenda;
-import ar.turnos.odontologia.agenda.domain.CodigoRechazo;
-import ar.turnos.odontologia.agenda.domain.TurnoRechazadoException;
 import ar.turnos.odontologia.agenda.domain.EstadoTurno;
 import ar.turnos.odontologia.agenda.domain.Turno;
 import java.time.Instant;
@@ -61,7 +58,6 @@ public class ServicioAgenda {
     private final CasosAsistencia asistencia;
     private final ConsultaAgenda consulta;
     private final AuditoriaTurnos auditoria;
-    private SenasDeAgenda senas = SenasDeAgenda.NINGUNA;
     private final TransactionTemplate transaccion;
     private final TransactionTemplate lectura;
 
@@ -122,21 +118,10 @@ public class ServicioAgenda {
 
     public Turno cancelar(CancelarTurnoCommand comando, String actor) {
         return enTransaccion(() -> {
-            // C-23 (RN-SE-06): con la seña pagada, el personal indica si la causa es del paciente o del consultorio
-            if (comando.causa() == null && senas.tieneSenaPagada(comando.turnoId())) {
-                throw new TurnoRechazadoException(CodigoRechazo.DATOS_INVALIDOS,
-                        "La causa es obligatoria: el paciente pagó una seña.");
-            }
             Turno turno = cancelarTurno.ejecutar(comando);
             auditoria.registrarCancelacion(turno.id(), actor, comando.causa());
             return turno;
         });
-    }
-
-    /** C-23: las señas del módulo de pagos, si existe; sin él ningún turno tiene seña (design D2). */
-    @org.springframework.beans.factory.annotation.Autowired(required = false)
-    void usarSenas(SenasDeAgenda senas) {
-        this.senas = senas;
     }
 
     public Turno reprogramar(ReprogramarTurnoCommand comando, String actor) {

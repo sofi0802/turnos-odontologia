@@ -2,7 +2,10 @@ package ar.turnos.odontologia.pagos.infrastructure;
 
 import ar.turnos.odontologia.agenda.application.SenasDeAgenda;
 import ar.turnos.odontologia.agenda.infrastructure.ServicioAgenda;
+import ar.turnos.odontologia.caja.application.ServicioCobros;
 import ar.turnos.odontologia.caja.application.TurnosACobrar;
+import ar.turnos.odontologia.pagos.application.RevisionDeSenas;
+import ar.turnos.odontologia.pagos.application.TurnosDeSenas;
 import ar.turnos.odontologia.pagos.application.AvisoReintegroSena;
 import ar.turnos.odontologia.pagos.application.CancelacionDelSistema;
 import ar.turnos.odontologia.pagos.application.CrearSena;
@@ -56,6 +59,19 @@ class PagosConfig {
     CrearSena crearSena(ConfiguracionSenas configuracion, TurnosACobrar turnos, Senas senas, PasarelaPago pasarela,
                         Clock reloj) {
         return new CrearSena(configuracion, turnos, senas, pasarela, reloj);
+    }
+
+    @Bean
+    TurnosDeSenas turnosDeSenas(JdbcTemplate jdbc) {
+        return new TurnosDeSenasJdbc(jdbc);
+    }
+
+    @Bean
+    RevisionDeSenas revisionDeSenas(Senas senas, TurnosDeSenas turnos, Reintegros reintegros,
+                                    CancelacionDelSistema cancelacion, ServicioCobros cobros,
+                                    PlatformTransactionManager transacciones, Clock reloj) {
+        return new RevisionDeSenas(senas, turnos, reintegros, cancelacion, cobros,
+                new TransactionTemplate(transacciones), reloj);
     }
 
     /** El puerto de la agenda (design D2): la cancelación pide la causa con la seña pagada. */

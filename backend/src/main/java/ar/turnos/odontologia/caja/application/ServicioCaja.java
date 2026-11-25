@@ -98,6 +98,9 @@ public class ServicioCaja {
     private static Map<MedioPago, BigDecimal> completar(Map<MedioPago, BigDecimal> parciales) {
         Map<MedioPago, BigDecimal> totales = new EnumMap<>(MedioPago.class);
         for (MedioPago medio : MedioPago.values()) {
+            if (!medio.deCaja()) {
+                continue;
+            }
             BigDecimal valor = parciales == null ? null : parciales.get(medio);
             totales.put(medio, valor == null ? Dinero.CERO.valor() : valor);
         }

@@ -1,5 +1,8 @@
 package ar.turnos.odontologia.agenda.api;
 
+import ar.turnos.odontologia.agenda.domain.TurnoRechazadoException;
+import ar.turnos.odontologia.agenda.domain.CodigoRechazo;
+import ar.turnos.odontologia.agenda.application.SenasDeAgenda;
 import ar.turnos.odontologia.agenda.application.CancelarTurnoCommand;
 import ar.turnos.odontologia.agenda.application.CrearSobreturnoCommand;
 import ar.turnos.odontologia.agenda.application.CrearTurnoCommand;
@@ -76,9 +79,23 @@ class TurnosController {
                 .toList();
     }
 
+    /** C-23: las señas del módulo de pagos, si existe; sin él ningún turno tiene seña (design D2). */
+    @org.springframework.beans.factory.annotation.Autowired(required = false)
+    void usarSenas(SenasDeAgenda senas) {
+        this.senas = senas;
+    }
+
+    private SenasDeAgenda senas = SenasDeAgenda.NINGUNA;
+
     @PostMapping("/{id}/cancelar")
     TurnoResponse cancelar(@PathVariable Long id, @Valid @RequestBody CancelarTurnoRequest pedido,
                            @AuthenticationPrincipal UsuarioAutenticado usuario) {
+        // C-23 (RN-SE-06): con la seña pagada, el personal indica si la causa es del paciente o del consultorio.
+        // La cancelación online del paciente no pasa por acá: siempre reintegra.
+        if (pedido.causa() == null && senas.tieneSenaPagada(id)) {
+            throw new TurnoRechazadoException(CodigoRechazo.DATOS_INVALIDOS,
+                    "La causa es obligatoria: el paciente pagó una seña.");
+        }
         CancelarTurnoCommand comando = new CancelarTurnoCommand(id, pedido.dni(), pedido.numeroReserva(), pedido.causa());
         return TurnoResponse.de(agenda.cancelar(comando, usuario.getUsername()), zona);
     }

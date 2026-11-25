@@ -52,6 +52,37 @@ public abstract class IntegracionPagosBase extends IntegracionCajaBase {
         return notificar(idPago, CLAVE_FIRMA);
     }
 
+    /** Horario de lunes a viernes de 8 a 20 para "Ana Ejemplo", sus prestaciones y la cuenta de "Paciente Dos". */
+    protected void habilitarReservaOnline() {
+        for (int dia = 1; dia <= 5; dia++) {
+            jdbc.update("INSERT INTO horario_trabajo(profesional_id, dia_semana, hora_desde, hora_hasta) "
+                    + "VALUES (?, ?, '08:00'::time, '20:00'::time)", ana, dia);
+        }
+        jdbc.update("INSERT INTO profesional_prestacion(profesional_id, prestacion_id) VALUES (?,?),(?,?),(?,?)",
+                ana, consulta, ana, limpieza, ana, extraccion);
+        jdbc.update("INSERT INTO usuario(username, password_hash, rol, paciente_id) VALUES (?,?,'PACIENTE',?)",
+                "paciente.dos@example.com", passwordEncoder.encode(clave), pacienteDos);
+    }
+
+    protected void activarSenas(int porcentaje, int plazoMinutos) {
+        jdbc.update("DELETE FROM configuracion WHERE clave LIKE 'senas_%'");
+        jdbc.update("INSERT INTO configuracion(clave, valor) VALUES ('senas_activas', 'true'), ('senas_porcentaje', ?), "
+                + "('senas_plazo_minutos', ?)", String.valueOf(porcentaje), String.valueOf(plazoMinutos));
+    }
+
+    /** Un turno de 30 minutos de "Ana Ejemplo" en el sillón 1, en la fecha y hora locales indicadas. */
+    protected long turnoA(long paciente, long prestacion, String fecha, String hora, String estado) {
+        java.time.OffsetDateTime desde = java.time.LocalDateTime.of(java.time.LocalDate.parse(fecha),
+                java.time.LocalTime.parse(hora)).atZone(ZONA).toOffsetDateTime();
+        return id("INSERT INTO turno(profesional_id, sillon_id, prestacion_id, paciente_id, inicio, fin, fin_con_margen, "
+                        + "estado) VALUES (?,?,?,?,?,?,?,?) RETURNING id", ana, sillon, prestacion, paciente, desde,
+                desde.plusMinutes(30), desde.plusMinutes(40), estado);
+    }
+
+    protected String numeroDe(long turno) {
+        return jdbc.queryForObject("SELECT codigo_reserva FROM turno WHERE id = ?", String.class, turno);
+    }
+
     protected long movimientos(long sena, String tipo) {
         return id("SELECT count(*) FROM sena_movimiento WHERE sena_id = ? AND tipo = ?", sena, tipo);
     }
