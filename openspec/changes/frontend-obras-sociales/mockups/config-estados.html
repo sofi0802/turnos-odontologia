@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuración · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="coberturas.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="admin" data-rol="ADMIN" data-activa="configuracion">
+  <div class="pagina-config">
+    <h1 tabindex="-1">Configuración</h1>
+
+    <p class="rotulo-estado">1 · Cargando</p>
+    <section class="panel-config">
+      <div class="cob-bloque" aria-busy="true">
+        <div class="cabecera-seccion"><h2>Obras sociales y prepagas</h2></div>
+        <div class="cargando" role="status"><span class="rueda" aria-hidden="true"></span>Cargando…</div>
+      </div>
+    </section>
+
+    <p class="rotulo-estado">2 · Falla al cargar, con "Reintentar"</p>
+    <section class="panel-config">
+      <div class="cob-bloque">
+        <div class="cabecera-seccion"><h2>Obras sociales y prepagas</h2><button type="button" class="btn btn-principal">Agregar obra social</button></div>
+        <p class="aviso aviso-error" role="alert">No pudimos completar la operación. Probá de nuevo en unos minutos.</p>
+        <button type="button" class="btn">Reintentar</button>
+      </div>
+    </section>
+
+    <p class="rotulo-estado">3 · Catálogo y nomenclador vacíos</p>
+    <section class="panel-config">
+      <div class="cob-bloque">
+        <div class="cabecera-seccion"><h2>Obras sociales y prepagas</h2><button type="button" class="btn btn-principal">Agregar obra social</button></div>
+        <div class="estado-vacio chico"><p class="estado-vacio-texto">Todavía no hay obras sociales ni prepagas.</p></div>
+      </div>
+      <div class="cob-bloque">
+        <div class="cabecera-seccion"><h2>Nomenclador</h2><button type="button" class="btn btn-principal">Agregar código</button></div>
+        <div class="estado-vacio chico"><p class="estado-vacio-texto">Todavía no hay códigos en el nomenclador.</p></div>
+      </div>
+    </section>
+
+    <p class="rotulo-estado">4 · Obra social desactivada: sus planes siguen como estaban</p>
+    <section class="panel-config">
+      <ul class="cob-obras">
+        <li class="cob-obra cob-obra-inactiva">
+          <div class="cob-obra-cabecera">
+            <div>
+              <h3 class="cob-obra-nombre">Obra Social Ejemplo</h3>
+              <p class="cob-datos"><span class="cob-sigla">OSE</span><span class="cob-tipo">Obra social</span><span class="estado-inactivo">Inactiva</span></p>
+              <p class="ayuda">Inactiva: no se puede afiliar a sus planes. Las afiliaciones que ya existen no cambian.</p>
+            </div>
+            <div class="item-acciones">
+              <button type="button" class="btn btn-chico">Editar</button>
+              <button type="button" class="btn btn-chico">Activar</button>
+            </div>
+          </div>
+          <ul class="cob-planes" aria-label="Planes de Obra Social Ejemplo">
+            <li class="cob-plan">
+              <div><p class="cob-plan-nombre">Plan Base</p><span class="estado-activo">Activo</span></div>
+              <div class="item-acciones"><button type="button" class="btn btn-chico">Editar</button><button type="button" class="btn btn-chico btn-peligro">Desactivar</button></div>
+            </li>
+          </ul>
+          <div><button type="button" class="btn btn-chico">Agregar plan</button></div>
+        </li>
+      </ul>
+    </section>
+
+    <p class="rotulo-estado">5 · Falla al desactivar (aviso arriba de la lista)</p>
+    <section class="panel-config">
+      <p class="aviso aviso-error" role="alert">No tenés permiso para esta acción.</p>
+      <ul class="cob-obras">
+        <li class="cob-obra">
+          <div class="cob-obra-cabecera">
+            <div><h3 class="cob-obra-nombre">Prepaga Prueba</h3><p class="cob-datos"><span class="cob-tipo">Prepaga</span><span>Sin sigla</span><span class="estado-activo">Activa</span></p></div>
+            <div class="item-acciones"><button type="button" class="btn btn-chico">Editar</button><button type="button" class="btn btn-chico btn-peligro">Desactivar</button></div>
+          </div>
+          <p class="cob-planes-vacio">Sin planes todavía.</p>
+          <div><button type="button" class="btn btn-chico">Agregar plan</button></div>
+        </li>
+      </ul>
+    </section>
+
+    <p class="nota-mockup"><b>Mockup C-49.</b> Estados de la pestaña "Obras sociales": carga, falla con "Reintentar", vacío, obra social inactiva con su plan todavía activo, falla de una acción y obra social sin planes. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

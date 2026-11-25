@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pacientes · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="coberturas.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="admin" data-rol="ADMIN" data-activa="pacientes">
+  <div class="pagina-ficha">
+    <h1 tabindex="-1">Pacientes</h1>
+    <p class="aviso aviso-ok" role="status">Afiliación guardada.</p>
+
+    <section class="panel ficha-paciente" aria-labelledby="paciente-nombre">
+      <div class="ficha-paciente-datos">
+        <div>
+          <h2 class="ficha-paciente-nombre" id="paciente-nombre">Paciente Uno</h2>
+          <p class="ficha-paciente-dni">DNI 99000001</p>
+        </div>
+        <button type="button" class="btn">Cambiar de paciente</button>
+      </div>
+      <p class="aviso aviso-info">Solo lectura: la ficha clínica la edita el odontólogo.</p>
+    </section>
+
+    <section class="panel ficha-seccion cob-seccion" aria-labelledby="t-cobertura">
+      <div class="ficha-seccion-cabecera">
+        <h2 id="t-cobertura">Cobertura</h2>
+        <button type="button" class="btn btn-principal">Afiliar</button>
+      </div>
+
+      <div class="cob-tarjeta">
+        <span class="cob-tarjeta-icono" data-icono="credencial"></span>
+        <div class="cob-tarjeta-datos">
+          <p class="cob-tarjeta-rotulo">Cobertura de hoy</p>
+          <p class="cob-tarjeta-titulo">Obra Social Ejemplo (OSE)</p>
+          <p class="cob-tarjeta-plan">Plan Base · N.º de afiliado <span class="cob-numero">OSE-000001</span></p>
+          <p class="cob-vigencia">Desde 01/01/2026, sin fecha de fin</p>
+        </div>
+        <span class="etiqueta etiqueta-vigente">Vigente</span>
+      </div>
+
+      <h3 class="cob-historial-titulo">Historial de afiliaciones</h3>
+      <ul class="cob-historial" aria-label="Historial de afiliaciones de Paciente Uno">
+        <li class="cob-afiliacion">
+          <div>
+            <p class="cob-afiliacion-titulo"><span>Plan Base</span><span class="etiqueta etiqueta-vigente">Vigente</span></p>
+            <p class="cob-afiliacion-meta">Obra Social Ejemplo · N.º <span class="cob-numero">OSE-000001</span> · Desde 01/01/2026, sin fecha de fin</p>
+          </div>
+          <div class="cob-afiliacion-acciones">
+            <button type="button" class="btn btn-chico" aria-label="Corregir la afiliación a Plan Base">Corregir</button>
+            <button type="button" class="btn btn-chico" aria-label="Cerrar la afiliación a Plan Base">Cerrar afiliación</button>
+          </div>
+        </li>
+        <li class="cob-afiliacion cob-afiliacion-finalizada">
+          <div>
+            <p class="cob-afiliacion-titulo"><span>Plan Integral</span><span class="etiqueta etiqueta-finalizada">Finalizada</span></p>
+            <p class="cob-afiliacion-meta">Obra Social Ejemplo · N.º <span class="cob-numero">OSE-000001</span> · Del 01/01/2025 al 31/12/2025</p>
+          </div>
+          <div class="cob-afiliacion-acciones">
+            <button type="button" class="btn btn-chico" aria-label="Corregir la afiliación a Plan Integral">Corregir</button>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <div class="nota-contexto">Odontograma (C-44), periodontograma (C-46), imágenes (C-47) y ficha básica, sin cambios</div>
+
+    <p class="nota-mockup"><b>Mockup C-49.</b> Administrador en la ficha: la cobertura va arriba del odontograma y se carga aparte. La puede editar aunque la ficha clínica sea de solo lectura para él. Corregir y cerrar van en cada fila del historial; "Cerrar afiliación" solo en las que no tienen fecha de fin. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

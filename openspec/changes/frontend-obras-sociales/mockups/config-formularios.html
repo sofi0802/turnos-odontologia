@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuración · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="coberturas.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="admin" data-rol="ADMIN" data-activa="configuracion">
+  <div class="pagina-config">
+    <h1 tabindex="-1">Configuración</h1>
+
+    <p class="rotulo-estado">1 · "Agregar obra social" recién abierto</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="d1-t">
+      <h2 id="d1-t">Agregar obra social</h2>
+      <form class="formulario cob-form" novalidate>
+        <div class="campo"><label for="d1-nombre">Nombre</label><input id="d1-nombre" class="control" maxlength="120" /><p class="campo-error"></p></div>
+        <div class="cob-form-fila">
+          <div class="campo"><label for="d1-sigla">Sigla (opcional)</label><input id="d1-sigla" class="control" maxlength="20" placeholder="Ej.: OSE" /><p class="campo-error"></p></div>
+          <div class="campo"><label for="d1-tipo">Tipo</label><select id="d1-tipo" class="control"><option>Obra social</option><option>Prepaga</option></select><p class="campo-error"></p></div>
+        </div>
+        <p class="aviso aviso-error" role="alert"></p>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Guardar</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">2 · Nombre vacío (no se envía nada)</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="d2-t">
+      <h2 id="d2-t">Agregar obra social</h2>
+      <form class="formulario cob-form" novalidate>
+        <div class="campo"><label for="d2-nombre">Nombre</label><input id="d2-nombre" class="control" aria-invalid="true" aria-describedby="d2-e" /><p class="campo-error" id="d2-e">Completá el nombre.</p></div>
+        <div class="cob-form-fila">
+          <div class="campo"><label for="d2-sigla">Sigla (opcional)</label><input id="d2-sigla" class="control" value="PP" /><p class="campo-error"></p></div>
+          <div class="campo"><label for="d2-tipo">Tipo</label><select id="d2-tipo" class="control"><option>Prepaga</option></select><p class="campo-error"></p></div>
+        </div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Guardar</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">3 · Nombre repetido: 409 OBRA_SOCIAL_EXISTENTE</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="d3-t">
+      <h2 id="d3-t">Agregar obra social</h2>
+      <form class="formulario cob-form" novalidate>
+        <p class="aviso aviso-error" role="alert">Ya existe una obra social o prepaga con ese nombre.</p>
+        <div class="campo"><label for="d3-nombre">Nombre</label><input id="d3-nombre" class="control" value="obra social ejemplo" /><p class="campo-error"></p></div>
+        <div class="cob-form-fila">
+          <div class="campo"><label for="d3-sigla">Sigla (opcional)</label><input id="d3-sigla" class="control" /><p class="campo-error"></p></div>
+          <div class="campo"><label for="d3-tipo">Tipo</label><select id="d3-tipo" class="control"><option>Obra social</option></select><p class="campo-error"></p></div>
+        </div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Guardar</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">4 · "Agregar plan" de una obra social</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="d4-t">
+      <h2 id="d4-t">Agregar plan</h2>
+      <p class="dialogo-resumen">Plan de Prepaga Prueba.</p>
+      <form class="formulario cob-form" novalidate>
+        <div class="campo"><label for="d4-nombre">Nombre del plan</label><input id="d4-nombre" class="control" value="Plan Plata" maxlength="80" /><p class="campo-error"></p></div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Guardar</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">5 · "Agregar código" con su prestación</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="d5-t">
+      <h2 id="d5-t">Agregar código</h2>
+      <form class="formulario cob-form" novalidate>
+        <div class="cob-form-fila">
+          <div class="campo"><label for="d5-codigo">Código</label><input id="d5-codigo" class="control cob-codigo" value="N-0401" maxlength="20" /><p class="campo-error"></p></div>
+          <div class="campo"><label for="d5-prest">Prestación</label><select id="d5-prest" class="control"><option>Sin prestación</option><option>Consulta o control</option><option>Limpieza (profilaxis)</option><option selected>Tratamiento de conducto</option><option>Extracción simple</option></select><p class="campo-error"></p></div>
+        </div>
+        <div class="campo"><label for="d5-desc">Descripción</label><input id="d5-desc" class="control" value="Tratamiento de conducto" maxlength="200" aria-describedby="d5-ayuda" /><p class="ayuda" id="d5-ayuda">Hasta 200 caracteres.</p><p class="campo-error"></p></div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Guardar</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">6 · Código repetido (409) y descripción demasiado larga</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="d6-t">
+      <h2 id="d6-t">Agregar código</h2>
+      <form class="formulario cob-form" novalidate>
+        <p class="aviso aviso-error" role="alert">Ya existe ese código en el nomenclador.</p>
+        <div class="cob-form-fila">
+          <div class="campo"><label for="d6-codigo">Código</label><input id="d6-codigo" class="control cob-codigo" value="n-0101" /><p class="campo-error"></p></div>
+          <div class="campo"><label for="d6-prest">Prestación</label><select id="d6-prest" class="control"><option>Consulta o control</option></select><p class="campo-error"></p></div>
+        </div>
+        <div class="campo"><label for="d6-desc">Descripción</label><input id="d6-desc" class="control" value="Consulta de control con una descripción que supera el máximo permitido…" aria-invalid="true" aria-describedby="d6-e" /><p class="campo-error" id="d6-e">La descripción puede tener hasta 200 caracteres.</p></div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Guardar</button></div>
+      </form>
+    </dialog>
+
+    <p class="nota-mockup"><b>Mockup C-49.</b> Diálogos del catálogo con el molde de <code>shared/ui/dialogo.ts</code>. Los errores de la API van arriba del formulario y los de un campo debajo de él; el diálogo queda abierto con los datos. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

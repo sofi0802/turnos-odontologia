@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuración · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="coberturas.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="admin" data-rol="ADMIN" data-activa="configuracion">
+  <div class="pagina-config">
+    <h1 tabindex="-1">Configuración</h1>
+    <div>
+      <div class="pestanas-config" role="tablist" aria-label="Secciones de configuración">
+        <button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Profesionales</button>
+        <button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Sillones</button>
+        <button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Prestaciones</button>
+        <button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Margen</button>
+        <button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Horarios</button>
+        <button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Ausencias</button>
+        <button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Bloqueos</button>
+        <button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Usuarios</button>
+        <button type="button" class="pestana" role="tab" aria-selected="true" id="tab-os" aria-controls="panel-os">Obras sociales</button>
+      </div>
+      <section class="panel-config" role="tabpanel" id="panel-os" aria-labelledby="tab-os">
+
+        <div class="cob-bloque">
+          <div class="cabecera-seccion">
+            <h2>Obras sociales y prepagas</h2>
+            <button type="button" class="btn btn-principal">Agregar obra social</button>
+          </div>
+          <p class="ayuda">No se borran: desactivá las que ya no trabajan con el consultorio. Las afiliaciones que ya existen no cambian.</p>
+          <ul class="cob-obras">
+            <li class="cob-obra">
+              <div class="cob-obra-cabecera">
+                <div>
+                  <h3 class="cob-obra-nombre">Obra Social Ejemplo</h3>
+                  <p class="cob-datos"><span class="cob-sigla">OSE</span><span class="cob-tipo">Obra social</span><span class="estado-activo">Activa</span></p>
+                </div>
+                <div class="item-acciones">
+                  <button type="button" class="btn btn-chico" aria-label="Editar Obra Social Ejemplo">Editar</button>
+                  <button type="button" class="btn btn-chico btn-peligro" aria-label="Desactivar Obra Social Ejemplo">Desactivar</button>
+                </div>
+              </div>
+              <ul class="cob-planes" aria-label="Planes de Obra Social Ejemplo">
+                <li class="cob-plan">
+                  <div><p class="cob-plan-nombre">Plan Base</p><span class="estado-activo">Activo</span></div>
+                  <div class="item-acciones">
+                    <button type="button" class="btn btn-chico" aria-label="Editar Plan Base">Editar</button>
+                    <button type="button" class="btn btn-chico btn-peligro" aria-label="Desactivar Plan Base">Desactivar</button>
+                  </div>
+                </li>
+                <li class="cob-plan cob-plan-inactivo">
+                  <div><p class="cob-plan-nombre">Plan Integral</p><span class="estado-inactivo">Inactivo</span></div>
+                  <div class="item-acciones">
+                    <button type="button" class="btn btn-chico" aria-label="Editar Plan Integral">Editar</button>
+                    <button type="button" class="btn btn-chico" aria-label="Activar Plan Integral">Activar</button>
+                  </div>
+                </li>
+              </ul>
+              <div><button type="button" class="btn btn-chico" aria-label="Agregar plan a Obra Social Ejemplo">Agregar plan</button></div>
+            </li>
+            <li class="cob-obra">
+              <div class="cob-obra-cabecera">
+                <div>
+                  <h3 class="cob-obra-nombre">Prepaga Prueba</h3>
+                  <p class="cob-datos"><span class="cob-tipo">Prepaga</span><span>Sin sigla</span><span class="estado-activo">Activa</span></p>
+                </div>
+                <div class="item-acciones">
+                  <button type="button" class="btn btn-chico" aria-label="Editar Prepaga Prueba">Editar</button>
+                  <button type="button" class="btn btn-chico btn-peligro" aria-label="Desactivar Prepaga Prueba">Desactivar</button>
+                </div>
+              </div>
+              <ul class="cob-planes" aria-label="Planes de Prepaga Prueba">
+                <li class="cob-plan">
+                  <div><p class="cob-plan-nombre">Plan Oro</p><span class="estado-activo">Activo</span></div>
+                  <div class="item-acciones">
+                    <button type="button" class="btn btn-chico" aria-label="Editar Plan Oro">Editar</button>
+                    <button type="button" class="btn btn-chico btn-peligro" aria-label="Desactivar Plan Oro">Desactivar</button>
+                  </div>
+                </li>
+              </ul>
+              <div><button type="button" class="btn btn-chico" aria-label="Agregar plan a Prepaga Prueba">Agregar plan</button></div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="cob-bloque">
+          <div class="cabecera-seccion">
+            <h2>Nomenclador</h2>
+            <button type="button" class="btn btn-principal">Agregar código</button>
+          </div>
+          <p class="ayuda">Códigos de práctica con los que se informa a las obras sociales. Se cargan a mano.</p>
+          <ul class="lista-config">
+            <li>
+              <div>
+                <div class="item-nombre"><span class="cob-codigo">N-0101</span> · Consulta</div>
+                <div class="item-datos"><span>Prestación: Consulta o control</span></div>
+                <span class="estado-activo">Activo</span>
+              </div>
+              <div class="item-acciones">
+                <button type="button" class="btn btn-chico" aria-label="Editar N-0101">Editar</button>
+                <button type="button" class="btn btn-chico btn-peligro" aria-label="Desactivar N-0101">Desactivar</button>
+              </div>
+            </li>
+            <li>
+              <div>
+                <div class="item-nombre"><span class="cob-codigo">N-0201</span> · Limpieza</div>
+                <div class="item-datos"><span>Prestación: Limpieza (profilaxis)</span></div>
+                <span class="estado-activo">Activo</span>
+              </div>
+              <div class="item-acciones">
+                <button type="button" class="btn btn-chico" aria-label="Editar N-0201">Editar</button>
+                <button type="button" class="btn btn-chico btn-peligro" aria-label="Desactivar N-0201">Desactivar</button>
+              </div>
+            </li>
+            <li class="item-inactivo">
+              <div>
+                <div class="item-nombre"><span class="cob-codigo">N-0301</span> · Extracción simple</div>
+                <div class="item-datos"><span>Sin prestación</span></div>
+                <span class="estado-inactivo">Inactivo</span>
+              </div>
+              <div class="item-acciones">
+                <button type="button" class="btn btn-chico" aria-label="Editar N-0301">Editar</button>
+                <button type="button" class="btn btn-chico" aria-label="Activar N-0301">Activar</button>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <p class="nota-mockup"><b>Mockup C-49.</b> Administrador, pestaña "Obras sociales": obras sociales y prepagas con sus planes anidados y, debajo, el nomenclador. Nada se borra; el estado se lee por el texto. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

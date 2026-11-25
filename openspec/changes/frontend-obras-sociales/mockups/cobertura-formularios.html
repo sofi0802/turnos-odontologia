@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coberturas · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="coberturas.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="recepcion" data-rol="RECEPCIONISTA" data-activa="coberturas">
+  <div class="pagina-coberturas">
+    <h1 tabindex="-1">Coberturas</h1>
+
+    <p class="rotulo-estado">1 · "Afiliar" recién abierto (Paciente Dos, particular)</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="a1-t">
+      <h2 id="a1-t">Afiliar</h2>
+      <p class="dialogo-resumen">Paciente Dos. Una sola cobertura por fecha: para cambiarla, cerrá antes la vigente.</p>
+      <form class="formulario cob-form" novalidate>
+        <div class="cob-form-fila">
+          <div class="campo"><label for="a1-os">Obra social</label><select id="a1-os" class="control"><option>Elegí una obra social</option><option>Obra Social Ejemplo (OSE)</option><option>Prepaga Prueba</option></select><p class="campo-error"></p></div>
+          <div class="campo"><label for="a1-plan">Plan</label><select id="a1-plan" class="control" disabled><option>Elegí primero la obra social</option></select><p class="campo-error"></p></div>
+        </div>
+        <div class="campo"><label for="a1-num">N.º de afiliado</label><input id="a1-num" class="control cob-numero" maxlength="30" autocomplete="off" aria-describedby="a1-ayuda" /><p class="ayuda" id="a1-ayuda">Hasta 30 letras, números, guiones, barras o puntos.</p><p class="campo-error"></p></div>
+        <div class="cob-form-fila">
+          <div class="campo"><label for="a1-desde">Vigente desde</label><input id="a1-desde" class="control" type="date" value="2026-11-24" /><p class="campo-error"></p></div>
+          <div class="campo"><label for="a1-hasta">Vigente hasta (opcional)</label><input id="a1-hasta" class="control" type="date" /><p class="campo-error"></p></div>
+        </div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Afiliar</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">2 · Validación antes de enviar (no se pide nada)</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="a2-t">
+      <h2 id="a2-t">Afiliar</h2>
+      <form class="formulario cob-form" novalidate>
+        <div class="cob-form-fila">
+          <div class="campo"><label for="a2-os">Obra social</label><select id="a2-os" class="control"><option>Obra Social Ejemplo (OSE)</option></select><p class="campo-error"></p></div>
+          <div class="campo"><label for="a2-plan">Plan</label><select id="a2-plan" class="control"><option>Plan Base</option></select><p class="campo-error"></p></div>
+        </div>
+        <div class="campo"><label for="a2-num">N.º de afiliado</label><input id="a2-num" class="control cob-numero" value="OSE 0001#" aria-invalid="true" aria-describedby="a2-e" /><p class="campo-error" id="a2-e">Usá de 1 a 30 letras, números, guiones, barras o puntos.</p></div>
+        <div class="cob-form-fila">
+          <div class="campo"><label for="a2-desde">Vigente desde</label><input id="a2-desde" class="control" type="date" value="2026-06-01" /><p class="campo-error"></p></div>
+          <div class="campo"><label for="a2-hasta">Vigente hasta (opcional)</label><input id="a2-hasta" class="control" type="date" value="2026-05-31" aria-invalid="true" aria-describedby="a2-e2" /><p class="campo-error" id="a2-e2">Tiene que ser igual o posterior a la fecha de inicio.</p></div>
+        </div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Afiliar</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">3 · 409 VIGENCIA_SUPERPUESTA (Paciente Uno ya tiene Plan Base abierto)</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="a3-t">
+      <h2 id="a3-t">Afiliar</h2>
+      <form class="formulario cob-form" novalidate>
+        <p class="aviso aviso-error" role="alert">El paciente ya tiene una cobertura en esas fechas. Cerrá la vigente o cambiá las fechas.</p>
+        <div class="cob-form-fila">
+          <div class="campo"><label for="a3-os">Obra social</label><select id="a3-os" class="control"><option>Prepaga Prueba</option></select><p class="campo-error"></p></div>
+          <div class="campo"><label for="a3-plan">Plan</label><select id="a3-plan" class="control"><option>Plan Oro</option></select><p class="campo-error"></p></div>
+        </div>
+        <div class="campo"><label for="a3-num">N.º de afiliado</label><input id="a3-num" class="control cob-numero" value="PP-78" /><p class="campo-error"></p></div>
+        <div class="cob-form-fila">
+          <div class="campo"><label for="a3-desde">Vigente desde</label><input id="a3-desde" class="control" type="date" value="2026-11-01" /><p class="campo-error"></p></div>
+          <div class="campo"><label for="a3-hasta">Vigente hasta (opcional)</label><input id="a3-hasta" class="control" type="date" /><p class="campo-error"></p></div>
+        </div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Afiliar</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">4 · 409 AFILIADO_DUPLICADO (junto al número, sin repetirlo) y PLAN_INACTIVO</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="a4-t">
+      <h2 id="a4-t">Afiliar</h2>
+      <form class="formulario cob-form" novalidate>
+        <div class="cob-form-fila">
+          <div class="campo"><label for="a4-os">Obra social</label><select id="a4-os" class="control"><option>Obra Social Ejemplo (OSE)</option></select><p class="campo-error"></p></div>
+          <div class="campo"><label for="a4-plan">Plan</label><select id="a4-plan" class="control"><option>Plan Base</option></select><p class="campo-error"></p></div>
+        </div>
+        <div class="campo"><label for="a4-num">N.º de afiliado</label><input id="a4-num" class="control cob-numero" value="ose-000001" aria-invalid="true" aria-describedby="a4-e" /><p class="campo-error" id="a4-e">Ese número ya lo tiene otro paciente de la misma obra social.</p></div>
+        <div class="cob-form-fila">
+          <div class="campo"><label for="a4-desde">Vigente desde</label><input id="a4-desde" class="control" type="date" value="2026-01-01" /><p class="campo-error"></p></div>
+          <div class="campo"><label for="a4-hasta">Vigente hasta (opcional)</label><input id="a4-hasta" class="control" type="date" /><p class="campo-error"></p></div>
+        </div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Afiliar</button></div>
+      </form>
+    </dialog>
+    <p class="aviso aviso-error" role="alert">Otro rechazo, arriba del diálogo: "El plan está inactivo. Elegí otro." (PLAN_INACTIVO) o "La obra social está inactiva. Elegí otra." (OBRA_SOCIAL_INACTIVA).</p>
+
+    <p class="rotulo-estado">5 · "Corregir": el plan actual se conserva aunque esté inactivo</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="a5-t">
+      <h2 id="a5-t">Corregir afiliación</h2>
+      <p class="dialogo-resumen">Paciente Uno · Plan Base desde 01/01/2026. Para cambiar la fecha de fin, cerrá la afiliación.</p>
+      <form class="formulario cob-form" novalidate>
+        <div class="cob-form-fila">
+          <div class="campo"><label for="a5-os">Obra social</label><select id="a5-os" class="control"><option>Obra Social Ejemplo (OSE)</option></select><p class="campo-error"></p></div>
+          <div class="campo"><label for="a5-plan">Plan</label><select id="a5-plan" class="control"><option selected>Plan Base (inactivo)</option></select><p class="campo-error"></p></div>
+        </div>
+        <div class="campo"><label for="a5-num">N.º de afiliado</label><input id="a5-num" class="control cob-numero" value="OSE-000010" /><p class="campo-error"></p></div>
+        <div class="campo"><label for="a5-desde">Vigente desde</label><input id="a5-desde" class="control" type="date" value="2026-01-01" /><p class="campo-error"></p></div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Guardar</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">6 · "Cerrar afiliación"</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="a6-t">
+      <h2 id="a6-t">Cerrar afiliación</h2>
+      <p class="dialogo-resumen">Paciente Uno · Obra Social Ejemplo, Plan Base, desde 01/01/2026. Queda en el historial; no se borra.</p>
+      <form class="formulario cob-form" novalidate>
+        <div class="campo"><label for="a6-hasta">Vigente hasta</label><input id="a6-hasta" class="control" type="date" value="2026-11-30" min="2026-01-01" aria-describedby="a6-ayuda" /><p class="ayuda" id="a6-ayuda">Último día con esta cobertura. Para cambiar de cobertura, después afiliá desde el día siguiente.</p><p class="campo-error"></p></div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Cerrar afiliación</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">7 · Cierre anterior al inicio</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="a7-t">
+      <h2 id="a7-t">Cerrar afiliación</h2>
+      <form class="formulario cob-form" novalidate>
+        <div class="campo"><label for="a7-hasta">Vigente hasta</label><input id="a7-hasta" class="control" type="date" value="2025-12-31" aria-invalid="true" aria-describedby="a7-e" /><p class="campo-error" id="a7-e">Tiene que ser igual o posterior a la fecha de inicio.</p></div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Cerrar afiliación</button></div>
+      </form>
+    </dialog>
+
+    <p class="nota-mockup"><b>Mockup C-49.</b> Diálogos de la cobertura, iguales en la ficha y en "Coberturas". Solo se ofrecen obras sociales y planes activos; el número de afiliado nunca se repite en un mensaje. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>
