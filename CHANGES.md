@@ -54,7 +54,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `backend/.../agenda/` lista de espera, `configuracion/` política de cancelación | Sofia (C-16 avisa a Emanuel) | V9, V10 |
 | `backend/.../notificaciones/` consentimiento | Juan Cruz | V11 |
 | `backend/.../coberturas/` (obras sociales, presupuestos, liquidaciones) | Juan Sebastián | V12, V13, V14 |
-| `backend/.../caja/`, `pagos/`, `facturacion/`, `reportes/` | Enzo | V15, V23 (señas de C-23, propuesta a confirmar por la líder) |
+| `backend/.../caja/`, `pagos/`, `facturacion/`, `reportes/` | Enzo | V15, V23 (señas de C-23, confirmada por la líder al revisar el PR #135) |
 | `backend/.../clinica/` periodontograma, imágenes, consentimientos, FHIR | Emanuel | V16, V17, V18 |
 | `frontend/` periodontograma en la ficha clínica (C-46) | Sofia (avisa a Enzo, dueño de `frontend/`) | — |
 | `frontend/` imágenes y radiografías en la ficha clínica (C-47) | Emanuel (avisa a Enzo, dueño de `frontend/`) | — |
@@ -999,7 +999,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - Puerto `PasarelaPago` con adaptador Mercado Pago (modo sandbox, **sin credenciales reales en el repo**) y una pasarela simulada: link de pago para la seña al reservar y webhook de confirmación con validación de firma.
   - Seña con vencimiento, reintegros, traslado al reprogramar e imputación al cargo de C-22 (RN-SE-01 a RN-SE-12).
   - Tests: seña pagada confirma el turno; seña vencida lo libera; webhook con firma inválida rechazado.
-- **Migración**: V23 (propuesta en este PR, a confirmar por la líder): `sena`, `sena_movimiento` y el cambio de `cobro` (`MERCADO_PAGO` y `caja_id` nullable), sin editar V15
+- **Migración**: V23 (reservada; confirmada por la líder al revisar el PR #135): `sena`, `sena_movimiento` y el cambio de `cobro` (`MERCADO_PAGO` y `caja_id` nullable), sin editar V15
 - **Dependencias**: `C-10, C-22`
 - **Governance**: CRITICO (pagos)
 - **Leer antes**:
