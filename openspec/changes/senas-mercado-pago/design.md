@@ -144,4 +144,4 @@ Los logs registran solo la acción, el id y la referencia de la seña, y el esta
 - Decision: yes (2026-11-25, política `system-and-mockups`)
 - Mockups: `openspec/changes/senas-mercado-pago/mockups/` (ver su README)
 - Approval: pending
-- Preview: pending
+- Preview: rendered (2026-11-25, 7 pantallas en `mockups/previews/` a 390x844 y 1440x900, sin desplazamiento horizontal)
