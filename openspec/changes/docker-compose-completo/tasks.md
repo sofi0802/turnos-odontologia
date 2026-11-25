@@ -84,7 +84,7 @@
 
 ## 4. Seguridad y credenciales
 
-- [ ] 4.1 Escenario "Ingreso desde el frontend en Docker":
+- [x] 4.1 Escenario "Ingreso desde el frontend en Docker":
   - con el entorno levantado, abrir `http://localhost:5173` e ingresar desde Mi cuenta con la cuenta ADMIN inicial del `.env`;
   - recargar y verificar que la sesión se mantiene;
   - en las herramientas del navegador, verificar que `JSESSIONID` tiene `HttpOnly` y que la consola no muestra errores de CORS.
