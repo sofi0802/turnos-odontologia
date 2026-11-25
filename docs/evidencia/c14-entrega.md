@@ -20,7 +20,7 @@ Desde `master` en `d34c8b8` (PR #154, archive de C-15), con todos los changes de
 | Suite | Comando | Resultado |
 |---|---|---|
 | Backend, dominio | `./gradlew test` | 1108 de 1108, sin fallas ni omitidos |
-| Backend, integración (PostgreSQL 16 real) | `./gradlew integrationTest` | **[COMPLETAR]**: correrlo con el `.env` cargado. Sin `DB_TEST_URL`, el contexto de Spring no arranca (`'url' must start with "jdbc"`) y los tests fallan por el entorno, no por el código |
+| Backend, integración (PostgreSQL 16 real) | `./gradlew integrationTest` | 1343 de 1343 en 265 clases, sin fallas ni omitidos. `BUILD SUCCESSFUL in 23m 59s`, con el `.env` cargado. Sin `DB_TEST_URL`, el contexto de Spring no arranca (`'url' must start with "jdbc"`) |
 | Frontend, tests | `npm test` | 1694 de 1694 en 93 archivos |
 | Frontend, build | `npm run build` (`tsc --noEmit` strict y Vite) | Sin errores |
 
