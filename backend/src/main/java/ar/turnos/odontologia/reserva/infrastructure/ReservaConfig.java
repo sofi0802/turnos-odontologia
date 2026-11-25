@@ -11,6 +11,7 @@ import ar.turnos.odontologia.reserva.application.ConsultarMisTurnos;
 import ar.turnos.odontologia.reserva.application.CancelarReservaOnline;
 import ar.turnos.odontologia.reserva.application.ReprogramarReservaOnline;
 import ar.turnos.odontologia.reserva.application.ReservarTurno;
+import ar.turnos.odontologia.reserva.application.SenasDeReserva;
 import ar.turnos.odontologia.reserva.application.ReservasPaciente;
 import ar.turnos.odontologia.reserva.application.CatalogoReserva;
 import ar.turnos.odontologia.reserva.application.ConsultarCatalogo;
@@ -49,10 +50,11 @@ class ReservaConfig {
     /** Si ningún módulo publica un aviso real, la reserva usa uno que solo deja una línea de log (design D9). */
     @Bean
     ReservarTurno reservarTurno(CatalogoReserva catalogo, BuscadorDeHuecos buscador, AgendaDeTurnos agenda,
-                                ObjectProvider<AvisoReservaOnline> avisos, Clock reloj, ZoneId zonaHoraria,
+                                ObjectProvider<AvisoReservaOnline> avisos, ObjectProvider<SenasDeReserva> senas,
+                                Clock reloj, ZoneId zonaHoraria,
                                 @Value("${app.reserva.alternativas:3}") int alternativas) {
         return new ReservarTurno(catalogo, buscador, agenda, avisos.getIfAvailable(AvisoReservaOnlineInactivo::new),
-                reloj, zonaHoraria, alternativas);
+                senas.getIfAvailable(() -> SenasDeReserva.NINGUNA), reloj, zonaHoraria, alternativas);
     }
 
     @Bean

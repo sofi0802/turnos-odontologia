@@ -1,6 +1,7 @@
 package ar.turnos.odontologia.reserva.api;
 
 import ar.turnos.odontologia.agenda.domain.ReferenciaInexistenteException;
+import ar.turnos.odontologia.reserva.application.SenasDeReserva;
 import ar.turnos.odontologia.reserva.domain.CodigoReserva;
 import ar.turnos.odontologia.reserva.domain.ReservaRechazadaException;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -43,6 +44,18 @@ class ReservaExceptionHandler {
                     .map(horario -> HorarioResponse.de(horario, zona)).toList());
         }
         return problema;
+    }
+
+    /** C-23: el turno no tiene una seña pendiente para pedir un link nuevo. */
+    @ExceptionHandler(SenasDeReserva.SenaNoPendienteException.class)
+    ProblemDetail senaNoPendiente(SenasDeReserva.SenaNoPendienteException e) {
+        return problema(HttpStatus.CONFLICT, "Seña no pendiente", "SENA_NO_PENDIENTE", e.getMessage());
+    }
+
+    /** C-23: la pasarela no respondió o no se pudo guardar la seña. */
+    @ExceptionHandler(SenasDeReserva.SenaNoDisponibleException.class)
+    ProblemDetail senaNoDisponible(SenasDeReserva.SenaNoDisponibleException e) {
+        return problema(HttpStatus.SERVICE_UNAVAILABLE, "Seña no disponible", e.codigo(), e.getMessage());
     }
 
     @ExceptionHandler(ReferenciaInexistenteException.class)

@@ -14,6 +14,12 @@ public interface TurnosACobrar {
 
     List<TurnoACobrar> atendidosSinCargo();
 
+    /**
+     * C-23: la tarifa de un turno en cualquier estado, para calcular su seña al reservar (RN-SE-03). Vacío si el turno
+     * no existe o su prestación no tiene arancel.
+     */
+    java.util.Optional<TurnoACobrar> tarifaDe(long turnoId);
+
     record TurnoACobrar(long turnoId, long pacienteId, long prestacionId, LocalDate fecha, BigDecimal precio,
                         Long afiliacionId, List<CodigoActivo> codigosActivos, Map<Long, Integer> porcentajesDelPlan) {}
 }

@@ -29,8 +29,8 @@ Acceptance criteria: los escenarios de los deltas `senas`, `frontend-senas`, `co
 
 ## 4. Reserva y "Mis turnos" (backend, `reserva/` de Juan Sebastián)
 
-- [ ] 4.1 Puerto `SenasDeReserva` y `CrearSena` (design D3); `ReservarTurno` crea la seña y `TurnoPacienteResponse` suma `sena`; un `@Test` por escenario de "Seña al reservar online", "Turnos que no piden seña", "Link de pago y datos para Mercado Pago" y del delta `reserva-online`, incluida la reserva simultánea
-- [ ] 4.2 `GET /api/v1/paciente/turnos` con `sena` y `POST /api/v1/paciente/reservas/{numeroReserva}/sena/link`; un `@Test` por escenario del delta `turnos-paciente`
+- [x] 4.1 Puerto `SenasDeReserva` y `CrearSena` (design D3); `ReservarTurno` crea la seña y `TurnoPacienteResponse` suma `sena`; un `@Test` por escenario de "Seña al reservar online", "Turnos que no piden seña", "Link de pago y datos para Mercado Pago" y del delta `reserva-online`, incluida la reserva simultánea
+- [x] 4.2 `GET /api/v1/paciente/turnos` con `sena` y `POST /api/v1/paciente/reservas/{numeroReserva}/sena/link`; un `@Test` por escenario del delta `turnos-paciente`
 
 ## 5. Ciclo de vida de la seña (backend)
 
