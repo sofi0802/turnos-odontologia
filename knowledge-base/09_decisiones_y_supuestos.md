@@ -203,7 +203,7 @@ Como el margen es configurable (con mínimo 10), se guarda la columna `fin_con_m
 - La firma y la consulta a Mercado Pago, con un registro idempotente de las notificaciones, evitan pagos falsos o aplicados dos veces.
 - Imputar la seña al cargo reusa la cuenta corriente de C-22 sin tocar el arqueo.
 **Trade-offs aceptados**:
-- El endpoint de la notificación es público y no puede llevar el token CSRF: necesita una excepción acotada a esa ruta, autenticada por la firma (PA-64, a decidir por la líder por la regla dura 8).
+- El endpoint de la notificación es público y no puede llevar el token CSRF: necesita una excepción acotada a esa ruta, autenticada por la firma (PA-64, aceptada por la líder al revisar la KB: solo esa ruta; regla dura 8).
 - `Cobro.caja_id` pasa a nullable para los cobros `MERCADO_PAGO` (cambio del modelo de C-22, en una migración nueva).
 - En C-23 el personal no ve la seña en la agenda (PA-65); la ve en la cuenta corriente recién cuando se imputa.
 - Toca módulos de otros dueños: `reserva/` (Juan Sebastián), la cancelación y la reprogramación de `agenda/` (Sofia) y los avisos de `notificaciones/` (Juan Cruz). El propose define los puntos de contacto.

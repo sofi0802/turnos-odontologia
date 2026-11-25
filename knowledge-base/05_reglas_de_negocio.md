@@ -267,7 +267,7 @@ Cada regla tiene un código `RN-{DOMINIO}-{NN}`. Entre paréntesis va el código
 - **RN-SE-04**: **turno pendiente de seña** (PA-56).
   - La reserva crea el turno `RESERVADO` y **ocupa el hueco** con las dos garantías contra solapamientos (RN-AG-01 a RN-AG-05, DD-03). La seña queda **pendiente** con un vencimiento: el momento de la reserva más el plazo configurado.
   - Si vence sin pago, el sistema **cancela el turno** (`CANCELADO`, con el sistema como actor en `TurnoAuditoria`, RN-GL-03), el hueco queda libre (RN-AG-08) y la seña queda **vencida**.
-  - Con la seña pagada el turno **queda firme**: ya no vence. La confirmación de asistencia (RN-NO) sigue igual (PA-62).
+  - Con la seña pagada el turno **queda firme**: ya no vence. El turno sigue `RESERVADO`: la confirmación de asistencia (RN-NO) sigue aparte (PA-62).
 - **RN-SE-05**: **pago con Mercado Pago**.
   - El paciente paga con el link de Mercado Pago que ve al terminar la reserva y en "Mis turnos" mientras la seña está pendiente. El sistema no guarda datos de tarjetas ni de cuentas.
   - Una seña se da por **pagada** solo con la notificación de Mercado Pago **verificada**: firma válida y el pago consultado a Mercado Pago, aprobado y por el importe de la seña. Una notificación repetida no aplica el pago dos veces.
@@ -284,7 +284,7 @@ Cada regla tiene un código `RN-{DOMINIO}-{NN}`. Entre paréntesis va el código
 - **RN-SE-09**: **reintegros**. Se hacen por Mercado Pago, completos o por la diferencia de RN-SE-08, y la seña queda **devuelta**. Si Mercado Pago rechaza el reintegro, se reintenta y el intento queda registrado; nunca se reintegra dos veces.
 - **RN-SE-10**: **seguridad**.
   - Las credenciales de Mercado Pago son de **sandbox** y van solo en variables de entorno (`08_arquitectura_propuesta.md`), nunca en el repositorio. Los tests usan una pasarela simulada detrás de un puerto.
-  - La notificación de Mercado Pago llega a un endpoint público sin sesión: se acepta solo con la firma válida, y el estado del pago se confirma consultándolo a Mercado Pago (PA-64).
+  - La notificación de Mercado Pago llega a un endpoint público sin sesión: se acepta solo con la firma válida, y el estado del pago se confirma consultándolo a Mercado Pago. Esa ruta, y solo esa, queda fuera de la protección CSRF; el resto de la API la mantiene (PA-64, regla dura 8).
 - **RN-SE-11**: **privacidad** (RN-CA-08, RN-NO-01).
   - A Mercado Pago se le manda solo el importe, una descripción genérica ("Seña de turno") y una referencia opaca de la seña: ni la prestación (dato de salud) ni el nombre o el DNI del paciente.
   - El importe de la seña no va en recordatorios, mensajes ni logs. Un aviso de reintegro solo dice que se hizo el reintegro de la seña del turno de tal fecha, y solo con consentimiento (RN-NO-03).
