@@ -275,12 +275,12 @@ Mismo entorno que la 6.4. Capturas en `mockups/verify/`. Pedidos a `/api/v1/cons
 | Versiones (`plantillas-estados`) | sí | — | Igual. |
 | Desactivar (`plantillas-estados`) | — | sí | Igual: "Plantilla desactivada." y la fila "Inactiva" con "Activar". La plantilla inactiva no se ofrece al firmar. |
 | Sección de la ficha (`consentimientos-ficha`) | vacía y firmada | firmada y revocada | Igual. |
-| Elegir plantilla y aviso de doble firma (`firma-estados`) | sí | — | Igual. |
-| Vista de firma vacía, errores y DNI que no coincide (`firma-vacia`, `firma-errores`) | sí | — | Igual. |
-| Bloqueo: firmada, cancelada y contraseña incorrecta (`firma-bloqueo`, `firma-bloqueo-estados`) | sí | — | Igual; "Te quedan 2 intentos". |
+| Elegir plantilla y aviso de doble firma (`firma-estados`) | sí | elegir | Igual. |
+| Vista de firma vacía, completa, errores y DNI que no coincide (`firma-vacia`, `firma-completa`, `firma-errores`) | sí | vacía y completa | Igual. A 390 ocupa todo el ancho (390 px), sin desplazamiento horizontal y con los controles de 44 px o más. |
+| Bloqueo: firmada, cancelada y contraseña incorrecta (`firma-bloqueo`, `firma-bloqueo-estados`) | sí | firmada | Igual; "Te quedan 2 intentos". |
 | Documento: "Íntegro" y revocado (`consentimiento-ver`) | íntegro | revocado | Igual, con el motivo y quién revocó. |
 | Revocar (`consentimientos-estados`) | — | sí | Igual. |
 
 Hallazgo menor fuera de C-48: con 11 pestañas, la tira de Configuración se desplaza y, a 390, la pestaña elegida no se lleva a la vista al cambiar el tamaño (componente `crearPestanas` de C-34).
 
-No verificadas a 390 px: la vista de firma y el bloqueo (hacen falta otra firma y otro desbloqueo con la contraseña del profesional). No verificadas en el navegador: la vista de solo lectura del administrador en la ficha (cubierta por los tests de 7.1).
+No verificados a 390 px: los errores de la firma, el aviso de doble firma y la contraseña incorrecta (iguales a 1440 y cubiertos por los tests). No verificada en el navegador: la vista de solo lectura del administrador en la ficha (cubierta por los tests de 7.1).

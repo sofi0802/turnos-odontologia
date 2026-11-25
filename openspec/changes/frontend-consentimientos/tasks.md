@@ -63,7 +63,7 @@
 ## 8. Verificación
 
 - [x] 8.1 Correr `npm test`, `npx tsc --noEmit` y `npm run build` y verificar que todo pase
-- [ ] 8.2 Hacer la verificación visual contra el backend de desarrollo con C-27:
+- [x] 8.2 Hacer la verificación visual contra el backend de desarrollo con C-27:
   - datos ficticios, entrando como `admin` y como `ana.ejemplo`, a 390 × 844 y 1440 × 900;
   - crear y editar una plantilla, ver sus versiones, desactivarla; firmar, desbloquear, ver con "Íntegro", revocar; cancelar una firma; una contraseña mala en el bloqueo; el aviso de doble firma;
   - comparar cada pantalla con su mockup, revisar la consola y los pedidos fallidos, y que la dirección, `localStorage` y `sessionStorage` no tengan datos;
