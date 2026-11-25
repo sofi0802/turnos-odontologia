@@ -286,6 +286,21 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 - [ ] CA-6: solo el administrador ve y maneja las liquidaciones.
 **Reglas relacionadas**: RN-LQ-01 a RN-LQ-08
 
+## Épica 10: Señas (post-MVP)
+
+### US-202: Pagar una seña con Mercado Pago al reservar online [2026-11-24, C-23, en revisión]
+**Como** paciente **quiero** pagar una seña con Mercado Pago cuando reservo un turno online, **para** asegurar el horario; **y como** administrador **quiero** cobrar esa seña, **para** compensar los turnos a los que el paciente no viene.
+**Criterios de aceptación**:
+- [ ] CA-1: como `ADMIN` activo las señas y fijo el porcentaje del copago y el plazo para pagar; mientras estén desactivadas, la reserva online funciona como antes.
+- [ ] CA-2: al reservar online con las señas activas, el turno ocupa el hueco y veo el importe de la seña, su vencimiento y el link para pagar, también en "Mis turnos"; los turnos del personal, los sobreturnos y los de copago cero o sin precio no piden seña.
+- [ ] CA-3: si pago con Mercado Pago, la seña queda pagada y el turno no vence; si no pago a tiempo, el turno se cancela solo y el horario queda libre; un pago que llega tarde se me devuelve.
+- [ ] CA-4: si cancelo a tiempo, o cancela el consultorio, se me devuelve la seña; si no voy, o pido cancelar con menos de 24 h, la retiene el consultorio.
+- [ ] CA-5: si reprogramo, la seña pasa al turno nuevo sin volver a pagar.
+- [ ] CA-6: cuando el turno queda atendido, la seña se descuenta del copago en mi cuenta corriente como un cobro de Mercado Pago, fuera de la caja; si sobra, se me devuelve la diferencia.
+- [ ] CA-7: una notificación de Mercado Pago con firma inválida se rechaza, y una repetida no aplica el pago dos veces.
+- [ ] CA-8: ni la prestación ni mis datos van a Mercado Pago, y el importe no aparece en mensajes ni logs.
+**Reglas relacionadas**: RN-SE-01 a RN-SE-12, RN-CA-03, RN-CA-04, RN-AG-07, RN-AG-08, RN-AG-17
+
 ## Backlog: v1.x y posteriores (fuera del MVP)
 
 > Cada fila se vincula con su change de `CHANGES.md`. Las reglas detalladas se escriben en esta KB **antes de empezar** el change, cuando el MVP esté completo.
@@ -299,7 +314,7 @@ Están organizadas por **épica** y, dentro de cada una, por **historia de usuar
 | US-205 | Presupuestos con cobertura y copago (pasó a US-047 el 2026-11-24) | Posterior | C-19 | Informe, A.3 |
 | US-206 | Validación online de la cobertura con la obra social | Posterior | C-21 | Informe, C.2 (DentalTec) |
 | US-207 | Caja diaria, cobros y cuenta corriente del paciente (detallada en la Épica 9 el 2026-11-24) | Posterior | C-22 | Roadmap (Ajustar de la líder, 2026-11-21); base de C-23 y C-24 |
-| US-202 | Señas con Mercado Pago | Posterior | C-23 | Informe, D.3 |
+| US-202 | Señas con Mercado Pago (detallada en la Épica 10 el 2026-11-24) | Posterior | C-23 | Informe, D.3 |
 | US-201 | Facturación electrónica ARCA | Posterior | C-24 | Informe, D.3 |
 | US-203 | ~~Imágenes y radiografías~~ (pasó a US-048 el 2026-11-24; el periodontograma, a US-045) | Posterior | C-26, C-47 | Informe, D.3 |
 | US-208 | Consentimiento informado con firma electrónica | Posterior | C-27, C-48 | Informe, D.3; relevamiento: Bilog (Ley 25.506) |
