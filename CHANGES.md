@@ -59,6 +59,9 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `frontend/` periodontograma en la ficha clínica (C-46) | Sofia (avisa a Enzo, dueño de `frontend/`) | — |
 | `frontend/` imágenes y radiografías en la ficha clínica (C-47) | Emanuel (avisa a Enzo, dueño de `frontend/`) | — |
 | `frontend/` consentimientos informados: plantillas y firma (C-48) | Emanuel (avisa a Enzo, dueño de `frontend/`) | — |
+| `frontend/` obras sociales y cobertura del paciente (C-49) | Juan Sebastián (avisa a Enzo, dueño de `frontend/`) | — |
+| `frontend/` aranceles y presupuestos (C-50) | Juan Sebastián (avisa a Enzo, dueño de `frontend/`) | — |
+| `frontend/` liquidaciones a obras sociales (C-51) | Juan Sebastián (avisa a Enzo, dueño de `frontend/`) | — |
 | `backend/.../sucursales/` (transversal) | Sofia | V19 |
 | `backend/.../integraciones/` Google Calendar, asistente IA | Juan Cruz | — |
 
@@ -113,8 +116,11 @@ v1.x
 
 Obras sociales, cobros y facturación
   C-04 + C-05 ── C-18 obras-sociales-y-planes      [Juan Sebastián]
+                   │     └── C-49 frontend-obras-sociales [Juan Sebastián]   ← + C-34, C-44; C-18 hizo solo el backend
                    ├── C-19 presupuestos-y-cobertura [Juan Sebastián] ← + C-13
+                   │     ├── C-50 frontend-presupuestos [Juan Sebastián]   ← + C-49; C-19 hizo solo el backend
                    │     └── C-20 liquidaciones-obras-sociales [Juan Sebastián]
+                   │           └── C-51 frontend-liquidaciones [Juan Sebastián]   ← + C-49; C-20 hizo solo el backend
                    └── C-21 validacion-online-obras-sociales [Juan Sebastián]
   C-06 ───────── C-22 caja-y-cobros                [Enzo]
                    ├── C-23 senas-mercado-pago     [Enzo]   ← + C-10
@@ -232,6 +238,10 @@ GATE 9: C-19 ✓ + C-22 ✓                                       ← FORK
   → C-29 multisucursal                       [Agente A · Sofia]
   → C-31 asistente-ia-whatsapp               [Agente B · Juan Cruz]
   → C-20 liquidaciones-obras-sociales        [Agente B · Juan Sebastián]
+  → C-49 frontend-obras-sociales             [Agente C · Juan Sebastián — si C-18 ✓]
+  → C-50 frontend-presupuestos               [Agente C · Juan Sebastián — si C-19 ✓ y C-49 ✓]
+  → C-51 frontend-liquidaciones              [Agente C · Juan Sebastián — si C-20 ✓ y C-49 ✓]
+  (C-49 a C-51 tocan frontend/ y styles.css: un PR por vez, en este orden)
   → C-24 facturacion-electronica-arca        [Agente C · Enzo]
   → C-27 consentimientos-firma-electronica   [Agente B · Emanuel]
   → C-48 frontend-consentimientos            [Agente C · Emanuel — si C-27 ✓]
@@ -290,7 +300,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 | **Sofia Indovino** (líder) | **C-01** (OPSX), C-06, C-35, C-42, C-43, C-14 + revisión de todos los PR | C-15, C-16, C-25, C-29, C-46 |
 | **Juan Cruz** | C-03, C-08, C-11, C-33, C-37, C-38, C-39 | C-17, C-30, C-31 |
 | **Emanuel** | C-04, C-07, C-13, C-12, C-34, C-44 | C-26, C-47, C-27, C-48, C-28 |
-| **Juan Sebastián** | C-05, C-10, C-36 | C-18, C-19, C-20, C-21 |
+| **Juan Sebastián** | C-05, C-10, C-36 | C-18, C-19, C-20, C-21, C-49, C-50, C-51 |
 | **Enzo** | C-02, C-09, C-40, C-41, C-45 | C-22, C-23, C-24, C-32 (backend y pantallas de administración) |
 
 ---
@@ -906,6 +916,68 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 - **Leer antes**:
   - `knowledge-base/02_descripcion_general.md` §Integraciones externas
   - `docs/discovery/sources/relevamiento-fuentes.md` §DentalTec
+
+### [C-49] `frontend-obras-sociales`
+- **Estado**: `[ ]` pendiente
+- **Responsable**: Juan Sebastián (avisa a Enzo, dueño de `frontend/`)
+- **Scope**:
+  - C-18 hizo el backend de obras sociales, planes, nomenclador y afiliaciones, pero ninguna pantalla lo usa.
+  - **Configuración** (solo `ADMIN`): una pestaña "Obras sociales" con las obras sociales y prepagas, sus planes y el nomenclador. Alta, edición, activar y desactivar; nada se borra. Sobre `/api/v1/obras-sociales`, `/{id}/planes` y `/api/v1/nomenclador`.
+  - **Ficha del paciente** (`#/pacientes`, C-44): la cobertura vigente o "Particular" y el historial de afiliaciones. El `ADMIN` y la recepción afilian, corrigen y cierran; el odontólogo solo lee. Sobre `/api/v1/pacientes/{id}/afiliaciones` y `/cobertura`.
+  - **Mi cuenta** (paciente): su cobertura vigente, solo lectura, sobre `/api/v1/paciente/cobertura` (PA-21).
+  - Muestra los errores de la API con su mensaje (`VIGENCIA_SUPERPUESTA`, `AFILIADO_DUPLICADO`, `PLAN_INACTIVO`, `OBRA_SOCIAL_INACTIVA`, `*_EXISTENTE`).
+  - Sin cambios de backend ni migraciones: usa la API tal como quedó. Si falta un endpoint, se agrega en un change de backend aparte.
+  - Cambio visual: modo `system-and-mockups`, mockups a 390 y 1440 px aprobados por la líder antes del apply.
+  - Ningún dato personal ni de salud en la URL, en `localStorage` ni en la consola (reglas duras 1 y 6).
+- **Dependencias**: `C-18`, `C-34`, `C-44`
+- **Governance**: MEDIO (datos personales)
+- **Leer antes**:
+  - `knowledge-base/05_reglas_de_negocio.md` §Coberturas (RN-OS-01 a RN-OS-07)
+  - `knowledge-base/06_funcionalidades.md` §US-046
+  - `openspec/specs/catalogo-coberturas/spec.md` y `openspec/specs/afiliaciones-pacientes/spec.md`
+  - `design-system/README.md` y `design-system/components.html`
+
+### [C-50] `frontend-presupuestos`
+- **Estado**: `[ ]` pendiente
+- **Responsable**: Juan Sebastián (avisa a Enzo, dueño de `frontend/`)
+- **Scope**:
+  - C-19 hizo el backend de aranceles, cobertura por plan y presupuestos, pero ninguna pantalla lo usa.
+  - **Configuración** (solo `ADMIN`): el precio particular de cada prestación y el porcentaje que cubre cada plan por código, sobre `/api/v1/aranceles` y `.../planes/{planId}/coberturas`.
+  - **Ficha del paciente**: una sección "Presupuestos". El odontólogo arma uno con las piezas sugeridas del odontograma (`/sugerencias`), elige la prestación y el código de cada ítem y ve el importe, la cobertura y el copago antes de emitir; después lo acepta o lo rechaza. Muestra los vencidos (RN-PR-05). El `ADMIN` solo lee; la recepción ve los presupuestos **sin pieza ni cara** (PA-24).
+  - **Mi cuenta** (paciente): sus presupuestos, solo lectura (PA-27).
+  - Muestra los errores de la API (`ARANCEL_INEXISTENTE`, `PRESTACION_INACTIVA`, `PRESUPUESTO_VENCIDO`, `PRESUPUESTO_CERRADO`, `CODIGO_NOMENCLADOR_REQUERIDO`).
+  - Sin cambios de backend ni migraciones: usa la API tal como quedó. Si falta un endpoint, se agrega en un change de backend aparte.
+  - Cambio visual: modo `system-and-mockups`, mockups a 390 y 1440 px aprobados por la líder antes del apply.
+  - Ningún dato personal ni de salud en la URL, en `localStorage` ni en la consola (reglas duras 1 y 6).
+- **Dependencias**: `C-19`, `C-49`
+- **Governance**: ALTO (datos de salud y dinero)
+- **Leer antes**:
+  - `knowledge-base/05_reglas_de_negocio.md` §Presupuestos (RN-PR-01 a RN-PR-07)
+  - `knowledge-base/06_funcionalidades.md` §US-047
+  - `openspec/changes/presupuestos-y-cobertura/specs/` (después del archive, `openspec/specs/aranceles-y-cobertura-planes/` y `presupuestos/`)
+  - `design-system/README.md` y `design-system/components.html`
+
+### [C-51] `frontend-liquidaciones`
+- **Estado**: `[ ]` pendiente
+- **Responsable**: Juan Sebastián (avisa a Enzo, dueño de `frontend/`)
+- **Scope**:
+  - C-20 hizo el backend de las liquidaciones a obras sociales, pero ninguna pantalla lo usa.
+  - **Pantalla "Liquidaciones"** (solo `ADMIN`, entrada propia en la barra lateral o dentro de Configuración, a decidir en el propose):
+    - lista por obra social y período, con estado y totales;
+    - generar para una obra social y un mes cerrado;
+    - en borrador: regenerar, quitar líneas y elegir el código de las líneas sin código;
+    - presentar, descargar el CSV, conciliar cada línea (cobrada, parcial o rechazada con motivo) y cerrar.
+  - Sobre `/api/v1/liquidaciones` y sus acciones. Muestra los errores de la API (`LIQUIDACION_EXISTENTE`, `PERIODO_NO_CERRADO`, `LIQUIDACION_VACIA`, `LINEA_SIN_CODIGO`, `CONCILIACION_INCOMPLETA`, `MONTO_COBRADO_INVALIDO`, `MOTIVO_REQUERIDO`).
+  - Sin cambios de backend ni migraciones: usa la API tal como quedó. Si falta un endpoint, se agrega en un change de backend aparte.
+  - Cambio visual: modo `system-and-mockups`, mockups a 390 y 1440 px aprobados por la líder antes del apply.
+  - Ningún dato personal ni de salud en la URL, en `localStorage` ni en la consola (reglas duras 1 y 6).
+- **Dependencias**: `C-20`, `C-49`
+- **Governance**: ALTO (dinero)
+- **Leer antes**:
+  - `knowledge-base/05_reglas_de_negocio.md` §Liquidaciones (RN-LQ-01 a RN-LQ-08)
+  - `knowledge-base/06_funcionalidades.md` §US-049
+  - `openspec/changes/liquidaciones-obras-sociales/specs/` (después del archive, en `openspec/specs/`)
+  - `design-system/README.md` y `design-system/components.html`
 
 ### [C-22] `caja-y-cobros`
 - **Estado**: `[ ]` en propuesta (KB aprobada en el PR #118; propose y mockups en la rama `change/C-22-caja-y-cobros`, aprobados explícitamente por Enzo el 2026-11-24). Change `openspec/changes/caja-y-cobros/`: capabilities nuevas `caja`, `cobros-pacientes` y `frontend-caja`, y delta de `frontend-navegacion`. Migración V15
