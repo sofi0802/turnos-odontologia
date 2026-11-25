@@ -170,6 +170,27 @@ Como el margen es configurable (con mínimo 10), se guarda la columna `fin_con_m
 **Trade-offs aceptados**: un turno es una sola prestación. Si en un turno se hacen varias prácticas, hoy se liquida solo la del turno; si hace falta, se agrega después el registro de práctica realizada.
 **Impacto**: RN-LQ-01 a RN-LQ-08, US-049, una fila de la matriz de 03 y las entidades `Liquidacion` y `LiquidacionLinea` (migración V14).
 
+### DD-20: Consentimiento con firma electrónica, evidencia y hash canónico [2026-11-24, C-27]
+**Decisión**: el consentimiento informado se firma con **firma electrónica** (Ley 25.506, art. 5), **no con firma digital** (art. 2, con certificado de un certificador licenciado).
+- En la computadora del consultorio, con la sesión del odontólogo, el paciente lee una versión concreta de la plantilla, escribe su nombre y su DNI y acepta.
+- El sistema guarda una copia del texto firmado y la evidencia (firmante, profesional, fecha y hora, IP y dispositivo), y calcula un **SHA-256** sobre un **contenido canónico** con cada campo precedido por su longitud en bytes (formato 1).
+- El documento firmado es inmutable en el dominio y en la base (trigger sin excepciones). La revocación va en otra tabla, así que no lo toca y su hash sigue verificando.
+- Las plantillas tienen versiones de solo agregado y las edita el `ADMIN`.
+
+**Contexto**: Emanuel fijó el alcance el 2026-11-24 (CHANGES.md §C-27). Bilog ofrece consentimientos con firma citando la Ley 25.506 (`docs/discovery/sources/relevamiento-fuentes.md` §Bilog), sin publicar cómo.
+**Alternativas consideradas**:
+1. Firma digital con certificado: cada paciente necesitaría un certificado de un certificador licenciado.
+2. Trazo manuscrito en una tableta: suma hardware y no mejora la prueba de integridad.
+3. Hashear solo el texto, o usar JSON canónico: lo primero no ata el texto al firmante y a la evidencia; lo segundo es más difícil de reproducir a mano.
+
+**Justificación**: un consultorio chico no puede exigir certificados a sus pacientes. La evidencia guardada y el hash permiten probar qué se firmó, quién dijo firmar, cuándo y con qué sesión del personal.
+**Trade-offs aceptados**:
+- La firma electrónica no tiene las presunciones de autoría e integridad de la firma digital (arts. 7 y 8): si el paciente la desconoce, el consultorio tiene que probar su validez. Para el Código Civil y Comercial (art. 288), en instrumentos electrónicos la firma se cumple con firma digital, así que el documento vale como prueba y no como instrumento firmado en sentido estricto. Se recomienda que el consultorio lo valide con su asesor legal.
+- El hash no está firmado con una clave fuera de la base: quien administra la base podría reescribir una fila y su hash. Un sello HMAC o un sellado de tiempo de un tercero quedan como extensión.
+- La IP es la que ve el servidor; detrás de un proxy es la del proxy (PA-49).
+
+**Impacto**: RN-CL-09 a RN-CL-11, US-208, dos filas de la matriz de 03 y las entidades `PlantillaConsentimiento`, `PlantillaConsentimientoVersion`, `ConsentimientoFirmado` y `ConsentimientoRevocacion` (migración V18).
+
 ## Supuestos inferidos
 
 ### ~~SU-07: Todos los profesionales pueden hacer todas las prestaciones~~ (refutado)

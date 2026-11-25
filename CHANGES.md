@@ -58,6 +58,7 @@ Conservá los IDs de las fichas al editar o reordenar. El seguimiento es **local
 | `backend/.../clinica/` periodontograma, imágenes, consentimientos, FHIR | Emanuel | V16, V17, V18 |
 | `frontend/` periodontograma en la ficha clínica (C-46) | Sofia (avisa a Enzo, dueño de `frontend/`) | — |
 | `frontend/` imágenes y radiografías en la ficha clínica (C-47) | Emanuel (avisa a Enzo, dueño de `frontend/`) | — |
+| `frontend/` consentimientos informados: plantillas y firma (C-48) | Emanuel (avisa a Enzo, dueño de `frontend/`) | — |
 | `backend/.../sucursales/` (transversal) | Sofia | V19 |
 | `backend/.../integraciones/` Google Calendar, asistente IA | Juan Cruz | — |
 
@@ -125,6 +126,7 @@ Clínica avanzada (todas desde C-13)
          ├── C-26 imagenes-y-radiografias          [Emanuel]
          │     └── C-47 frontend-imagenes-y-radiografias [Emanuel]   ← + C-44; C-26 hace solo el backend
          ├── C-27 consentimientos-firma-electronica [Emanuel]
+         │     └── C-48 frontend-consentimientos   [Emanuel]   ← + C-44; C-27 hace solo el backend
          └── C-28 exportacion-hl7-fhir             [Emanuel]
 
 Escala, integraciones e inteligencia
@@ -232,6 +234,7 @@ GATE 9: C-19 ✓ + C-22 ✓                                       ← FORK
   → C-20 liquidaciones-obras-sociales        [Agente B · Juan Sebastián]
   → C-24 facturacion-electronica-arca        [Agente C · Enzo]
   → C-27 consentimientos-firma-electronica   [Agente B · Emanuel]
+  → C-48 frontend-consentimientos            [Agente C · Emanuel — si C-27 ✓]
 
 GATE 10: resto del post-MVP
   → C-28 exportacion-hl7-fhir                [Agente B · Emanuel]
@@ -286,7 +289,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 |---|---|---|
 | **Sofia Indovino** (líder) | **C-01** (OPSX), C-06, C-35, C-42, C-43, C-14 + revisión de todos los PR | C-15, C-16, C-25, C-29, C-46 |
 | **Juan Cruz** | C-03, C-08, C-11, C-33, C-37, C-38, C-39 | C-17, C-30, C-31 |
-| **Emanuel** | C-04, C-07, C-13, C-12, C-34, C-44 | C-26, C-47, C-27, C-28 |
+| **Emanuel** | C-04, C-07, C-13, C-12, C-34, C-44 | C-26, C-47, C-27, C-48, C-28 |
 | **Juan Sebastián** | C-05, C-10, C-36 | C-18, C-19, C-20, C-21 |
 | **Enzo** | C-02, C-09, C-40, C-41, C-45 | C-22, C-23, C-24, C-32 (backend y pantallas de administración) |
 
@@ -1020,11 +1023,35 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 - **Scope**:
   - Plantillas de consentimiento informado y firma con hash, fecha, IP y dispositivo; documento bloqueado una vez firmado (Ley 25.506). **Migración V18**.
   - Tests: no se puede modificar un documento firmado; verificación del hash.
+  - **Decisiones de Emanuel (2026-11-24)**:
+    - **Solo backend**: API, dominio y migración. Las pantallas van en C-48.
+    - **Firma electrónica en el consultorio** (Ley 25.506 art. 5, no firma digital con certificado): en la computadora del consultorio, con la sesión del odontólogo, el paciente lee el texto, escribe su nombre y DNI y acepta. Se guardan el hash, la fecha, la IP y el dispositivo.
+    - **Plantillas editables por el `ADMIN`**, con una versión nueva por cada cambio. El documento firmado guarda su propia copia del texto.
+    - **Revocación con registro**: quién la registró, cuándo y el motivo. El documento firmado no cambia y su hash sigue verificando.
 - **Dependencias**: `C-13`
 - **Governance**: CRITICO (validez legal)
 - **Leer antes**:
   - `docs/discovery/sources/relevamiento-fuentes.md` §Bilog
   - `knowledge-base/05_reglas_de_negocio.md` §Clínica
+
+### [C-48] `frontend-consentimientos`
+- **Estado**: `[ ]` pendiente
+- **Responsable**: Emanuel (avisa a Enzo, dueño de `frontend/`)
+- **Scope**:
+  - C-27 hace el backend de los consentimientos, pero ninguna pantalla lo usa. Este change suma la interfaz, sin cambiar el contrato de la API.
+  - **Plantillas** (solo `ADMIN`): crear una plantilla y editarla (cada cambio es una versión nueva), y ver sus versiones.
+  - **Firma en el consultorio**: una sección "Consentimientos" en la ficha clínica de C-44 (`#/pacientes`). El odontólogo elige la plantilla y el paciente lee el texto, escribe su nombre y DNI y acepta.
+  - **Consulta**: los consentimientos firmados del paciente, con la verificación del hash, y la **revocación con motivo**.
+  - **Acceso**: según la matriz de roles que defina C-27. Ningún dato de salud en la URL, en `localStorage` ni en la consola (regla dura 6).
+  - Sin cambios de backend ni migraciones.
+  - Cambio visual: modo `system-and-mockups`, con mockups a 390 y 1440 px aprobados antes del apply.
+- **Dependencias**: `C-27`, `C-44`
+- **Governance**: CRITICO (validez legal de la firma)
+- **Leer antes**:
+  - `knowledge-base/05_reglas_de_negocio.md` §Clínica (las reglas de consentimientos que suma C-27)
+  - `knowledge-base/06_funcionalidades.md` §US-208
+  - la spec de consentimientos de C-27 (después del archive, en `openspec/specs/`) y `openspec/specs/frontend-ficha-clinica/spec.md`
+  - `design-system/README.md` y `design-system/components.html`
 
 ### [C-28] `exportacion-hl7-fhir`
 - **Estado**: `[ ]` pendiente
