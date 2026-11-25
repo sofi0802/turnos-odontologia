@@ -17,13 +17,13 @@ Acceptance criteria: los escenarios de los deltas `senas`, `frontend-senas`, `co
 
 ## 2. Pasarela de pagos (backend)
 
-- [ ] 2.1 Puerto `PasarelaPago` y `PasarelaSimulada` con fallos programables (design D6)
-- [ ] 2.2 `PasarelaMercadoPago` con `RestClient`, probada con `MockRestServiceServer`: la preferencia sin datos del pagador ni la prestación, la consulta del pago y el reintegro con `X-Idempotency-Key`
+- [x] 2.1 Puerto `PasarelaPago` y `PasarelaSimulada` con fallos programables (design D6)
+- [x] 2.2 `PasarelaMercadoPago` con `RestClient`, probada con `MockRestServiceServer`: la preferencia sin datos del pagador ni la prestación, la consulta del pago y el reintegro con `X-Idempotency-Key`
 - [ ] 2.3 Variables `PAGOS_PASARELA`, `MERCADOPAGO_ACCESS_TOKEN`, `MERCADOPAGO_WEBHOOK_SECRET` y `PAGOS_URL_PUBLICA` en `.env.example` sin valores reales; el arranque falla con `mercadopago` sin credenciales
 
 ## 3. Notificación de Mercado Pago (backend)
 
-- [ ] 3.1 Confirmar con la documentación vigente de Mercado Pago (context7) el formato de `x-signature` y su manifiesto; test primero de `FirmaMercadoPago` (válida, alterada, vacía y con otra clave)
+- [x] 3.1 Confirmar con la documentación vigente de Mercado Pago (context7) el formato de `x-signature` y su manifiesto; test primero de `FirmaMercadoPago` (válida, alterada, vacía y con otra clave)
 - [ ] 3.2 `NotificacionesMercadoPagoController` y `NotificacionDePago` con idempotencia y pago tardío (design D5); un `@Test` por escenario de "Pago confirmado por la notificación de Mercado Pago" y "Notificaciones inválidas o repetidas"
 - [ ] 3.3 Excepción de CSRF de la ruta exacta en `SecurityConfig` (avisa a Juan Sebastián, design D7); un `@Test` por escenario del delta `seguridad-autorizacion`
 
