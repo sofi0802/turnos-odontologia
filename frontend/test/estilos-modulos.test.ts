@@ -32,6 +32,8 @@ const REGLAS_POR_MODULO: Readonly<Record<string, string>> = {
   '20-reportes.css': '.medidor-relleno {',
   // C-47: imágenes y estudios de la ficha.
   '21-imagenes.css': '.img-fila-anulada {',
+  // C-49: obras sociales, cobertura del paciente y "Mi cobertura".
+  '22-coberturas.css': '.cob-afiliacion {',
 };
 
 function importaciones(): string[] {
@@ -86,8 +88,33 @@ describe('Módulo de imágenes (C-47)', () => {
 
   it('Se importa al final de styles.css, después del módulo de reportes', () => {
     const importaciones = [...textoPrincipal.matchAll(/@import\s+'([^']+)';/g)].map((m) => m[1]);
-    expect(importaciones.at(-1)).toBe('./styles/21-imagenes.css');
-    expect(importaciones.at(-2)).toBe('./styles/20-reportes.css');
+    // C-49 suma 22-coberturas.css después: imágenes sigue inmediatamente después de reportes.
+    const posicion = importaciones.indexOf('./styles/21-imagenes.css');
+    expect(importaciones[posicion - 1]).toBe('./styles/20-reportes.css');
+    expect(importaciones.at(-1)).toBe('./styles/22-coberturas.css');
+  });
+});
+
+describe('Módulo de coberturas (C-49, design D10)', () => {
+  it('Sin las reglas que son solo de los mockups', () => {
+    const modulo = textoDeModulo('22-coberturas.css');
+    for (const regla of ['.nota-mockup', '.rotulo-estado', '.dialogo-estatico', '.nota-contexto', 'Solo mockups']) {
+      expect(modulo, regla).not.toContain(regla);
+    }
+  });
+
+  it('Sin quitar el foco y con las piezas de los mockups', () => {
+    const modulo = textoDeModulo('22-coberturas.css');
+    expect(modulo).not.toMatch(/outline:\s*none/);
+    for (const regla of ['.cob-obra {', '.cob-planes {', '.cob-tarjeta {', '.cob-tarjeta-particular {', '.etiqueta-proxima {', '.mi-cobertura {']) {
+      expect(modulo, regla).toContain(regla);
+    }
+  });
+
+  it('Se importa al final de styles.css, después del módulo de imágenes', () => {
+    const importaciones = [...textoPrincipal.matchAll(/@import\s+'([^']+)';/g)].map((m) => m[1]);
+    expect(importaciones.at(-1)).toBe('./styles/22-coberturas.css');
+    expect(importaciones.at(-2)).toBe('./styles/21-imagenes.css');
   });
 });
 

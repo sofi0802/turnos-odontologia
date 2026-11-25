@@ -1,3 +1,4 @@
+import { crearMiCobertura } from '../coberturas/mi-cobertura.ts';
 import { leerReservaPendiente } from '../paciente/reserva.ts';
 import { ErrorNegocio, ErrorSesion, ErrorValidacion } from '../shared/api/errores.ts';
 import {
@@ -10,6 +11,7 @@ import {
 } from '../shared/sesion/sesion.ts';
 import { crearAviso, crearBoton, crearCampo, crearEntrada, type Campo } from '../shared/ui/campos.ts';
 import { mensajeDeError } from '../shared/ui/mensajes.ts';
+import { MENSAJE_SESION_TERMINADA } from './agenda.ts';
 import { crearTitulo, type ContextoPagina, type Pagina } from './pagina.ts';
 
 export const MENSAJE_CREDENCIALES_PACIENTE = 'Email o contraseña incorrectos.';
@@ -245,23 +247,48 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
   mostrarSeccion('ingresar');
   contenedor.replaceChildren(pagina);
 
-  // Con una sesión ya iniciada, la cuenta lleva al espacio del rol: Mis turnos o la Agenda.
+  // Con una sesión ya iniciada: el paciente ve su cuenta con "Mi cobertura" (C-49, design D3); el personal va a la Agenda.
   void contexto.sesionLista.then((sesion) => {
     if (!contenedor.contains(pagina) || !sesion.autenticado) {
       return;
     }
     if (esPaciente(sesion.rol)) {
-      contexto.irA('mis-turnos');
+      dibujarCuentaConSesion(contenedor, contexto);
     } else if (esPersonal(sesion.rol)) {
       contexto.irA('agenda');
     }
   });
 }
 
-/** Cuenta del paciente (`#/mi-cuenta`): ingresar o crear la cuenta. Fuera del menú. */
+/** "Mi cuenta" del paciente con sesión: por ahora "Mi cobertura"; C-50 sumará "Mis presupuestos" (PA-27). */
+function dibujarCuentaConSesion(contenedor: HTMLElement, contexto: ContextoPagina): void {
+  const pagina = document.createElement('div');
+  pagina.className = 'pagina-paciente';
+  const cobertura = crearMiCobertura({
+    api: contexto.api,
+    mensajeDeError: (causa) => {
+      if (causa instanceof ErrorSesion) {
+        contexto.irAMiCuenta(MENSAJE_SESION_TERMINADA);
+        return '';
+      }
+      return mensajeDeError(causa);
+    },
+    vigente: () => contenedor.contains(pagina),
+  });
+  pagina.append(crearTitulo('Mi cuenta'), cobertura);
+  contenedor.replaceChildren(pagina);
+}
+
+/**
+ * Cuenta del paciente (`#/mi-cuenta`): sin sesión, ingresar o crear la cuenta; con sesión de paciente, su cuenta con
+ * "Mi cobertura" (C-49). La opción del menú es solo para el paciente con sesión.
+ */
 export const paginaMiCuenta: Pagina = {
   ruta: 'mi-cuenta',
   fondoSuave: true,
   titulo: 'Mi cuenta',
+  menu: 'paciente',
+  icono: 'cuenta',
+  soloConSesion: true,
   render: dibujar,
 };

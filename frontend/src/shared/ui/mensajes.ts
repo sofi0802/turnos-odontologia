@@ -67,6 +67,17 @@ export const MENSAJES_POR_CODIGO: Readonly<Record<string, string>> = {
   TIPO_ARCHIVO_NO_PERMITIDO: 'Solo se aceptan archivos JPEG, PNG o PDF.',
   ARCHIVO_DEMASIADO_GRANDE: 'El archivo supera los 10 MB.',
   IMAGEN_YA_ANULADA: 'La imagen ya estaba anulada.',
+  // Coberturas (C-49, design D8). Ninguno repite el número de afiliado escrito.
+  OBRA_SOCIAL_EXISTENTE: 'Ya existe una obra social o prepaga con ese nombre.',
+  PLAN_EXISTENTE: 'Esa obra social ya tiene un plan con ese nombre.',
+  CODIGO_NOMENCLADOR_EXISTENTE: 'Ya existe ese código en el nomenclador.',
+  PRESTACION_INEXISTENTE: 'La prestación elegida ya no existe.',
+  VIGENCIA_SUPERPUESTA: 'El paciente ya tiene una cobertura en esas fechas. Cerrá la vigente o cambiá las fechas.',
+  AFILIADO_DUPLICADO: 'Ese número ya lo tiene otro paciente de la misma obra social.',
+  PLAN_INACTIVO: 'El plan está inactivo. Elegí otro.',
+  OBRA_SOCIAL_INACTIVA: 'La obra social está inactiva. Elegí otra.',
+  VIGENCIA_INVALIDA: 'La fecha de fin no puede ser anterior a la de inicio.',
+  AFILIACION_CERRADA: 'Esa afiliación ya estaba cerrada.',
 };
 
 export const MENSAJE_SIN_PERMISO = 'No tenés permiso para esta acción.';

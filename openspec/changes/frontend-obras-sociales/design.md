@@ -38,7 +38,7 @@ Todo el comportamiento nuevo va en `frontend-coberturas`. Se modifican solo:
 
 `frontend-ficha-clinica` no se modifica: C-46 tiene su delta abierto. Es el mismo criterio que C-47.
 
-### D2. Cómo llega la recepción a la cobertura *(a confirmar)*
+### D2. Cómo llega la recepción a la cobertura *(confirmada por la líder, 2026-11-24)*
 **Recomendación**: una página nueva **"Coberturas"** (`#/coberturas`, `roles: ['ADMIN', 'RECEPCIONISTA']`) con el buscador de pacientes, la cabecera del paciente (nombre, DNI, "Cambiar de paciente") y la misma sección de cobertura que la ficha. No pide la ficha ni nada clínico (RN-CL-01). El paciente elegido vive solo en memoria, como en `ficha/seleccion.ts`.
 
 Alternativas:
@@ -47,7 +47,7 @@ Alternativas:
 
 El administrador ve la sección en los dos lugares, con el mismo componente.
 
-### D3. "Mi cobertura" del paciente *(a confirmar)*
+### D3. "Mi cobertura" del paciente *(confirmada por la líder, 2026-11-24)*
 La KB pide verla "en Mi cuenta" (PA-21, US-046 CA-6), pero hoy `#/mi-cuenta` con sesión redirige a "Mis turnos".
 
 **Recomendación**:
@@ -75,12 +75,12 @@ Alternativas:
 
 ### D5. Pestaña "Obras sociales"
 - **Permiso**: un campo nuevo `gestionaCoberturas` en `Permisos`, verdadero solo para `ADMIN`. Sin él, la pestaña no se agrega y no se pide nada (los otros roles pueden leer el catálogo por la API, pero el alcance de C-49 lo deja en el administrador).
-- **Un solo panel con dos bloques**, "Obras sociales y prepagas" y "Nomenclador" *(a confirmar; alternativa: pestaña "Nomenclador" aparte)*. Recomendación: un panel, porque las dos cosas se cargan juntas al empezar y Configuración ya tiene nueve pestañas.
+- **Un solo panel con dos bloques**, "Obras sociales y prepagas" y "Nomenclador" *(confirmada por la líder, 2026-11-24; alternativa descartada: pestaña "Nomenclador" aparte)*. Recomendación: un panel, porque las dos cosas se cargan juntas al empezar y Configuración ya tiene nueve pestañas.
 - Cada bloque carga con su `cargarEn`, con su error y "Reintentar". Las prestaciones del diálogo de códigos se piden recién al abrirlo.
 - No se reusa `montarCatalogo`: es para listas planas. Sí se reusan `abrirDialogo`, `guardando`, `crearEstado` y `mostrarErrorEnFormulario`.
 - El cuerpo del `POST`/`PUT` de obra social manda `sigla: null` si está vacía.
 
-### D6. Activar y desactivar sin confirmación *(a confirmar)*
+### D6. Activar y desactivar sin confirmación *(confirmada por la líder, 2026-11-24)*
 Como en C-34, "Activar" y "Desactivar" no piden confirmación: son reversibles y no borran nada. Una obra social inactiva muestra la ayuda "Inactiva: no se puede afiliar a sus planes. Las afiliaciones que ya existen no cambian.". Alternativa: confirmar solo al desactivar una obra social con planes activos.
 
 ### D7. Sección de cobertura
@@ -92,7 +92,7 @@ Como en C-34, "Activar" y "Desactivar" no piden confirmación: son reversibles y
   - La validación previa usa `modelo.ts`; si falla, el foco va al primer campo con error.
   - Los errores por campo de la API se ubican por `campo` (`numeroAfiliado`, `vigenteDesde`, `vigenteHasta`, `planId`) con mensajes propios, porque el backend solo dice "valor inválido".
   - `AFILIADO_DUPLICADO` se muestra junto al número; los demás códigos, arriba del diálogo.
-- **Cambiar de cobertura en dos pasos** *(a confirmar)*: primero "Cerrar afiliación", después "Afiliar", que propone como inicio el día siguiente al cierre. Alternativa: un diálogo "Cambiar de cobertura" que hace los dos pedidos seguidos; se descarta por ahora porque la API no es atómica y una falla del segundo dejaría al paciente sin la nueva.
+- **Cambiar de cobertura en dos pasos** *(confirmada por la líder, 2026-11-24)*: primero "Cerrar afiliación", después "Afiliar", que propone como inicio el día siguiente al cierre. Alternativa: un diálogo "Cambiar de cobertura" que hace los dos pedidos seguidos; se descarta por ahora porque la API no es atómica y una falla del segundo dejaría al paciente sin la nueva.
 - `AFILIACION_CERRADA` cierra el diálogo, recarga y avisa en la sección.
 - El odontólogo no ve botones y ve la ayuda de solo lectura.
 
@@ -144,5 +144,10 @@ Sin migraciones ni cambios de backend. Rollback: revertir el PR. Las afiliacione
 - Design system revision: 5 (sin tokens nuevos).
 - Decision: yes (2026-11-24). Modo `system-and-mockups`.
 - Mockups: `openspec/changes/frontend-obras-sociales/mockups/` (ver su `README.md`).
-- Approval: pending.
+- Approval: approved (2026-11-24, by Sofia Indovino). Confirmó D2, D3, D5, D6 y D7 tal como están recomendadas.
 - Preview: rendered (2026-11-24). Nueve pantallas en `mockups/previews/`, a 390 × 844 y 1440 × 900, con Playwright sobre un servidor estático local; sin desplazamiento horizontal, sin errores de consola ni pedidos fallidos.
+- Visual verify: passed with minor differences (2026-11-25). Frontend con Vite contra el backend de desarrollo (perfil `dev`, PostgreSQL 16 temporal), Playwright con Chromium, 9 pantallas × 390 × 844 y 1440 × 900 (18 capturas en `mockups/verify/`). Sin errores ni advertencias de consola, sin pedidos fallidos y sin desplazamiento horizontal en ninguna.
+  - Revisadas: `config-obras-sociales` y `config-formularios` (admin), `cobertura-ficha` (admin), `cobertura-odontologo` (`ana.ejemplo`), `coberturas-recepcion`, `cobertura-formularios` y `cobertura-cerrar` (`recepcion`), `mi-cuenta-cobertura` y `mi-cuenta-particular` (pacientes).
+  - Diferencias (todas minor): (1) el diálogo de plan rotula "Nombre", como dice el spec, y el mockup "Nombre del plan"; (2) al abrir "Afiliar" el foco queda en "N.º de afiliado", porque "Obra social" está deshabilitado mientras carga el catálogo; (3) solo de datos: en la base `dev`, N-0301 tiene la prestación "Extracción simple" (seed de C-19) y Paciente Uno no tiene la afiliación finalizada del mockup.
+  - Usuarios: `paciente.uno` y `paciente.dos` no se pudieron usar porque el seed `dev` crea esos pacientes sin cuenta y el registro responde `DNI_YA_REGISTRADO`; "Mi cuenta" se verificó con dos pacientes ficticios nuevos (DNI 99000004 con Plan Base y 99000005 particular).
+  - No revisado en el navegador: los estados de error y de carga, los rechazos 409 dentro de los diálogos y `AFILIACION_CERRADA` (cubiertos por los tests con jsdom).

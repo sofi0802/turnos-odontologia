@@ -1,7 +1,7 @@
 # Mockups de C-49 `frontend-obras-sociales`
 
 - **Design system revision**: 5, aprobada. No suma tokens: `coberturas.css` usa solo los de la Revision 5.
-- **Approval**: pending. Los aprueba la líder (Sofia Indovino) antes del apply; son el criterio de aceptación visual.
+- **Approval**: approved (2026-11-24, by Sofia Indovino). Son el criterio de aceptación visual.
 - **Preview**: rendered (2026-11-24). Capturas de página completa en `previews/`, a 1440 × 900 y 390 × 844, hechas con Playwright sobre un servidor estático local. Ninguna pantalla tiene desplazamiento horizontal a 390 px (ancho de documento 375 = ancho visible), ni errores o advertencias de consola, ni pedidos fallidos.
 
 ## Cómo verlos

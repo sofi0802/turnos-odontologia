@@ -132,8 +132,10 @@ describe('Páginas disponibles', () => {
   it('Abrir la cuenta del paciente por su dirección', async () => {
     abrirEn('#/mi-cuenta', sinSesion());
     await esperarTitulo('Mi cuenta');
-    const textos = [...raiz.querySelectorAll('nav a')].map((a) => a.textContent);
+    // C-49: "Mi cuenta" está en el menú del paciente, pero el visitante no la ve (delta de frontend-navegacion).
+    const textos = [...raiz.querySelectorAll('nav li:not([hidden]) a')].map((a) => a.textContent);
     expect(textos).not.toContain('Mi cuenta');
+    expect(raiz.querySelector('aside')?.hidden).toBe(true);
   });
 });
 
@@ -221,7 +223,8 @@ describe('Menú adaptable a pantallas chicas', () => {
     botonMenu().click();
 
     expect(menu().classList.contains('abierto')).toBe(true);
-    expect(enlacesVisibles()).toEqual(['Reservar turno', 'Mis turnos']);
+    // C-49: el paciente también ve "Mi cuenta".
+    expect(enlacesVisibles()).toEqual(['Reservar turno', 'Mis turnos', 'Mi cuenta']);
     expect(botonMenu().getAttribute('aria-expanded')).toBe('true');
   });
 
@@ -272,8 +275,8 @@ describe('Menú adaptable a pantallas chicas', () => {
     // está en el documento con sus dos enlaces sin tocar el botón. Lo visual se verifica con capturas.
     abrirEn('#/agenda');
     await esperarTitulo('Agenda');
-    // C-32: la recepción también ve "Reportes" (delta de frontend-navegacion).
-    expect(enlacesVisibles()).toEqual(['Agenda', 'Reportes', 'Configuración']);
+    // C-32: la recepción también ve "Reportes"; C-49: y "Coberturas" (deltas de frontend-navegacion).
+    expect(enlacesVisibles()).toEqual(['Agenda', 'Coberturas', 'Reportes', 'Configuración']);
     expect(menu().hidden).toBe(false);
   });
 });
@@ -295,8 +298,8 @@ describe('Menú según la sesión', () => {
     abrirEn('#/agenda');
     await esperarTitulo('Agenda');
 
-    // C-32: la recepción también ve "Reportes" (delta de frontend-navegacion).
-    expect(enlacesVisibles()).toEqual(['Agenda', 'Reportes', 'Configuración']);
+    // C-32: la recepción también ve "Reportes"; C-49: y "Coberturas" (deltas de frontend-navegacion).
+    expect(enlacesVisibles()).toEqual(['Agenda', 'Coberturas', 'Reportes', 'Configuración']);
     expect(enlacesActivos()).toEqual(['Agenda']);
     expect(barraLateral().hidden).toBe(false);
   });
@@ -316,7 +319,8 @@ describe('Menú según la sesión', () => {
 
     await esperarTitulo('Mis turnos');
     expect(barraLateral().hidden).toBe(false);
-    expect(enlacesVisibles()).toEqual(['Reservar turno', 'Mis turnos']);
+    // C-49: el paciente también ve "Mi cuenta".
+    expect(enlacesVisibles()).toEqual(['Reservar turno', 'Mis turnos', 'Mi cuenta']);
     const usuario = raiz.querySelector<HTMLElement>('.usuario-nombre');
     expect(usuario?.hidden).toBe(false);
     expect(usuario?.textContent).toBe('paciente.uno@example.com');
@@ -340,7 +344,8 @@ describe('Página "Reportes" para administración y recepción (C-32)', () => {
     abrirEn('#/agenda', conSesion(SESION_ADMIN));
 
     await vi.waitFor(() =>
-      expect(enlacesVisibles()).toEqual(['Agenda', 'Pacientes', 'Reportes', 'Configuración']),
+      // C-49: "Coberturas" entre "Pacientes" y "Reportes".
+      expect(enlacesVisibles()).toEqual(['Agenda', 'Pacientes', 'Coberturas', 'Reportes', 'Configuración']),
     );
   });
 

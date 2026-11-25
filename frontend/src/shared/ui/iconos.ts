@@ -22,7 +22,9 @@ export type NombreIcono =
   | 'documento'
   | 'descarga'
   | 'ver'
-  | 'subir';
+  | 'subir'
+  | 'credencial'
+  | 'cuenta';
 
 type Trazo = readonly [etiqueta: 'path' | 'rect' | 'circle', atributos: Readonly<Record<string, string>>];
 
@@ -81,6 +83,13 @@ const TRAZOS: Readonly<Record<NombreIcono, readonly Trazo[]>> = {
     ['circle', { cx: '12', cy: '12', r: '3' }],
   ],
   subir: [['path', { d: 'M12 20V9M7 14l5-5 5 5M5 4h14' }]],
+  // C-49: credencial de la obra social ("Coberturas") y cuenta del paciente ("Mi cuenta").
+  credencial: [
+    ['rect', { x: '3', y: '5', width: '18', height: '14', rx: '2' }],
+    ['circle', { cx: '9', cy: '11', r: '2' }],
+    ['path', { d: 'M6 16c.5-1.4 1.6-2 3-2s2.5.6 3 2M14 10h4M14 14h3' }],
+  ],
+  cuenta: [['circle', { cx: '12', cy: '8', r: '4' }], ['path', { d: 'M4 21c1-4 4.5-6 8-6s7 2 8 6' }]],
 };
 
 export function crearIcono(nombre: NombreIcono): SVGElement {
