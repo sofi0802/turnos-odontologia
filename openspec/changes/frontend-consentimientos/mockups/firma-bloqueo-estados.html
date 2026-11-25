@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bloqueo · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="consentimientos.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div class="pagina-estados">
+  <p class="rotulo-estado">1 · Después de cancelar (o de cerrar la vista sin enviar)</p>
+  <div class="firma-marco">
+    <div class="bloqueo-pantalla">
+      <section class="bloqueo-tarjeta" aria-labelledby="b1-t">
+        <span class="bloqueo-icono" data-icono="candado" aria-hidden="true"></span>
+        <h1 id="b1-t">Devolvé el equipo al profesional</h1>
+        <p class="bloqueo-caso" role="status">La firma se canceló. No se guardó nada.</p>
+        <form class="bloqueo-form" novalidate aria-labelledby="b1-f">
+          <p id="b1-f">Para seguir, el profesional escribe su contraseña.</p>
+          <p class="bloqueo-usuario">Usuario: <strong>ana.ejemplo</strong></p>
+          <div class="campo">
+            <label for="b1-pass">Contraseña</label>
+            <input id="b1-pass" type="password" autocomplete="off" value="" aria-describedby="b1-e" />
+            <p class="campo-error" id="b1-e" role="alert"></p>
+          </div>
+          <button type="submit" class="btn btn-principal" data-icono="candado">Desbloquear</button>
+        </form>
+      </section>
+    </div>
+  </div>
+  <p class="rotulo-estado">2 · Después de "Terminar" (plantilla inactiva) o de una sesión vencida (401)</p>
+  <div class="firma-marco">
+    <div class="bloqueo-pantalla">
+      <section class="bloqueo-tarjeta" aria-labelledby="b2-t">
+        <span class="bloqueo-icono" data-icono="candado" aria-hidden="true"></span>
+        <h1 id="b2-t">Devolvé el equipo al profesional</h1>
+        <p class="bloqueo-caso" role="status">La firma no se completó.</p>
+        <form class="bloqueo-form" novalidate aria-labelledby="b2-f">
+          <p id="b2-f">Para seguir, el profesional escribe su contraseña.</p>
+          <p class="bloqueo-usuario">Usuario: <strong>ana.ejemplo</strong></p>
+          <div class="campo">
+            <label for="b2-pass">Contraseña</label>
+            <input id="b2-pass" type="password" autocomplete="off" value="" aria-describedby="b2-e" />
+            <p class="campo-error" id="b2-e" role="alert"></p>
+          </div>
+          <button type="submit" class="btn btn-principal" data-icono="candado">Desbloquear</button>
+        </form>
+      </section>
+    </div>
+  </div>
+  <p class="rotulo-estado">3 · Envío dudoso (sin red, 30 s sin respuesta, 5xx): no dice ni "guardada" ni "no se guardó"</p>
+  <div class="firma-marco">
+    <div class="bloqueo-pantalla">
+      <section class="bloqueo-tarjeta" aria-labelledby="b3-t">
+        <span class="bloqueo-icono" data-icono="candado" aria-hidden="true"></span>
+        <h1 id="b3-t">Devolvé el equipo al profesional</h1>
+        <p class="bloqueo-caso" role="status">No pudimos confirmar si la firma se guardó. El profesional lo va a revisar.</p>
+        <form class="bloqueo-form" novalidate aria-labelledby="b3-f">
+          <p id="b3-f">Para seguir, el profesional escribe su contraseña.</p>
+          <p class="bloqueo-usuario">Usuario: <strong>ana.ejemplo</strong></p>
+          <div class="campo">
+            <label for="b3-pass">Contraseña</label>
+            <input id="b3-pass" type="password" autocomplete="off" value="" aria-describedby="b3-e" />
+            <p class="campo-error" id="b3-e" role="alert"></p>
+          </div>
+          <button type="submit" class="btn btn-principal" data-icono="candado">Desbloquear</button>
+        </form>
+      </section>
+    </div>
+  </div>
+  <p class="rotulo-estado">4 · Contraseña incorrecta (401 CREDENCIALES_INVALIDAS): sigue bloqueado y el campo se vacía</p>
+  <div class="firma-marco">
+    <div class="bloqueo-pantalla">
+      <section class="bloqueo-tarjeta" aria-labelledby="b4-t">
+        <span class="bloqueo-icono" data-icono="candado" aria-hidden="true"></span>
+        <h1 id="b4-t">Devolvé el equipo al profesional</h1>
+        <p class="bloqueo-caso" role="status">Listo: la firma quedó registrada.</p>
+        <form class="bloqueo-form" novalidate aria-labelledby="b4-f">
+          <p id="b4-f">Para seguir, el profesional escribe su contraseña.</p>
+          <p class="bloqueo-usuario">Usuario: <strong>ana.ejemplo</strong></p>
+          <div class="campo">
+            <label for="b4-pass">Contraseña</label>
+            <input id="b4-pass" type="password" autocomplete="off" value="" aria-invalid="true" aria-describedby="b4-e" />
+            <p class="campo-error" id="b4-e" role="alert">Contraseña incorrecta. Te quedan 2 intentos.</p>
+          </div>
+          <button type="submit" class="btn btn-principal" data-icono="candado">Desbloquear</button>
+        </form>
+      </section>
+    </div>
+  </div>
+  <p class="rotulo-estado">5 · Último intento</p>
+  <div class="firma-marco">
+    <div class="bloqueo-pantalla">
+      <section class="bloqueo-tarjeta" aria-labelledby="b5-t">
+        <span class="bloqueo-icono" data-icono="candado" aria-hidden="true"></span>
+        <h1 id="b5-t">Devolvé el equipo al profesional</h1>
+        <p class="bloqueo-caso" role="status">Listo: la firma quedó registrada.</p>
+        <form class="bloqueo-form" novalidate aria-labelledby="b5-f">
+          <p id="b5-f">Para seguir, el profesional escribe su contraseña.</p>
+          <p class="bloqueo-usuario">Usuario: <strong>ana.ejemplo</strong></p>
+          <div class="campo">
+            <label for="b5-pass">Contraseña</label>
+            <input id="b5-pass" type="password" autocomplete="off" value="" aria-invalid="true" aria-describedby="b5-e" />
+            <p class="campo-error" id="b5-e" role="alert">Contraseña incorrecta. Te queda 1 intento.</p>
+          </div>
+          <button type="submit" class="btn btn-principal" data-icono="candado">Desbloquear</button>
+        </form>
+      </section>
+    </div>
+  </div>
+  <p class="rotulo-estado">6 · Sin conexión al desbloquear: no cuenta como intento</p>
+  <div class="firma-marco">
+    <div class="bloqueo-pantalla">
+      <section class="bloqueo-tarjeta" aria-labelledby="b6-t">
+        <span class="bloqueo-icono" data-icono="candado" aria-hidden="true"></span>
+        <h1 id="b6-t">Devolvé el equipo al profesional</h1>
+        <p class="bloqueo-caso" role="status">Listo: la firma quedó registrada.</p>
+        <form class="bloqueo-form" novalidate aria-labelledby="b6-f">
+          <p id="b6-f">Para seguir, el profesional escribe su contraseña.</p>
+          <p class="bloqueo-usuario">Usuario: <strong>ana.ejemplo</strong></p>
+          <div class="campo">
+            <label for="b6-pass">Contraseña</label>
+            <input id="b6-pass" type="password" autocomplete="off" value="" aria-describedby="b6-e" />
+            <p class="campo-error" id="b6-e" role="alert">No pudimos comprobar la contraseña. Probá de nuevo.</p>
+          </div>
+          <button type="submit" class="btn btn-principal" data-icono="candado">Desbloquear</button>
+        </form>
+      </section>
+    </div>
+  </div>
+  <p class="rotulo-estado">7 · Desbloqueando</p>
+  <div class="firma-marco">
+    <div class="bloqueo-pantalla">
+      <section class="bloqueo-tarjeta" aria-labelledby="b7-t">
+        <span class="bloqueo-icono" data-icono="candado" aria-hidden="true"></span>
+        <h1 id="b7-t">Devolvé el equipo al profesional</h1>
+        <p class="bloqueo-caso" role="status">Listo: la firma quedó registrada.</p>
+        <form class="bloqueo-form" novalidate aria-labelledby="b7-f">
+          <p id="b7-f">Para seguir, el profesional escribe su contraseña.</p>
+          <p class="bloqueo-usuario">Usuario: <strong>ana.ejemplo</strong></p>
+          <div class="campo">
+            <label for="b7-pass">Contraseña</label>
+            <input id="b7-pass" type="password" autocomplete="off" value="xxxxxxxx" disabled aria-describedby="b7-e" />
+            <p class="campo-error" id="b7-e" role="alert"></p>
+          </div>
+          <button type="submit" class="btn btn-principal" data-icono="candado" disabled>Desbloqueando…</button>
+        </form>
+      </section>
+    </div>
+  </div>
+  <p class="rotulo-estado">8 · Tres intentos fallidos (o recarga): el ingreso de Mi cuenta, sin nada de la ficha</p>
+  <div class="firma-marco">
+    <form class="ingreso-mockup" novalidate aria-labelledby="in-t">
+      <h2 id="in-t">Ingresá a tu cuenta</h2>
+      <p role="alert" class="aviso aviso-alerta">Por seguridad, cerramos la sesión. Ingresá de nuevo.</p>
+      <div class="campo"><label for="in-u">Usuario</label><input id="in-u" type="text" autocomplete="username" /></div>
+      <div class="campo"><label for="in-p">Contraseña</label><input id="in-p" type="password" autocomplete="current-password" /></div>
+      <button type="submit" class="btn btn-principal">Ingresar</button>
+    </form>
+  </div>
+  <p class="rotulo-estado">9 · La aplicación arrancó con la marca de firma en curso (recarga u otra pestaña)</p>
+  <div class="firma-marco">
+    <form class="ingreso-mockup" novalidate aria-labelledby="in2-t">
+      <h2 id="in2-t">Ingresá a tu cuenta</h2>
+      <p role="alert" class="aviso aviso-alerta">Por seguridad, la sesión se cerró. Si estabas haciendo firmar un consentimiento, revisá la ficha del paciente para ver si quedó guardado.</p>
+      <div class="campo"><label for="in2-u">Usuario</label><input id="in2-u" type="text" autocomplete="username" /></div>
+      <div class="campo"><label for="in2-p">Contraseña</label><input id="in2-p" type="password" autocomplete="current-password" /></div>
+      <button type="submit" class="btn btn-principal">Ingresar</button>
+    </form>
+  </div>
+  <p class="nota-mockup"><b>Mockup C-48.</b> Estados del bloqueo apilados para revisarlos juntos; en la aplicación ocupa toda la pantalla, como <code>firma-bloqueo.html</code>. El usuario es texto fijo: no se puede cambiar de cuenta. Los estados 8 y 9 son la página de ingreso que ya existe (Mi cuenta), solo con el aviso nuevo; su aspecto real es el de la aplicación. Datos ficticios.</p>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

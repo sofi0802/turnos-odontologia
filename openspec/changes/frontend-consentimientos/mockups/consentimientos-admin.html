@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pacientes · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="consentimientos.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="admin" data-rol="ADMIN" data-activa="pacientes">
+  <div class="pagina-ficha">
+    <h1 tabindex="-1">Pacientes</h1>
+    <section class="panel ficha-paciente" aria-labelledby="paciente-nombre">
+      <div class="ficha-paciente-datos">
+        <div>
+          <h2 class="ficha-paciente-nombre" id="paciente-nombre">Paciente Uno</h2>
+          <p class="ficha-paciente-dni">DNI 99000001</p>
+        </div>
+        <button type="button" class="btn">Cambiar de paciente</button>
+      </div>
+    </section>
+    <div class="nota-contexto">Odontograma (C-44), periodontograma (C-46) e imágenes y estudios (C-47), sin cambios</div>
+    <section class="panel ficha-seccion" aria-labelledby="t-cons">
+      <div class="ficha-seccion-cabecera">
+        <div>
+          <h2 id="t-cons">Consentimientos</h2>
+          <p class="cons-contador">2 firmados</p>
+        </div>
+        
+      </div>
+      <ul class="cons-lista" aria-label="Consentimientos de Paciente Uno">
+        <li class="cons-fila">
+          <span class="cons-tipo" data-icono="documento"></span>
+          <div class="cons-datos">
+            <p class="cons-titulo"><span>Consentimiento para extracción dentaria</span><span class="etiqueta etiqueta-vigente">Vigente</span></p>
+            <p class="cons-meta">Versión 3 · Firmado el 24/11/2026 a las 10:30 · Ana Ejemplo</p>
+          </div>
+          <div class="cons-acciones">
+            <button type="button" class="btn" data-icono="ver" aria-label="Ver Consentimiento para extracción dentaria del 24/11/2026">Ver</button>
+            
+          </div>
+        </li>
+        <li class="cons-fila cons-fila-revocada">
+          <span class="cons-tipo" data-icono="documento"></span>
+          <div class="cons-datos">
+            <p class="cons-titulo"><span>Consentimiento para blanqueamiento</span><span class="etiqueta etiqueta-revocado">Revocado</span></p>
+            <p class="cons-meta">Versión 1 · Firmado el 01/10/2026 a las 16:05 · Ana Ejemplo</p>
+          </div>
+          <div class="cons-acciones">
+            <button type="button" class="btn" data-icono="ver" aria-label="Ver Consentimiento para blanqueamiento del 01/10/2026">Ver</button>
+            
+          </div>
+        </li>
+      </ul>
+    </section>
+    <p class="rotulo-estado">"Ver" como administrador: consentimiento revocado y alterado</p>
+    <dialog class="dialogo dialogo-estatico cons-documento" open aria-labelledby="adm-t">
+      <h2 id="adm-t">Consentimiento para extracción dentaria</h2>
+      <div class="cons-doc-cuerpo">
+        <div class="cons-doc-principal">
+          <p class="cons-doc-etiquetas"><span class="etiqueta etiqueta-revocado">Revocado</span><span class="etiqueta etiqueta-firma">Firma electrónica</span><span class="etiqueta etiqueta-version">Versión 3</span></p>
+          <p class="cons-revocacion">Revocado el 20/11/2026 a las 11:42 por Ana Ejemplo: El paciente decidió no hacer el tratamiento.</p>
+          <dl class="cons-doc-datos">
+            <dt>Firmante</dt><dd>Paciente Uno</dd>
+            <dt>DNI</dt><dd>99000001</dd>
+            <dt>Firmado</dt><dd>24/11/2026 10:30</dd>
+            <dt>Profesional</dt><dd>Ana Ejemplo</dd>
+          </dl>
+        </div>
+          <aside class="cons-verificacion alterado" role="alert" aria-labelledby="adm-v">
+            <p class="cons-verif-estado" id="adm-v" data-icono="alterado">Alterado</p>
+            <p>El contenido guardado no coincide con su hash. Avisá al administrador y no lo uses como prueba hasta revisarlo.</p>
+            <p>Hash guardado:<br /><span class="cons-hash">3f9a7c1e5b2d4086a1c9e7f30b6d2a845e1c7f9b0a3d6e2c8f4b1a7d9e0c5b2f</span></p>
+            <p>Hash calculado:<br /><span class="cons-hash">a41d0e9c7b3f2a6815e4d9c0b7a2f6e3d8c1b5a9f0e7d4c2b6a8f1e3d5c9b07a</span></p>
+            <p>Verificado el 24/11/2026 a las 11:05.</p>
+          </aside>
+        <div class="cons-doc-principal">
+          <h3 class="solo-lectores">Texto firmado</h3>
+          <div class="cons-texto">Yo, el paciente que firma este documento, declaro que el profesional me explicó en lenguaje claro el tratamiento propuesto: la extracción de una pieza dentaria.
+
+Qué es el tratamiento
+La extracción consiste en retirar la pieza de su alvéolo con anestesia local. Puede requerir separar la pieza en partes o hacer una pequeña incisión en la encía.
+
+Riesgos y molestias posibles
+- Dolor, inflamación o hematoma durante algunos días.
+- Sangrado leve en las primeras horas.
+- Alveolitis (inflamación del alvéolo), que se trata en el consultorio.
+- Con menor frecuencia: sensibilidad en el labio o la lengua, que suele ser pasajera.
+
+Alternativas
+Me informaron las alternativas posibles, incluida la de no hacer el tratamiento, y sus consecuencias.
+
+Cuidados después
+Me comprometo a seguir las indicaciones escritas que me entrega el profesional y a consultar ante cualquier síntoma que me preocupe.
+
+Puedo hacer todas las preguntas que necesite antes de firmar y puedo revocar este consentimiento en cualquier momento antes del tratamiento, avisando al profesional.</div>
+          <details class="cons-evidencia">
+            <summary>Evidencia de la firma</summary>
+            <dl class="cons-doc-datos">
+              <dt>IP</dt><dd>192.0.2.10</dd>
+              <dt>Dispositivo</dt><dd>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0 Safari/537.36</dd>
+              <dt>Algoritmo</dt><dd>SHA-256 · formato 1</dd>
+              <dt>Hash</dt><dd class="cons-hash">3f9a7c1e5b2d4086a1c9e7f30b6d2a845e1c7f9b0a3d6e2c8f4b1a7d9e0c5b2f</dd>
+            </dl>
+          </details>
+        </div>
+      </div>
+      <div class="dialogo-acciones"><button type="button" class="btn btn-principal">Cerrar</button></div>
+    </dialog>
+    <p class="nota-mockup"><b>Mockup C-48.</b> Administrador, solo lectura: ve el listado, abre y verifica, sin "Firmar consentimiento" ni "Revocar". Abajo, un documento revocado cuya verificación da "Alterado", con los dos hash. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

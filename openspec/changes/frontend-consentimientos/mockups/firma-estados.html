@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Firma · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="consentimientos.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div class="pagina-estados">
+  <p class="rotulo-estado">1 · El texto cambió mientras se leía (409 VERSION_DESACTUALIZADA): se muestra la versión 4 y se desmarca la casilla</p>
+  <div class="firma-marco">
+      <div class="firma-contenido">
+        <p class="firma-rotulo" data-icono="firma">Consentimiento informado · Firma electrónica</p>
+        <div class="firma-encabezado">
+          <h2 id="firma-t" tabindex="-1">Consentimiento para extracción dentaria</h2>
+          <p class="firma-version">Versión 4</p>
+        </div>
+        <p class="firma-para">Para: <strong>Paciente Uno</strong>. Si no sos vos, avisale al profesional.</p>
+        <div class="cons-texto firma-texto">Yo, el paciente que firma este documento, declaro que el profesional me explicó en lenguaje claro el tratamiento propuesto: la extracción de una pieza dentaria.
+
+Recibí una copia de las indicaciones escritas.
+
+[… resto del texto de la versión 4 …]</div>
+        <form class="firma-form" novalidate aria-labelledby="ff-t">
+          <h3 id="ff-t">Firma electrónica del paciente</h3>
+          <p role="alert" class="aviso aviso-alerta">El texto del consentimiento cambió mientras se leía. Leé la versión nueva antes de firmar.</p>
+          <div class="firma-campos">
+            <div class="campo">
+              <label for="f-nombre">Nombre completo</label>
+              <input id="f-nombre" type="text" autocomplete="off" autocapitalize="words" spellcheck="false" value="Paciente Uno" aria-describedby="f-nombre-e" />
+              <p class="campo-error" id="f-nombre-e"></p>
+            </div>
+            <div class="campo">
+              <label for="f-dni">DNI</label>
+              <input id="f-dni" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" value="99.000.001" aria-describedby="f-dni-ayuda f-dni-e" />
+              <p class="ayuda" id="f-dni-ayuda">Escribí tu DNI, con o sin puntos.</p>
+              <p class="campo-error" id="f-dni-e"></p>
+            </div>
+          </div>
+          <p class="firma-explicacion">Es una <strong>firma electrónica</strong>: se guardan el nombre y el DNI que escribís, la fecha y hora, el profesional que te atiende, la dirección IP y el dispositivo, junto con una copia exacta de este texto.</p>
+          <label class="cons-acepto"><input type="checkbox" aria-describedby="f-acepto-e" /> Leí y acepto este consentimiento</label>
+          <p class="campo-error" id="f-acepto-e"></p>
+          <div class="firma-acciones">
+            <button type="button" class="btn">Cancelar</button>
+            <button type="submit" class="btn btn-principal" data-icono="firma">Firmar</button>
+          </div>
+        </form>
+      </div>
+  </div>
+  <p class="rotulo-estado">2 · El DNI no es el del paciente (422 FIRMANTE_NO_COINCIDE): el mensaje no repite el DNI</p>
+  <div class="firma-marco">
+      <div class="firma-contenido">
+        <p class="firma-rotulo" data-icono="firma">Consentimiento informado · Firma electrónica</p>
+        <div class="firma-encabezado">
+          <h2 id="firma-t" tabindex="-1">Consentimiento para extracción dentaria</h2>
+          <p class="firma-version">Versión 3</p>
+        </div>
+        <p class="firma-para">Para: <strong>Paciente Uno</strong>. Si no sos vos, avisale al profesional.</p>
+        <div class="cons-texto firma-texto">Yo, el paciente que firma este documento, declaro que el profesional me explicó en lenguaje claro el tratamiento propuesto: la extracción de una pieza dentaria.
+
+[… resto del texto …]</div>
+        <form class="firma-form" novalidate aria-labelledby="ff-t">
+          <h3 id="ff-t">Firma electrónica del paciente</h3>
+          
+          <div class="firma-campos">
+            <div class="campo">
+              <label for="f-nombre">Nombre completo</label>
+              <input id="f-nombre" type="text" autocomplete="off" autocapitalize="words" spellcheck="false" value="Paciente Uno" aria-describedby="f-nombre-e" />
+              <p class="campo-error" id="f-nombre-e"></p>
+            </div>
+            <div class="campo">
+              <label for="f-dni">DNI</label>
+              <input id="f-dni" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" value="99000002" aria-invalid="true" aria-describedby="f-dni-ayuda f-dni-e" />
+              <p class="ayuda" id="f-dni-ayuda">Escribí tu DNI, con o sin puntos.</p>
+              <p class="campo-error" id="f-dni-e">El DNI no coincide con el del paciente. Revisalo.</p>
+            </div>
+          </div>
+          <p class="firma-explicacion">Es una <strong>firma electrónica</strong>: se guardan el nombre y el DNI que escribís, la fecha y hora, el profesional que te atiende, la dirección IP y el dispositivo, junto con una copia exacta de este texto.</p>
+          <label class="cons-acepto"><input type="checkbox" checked aria-describedby="f-acepto-e" /> Leí y acepto este consentimiento</label>
+          <p class="campo-error" id="f-acepto-e"></p>
+          <div class="firma-acciones">
+            <button type="button" class="btn">Cancelar</button>
+            <button type="submit" class="btn btn-principal" data-icono="firma">Firmar</button>
+          </div>
+        </form>
+      </div>
+  </div>
+  <p class="rotulo-estado">3 · Plantilla desactivada durante la firma (409 PLANTILLA_INACTIVA): "Terminar" lleva al bloqueo</p>
+  <div class="firma-marco">
+      <div class="firma-contenido">
+        <p class="firma-rotulo" data-icono="firma">Consentimiento informado · Firma electrónica</p>
+        <div class="firma-encabezado">
+          <h2 id="firma-t" tabindex="-1">Consentimiento para extracción dentaria</h2>
+          <p class="firma-version">Versión 3</p>
+        </div>
+        <p class="firma-para">Para: <strong>Paciente Uno</strong>. Si no sos vos, avisale al profesional.</p>
+        <div class="cons-texto firma-texto">Yo, el paciente que firma este documento, declaro que el profesional me explicó en lenguaje claro el tratamiento propuesto: la extracción de una pieza dentaria.
+
+[… resto del texto …]</div>
+        <section class="firma-form" aria-labelledby="ff-t">
+          <h3 id="ff-t">Firma</h3>
+          <p role="alert" class="aviso aviso-error">Esta plantilla se desactivó y ya no se puede firmar.</p>
+          <div class="firma-acciones"><button type="button" class="btn btn-principal">Terminar</button></div>
+        </section>
+      </div>
+  </div>
+  <p class="rotulo-estado">4 · Cancelar con datos escritos (se confirma; lo escrito se descarta y sigue el bloqueo)</p>
+  <div class="firma-marco">
+      <div class="firma-contenido">
+        <dialog class="dialogo dialogo-estatico" open aria-labelledby="cc-t">
+          <h2 id="cc-t">¿Cancelar la firma?</h2>
+          <p class="dialogo-resumen">Lo escrito se descarta. Después, devolvé el equipo al profesional.</p>
+          <div class="dialogo-acciones"><button type="button" class="btn">Seguir firmando</button><button type="button" class="btn btn-peligro">Cancelar la firma</button></div>
+        </dialog>
+      </div>
+  </div>
+  <p class="rotulo-estado">5 · Enviando: un solo pedido; "Firmar" y "Cancelar" deshabilitados</p>
+  <div class="firma-marco">
+      <div class="firma-contenido">
+        <p class="firma-rotulo" data-icono="firma">Consentimiento informado · Firma electrónica</p>
+        <div class="firma-encabezado">
+          <h2 id="firma-t" tabindex="-1">Consentimiento para extracción dentaria</h2>
+          <p class="firma-version">Versión 3</p>
+        </div>
+        <p class="firma-para">Para: <strong>Paciente Uno</strong>. Si no sos vos, avisale al profesional.</p>
+        <div class="cons-texto firma-texto">Yo, el paciente que firma este documento, declaro que el profesional me explicó en lenguaje claro el tratamiento propuesto: la extracción de una pieza dentaria.
+
+[… resto del texto …]</div>
+        <form class="firma-form" novalidate aria-labelledby="ff-t">
+          <h3 id="ff-t">Firma electrónica del paciente</h3>
+          
+          <div class="firma-campos">
+            <div class="campo">
+              <label for="f-nombre">Nombre completo</label>
+              <input id="f-nombre" type="text" autocomplete="off" autocapitalize="words" spellcheck="false" value="Paciente Uno" aria-describedby="f-nombre-e" />
+              <p class="campo-error" id="f-nombre-e"></p>
+            </div>
+            <div class="campo">
+              <label for="f-dni">DNI</label>
+              <input id="f-dni" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" value="99.000.001" aria-describedby="f-dni-ayuda f-dni-e" />
+              <p class="ayuda" id="f-dni-ayuda">Escribí tu DNI, con o sin puntos.</p>
+              <p class="campo-error" id="f-dni-e"></p>
+            </div>
+          </div>
+          <p class="firma-explicacion">Es una <strong>firma electrónica</strong>: se guardan el nombre y el DNI que escribís, la fecha y hora, el profesional que te atiende, la dirección IP y el dispositivo, junto con una copia exacta de este texto.</p>
+          <label class="cons-acepto"><input type="checkbox" checked aria-describedby="f-acepto-e" /> Leí y acepto este consentimiento</label>
+          <p class="campo-error" id="f-acepto-e"></p>
+          <div class="firma-acciones">
+            <button type="button" class="btn" disabled>Cancelar</button>
+            <button type="submit" class="btn btn-principal" data-icono="firma" disabled>Firmando…</button>
+          </div>
+        </form>
+      </div>
+  </div>
+  <p class="nota-mockup"><b>Mockup C-48.</b> Estados de la vista de firma apilados para revisarlos juntos; en la aplicación cada uno ocupa toda la pantalla. La firma correcta (201), la cancelación y "Terminar" siguen en el bloqueo (<code>firma-bloqueo.html</code>). Datos ficticios.</p>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

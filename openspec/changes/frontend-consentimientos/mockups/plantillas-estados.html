@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuración · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="consentimientos.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="admin" data-rol="ADMIN" data-activa="configuracion">
+  <div class="pagina-config">
+    <h1 tabindex="-1">Configuración</h1>
+
+    <p class="rotulo-estado">1 · Versiones de una plantilla (solo lectura, de la más nueva a la más vieja)</p>
+    <dialog class="dialogo dialogo-estatico cons-editor" open aria-labelledby="ver-t">
+      <h2 id="ver-t">Versiones de «Consentimiento para extracción dentaria»</h2>
+      <p class="dialogo-resumen">Las versiones no se modifican. Cada consentimiento firmado guarda la copia del texto que se firmó.</p>
+      <ul class="cons-versiones" aria-label="Versiones">
+        <li>
+          <details class="cons-version">
+            <summary>Versión 3 <span class="cons-version-meta">· 24/11/2026 10:15 · admin</span></summary>
+            <div class="cons-texto">Yo, el paciente que firma este documento, declaro que el profesional me explicó en lenguaje claro el tratamiento propuesto: la extracción de una pieza dentaria.
+
+Qué es el tratamiento
+La extracción consiste en retirar la pieza de su alvéolo con anestesia local. Puede requerir separar la pieza en partes o hacer una pequeña incisión en la encía.
+
+Riesgos y molestias posibles
+- Dolor, inflamación o hematoma durante algunos días.
+- Sangrado leve en las primeras horas.
+- Alveolitis (inflamación del alvéolo), que se trata en el consultorio.
+- Con menor frecuencia: sensibilidad en el labio o la lengua, que suele ser pasajera.
+
+Alternativas
+Me informaron las alternativas posibles, incluida la de no hacer el tratamiento, y sus consecuencias.
+
+Cuidados después
+Me comprometo a seguir las indicaciones escritas que me entrega el profesional y a consultar ante cualquier síntoma que me preocupe.
+
+Puedo hacer todas las preguntas que necesite antes de firmar y puedo revocar este consentimiento en cualquier momento antes del tratamiento, avisando al profesional.</div>
+          </details>
+        </li>
+        <li>
+          <details class="cons-version">
+            <summary>Versión 2 <span class="cons-version-meta">· 20/11/2026 09:02 · admin</span></summary>
+            <div class="cons-texto">Yo, el paciente que firma este documento, declaro que el profesional me explicó en lenguaje claro el tratamiento propuesto: la extracción de una pieza dentaria.
+
+Qué es el tratamiento
+La extracción consiste en retirar la pieza de su alvéolo con anestesia local. Puede requerir separar la pieza en partes o hacer una pequeña incisión en la encía.
+
+Riesgos y molestias posibles
+- Dolor, inflamación o hematoma durante algunos días.
+- Sangrado leve en las primeras horas.
+- Alveolitis (inflamación del alvéolo), que se trata en el consultorio.
+- Con menor frecuencia: sensibilidad en el labio o la lengua, que suele ser pasajera.
+
+Alternativas
+Me informaron las alternativas posibles, incluida la de no hacer el tratamiento, y sus consecuencias.
+
+Cuidados después
+Me comprometo a seguir las indicaciones escritas que me entrega el profesional y a consultar ante cualquier síntoma que me preocupe.
+
+Puedo hacer todas las preguntas que necesite antes de firmar y puedo revocar este consentimiento en cualquier momento antes del tratamiento, avisando al profesional.</div>
+          </details>
+        </li>
+        <li>
+          <details class="cons-version" open>
+            <summary>Versión 1 <span class="cons-version-meta">· 02/10/2026 18:40 · admin</span></summary>
+            <div class="cons-texto">Yo, el paciente que firma este documento, declaro que el profesional me explicó en lenguaje claro el tratamiento propuesto: la extracción de una pieza dentaria.
+
+Qué es el tratamiento
+La extracción consiste en retirar la pieza de su alvéolo con anestesia local. Puede requerir separar la pieza en partes o hacer una pequeña incisión en la encía.
+
+Riesgos y molestias posibles
+- Dolor, inflamación o hematoma durante algunos días.
+- Sangrado leve en las primeras horas.
+- Alveolitis (inflamación del alvéolo), que se trata en el consultorio.
+- Con menor frecuencia: sensibilidad en el labio o la lengua, que suele ser pasajera.
+
+&lt;b&gt;Riesgos&lt;/b&gt;: el texto se muestra literal, sin interpretar HTML.</div>
+          </details>
+        </li>
+      </ul>
+      <div class="dialogo-acciones"><button type="button" class="btn btn-principal">Cerrar</button></div>
+    </dialog>
+
+    <p class="rotulo-estado">2 · Sin plantillas</p>
+    <section class="panel-config">
+        <div class="cabecera-seccion">
+          <h2>Plantillas de consentimiento</h2>
+          <button type="button" class="btn btn-principal">Nueva plantilla</button>
+        </div>
+        <p class="ayuda">Las plantillas no se borran. Cada edición crea una versión nueva y lo que ya se firmó no cambia. Una plantilla inactiva no se puede usar para firmar.</p>
+        <div class="estado-vacio chico"><p class="estado-vacio-texto">Todavía no hay plantillas de consentimiento.</p></div>
+    </section>
+
+    <p class="rotulo-estado">3 · Cargando</p>
+    <section class="panel-config"><p class="cargando" role="status">Cargando plantillas…</p></section>
+
+    <p class="rotulo-estado">4 · Falla la carga (las otras pestañas siguen funcionando)</p>
+    <section class="panel-config">
+      <p role="alert" class="aviso aviso-error">No pudimos cargar las plantillas. Revisá la conexión e intentá de nuevo.</p>
+      <div><button type="button" class="btn btn-principal">Reintentar</button></div>
+    </section>
+
+    <p class="rotulo-estado">5 · Activar y desactivar</p>
+    <section class="panel-config">
+      <p role="status" class="aviso aviso-ok">Plantilla desactivada.</p>
+      <ul class="lista-config cons-plantillas" aria-label="Plantillas de consentimiento">
+          <li class="item-inactivo">
+            <div class="cons-plantilla-datos">
+              <div class="item-nombre">Consentimiento para extracción dentaria</div>
+              <div class="item-datos"><span>Versión 3</span><span>Actualizada el 24/11/2026</span></div>
+              <span class="estado-inactivo">Inactiva</span>
+            </div>
+            <div class="item-acciones">
+              <button type="button" class="btn btn-chico" aria-label="Editar Consentimiento para extracción dentaria">Editar</button>
+              <button type="button" class="btn btn-chico" data-icono="reloj" aria-label="Versiones de Consentimiento para extracción dentaria">Versiones</button>
+              <button type="button" class="btn btn-chico" aria-label="Activar Consentimiento para extracción dentaria">Activar</button>
+            </div>
+          </li>
+      </ul>
+    </section>
+    <p class="nota-mockup"><b>Mockup C-48.</b> Versiones y estados de la pestaña "Consentimientos". La versión 1 muestra una marca de HTML como texto literal. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Firma · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="consentimientos.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div class="firma-pantalla mockup-pagina" role="dialog" aria-modal="true" aria-labelledby="firma-t">
+      <div class="firma-contenido">
+        <p class="firma-rotulo" data-icono="firma">Consentimiento informado · Firma electrónica</p>
+        <div class="firma-encabezado">
+          <h2 id="firma-t" tabindex="-1">Consentimiento para extracción dentaria</h2>
+          <p class="firma-version">Versión 3</p>
+        </div>
+        <p class="firma-para">Para: <strong>Paciente Uno</strong>. Si no sos vos, avisale al profesional.</p>
+        <div class="cons-texto firma-texto">Yo, el paciente que firma este documento, declaro que el profesional me explicó en lenguaje claro el tratamiento propuesto: la extracción de una pieza dentaria.
+
+Qué es el tratamiento
+La extracción consiste en retirar la pieza de su alvéolo con anestesia local. Puede requerir separar la pieza en partes o hacer una pequeña incisión en la encía.
+
+Riesgos y molestias posibles
+- Dolor, inflamación o hematoma durante algunos días.
+- Sangrado leve en las primeras horas.
+- Alveolitis (inflamación del alvéolo), que se trata en el consultorio.
+- Con menor frecuencia: sensibilidad en el labio o la lengua, que suele ser pasajera.
+
+Alternativas
+Me informaron las alternativas posibles, incluida la de no hacer el tratamiento, y sus consecuencias.
+
+Cuidados después
+Me comprometo a seguir las indicaciones escritas que me entrega el profesional y a consultar ante cualquier síntoma que me preocupe.
+
+Puedo hacer todas las preguntas que necesite antes de firmar y puedo revocar este consentimiento en cualquier momento antes del tratamiento, avisando al profesional.</div>
+        <form class="firma-form" novalidate aria-labelledby="ff-t">
+          <h3 id="ff-t">Firma electrónica del paciente</h3>
+          
+          <div class="firma-campos">
+            <div class="campo">
+              <label for="f-nombre">Nombre completo</label>
+              <input id="f-nombre" type="text" autocomplete="off" autocapitalize="words" spellcheck="false" value="Paciente Uno" aria-describedby="f-nombre-e" />
+              <p class="campo-error" id="f-nombre-e"></p>
+            </div>
+            <div class="campo">
+              <label for="f-dni">DNI</label>
+              <input id="f-dni" type="text" inputmode="numeric" autocomplete="off" spellcheck="false" value="99.000.001" aria-describedby="f-dni-ayuda f-dni-e" />
+              <p class="ayuda" id="f-dni-ayuda">Escribí tu DNI, con o sin puntos.</p>
+              <p class="campo-error" id="f-dni-e"></p>
+            </div>
+          </div>
+          <p class="firma-explicacion">Es una <strong>firma electrónica</strong>: se guardan el nombre y el DNI que escribís, la fecha y hora, el profesional que te atiende, la dirección IP y el dispositivo, junto con una copia exacta de este texto.</p>
+          <label class="cons-acepto"><input type="checkbox" checked aria-describedby="f-acepto-e" /> Leí y acepto este consentimiento</label>
+          <p class="campo-error" id="f-acepto-e"></p>
+          <div class="firma-acciones">
+            <button type="button" class="btn">Cancelar</button>
+            <button type="submit" class="btn btn-principal" data-icono="firma">Firmar</button>
+          </div>
+        </form>
+      </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

@@ -1,0 +1,850 @@
+/* C-48: propuesta del módulo NN-consentimientos.css (design D10). Solo usa tokens de la Revision 5 del design system.
+   Las reglas marcadas "Solo mockups" no pasan al módulo. */
+
+/* ---- Configuración → Consentimientos ---- */
+.cons-plantillas > li {
+  grid-template-columns: 1fr;
+  align-items: center;
+}
+
+.cons-plantilla-datos {
+  min-width: 0;
+  display: grid;
+  gap: var(--ds-espacio-0);
+}
+
+.cons-plantilla-datos .item-nombre {
+  overflow-wrap: anywhere;
+}
+
+.cons-plantillas .item-acciones .btn {
+  flex: 1 1 auto;
+  justify-content: center;
+}
+
+@media (min-width: 48rem) {
+  .cons-plantillas > li {
+    grid-template-columns: 1fr auto;
+  }
+
+  .cons-plantillas .item-acciones .btn {
+    flex: 0 0 auto;
+  }
+}
+
+/* ---- Editor de la plantilla ---- */
+.dialogo.cons-editor {
+  max-width: 52rem;
+}
+
+.cons-form {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.cons-texto-editor textarea {
+  min-height: 18rem;
+  font-family: var(--ds-fuente);
+  line-height: var(--ds-interlineado);
+}
+
+@media (min-width: 48rem) {
+  .cons-texto-editor textarea {
+    min-height: 24rem;
+  }
+}
+
+.contador.excedido {
+  color: var(--ds-error);
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.cons-ayuda {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+/* ---- Versiones ---- */
+.cons-versiones {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--ds-espacio-1);
+}
+
+.cons-version {
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio);
+  background: var(--ds-fondo);
+}
+
+.cons-version summary {
+  display: list-item;
+  box-sizing: border-box;
+  min-height: var(--ds-alto-control);
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  cursor: pointer;
+  font-weight: var(--ds-peso-medio);
+}
+
+.cons-version summary:focus-visible {
+  outline: var(--ds-foco-ancho) solid var(--ds-foco-color);
+  outline-offset: var(--ds-foco-separacion);
+}
+
+.cons-version-meta {
+  font-size: var(--ds-texto-sm);
+  font-weight: var(--ds-peso-normal);
+  color: var(--ds-texto-suave);
+}
+
+.cons-version .cons-texto {
+  margin: 0 var(--ds-espacio-2) var(--ds-espacio-2);
+  max-block-size: 20rem;
+  overflow: auto;
+}
+
+/* ---- Texto plano (plantilla, versión y documento firmado): respeta los saltos de línea, nunca HTML ---- */
+.cons-texto {
+  margin: 0;
+  padding: var(--ds-espacio-2);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  line-height: var(--ds-interlineado);
+  color: var(--ds-texto);
+  background: var(--ds-superficie);
+  border-radius: var(--ds-radio);
+}
+
+/* ---- Sección de la ficha ---- */
+.cons-cabecera-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1);
+}
+
+.cons-contador {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.cons-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: var(--ds-espacio-1);
+}
+
+.cons-fila {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--ds-espacio-1) var(--ds-espacio-2);
+  align-items: start;
+  padding: var(--ds-espacio-2);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio);
+  background: var(--ds-superficie);
+}
+
+.cons-tipo {
+  display: grid;
+  place-items: center;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  border-radius: var(--ds-radio);
+  background: var(--ds-acento-50);
+  color: var(--ds-acento-700);
+}
+
+.cons-tipo .icono {
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+}
+
+.cons-datos {
+  min-width: 0;
+  display: grid;
+  gap: var(--ds-espacio-0);
+}
+
+.cons-titulo {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--ds-espacio-0) var(--ds-espacio-1);
+  font-weight: var(--ds-peso-fuerte);
+  overflow-wrap: anywhere;
+}
+
+.cons-meta {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.cons-acciones {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1);
+}
+
+.cons-acciones .btn {
+  min-height: var(--ds-alto-control);
+  flex: 1 1 0;
+  justify-content: center;
+}
+
+@media (min-width: 48rem) {
+  .cons-fila {
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+  }
+
+  .cons-acciones {
+    grid-column: auto;
+    justify-content: flex-end;
+  }
+
+  .cons-acciones .btn {
+    flex: 0 0 auto;
+  }
+}
+
+/* Estados escritos en una etiqueta, no solo por color. */
+.etiqueta-vigente {
+  color: var(--ds-ok);
+  background: var(--ds-ok-fondo);
+}
+
+.etiqueta-revocado {
+  color: var(--ds-error);
+  background: var(--ds-error-fondo);
+}
+
+.etiqueta-version {
+  color: var(--ds-texto-suave);
+  font-weight: var(--ds-peso-medio);
+}
+
+.cons-fila-revocada {
+  background: var(--ds-superficie-2);
+  border-style: dashed;
+}
+
+.cons-fila-revocada .cons-tipo {
+  background: var(--ds-superficie);
+  color: var(--ds-texto-suave);
+}
+
+/* ---- Elegir la plantilla ---- */
+.cons-opciones {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.cons-opcion {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  min-height: var(--ds-alto-control);
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio);
+  cursor: pointer;
+}
+
+.cons-opcion:has(input:checked) {
+  border-color: var(--ds-acento-500);
+  background: var(--ds-acento-50);
+}
+
+.cons-opcion input,
+.cons-acepto input {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  min-height: 0;
+  flex: none;
+  margin: 0;
+  accent-color: var(--ds-acento-500);
+}
+
+.cons-opcion-texto {
+  display: grid;
+}
+
+.cons-opcion-texto small {
+  color: var(--ds-texto-suave);
+  font-size: var(--ds-texto-sm);
+}
+
+/* ---- Vista de firma a pantalla completa (design D5): fondo opaco, tapa la ficha ---- */
+.firma-pantalla {
+  position: fixed;
+  inset: 0;
+  inline-size: auto;
+  block-size: auto;
+  max-inline-size: none;
+  max-block-size: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow-y: auto;
+  color: var(--ds-texto);
+  background: var(--ds-fondo);
+}
+
+.firma-pantalla::backdrop {
+  background: var(--ds-fondo);
+}
+
+.firma-contenido {
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: 48rem;
+  margin: 0 auto;
+  padding: var(--ds-espacio-3) var(--ds-espacio-2) var(--ds-espacio-5);
+  display: grid;
+  gap: var(--ds-espacio-3);
+}
+
+.firma-rotulo {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  font-size: var(--ds-texto-sm);
+  font-weight: var(--ds-peso-medio);
+  color: var(--ds-acento-700);
+}
+
+.firma-rotulo .icono {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+}
+
+.firma-encabezado {
+  display: grid;
+  gap: var(--ds-espacio-0);
+}
+
+.firma-encabezado h2 {
+  margin: 0;
+  font-size: var(--ds-texto-2xl);
+  line-height: var(--ds-interlineado-titulo);
+  overflow-wrap: anywhere;
+}
+
+.firma-encabezado h2:focus-visible {
+  outline: var(--ds-foco-ancho) solid var(--ds-foco-color);
+  outline-offset: var(--ds-foco-separacion);
+}
+
+.firma-version {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.firma-texto {
+  font-size: var(--ds-texto-lg);
+  background: var(--ds-fondo);
+  padding: 0;
+}
+
+.firma-form {
+  display: grid;
+  gap: var(--ds-espacio-2);
+  padding: var(--ds-espacio-3) var(--ds-espacio-2);
+  background: var(--ds-superficie);
+  border-radius: var(--ds-radio-lg);
+  border-top: 4px solid var(--ds-acento-500);
+}
+
+.firma-form h3 {
+  margin: 0;
+  font-size: var(--ds-texto-lg);
+}
+
+.firma-campos {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+@media (min-width: 40rem) {
+  .firma-campos {
+    grid-template-columns: 2fr 1fr;
+  }
+}
+
+.firma-campos .campo {
+  margin: 0;
+}
+
+.firma-explicacion {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.cons-acepto {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  min-height: var(--ds-alto-control);
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  font-weight: var(--ds-peso-medio);
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio);
+  cursor: pointer;
+}
+
+.cons-acepto.con-error {
+  border-color: var(--ds-error);
+}
+
+.firma-acciones {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--ds-espacio-1);
+}
+
+.firma-acciones .btn {
+  inline-size: 100%;
+  min-height: var(--ds-alto-control);
+  justify-content: center;
+}
+
+@media (min-width: 48rem) {
+  .firma-acciones {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .firma-acciones .btn {
+    inline-size: auto;
+    min-inline-size: 10rem;
+  }
+}
+
+.firma-listo {
+  display: grid;
+  gap: var(--ds-espacio-2);
+  justify-items: start;
+  padding: var(--ds-espacio-3) var(--ds-espacio-2);
+  background: var(--ds-ok-fondo);
+  border-radius: var(--ds-radio-lg);
+}
+
+.firma-listo h3 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  color: var(--ds-ok);
+  font-size: var(--ds-texto-xl);
+}
+
+.firma-listo p {
+  margin: 0;
+}
+
+/* ---- Documento firmado y verificación (design D7) ---- */
+.dialogo.cons-documento {
+  max-width: 60rem;
+}
+
+.cons-doc-cuerpo {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+@media (min-width: 64rem) {
+  .cons-doc-cuerpo {
+    grid-template-columns: minmax(0, 1fr) 18rem;
+    align-items: start;
+  }
+
+  .cons-verificacion {
+    grid-column: 2;
+    grid-row: 1 / span 3;
+    position: sticky;
+    top: 0;
+  }
+}
+
+.cons-doc-principal {
+  min-width: 0;
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+.cons-doc-etiquetas {
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1);
+}
+
+.etiqueta-firma {
+  color: var(--ds-acento-700);
+  background: var(--ds-acento-50);
+}
+
+.cons-doc-datos {
+  margin: 0;
+  display: grid;
+  gap: var(--ds-espacio-1) var(--ds-espacio-2);
+  grid-template-columns: max-content 1fr;
+  font-size: var(--ds-texto-sm);
+}
+
+.cons-doc-datos dt {
+  color: var(--ds-texto-suave);
+}
+
+.cons-doc-datos dd {
+  margin: 0;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  font-weight: var(--ds-peso-medio);
+}
+
+.cons-verificacion {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  padding: var(--ds-espacio-2);
+  border-radius: var(--ds-radio);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  background: var(--ds-superficie);
+}
+
+.cons-verificacion p {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+}
+
+.cons-verificacion .cons-verif-estado {
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  font-size: var(--ds-texto-lg);
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.cons-verif-estado .icono {
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+  flex: none;
+}
+
+.cons-verificacion.integro {
+  background: var(--ds-ok-fondo);
+  border-color: var(--ds-ok);
+}
+
+.cons-verificacion.integro .cons-verif-estado {
+  color: var(--ds-ok);
+}
+
+.cons-verificacion.alterado {
+  background: var(--ds-error-fondo);
+  border-color: var(--ds-error);
+  border-width: 2px;
+}
+
+.cons-verificacion.alterado .cons-verif-estado {
+  color: var(--ds-error);
+}
+
+.cons-verificacion .cons-hash {
+  font-size: var(--ds-texto-xs);
+}
+
+.cons-hash {
+  font-family: var(--ds-fuente-mono);
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}
+
+.cons-evidencia {
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio);
+}
+
+.cons-evidencia summary {
+  display: list-item;
+  box-sizing: border-box;
+  min-height: var(--ds-alto-control);
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  cursor: pointer;
+  font-weight: var(--ds-peso-medio);
+}
+
+.cons-evidencia summary:focus-visible {
+  outline: var(--ds-foco-ancho) solid var(--ds-foco-color);
+  outline-offset: var(--ds-foco-separacion);
+}
+
+.cons-evidencia .cons-doc-datos {
+  padding: 0 var(--ds-espacio-2) var(--ds-espacio-2);
+}
+
+.cons-revocacion {
+  margin: 0;
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-error);
+  background: var(--ds-error-fondo);
+  border-radius: var(--ds-radio);
+  overflow-wrap: anywhere;
+}
+
+/* ---- Paciente de la vista de firma (design D15): nombre y apellido, nunca el DNI ---- */
+.firma-para {
+  margin: 0;
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  font-size: var(--ds-texto-base);
+  background: var(--ds-acento-50);
+  border-radius: var(--ds-radio);
+  overflow-wrap: anywhere;
+}
+
+/* ---- "Devolvé el equipo al profesional" (design D12): fuera de la raíz, opaco, no es un <dialog> ---- */
+.bloqueo-pantalla {
+  position: fixed;
+  inset: 0;
+  z-index: var(--ds-capa-modal);
+  overflow-y: auto;
+  display: grid;
+  place-items: center;
+  padding: var(--ds-espacio-3) var(--ds-espacio-2);
+  color: var(--ds-texto);
+  background: var(--ds-fondo);
+}
+
+.bloqueo-tarjeta {
+  box-sizing: border-box;
+  inline-size: 100%;
+  max-inline-size: 30rem;
+  display: grid;
+  gap: var(--ds-espacio-2);
+  padding: var(--ds-espacio-3) var(--ds-espacio-2);
+  background: var(--ds-superficie);
+  border-top: 4px solid var(--ds-acento-500);
+  border-radius: var(--ds-radio-lg);
+  box-shadow: var(--ds-sombra-2);
+}
+
+.bloqueo-icono {
+  inline-size: 3rem;
+  block-size: 3rem;
+  display: grid;
+  place-items: center;
+  color: var(--ds-acento-700);
+  background: var(--ds-acento-50);
+  border-radius: var(--ds-radio-pill);
+}
+
+.bloqueo-icono .icono {
+  inline-size: 1.5rem;
+  block-size: 1.5rem;
+}
+
+.bloqueo-tarjeta h1 {
+  margin: 0;
+  font-size: var(--ds-texto-2xl);
+  line-height: var(--ds-interlineado-titulo);
+}
+
+.bloqueo-tarjeta p {
+  margin: 0;
+}
+
+.bloqueo-caso {
+  font-size: var(--ds-texto-lg);
+}
+
+.bloqueo-form {
+  display: grid;
+  gap: var(--ds-espacio-2);
+  padding-block-start: var(--ds-espacio-2);
+  border-top: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.bloqueo-form .campo {
+  margin: 0;
+}
+
+.bloqueo-usuario {
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.bloqueo-usuario strong {
+  color: var(--ds-texto);
+  font-family: var(--ds-fuente-mono);
+  overflow-wrap: anywhere;
+}
+
+.bloqueo-form .btn {
+  inline-size: 100%;
+  min-height: var(--ds-alto-control);
+  justify-content: center;
+}
+
+/* ---- Comprobación de un envío dudoso (design D13) ---- */
+.cons-resultado {
+  display: grid;
+  gap: var(--ds-espacio-1);
+  padding: var(--ds-espacio-2);
+  border-left: 4px solid currentColor;
+  border-radius: var(--ds-radio);
+}
+
+.cons-resultado h3 {
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--ds-espacio-1);
+  font-size: var(--ds-texto-lg);
+}
+
+.cons-resultado p {
+  margin: 0;
+  color: var(--ds-texto);
+  overflow-wrap: anywhere;
+}
+
+.cons-resultado-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1);
+}
+
+.cons-resultado-ok {
+  color: var(--ds-ok);
+  background: var(--ds-ok-fondo);
+}
+
+.cons-resultado-error {
+  color: var(--ds-error);
+  background: var(--ds-error-fondo);
+}
+
+.cons-resultado-pendiente {
+  color: var(--ds-alerta);
+  background: var(--ds-alerta-fondo);
+}
+
+/* ---- Solo mockups ---- */
+.nota-mockup {
+  margin: 0;
+  font-size: var(--ds-texto-xs);
+  color: var(--ds-texto-suave);
+  max-width: 48rem;
+}
+
+.nota-mockup b {
+  color: var(--ds-alerta);
+}
+
+.nota-contexto {
+  min-height: 5rem;
+  padding: var(--ds-espacio-2);
+  text-align: center;
+  display: grid;
+  place-items: center;
+  color: var(--ds-texto-suave);
+  font-size: var(--ds-texto-sm);
+  border: 2px dashed var(--ds-borde);
+  border-radius: var(--ds-radio);
+}
+
+.rotulo-estado {
+  margin: var(--ds-espacio-3) 0 var(--ds-espacio-1);
+  font-size: var(--ds-texto-sm);
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-alerta);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.dialogo-estatico {
+  position: static;
+  display: block;
+  margin: 0;
+  max-height: none;
+  overflow: visible;
+  box-shadow: var(--ds-sombra-3);
+}
+
+/* La vista de firma como página entera (en la aplicación es un <dialog> modal). */
+.firma-pantalla.mockup-pagina {
+  display: block;
+  position: static;
+  inline-size: auto;
+  block-size: auto;
+  min-block-size: 100dvh;
+  overflow: visible;
+}
+
+/* Varias vistas de firma apiladas para revisarlas juntas. */
+.firma-marco {
+  border: 2px dashed var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio-lg);
+  background: var(--ds-fondo);
+}
+
+.firma-marco .firma-contenido {
+  padding-block: var(--ds-espacio-2);
+}
+
+.pagina-estados {
+  box-sizing: border-box;
+  max-inline-size: 60rem;
+  margin: 0 auto;
+  padding: var(--ds-espacio-2);
+  background: var(--ds-superficie-2);
+  min-block-size: 100dvh;
+}
+
+/* El bloqueo como página o como estado apilado (en la aplicación es fijo y tapa todo). */
+.bloqueo-pantalla.mockup-pagina {
+  position: static;
+  min-block-size: 100dvh;
+}
+
+.firma-marco .bloqueo-pantalla {
+  position: static;
+  padding-block: var(--ds-espacio-2);
+}
+
+.ingreso-mockup {
+  box-sizing: border-box;
+  max-inline-size: 30rem;
+  display: grid;
+  gap: var(--ds-espacio-2);
+  margin: 0 auto;
+  padding: var(--ds-espacio-3) var(--ds-espacio-2);
+  background: var(--ds-superficie);
+  border-radius: var(--ds-radio-lg);
+}
+
+.ingreso-mockup h2 {
+  margin: 0;
+}
+
+.ingreso-mockup .campo {
+  margin: 0;
+}
