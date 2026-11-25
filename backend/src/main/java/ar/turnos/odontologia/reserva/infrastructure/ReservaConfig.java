@@ -10,6 +10,7 @@ import ar.turnos.odontologia.reserva.application.BuscadorDeHuecos;
 import ar.turnos.odontologia.reserva.application.ConsultarMisTurnos;
 import ar.turnos.odontologia.reserva.application.CancelarReservaOnline;
 import ar.turnos.odontologia.reserva.application.ReprogramarReservaOnline;
+import ar.turnos.odontologia.reserva.application.ReservaPorListaEspera;
 import ar.turnos.odontologia.reserva.application.ReservarTurno;
 import ar.turnos.odontologia.reserva.application.SenasDeReserva;
 import ar.turnos.odontologia.reserva.application.ReservasPaciente;
@@ -48,6 +49,15 @@ class ReservaConfig {
     }
 
     /** Si ningún módulo publica un aviso real, la reserva usa uno que solo deja una línea de log (design D9). */
+    /** C-15: la lista de espera reusa la validación y la asignación de sillón de la reserva online. */
+    @Bean
+    ReservaPorListaEspera reservaPorListaEspera(CatalogoReserva catalogo, BuscadorDeHuecos buscador,
+                                                AgendaDeTurnos agenda, ObjectProvider<AvisoReservaOnline> avisos,
+                                                Clock reloj, ZoneId zonaHoraria) {
+        return new ReservaPorListaEspera(catalogo, buscador, agenda,
+                avisos.getIfAvailable(AvisoReservaOnlineInactivo::new), reloj, zonaHoraria);
+    }
+
     @Bean
     ReservarTurno reservarTurno(CatalogoReserva catalogo, BuscadorDeHuecos buscador, AgendaDeTurnos agenda,
                                 ObjectProvider<AvisoReservaOnline> avisos, ObjectProvider<SenasDeReserva> senas,

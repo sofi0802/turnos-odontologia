@@ -30,7 +30,10 @@ import periodontograma from '../src/styles/19-periodontograma.css?raw';
 import reportes from '../src/styles/20-reportes.css?raw';
 import imagenes from '../src/styles/21-imagenes.css?raw';
 import caja from '../src/styles/22-caja.css?raw';
-import senas from '../src/styles/23-senas.css?raw';
+import listaEspera from '../src/styles/23-lista-espera.css?raw';
+import coberturas from '../src/styles/24-coberturas.css?raw';
+import presupuestos from '../src/styles/25-presupuestos.css?raw';
+import senas from '../src/styles/26-senas.css?raw';
 
 const MODULOS: Readonly<Record<string, string>> = {
   '01-base.css': base,
@@ -55,7 +58,10 @@ const MODULOS: Readonly<Record<string, string>> = {
   '20-reportes.css': reportes,
   '21-imagenes.css': imagenes,
   '22-caja.css': caja,
-  '23-senas.css': senas,
+  '23-lista-espera.css': listaEspera,
+  '24-coberturas.css': coberturas,
+  '25-presupuestos.css': presupuestos,
+  '26-senas.css': senas,
 };
 
 /** Archivos que hay en `src/styles/`, ordenados (el prefijo numérico fija el orden). Solo los nombres, sin leerlos. */

@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi cuenta · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="consentimiento.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="paciente.uno@example.com" data-rol="PACIENTE" data-activa="mi-cuenta">
+  <div class="pagina-paciente">
+    <h1 tabindex="-1">Mi cuenta</h1>
+
+    <section class="panel" aria-labelledby="t-datos">
+      <h2 id="t-datos">Tus datos</h2>
+      <dl class="cuenta-datos">
+        <div><dt>Nombre</dt><dd>Paciente Uno</dd></div>
+        <div><dt>DNI</dt><dd>99000001</dd></div>
+        <div><dt>Email</dt><dd>paciente.uno@example.com</dd></div>
+        <div><dt>Teléfono</dt><dd class="sin-dato">Sin teléfono</dd></div>
+      </dl>
+      <p class="cuenta-ayuda">Si algún dato está mal, avisale a la recepción del consultorio.</p>
+    </section>
+
+    <section class="panel" aria-labelledby="t-mensajes">
+      <h2 id="t-mensajes">Mensajes del consultorio</h2>
+      <p class="mensajes-estado no" data-icono="mensaje-no">No recibís mensajes</p>
+      <p>Si los aceptás, te escribimos por WhatsApp o, si no tenés, por email para:</p>
+      <ul class="mensajes-que">
+        <li>recordarte tus turnos un día antes,</li>
+        <li>confirmar las reservas, cancelaciones y cambios que hagas,</li>
+        <li>ofrecerte un horario de la lista de espera.</li>
+      </ul>
+      <p class="cuenta-ayuda">Los mensajes solo traen la fecha, la hora, el consultorio y links para confirmar, cancelar o cambiar el turno. Nunca datos de salud. Podés dejar de recibirlos cuando quieras.</p>
+      <div class="acciones">
+        <button type="button" class="btn btn-principal">Aceptar mensajes</button>
+      </div>
+    </section>
+
+    <div class="nota-contexto">"Mi cobertura" (C-49) y "Mis presupuestos" (C-50), sin cambios</div>
+
+    <p class="nota-mockup"><b>Mockup C-17.</b> Paciente sin consentimiento en <code>#/mi-cuenta</code> ("Mi cuenta" ya está en la barra lateral desde C-49). Los datos vienen del perfil y no se editan. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

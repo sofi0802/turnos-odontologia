@@ -1,3 +1,5 @@
+<!-- Escrito contra el spec principal actual. C-49 (frontend-obras-sociales, "Obras sociales") y C-48 (frontend-consentimientos, "Consentimientos") también modifican este requisito: el que se archive después incluye las pestañas de los otros en su MODIFIED. En el código, "Señas" va después de "Obras sociales". -->
+
 ## MODIFIED Requirements
 
 ### Requirement: Secciones según el rol

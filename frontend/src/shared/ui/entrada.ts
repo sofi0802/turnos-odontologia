@@ -8,6 +8,8 @@ let vueltaDePago = false;
 
 const LINK_MIS_TURNOS = /^(.*)\/mis-turnos\/(cancelar|reprogramar)\/?$/;
 const LINK_CONFIRMAR = /^(.*)\/confirmar\/([^/]+)\/?$/;
+const LINK_OFERTA = /^(.*)\/oferta\/([^/]+)\/?$/;
+let tokenOferta: string | null = null;
 const VUELTA_DE_PAGO = /^#\/mis-turnos\?pago=/;
 
 let escuchaVueltaDePago = false;
@@ -43,6 +45,13 @@ export function traducirEntrada(ubicacion: Location = window.location): void {
     history.replaceState(history.state, '', `${misTurnos[1] ?? ''}/#/mis-turnos`);
     return;
   }
+  const oferta = LINK_OFERTA.exec(camino);
+  if (oferta !== null) {
+    // C-15: como el de confirmar, el token de la oferta queda solo en memoria.
+    tokenOferta = decodeURIComponent(oferta[2] ?? '');
+    history.replaceState(history.state, '', `${oferta[1] ?? ''}/#/oferta`);
+    return;
+  }
   const confirmar = LINK_CONFIRMAR.exec(camino);
   if (confirmar !== null) {
     // El token queda solo en memoria: ni en la dirección ni en el almacenamiento.
@@ -66,4 +75,14 @@ export function tomarVueltaDePago(): boolean {
 /** Para los tests: olvida el token guardado. */
 export function olvidarTokenDeConfirmacion(): void {
   tokenConfirmacion = null;
+}
+
+/** C-15: token del link de la oferta de la lista de espera que abrió la aplicación, si lo hubo. */
+export function tokenDeOferta(): string | null {
+  return tokenOferta;
+}
+
+/** Para los tests: olvida el token de la oferta. */
+export function olvidarTokenDeOferta(): void {
+  tokenOferta = null;
 }

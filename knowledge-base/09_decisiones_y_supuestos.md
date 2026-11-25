@@ -209,6 +209,18 @@ Como el margen es configurable (con mínimo 10), se guarda la columna `fin_con_m
 - Toca módulos de otros dueños: `reserva/` (Juan Sebastián), la cancelación y la reprogramación de `agenda/` (Sofia) y los avisos de `notificaciones/` (Juan Cruz). El propose define los puntos de contacto.
 **Impacto**: RN-SE-01 a RN-SE-12, US-202, dos filas de la matriz de 03, las entidades `Sena` y `SenaMovimiento`, tres claves de `Configuracion`, el cambio de `Cobro` y cuatro variables de entorno (migración nueva, número a reservar).
 
+### DD-22: La oferta de la lista de espera no reserva el horario [2026-11-24, C-15]
+**Decisión**: mientras un horario liberado se le ofrece a un paciente de la lista, sigue **libre** para cualquier reserva. La aceptación crea el turno con las validaciones de siempre, y si el horario ya se ocupó, se rechaza con `OFERTA_NO_DISPONIBLE` (RN-LE-06).
+**Contexto**: reservar el horario durante el plazo exigiría un turno provisional que las restricciones `EXCLUDE USING gist` (DD-03) contarían como activo, o una excepción a esas restricciones.
+**Alternativas consideradas**:
+1. Un turno provisional `OFRECIDO` que ocupa sillón y profesional hasta que vence la oferta.
+2. Bloquear el horario en la disponibilidad pública sin tocar la base.
+**Justificación**:
+- No toca las dos garantías contra solapamientos (regla dura 5) ni los estados del turno.
+- Un horario no queda vacío durante 2 horas si otro paciente lo quiere reservar en ese momento.
+**Trade-offs aceptados**: un paciente puede aceptar y encontrarse con que el horario ya no está; sigue en la lista y el mensaje de error se lo explica.
+**Impacto**: RN-LE-06, el Flujo 5 y la tabla `OfertaListaEspera` de 04.
+
 ## Supuestos inferidos
 
 ### ~~SU-07: Todos los profesionales pueden hacer todas las prestaciones~~ (refutado)

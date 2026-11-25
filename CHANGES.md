@@ -819,7 +819,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
 > Arranca con el MVP completo (C-01 a C-14). Los tres changes pueden ir en paralelo.
 
 ### [C-15] `lista-de-espera-automatica`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[x]` completo (2026-11-24, SDD, backend y frontend; migración V9). Change en `openspec/changes/lista-de-espera-automatica/`; el archive queda para después del merge (reconciliar "Menú según la sesión", tarea 11.3)
 - **Responsable**: Sofia Indovino
 - **Scope**:
   - Entidad `ListaEspera` (paciente, prestación, profesional opcional, rango de fechas preferido). **Migración V9**.
@@ -993,7 +993,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `knowledge-base/03_actores_y_roles.md` §RBAC
 
 ### [C-23] `senas-mercado-pago`
-- **Estado**: `[x]` implementado (2026-11-25; KB en el PR #133, con PA-62 y PA-64 decididas por la líder; propuesta y mockups en el PR #135; apply en la rama `change/C-23-senas-mercado-pago-apply`, falta el archive). Migración V23. Evidencia: `docs/evidencia/c23-backend.txt` (995 unitarios y 1193 de integración) y 1007 tests del frontend; verificación visual en `design.md` (differences: tres corregidas y el aviso general de los formularios que los mockups no muestran). Pasarela simulada por defecto (`PAGOS_PASARELA=simulada`); con `mercadopago` el arranque exige `MERCADOPAGO_ACCESS_TOKEN` y `MERCADOPAGO_WEBHOOK_SECRET`. Toca módulos de otros dueños: `reserva/` y `shared/security/` (Juan Sebastián), `agenda/` y la columna `turno_auditoria.causa` (Sofia), `notificaciones/` (Juan Cruz). Delta nuevo de `frontend-configuracion-consultorio` (pestaña Señas) encontrado en el apply. Módulo de estilos `23-senas.css`
+- **Estado**: `[x]` implementado (2026-11-25; KB en el PR #133, con PA-62 y PA-64 decididas por la líder; propuesta y mockups en el PR #135; apply en la rama `change/C-23-senas-mercado-pago-apply`, falta el archive). Migración V23. Evidencia: `docs/evidencia/c23-backend.txt` (995 unitarios y 1193 de integración) y 1007 tests del frontend; verificación visual en `design.md` (differences: tres corregidas y el aviso general de los formularios que los mockups no muestran). Pasarela simulada por defecto (`PAGOS_PASARELA=simulada`); con `mercadopago` el arranque exige `MERCADOPAGO_ACCESS_TOKEN` y `MERCADOPAGO_WEBHOOK_SECRET`. Toca módulos de otros dueños: `reserva/` y `shared/security/` (Juan Sebastián), `agenda/` y la columna `turno_auditoria.causa` (Sofia), `notificaciones/` (Juan Cruz). Delta nuevo de `frontend-configuracion-consultorio` (pestaña Señas) encontrado en el apply. Módulo de estilos `26-senas.css`
 - **Responsable**: Enzo (avisa a Juan Sebastián por `reserva/`, a Sofia por la cancelación y la reprogramación de `agenda/` y a Juan Cruz por los avisos de `notificaciones/`)
 - **Scope**:
   - Puerto `PasarelaPago` con adaptador Mercado Pago (modo sandbox, **sin credenciales reales en el repo**) y una pasarela simulada: link de pago para la seña al reservar y webhook de confirmación con validación de firma.
@@ -1093,7 +1093,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - `design-system/README.md` y `design-system/components.html`
 
 ### [C-27] `consentimientos-firma-electronica`
-- **Estado**: `[ ]` pendiente
+- **Estado**: `[~]` implementado (2026-11-24, SDD; propuesta aprobada en el PR #124, apply en su PR; `openspec/changes/consentimientos-firma-electronica/`, migración V18). Solo backend: plantillas con versiones, firma electrónica en el consultorio con hash SHA-256 y revocación con registro. Evidencia: `docs/evidencia/c27-backend.txt` (917 unitarios y 1001 de integración). Falta la revisión de la líder, el merge y el archive; las pantallas van en C-48
 - **Responsable**: Emanuel
 - **Scope**:
   - Plantillas de consentimiento informado y firma con hash, fecha, IP y dispositivo; documento bloqueado una vez firmado (Ley 25.506). **Migración V18**.
@@ -1120,6 +1120,7 @@ C-01 → C-03 → C-05 → C-06 → C-10 → C-12 → C-14
   - **Acceso**: según la matriz de roles que defina C-27. Ningún dato de salud en la URL, en `localStorage` ni en la consola (regla dura 6).
   - Sin cambios de backend ni migraciones.
   - Cambio visual: modo `system-and-mockups`, con mockups a 390 y 1440 px aprobados antes del apply.
+- **Coordinación con C-49** (`frontend-obras-sociales`, Juan Sebastián): no es dependencia. Los dos modifican el requisito "Secciones según el rol" de `frontend-configuracion-consultorio` y tocan `configuracion.ts`, `permisos.ts`, `pacientes.ts` y `styles.css`. El que se archive segundo incluye la pestaña del otro en su `MODIFIED`; el que se aplique segundo rebasa y resuelve esos archivos y el orden de la ficha. C-48 usa `23-consentimientos.css` (C-49 reservó el 22).
 - **Dependencias**: `C-27`, `C-44`
 - **Governance**: CRITICO (validez legal de la firma)
 - **Leer antes**:

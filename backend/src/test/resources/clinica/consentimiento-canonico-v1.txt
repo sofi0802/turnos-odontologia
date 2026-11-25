@@ -1,0 +1,13 @@
+consentimiento-informado/v1
+paciente_id=1:1
+plantilla_version_id=1:7
+titulo=18:Extracción dental
+texto=41:Texto ficticio de prueba.
+Segunda línea.
+firmante_nombre=12:Paciente Uno
+firmante_dni=8:99000001
+profesional_id=1:3
+firmado_en=27:2026-11-24T13:30:00.123456Z
+ip_origen=9:10.0.0.15
+dispositivo=23:Navegador de prueba 1.0
+tipo_firma=11:ELECTRONICA

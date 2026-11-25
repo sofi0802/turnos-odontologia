@@ -113,7 +113,7 @@ Los logs registran solo la acción, el id y la referencia de la seña, y el esta
 - **`pages/reserva.ts`**: la confirmación muestra el bloque de la seña con "Pagar seña". Si hay `linkPago`, es un enlace que abre Mercado Pago en la misma pestaña; si no, un botón que pide el link nuevo.
 - **`pages/mis-turnos.ts`**: el estado de la seña por turno, el aviso de vuelta (`?pago=` en el hash) y "Pagar seña" en las pendientes.
 - **`agenda/`**: el diálogo de cancelación suma "Causa" como un grupo de radio opcional con su ayuda, y marca el `422` del campo `causa`.
-- **Estilos**: módulo `23-senas.css` (el siguiente libre después de `22-caja.css`), registrado en `test/estilos.ts`, solo con los tokens del design system.
+- **Estilos**: módulo `26-senas.css` (el 23 lo tomó `23-lista-espera.css` de C-15; 24 y 25 son de C-49 y C-50), registrado en `test/estilos.ts`, solo con los tokens del design system.
 - Textos y montos con `caja/dinero.ts` (formato "$ 4.500,00").
 
 ### D12. Tests

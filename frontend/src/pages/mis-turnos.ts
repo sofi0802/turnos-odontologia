@@ -1,3 +1,5 @@
+import { misInscripciones, type Inscripcion } from '../lista-espera/api.ts';
+import { crearSeccionListaEspera, MENSAJE_FALLA_LISTA, MENSAJE_SALISTE } from '../lista-espera/paciente.ts';
 import { cargarProfesionales, type ProfesionalPublico } from '../paciente/catalogo.ts';
 import { consultarDisponibilidad, type Horario } from '../paciente/disponibilidad.ts';
 import { crearGrillaHorarios } from '../paciente/horarios.ts';
@@ -60,10 +62,20 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
     const esta = consulta;
     listas.setAttribute('aria-busy', 'true');
     listas.replaceChildren(crearCargando());
+    // C-15: la lista de espera se pide en paralelo; si falla, los turnos se muestran igual.
+    const espera = misInscripciones(contexto.api).then(
+      (inscripciones): Inscripcion[] | null => inscripciones,
+      (error: unknown): Inscripcion[] | null => {
+        if (error instanceof ErrorSesion) {
+          throw error;
+        }
+        return null;
+      },
+    );
     try {
-      const turnos = await listarMisTurnos(contexto.api);
+      const [turnos, inscripciones] = await Promise.all([listarMisTurnos(contexto.api), espera]);
       if (esta === consulta && vigente()) {
-        dibujarListas(turnos);
+        dibujarListas(turnos, inscripciones);
       }
     } catch (error) {
       if (!vigente()) {
@@ -78,11 +90,41 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
     }
   }
 
-  function dibujarListas(turnos: readonly TurnoPaciente[]): void {
+  /** C-15: la sección "Lista de espera", o el aviso si no se pudo cargar; nada si no hay inscripciones. */
+  function listaDeEspera(inscripciones: readonly Inscripcion[] | null): HTMLElement[] {
+    if (inscripciones === null) {
+      const aviso = document.createElement('p');
+      aviso.className = 'aviso aviso-alerta';
+      aviso.setAttribute('role', 'status');
+      aviso.textContent = MENSAJE_FALLA_LISTA;
+      return [aviso];
+    }
+    const seccionEspera = crearSeccionListaEspera(contexto.api, inscripciones, {
+      contenedor: pagina,
+      alSalir: () => {
+        avisoError.textContent = '';
+        avisoOk.textContent = MENSAJE_SALISTE;
+        void cargar();
+      },
+      alFallar: (error) => {
+        if (error instanceof ErrorSesion) {
+          sesionTerminada();
+          return;
+        }
+        avisoOk.textContent = '';
+        avisoError.textContent = mensajeDeError(error);
+        void cargar();
+      },
+    });
+    return seccionEspera === null ? [] : [seccionEspera];
+  }
+
+  function dibujarListas(turnos: readonly TurnoPaciente[], inscripciones: readonly Inscripcion[] | null = []): void {
     listas.removeAttribute('aria-busy');
     if (turnos.length === 0) {
       listas.replaceChildren(
         crearEstadoVacio({ texto: MENSAJE_SIN_TURNOS, accion: { texto: 'Reservar turno', ruta: 'reserva' } }),
+        ...listaDeEspera(inscripciones),
       );
       return;
     }
@@ -92,6 +134,7 @@ function dibujar(contenedor: HTMLElement, contexto: ContextoPagina): void {
     if (proximos.length > 0) {
       partes.push(seccion('Próximos turnos', proximos.map((t) => tarjeta(t, true, ahora))));
     }
+    partes.push(...listaDeEspera(inscripciones));
     if (anteriores.length > 0) {
       partes.push(seccion('Turnos anteriores', anteriores.map((t) => tarjeta(t, false, ahora))));
     }

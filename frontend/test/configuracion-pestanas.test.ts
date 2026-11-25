@@ -14,8 +14,8 @@ import {
 } from './apoyo-configuracion.ts';
 
 const TODAS = ['Profesionales', 'Sillones', 'Prestaciones', 'Margen', 'Horarios', 'Ausencias', 'Bloqueos'];
-/** El administrador suma Usuarios (C-41) y Señas (C-23), requisito modificado "Secciones según el rol". */
-const DEL_ADMIN = [...TODAS, 'Usuarios', 'Señas'];
+/** El administrador suma Usuarios (C-41), Obras sociales (C-49) y Señas (C-23), requisito modificado "Secciones según el rol". */
+const DEL_ADMIN = [...TODAS, 'Usuarios', 'Obras sociales', 'Señas'];
 
 afterEach(() => {
   document.querySelectorAll('dialog').forEach((d) => d.remove());
@@ -35,9 +35,18 @@ describe('Secciones según el rol', () => {
     const servidor = servidorCon(SESION_RECEPCION_CONFIG);
     const { raiz } = await abrirConfiguracion(servidor);
 
+    // Siete pestañas, sin "Usuarios" ni "Obras sociales" (C-49).
     expect(pestanas(raiz).map((p) => p.textContent)).toEqual(TODAS);
     expect(servidor.a('GET', '/usuarios')).toHaveLength(0);
     expect(servidor.a('GET', '/senas/configuracion')).toHaveLength(0);
+  });
+
+  it('El odontólogo no ve Obras sociales', async () => {
+    const servidor = servidorCon(SESION_ODONTOLOGA);
+    const { raiz } = await abrirConfiguracion(servidor);
+
+    expect(pestanas(raiz).map((p) => p.textContent)).not.toContain('Obras sociales');
+    expect(servidor.a('GET', '/obras-sociales')).toHaveLength(0);
   });
 
   it('Recepción ve los bloqueos sin poder registrarlos', async () => {
@@ -80,7 +89,7 @@ describe('Secciones según el rol', () => {
 
     pestana(raiz, 'Profesionales').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowLeft', bubbles: true }));
 
-    // La última pestaña del administrador es Señas (C-23; antes, Usuarios de C-41).
+    // La última pestaña del administrador es Señas (C-23, después de Obras sociales de C-49).
     expect(pestana(raiz, 'Señas').getAttribute('aria-selected')).toBe('true');
     expect(document.activeElement).toBe(pestana(raiz, 'Señas'));
     pestana(raiz, 'Señas').dispatchEvent(new KeyboardEvent('keydown', { key: 'ArrowRight', bubbles: true }));
@@ -139,6 +148,7 @@ describe('Permisos por rol (design D3)', () => {
       profesionalFijo: false,
       profesionalFijoId: null,
       gestionaUsuarios: true,
+      gestionaCoberturas: true,
       configuraSenas: true,
     });
   });
@@ -156,6 +166,7 @@ describe('Permisos por rol (design D3)', () => {
       profesionalFijo: false,
       profesionalFijoId: null,
       gestionaUsuarios: false,
+      gestionaCoberturas: false,
       configuraSenas: false,
     });
   });
@@ -173,6 +184,7 @@ describe('Permisos por rol (design D3)', () => {
       profesionalFijo: true,
       profesionalFijoId: 1,
       gestionaUsuarios: false,
+      gestionaCoberturas: false,
       configuraSenas: false,
     });
     expect(permisos({ autenticado: true, username: 'otro', rol: 'ODONTOLOGO' }).profesionalFijoId).toBeNull();

@@ -73,6 +73,32 @@ export const MENSAJES_POR_CODIGO: Readonly<Record<string, string>> = {
   TIPO_ARCHIVO_NO_PERMITIDO: 'Solo se aceptan archivos JPEG, PNG o PDF.',
   ARCHIVO_DEMASIADO_GRANDE: 'El archivo supera los 10 MB.',
   IMAGEN_YA_ANULADA: 'La imagen ya estaba anulada.',
+  // Lista de espera (C-15).
+  YA_EN_LISTA_DE_ESPERA: 'El paciente ya está en la lista de espera para esta prestación.',
+  SIN_CONSENTIMIENTO: 'El paciente no aceptó recibir mensajes: no le podemos avisar las ofertas.',
+  INSCRIPCION_NO_ACTIVA: 'Esta inscripción ya no estaba activa.',
+  PLAZO_INVALIDO: 'Ingresá un número entero de 1 a 24.',
+  OFERTA_NO_DISPONIBLE: 'Ese horario ya se ocupó. Seguís en la lista de espera.',
+  OFERTA_VENCIDA: 'Esta oferta venció. Seguís en la lista de espera.',
+  OFERTA_YA_RESPONDIDA: 'Ya respondiste esta oferta.',
+  OFERTA_INEXISTENTE: 'El link no es válido. Revisá que esté completo.',
+  // Coberturas (C-49, design D8). Ninguno repite el número de afiliado escrito.
+  OBRA_SOCIAL_EXISTENTE: 'Ya existe una obra social o prepaga con ese nombre.',
+  PLAN_EXISTENTE: 'Esa obra social ya tiene un plan con ese nombre.',
+  CODIGO_NOMENCLADOR_EXISTENTE: 'Ya existe ese código en el nomenclador.',
+  PRESTACION_INEXISTENTE: 'La prestación elegida ya no existe.',
+  VIGENCIA_SUPERPUESTA: 'El paciente ya tiene una cobertura en esas fechas. Cerrá la vigente o cambiá las fechas.',
+  AFILIADO_DUPLICADO: 'Ese número ya lo tiene otro paciente de la misma obra social.',
+  PLAN_INACTIVO: 'El plan está inactivo. Elegí otro.',
+  OBRA_SOCIAL_INACTIVA: 'La obra social está inactiva. Elegí otra.',
+  VIGENCIA_INVALIDA: 'La fecha de fin no puede ser anterior a la de inicio.',
+  AFILIACION_CERRADA: 'Esa afiliación ya estaba cerrada.',
+  // Presupuestos (C-50, design D8). Ninguno repite piezas, caras ni importes.
+  ARANCEL_INEXISTENTE: 'Una de las prestaciones ya no tiene precio. Revisá los aranceles.',
+  PRESUPUESTO_VENCIDO: 'El presupuesto venció: ya no se puede aceptar. Emití uno nuevo.',
+  PRESUPUESTO_CERRADO: 'Ese presupuesto ya estaba aceptado o rechazado.',
+  CODIGO_NOMENCLADOR_REQUERIDO: 'Una de las prestaciones tiene varios códigos: elegí uno.',
+  CODIGO_NOMENCLADOR_INVALIDO: 'El código elegido no corresponde a la prestación o está inactivo.',
 };
 
 export const MENSAJE_SIN_PERMISO = 'No tenés permiso para esta acción.';

@@ -1,0 +1,261 @@
+/* C-15: lista de espera (página del personal, diálogos, reserva, Mis turnos, oferta y plazo).
+   Desde los mockups aprobados; solo tokens --ds-* (design system Revision 5). */
+
+/* ---- Página "Lista de espera" del personal ---- */
+.le-cabecera {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1) var(--ds-espacio-2);
+  align-items: center;
+  justify-content: space-between;
+}
+
+.le-cabecera h1 {
+  margin: 0;
+}
+
+.le-intro {
+  max-width: 60ch;
+  margin: var(--ds-espacio-1) 0 var(--ds-espacio-2);
+  color: var(--ds-texto-suave);
+}
+
+.le-lista {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  background: var(--ds-fondo);
+  border: var(--ds-borde-ancho) solid var(--ds-borde);
+  border-radius: var(--ds-radio-lg);
+}
+
+.le-fila {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--ds-espacio-1) var(--ds-espacio-2);
+  align-items: start;
+  padding: var(--ds-espacio-2);
+}
+
+.le-fila + .le-fila {
+  border-top: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.le-orden {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2rem;
+  height: 2rem;
+  font-weight: var(--ds-peso-fuerte);
+  color: var(--ds-acento-700);
+  background: var(--ds-acento-50);
+  border-radius: var(--ds-radio-pill);
+}
+
+.le-datos {
+  display: grid;
+  gap: var(--ds-espacio-0);
+  min-width: 0;
+}
+
+.le-paciente {
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.le-dni {
+  font-weight: var(--ds-peso-normal);
+  color: var(--ds-texto-suave);
+}
+
+.le-meta {
+  margin: 0;
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.le-meta span + span::before {
+  content: ' · ';
+}
+
+.le-acciones {
+  grid-column: 2;
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--ds-espacio-1);
+}
+
+/* La oferta pendiente: un aviso chico dentro de la fila. */
+.le-oferta {
+  display: inline-flex;
+  gap: var(--ds-espacio-1);
+  align-items: center;
+  justify-self: start;
+  margin-top: var(--ds-espacio-0);
+  padding: var(--ds-espacio-0) var(--ds-espacio-1);
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-info);
+  background: var(--ds-info-fondo);
+  border-radius: var(--ds-radio-sm);
+}
+
+.le-oferta .icono {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+}
+
+@media (min-width: 768px) {
+  .le-fila {
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+  }
+
+  .le-acciones {
+    grid-column: 3;
+  }
+}
+
+/* ---- Diálogo de alta ---- */
+.le-rango {
+  display: grid;
+  gap: var(--ds-espacio-2);
+}
+
+@media (min-width: 480px) {
+  .le-rango {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.le-fijo {
+  margin: 0;
+  padding: var(--ds-espacio-1) var(--ds-espacio-2);
+  background: var(--ds-superficie);
+  border-radius: var(--ds-radio);
+}
+
+.le-fijo dt {
+  font-size: var(--ds-texto-sm);
+  color: var(--ds-texto-suave);
+}
+
+.le-fijo dd {
+  margin: 0 0 var(--ds-espacio-1);
+  font-weight: var(--ds-peso-medio);
+}
+
+.le-fijo dd:last-child {
+  margin-bottom: 0;
+}
+
+/* ---- Reserva: un día sin horarios con la lista de espera ---- */
+.le-sin-horarios {
+  display: grid;
+  gap: var(--ds-espacio-2);
+  justify-items: start;
+  padding: var(--ds-espacio-3);
+  background: var(--ds-superficie);
+  border: var(--ds-borde-ancho) dashed var(--ds-borde-fuerte);
+  border-radius: var(--ds-radio-lg);
+}
+
+.le-sin-horarios p {
+  margin: 0;
+}
+
+.le-sin-horarios .le-sugerencia {
+  color: var(--ds-texto-suave);
+}
+
+/* ---- Mis turnos: sección "Lista de espera" ---- */
+.le-tarjeta .turno-cabecera {
+  align-items: center;
+}
+
+.le-tarjeta .le-oferta {
+  margin-top: var(--ds-espacio-1);
+}
+
+/* ---- Pantalla pública de la oferta ---- */
+.oferta {
+  display: grid;
+  gap: var(--ds-espacio-2);
+  max-width: 36rem;
+}
+
+.oferta-turno {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--ds-espacio-2);
+  align-items: center;
+  padding: var(--ds-espacio-2);
+  background: var(--ds-acento-50);
+  border-radius: var(--ds-radio-lg);
+}
+
+.oferta-turno .icono {
+  width: 2.5rem;
+  height: 2.5rem;
+  color: var(--ds-acento-700);
+}
+
+.oferta-dia {
+  margin: 0;
+  font-size: var(--ds-texto-lg);
+  font-weight: var(--ds-peso-fuerte);
+}
+
+.oferta-con {
+  margin: 0;
+  color: var(--ds-texto-suave);
+}
+
+.oferta-plazo {
+  margin: 0;
+  font-weight: var(--ds-peso-medio);
+}
+
+.oferta-acciones {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: var(--ds-espacio-1);
+}
+
+.oferta-acciones .btn {
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .oferta-acciones {
+    flex-direction: row;
+    justify-content: flex-start;
+  }
+
+  .oferta-acciones .btn {
+    width: auto;
+  }
+}
+
+.oferta-numero {
+  font-family: var(--ds-fuente-mono);
+  font-weight: var(--ds-peso-fuerte);
+}
+
+/* ---- Configuración: plazo junto al margen ---- */
+.le-plazo {
+  margin-top: var(--ds-espacio-3);
+  padding-top: var(--ds-espacio-3);
+  border-top: var(--ds-borde-ancho) solid var(--ds-borde);
+}
+
+.le-plazo h3 {
+  margin: 0 0 var(--ds-espacio-1);
+  font-size: var(--ds-texto-base);
+}
+
+.le-plazo:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}

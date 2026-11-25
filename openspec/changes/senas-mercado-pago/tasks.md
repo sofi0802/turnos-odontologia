@@ -48,7 +48,7 @@ Acceptance criteria: los escenarios de los deltas `senas`, `frontend-senas`, `co
 - [x] 6.2 Test primero, un `it` por escenario de "Seña al terminar la reserva"; bloque de la seña en `pages/reserva.ts`
 - [x] 6.3 Test primero, un `it` por escenario de "Seña en Mis turnos" y "Vuelta desde Mercado Pago"; estado y "Pagar seña" en `pages/mis-turnos.ts`
 - [x] 6.4 Test primero, un `it` por escenario de "Causa al cancelar desde la agenda"; "Causa" en el diálogo de cancelación
-- [x] 6.5 Estilos en `src/styles/23-senas.css`, registrado en `test/estilos.ts` y `test/estilos-modulos.test.ts`, solo con tokens del design system
+- [x] 6.5 Estilos en `src/styles/26-senas.css`, registrado en `test/estilos.ts` y `test/estilos-modulos.test.ts`, solo con tokens del design system
 
 ## 7. Verificación
 

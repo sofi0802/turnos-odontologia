@@ -1,4 +1,6 @@
 import { crearBuscadorPacientes, type PacienteEncontrado } from '../agenda/buscador-pacientes.ts';
+import { crearSeccionCobertura, type SeccionCobertura } from '../coberturas/seccion.ts';
+import { crearSeccionPresupuestos, type SeccionPresupuestos } from '../presupuestos/seccion.ts';
 import { crearAusencias, marcarAusenteDisponible } from '../ficha/ausencias.ts';
 import {
   guardarFicha,
@@ -63,6 +65,19 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
   let odontograma: Odontograma | null = null;
   let periodontograma: SeccionPeriodontograma | null = null;
   let imagenes: SeccionImagenes | null = null;
+  let cobertura: SeccionCobertura | null = null;
+  // C-49: el administrador carga la cobertura aunque la ficha clínica sea de solo lectura para él.
+  const editaCobertura = contexto.sesion.rol === 'ADMIN' || contexto.sesion.rol === 'RECEPCIONISTA';
+
+  let presupuestos: SeccionPresupuestos | null = null;
+
+  function soltarCobertura(): void {
+    cobertura?.destruir();
+    cobertura = null;
+    // C-50: los presupuestos se sueltan junto con la cobertura.
+    presupuestos?.destruir();
+    presupuestos = null;
+  }
 
   function sesionVencida(causa: unknown): boolean {
     if (causa instanceof ErrorSesion) {
@@ -77,6 +92,7 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
     periodontograma = null;
     imagenes?.destruir();
     imagenes = null;
+    soltarCobertura();
     const panel = document.createElement('section');
     panel.className = 'panel ficha-seccion';
     const titulo = document.createElement('h2');
@@ -211,6 +227,7 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
     const pacienteId = seleccion.paciente.id;
     imagenes?.destruir();
     imagenes = null;
+    soltarCobertura();
     if (limpiarAvisos) {
       exito.textContent = '';
     }
@@ -261,13 +278,39 @@ function dibujarPacientes(contenedor: HTMLElement, contexto: ContextoPagina): vo
           mensajeDeError: (causa) => (sesionVencida(causa) ? '' : mensajeDeError(causa)),
           vigente,
         });
+        // C-49: la cobertura va entre la cabecera y el odontograma, y también carga aparte (design D4).
+        cobertura = crearSeccionCobertura({
+          pacienteId,
+          nombrePaciente: `${seleccion.paciente.nombre} ${seleccion.paciente.apellido}`.trim(),
+          editable: editaCobertura,
+          api: contexto.api,
+          mensajeDeError: (causa) => (sesionVencida(causa) ? '' : mensajeDeError(causa)),
+          vigente,
+        });
+        // C-50: los presupuestos van debajo de la cobertura; el odontólogo los arma y el admin solo los lee.
+        presupuestos = crearSeccionPresupuestos({
+          pacienteId,
+          nombrePaciente: `${seleccion.paciente.nombre} ${seleccion.paciente.apellido}`.trim(),
+          modo: editable ? 'odontologo' : 'lectura',
+          api: contexto.api,
+          mensajeDeError: (causa) => (sesionVencida(causa) ? '' : mensajeDeError(causa)),
+          vigente,
+        });
         const columnas = document.createElement('div');
         columnas.className = 'ficha-columnas';
         const derecha = document.createElement('div');
         derecha.className = 'ficha-seccion';
         derecha.append(crearAusencias(ficha.ausencias), historial.elemento);
         columnas.append(basica, derecha);
-        cuerpo.replaceChildren(cabeceraDelPaciente(seleccion), odontograma.elemento, periodontograma.contenedor, imagenes.contenedor, columnas);
+        cuerpo.replaceChildren(
+          cabeceraDelPaciente(seleccion),
+          cobertura.contenedor,
+          presupuestos.contenedor,
+          odontograma.elemento,
+          periodontograma.contenedor,
+          imagenes.contenedor,
+          columnas,
+        );
       } catch (causa) {
         if (!vigente() || sesionVencida(causa)) {
           return;

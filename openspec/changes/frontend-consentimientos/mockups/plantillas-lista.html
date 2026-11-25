@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuración · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="consentimientos.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="admin" data-rol="ADMIN" data-activa="configuracion">
+  <div class="pagina-config">
+    <h1 tabindex="-1">Configuración</h1>
+    <div>
+      <div class="pestanas-config" role="tablist" aria-label="Secciones de configuración"><button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Profesionales</button><button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Sillones</button><button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Prestaciones</button><button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Margen</button><button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Horarios</button><button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Ausencias</button><button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Bloqueos</button><button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Usuarios</button><button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Obras sociales</button><button type="button" class="pestana" role="tab" aria-selected="true" id="tab-cons" aria-controls="panel-cons">Consentimientos</button></div>
+      <section class="panel-config" role="tabpanel" id="panel-cons" aria-labelledby="tab-cons">
+        <div class="cabecera-seccion">
+          <h2>Plantillas de consentimiento</h2>
+          <button type="button" class="btn btn-principal">Nueva plantilla</button>
+        </div>
+        <p class="ayuda">Las plantillas no se borran. Cada edición crea una versión nueva y lo que ya se firmó no cambia. Una plantilla inactiva no se puede usar para firmar.</p>
+        <p role="status" class="aviso aviso-ok">Plantilla guardada como versión 3.</p>
+        <ul class="lista-config cons-plantillas" aria-label="Plantillas de consentimiento">
+          <li>
+            <div class="cons-plantilla-datos">
+              <div class="item-nombre">Consentimiento para extracción dentaria</div>
+              <div class="item-datos"><span>Versión 3</span><span>Actualizada el 24/11/2026</span></div>
+              <span class="estado-activo">Activa</span>
+            </div>
+            <div class="item-acciones">
+              <button type="button" class="btn btn-chico" aria-label="Editar Consentimiento para extracción dentaria">Editar</button>
+              <button type="button" class="btn btn-chico" data-icono="reloj" aria-label="Versiones de Consentimiento para extracción dentaria">Versiones</button>
+              <button type="button" class="btn btn-chico btn-peligro" aria-label="Desactivar Consentimiento para extracción dentaria">Desactivar</button>
+            </div>
+          </li>
+          <li>
+            <div class="cons-plantilla-datos">
+              <div class="item-nombre">Consentimiento para tratamiento de conducto</div>
+              <div class="item-datos"><span>Versión 1</span><span>Actualizada el 20/11/2026</span></div>
+              <span class="estado-activo">Activa</span>
+            </div>
+            <div class="item-acciones">
+              <button type="button" class="btn btn-chico" aria-label="Editar Consentimiento para tratamiento de conducto">Editar</button>
+              <button type="button" class="btn btn-chico" data-icono="reloj" aria-label="Versiones de Consentimiento para tratamiento de conducto">Versiones</button>
+              <button type="button" class="btn btn-chico btn-peligro" aria-label="Desactivar Consentimiento para tratamiento de conducto">Desactivar</button>
+            </div>
+          </li>
+          <li class="item-inactivo">
+            <div class="cons-plantilla-datos">
+              <div class="item-nombre">Consentimiento para blanqueamiento</div>
+              <div class="item-datos"><span>Versión 1</span><span>Actualizada el 02/10/2026</span></div>
+              <span class="estado-inactivo">Inactiva</span>
+            </div>
+            <div class="item-acciones">
+              <button type="button" class="btn btn-chico" aria-label="Editar Consentimiento para blanqueamiento">Editar</button>
+              <button type="button" class="btn btn-chico" data-icono="reloj" aria-label="Versiones de Consentimiento para blanqueamiento">Versiones</button>
+              <button type="button" class="btn btn-chico" aria-label="Activar Consentimiento para blanqueamiento">Activar</button>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+    <p class="nota-mockup"><b>Mockup C-48.</b> Administrador, pestaña "Consentimientos": dos plantillas activas y una inactiva, con el estado escrito. Nada se borra. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>
