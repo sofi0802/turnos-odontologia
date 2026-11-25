@@ -8,5 +8,7 @@ public enum TipoNotificacion {
     RECORDATORIO,
     CONFIRMACION,
     CANCELACION,
-    REASIGNACION
+    REASIGNACION,
+    /** C-23: se reintegró la seña del turno (RN-SE-11), sin el importe. */
+    REINTEGRO_SENA
 }

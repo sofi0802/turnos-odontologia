@@ -25,6 +25,7 @@ public final class MensajeRecordatorio {
             + "Para cancelarlo: %s. Para reprogramarlo: %s";
     static final String PLANTILLA_CANCELACION = "Tu turno del %s a las %s en %s (%s) fue cancelado.";
     static final String PLANTILLA_REASIGNACION = "Tu turno fue reasignado: ahora es el %s a las %s en %s (%s).";
+    static final String PLANTILLA_REINTEGRO_SENA = "Te reintegramos la seña de tu turno del %s a las %s en %s (%s).";
 
     private static final DateTimeFormatter FECHA = DateTimeFormatter.ofPattern("dd/MM/yyyy").withZone(ZONA);
     private static final DateTimeFormatter HORA = DateTimeFormatter.ofPattern("HH:mm").withZone(ZONA);
@@ -58,6 +59,12 @@ public final class MensajeRecordatorio {
     /** Aviso de que el turno cambió de fecha, hora o profesional (RN-AG-16): sin link ni token. */
     public static MensajeRecordatorio reasignacion(DatosDelTurno turno, Consultorio consultorio) {
         return new MensajeRecordatorio(PLANTILLA_REASIGNACION.formatted(fecha(turno), hora(turno),
+                consultorio.nombre(), consultorio.direccion()));
+    }
+
+    /** C-23: aviso de que se reintegró la seña del turno, sin el importe (RN-SE-11, RN-CA-08). */
+    public static MensajeRecordatorio reintegroSena(DatosDelTurno turno, Consultorio consultorio) {
+        return new MensajeRecordatorio(PLANTILLA_REINTEGRO_SENA.formatted(fecha(turno), hora(turno),
                 consultorio.nombre(), consultorio.direccion()));
     }
 

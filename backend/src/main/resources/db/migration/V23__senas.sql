@@ -57,3 +57,8 @@ ALTER TABLE cobro ADD CONSTRAINT cobro_medio_valido
     CHECK (medio IN ('EFECTIVO', 'DEBITO', 'CREDITO', 'TRANSFERENCIA', 'MERCADO_PAGO'));
 ALTER TABLE cobro ALTER COLUMN caja_id DROP NOT NULL;
 ALTER TABLE cobro ADD CONSTRAINT cobro_caja_segun_medio CHECK ((caja_id IS NULL) = (medio = 'MERCADO_PAGO'));
+
+-- RN-SE-11: aviso al paciente de que se reintegró su seña, sin el importe.
+ALTER TABLE notificacion DROP CONSTRAINT notificacion_tipo_valido;
+ALTER TABLE notificacion ADD CONSTRAINT notificacion_tipo_valido
+    CHECK (tipo IN ('RECORDATORIO', 'CONFIRMACION', 'CANCELACION', 'REASIGNACION', 'REINTEGRO_SENA'));

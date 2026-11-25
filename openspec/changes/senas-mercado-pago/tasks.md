@@ -24,8 +24,8 @@ Acceptance criteria: los escenarios de los deltas `senas`, `frontend-senas`, `co
 ## 3. Notificación de Mercado Pago (backend)
 
 - [x] 3.1 Confirmar con la documentación vigente de Mercado Pago (context7) el formato de `x-signature` y su manifiesto; test primero de `FirmaMercadoPago` (válida, alterada, vacía y con otra clave)
-- [ ] 3.2 `NotificacionesMercadoPagoController` y `NotificacionDePago` con idempotencia y pago tardío (design D5); un `@Test` por escenario de "Pago confirmado por la notificación de Mercado Pago" y "Notificaciones inválidas o repetidas"
-- [ ] 3.3 Excepción de CSRF de la ruta exacta en `SecurityConfig` (avisa a Juan Sebastián, design D7); un `@Test` por escenario del delta `seguridad-autorizacion`
+- [x] 3.2 `NotificacionesMercadoPagoController` y `NotificacionDePago` con idempotencia y pago tardío (design D5); un `@Test` por escenario de "Pago confirmado por la notificación de Mercado Pago" y "Notificaciones inválidas o repetidas"
+- [x] 3.3 Excepción de CSRF de la ruta exacta en `SecurityConfig` (avisa a Juan Sebastián, design D7); un `@Test` por escenario del delta `seguridad-autorizacion`
 
 ## 4. Reserva y "Mis turnos" (backend, `reserva/` de Juan Sebastián)
 
