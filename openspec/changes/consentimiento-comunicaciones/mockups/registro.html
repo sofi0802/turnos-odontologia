@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi cuenta · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="consentimiento.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-rol="">
+  <div class="pagina-paciente">
+    <h1 tabindex="-1">Mi cuenta</h1>
+    <section class="panel" aria-label="Mi cuenta">
+      <div class="pestanas" role="tablist" aria-label="Cuenta">
+        <button type="button" role="tab" aria-selected="false">Ingresar</button>
+        <button type="button" role="tab" aria-selected="true">Crear cuenta</button>
+      </div>
+      <form class="formulario" novalidate aria-label="Crear cuenta">
+        <div class="campo"><label for="r-nombre">Nombre</label><input id="r-nombre" class="control" value="Paciente" autocomplete="given-name" /><p class="campo-error"></p></div>
+        <div class="campo"><label for="r-apellido">Apellido</label><input id="r-apellido" class="control" value="Uno" autocomplete="family-name" /><p class="campo-error"></p></div>
+        <div class="campo"><label for="r-dni">DNI</label><input id="r-dni" class="control" value="99000001" inputmode="numeric" /><p class="campo-error"></p></div>
+        <div class="campo"><label for="r-email">Email</label><input id="r-email" class="control" type="email" value="paciente.uno@example.com" autocomplete="email" /><p class="campo-error"></p></div>
+        <div class="campo"><label for="r-tel">Teléfono (opcional)</label><input id="r-tel" class="control" type="tel" autocomplete="tel" /><p class="campo-error"></p></div>
+        <div class="campo"><label for="r-clave">Contraseña</label><input id="r-clave" class="control" type="password" value="contrasena-ficticia" autocomplete="new-password" /><p class="campo-error"></p></div>
+        <div class="campo"><label for="r-rep">Repetí la contraseña</label><input id="r-rep" class="control" type="password" value="contrasena-ficticia" autocomplete="new-password" /><p class="campo-error"></p></div>
+        <label class="casilla casilla-mensajes"><input type="checkbox" name="aceptaMensajes" /><span>Acepto recibir mensajes del consultorio sobre mis turnos (fecha, hora y links, sin datos de salud). Lo podés cambiar después en Mi cuenta.</span></label>
+        <p role="alert" class="aviso aviso-error"></p>
+        <button type="submit" class="btn btn-principal">Crear cuenta</button>
+      </form>
+    </section>
+    <p class="nota-mockup"><b>Mockup C-17.</b> Registro en <code>#/mi-cuenta</code> sin sesión: la casilla nueva va antes de "Crear cuenta", sin marcar por defecto y sin ser obligatoria. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

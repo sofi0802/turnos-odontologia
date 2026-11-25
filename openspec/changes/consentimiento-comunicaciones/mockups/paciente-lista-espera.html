@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reservar turno · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="consentimiento.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="paciente.uno@example.com" data-rol="PACIENTE" data-activa="reserva">
+  <div class="pagina-paciente">
+    <h1 tabindex="-1">Reservar turno</h1>
+    <div class="nota-contexto">Paso 2 de la reserva, sin horarios libres ese día (C-15)</div>
+
+    <p class="rotulo-estado">"Anotarme" respondió 409 SIN_CONSENTIMIENTO</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="d-anotarme">
+      <h2 id="d-anotarme">Anotarme en la lista de espera</h2>
+      <form class="formulario" novalidate>
+        <div role="alert" class="aviso aviso-error">
+          <p>Para anotarte tenés que aceptar recibir mensajes del consultorio: así te avisamos cuando se libere un horario.</p>
+          <p><a href="#/mi-cuenta">Aceptar mensajes en Mi cuenta</a></p>
+        </div>
+        <dl class="le-fijo"><dt>Prestación</dt><dd>Consulta o control</dd><dt>Profesional</dt><dd>Sin preferencia</dd></dl>
+        <div class="le-rango">
+          <div class="campo"><label for="p-des">Desde</label><input id="p-des" class="control" value="26/11/2026" /></div>
+          <div class="campo"><label for="p-has">Hasta</label><input id="p-has" class="control" value="10/12/2026" /></div>
+        </div>
+        <p class="ayuda">Si se libera un horario en esas fechas, te lo ofrecemos por WhatsApp o email y tenés un plazo para aceptarlo.</p>
+        <div class="dialogo-acciones"><button type="button" class="btn">Volver</button><button type="submit" class="btn btn-principal">Anotarme</button></div>
+      </form>
+    </dialog>
+
+    <p class="nota-mockup"><b>Mockup C-17.</b> Paciente sin consentimiento que intenta anotarse: el aviso de C-15 suma el enlace a "Mi cuenta", donde acepta los mensajes y vuelve a la reserva. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

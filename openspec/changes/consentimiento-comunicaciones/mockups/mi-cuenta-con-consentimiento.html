@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi cuenta · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="consentimiento.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="paciente.uno@example.com" data-rol="PACIENTE" data-activa="mi-cuenta">
+  <div class="pagina-paciente">
+    <h1 tabindex="-1">Mi cuenta</h1>
+    <div class="nota-contexto">"Tus datos", igual que sin consentimiento</div>
+
+    <section class="panel" aria-labelledby="t-mensajes">
+      <h2 id="t-mensajes">Mensajes del consultorio</h2>
+      <p role="status" class="aviso aviso-ok">Listo, vas a recibir mensajes del consultorio.</p>
+      <p class="mensajes-estado si" data-icono="mensaje">Aceptás recibir mensajes</p>
+      <p class="mensajes-fecha">Desde el 01/12/2026</p>
+      <p class="cuenta-ayuda">Te escribimos por WhatsApp o, si no tenés, por email. Los mensajes solo traen la fecha, la hora, el consultorio y links para confirmar, cancelar o cambiar el turno. Nunca datos de salud.</p>
+      <div class="acciones">
+        <button type="button" class="btn">Dejar de recibir mensajes</button>
+      </div>
+    </section>
+
+    <p class="rotulo-estado">"Dejar de recibir mensajes": confirmación</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="d-rev">
+      <h2 id="d-rev">¿Dejar de recibir mensajes?</h2>
+      <p class="dialogo-resumen">No te vamos a recordar tus turnos ni ofrecer horarios de la lista de espera. Podés volver a aceptarlos cuando quieras.</p>
+      <form class="formulario" novalidate>
+        <p role="alert" class="aviso aviso-error"></p>
+        <div class="dialogo-acciones"><button type="button" class="btn">Volver</button><button type="submit" class="btn btn-peligro">Dejar de recibir</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">Después de confirmar</p>
+    <section class="panel" aria-labelledby="t-mensajes-2">
+      <h2 id="t-mensajes-2">Mensajes del consultorio</h2>
+      <p role="status" class="aviso aviso-info">Ya no te vamos a recordar tus turnos ni ofrecer horarios de la lista de espera.</p>
+      <p class="mensajes-estado no" data-icono="mensaje-no">No recibís mensajes</p>
+      <p class="mensajes-fecha">Desde el 03/12/2026</p>
+      <div class="acciones">
+        <button type="button" class="btn btn-principal">Aceptar mensajes</button>
+      </div>
+    </section>
+
+    <p class="nota-mockup"><b>Mockup C-17.</b> Paciente que aceptó los mensajes (aviso de éxito después de "Aceptar mensajes"), la confirmación para revocar y el estado después de revocar. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>
