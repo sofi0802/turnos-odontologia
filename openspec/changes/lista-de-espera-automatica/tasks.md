@@ -4,7 +4,7 @@
 
 ## 1. Avisos y base
 
-- [ ] 1.1 Avisar a Juan Cruz (`notificaciones/`), Emanuel (patrón de `configuracion/`), Juan Sebastián (`reserva/`) y Enzo (`frontend/`) del alcance y de las partes que revisan.
+- [x] 1.1 Avisar a Juan Cruz (`notificaciones/`), Emanuel (patrón de `configuracion/`), Juan Sebastián (`reserva/`) y Enzo (`frontend/`) del alcance y de las partes que revisan.
 - [x] 1.2 Migración `V9__lista_espera.sql`: tablas `inscripcion_lista_espera` y `oferta_lista_espera` con sus `CHECK`, índices únicos parciales e índices de búsqueda; clave `lista_espera_plazo_horas = 2`; estado del aviso en la oferta (`aviso_enviado`, `aviso_intentos`), sin tocar `notificacion` (D6, D9).
 - [x] 1.3 Test de integración de la migración: los índices parciales rechazan una segunda inscripción activa y una segunda oferta pendiente por horario.
 
@@ -65,11 +65,11 @@
 
 ## 10. Verificación
 
-- [ ] 10.1 Verificación visual contra los mockups a 390 × 844 y 1440 × 900, con el backend de desarrollo y datos ficticios; capturas en `mockups/verify/`.
-- [ ] 10.2 Recorrido completo: anotar, cancelar un turno, ver la oferta en el log del canal simulado, aceptar desde el link y ver el turno en la agenda.
+- [x] 10.1 Verificación visual contra los mockups a 390 × 844 y 1440 × 900, con el backend de desarrollo y datos ficticios; capturas en `mockups/verify/`. El plazo editable como administrador queda como revisión manual (decisión de la líder, 2026-11-25).
+- [x] 10.2 Recorrido completo: anotar, cancelar un turno, ver la oferta en el log del canal simulado, aceptar desde el link y ver el turno en la agenda. El turno aceptado se verificó en la base; verlo en la pantalla de la agenda queda como revisión manual (decisión de la líder, 2026-11-25).
 
 ## 11. Cierre
 
-- [ ] 11.1 Marcar C-15 en `CHANGES.md` y abrir el PR a `master`.
+- [x] 11.1 Marcar C-15 en `CHANGES.md` y abrir el PR a `master` (código en el PR #136; cierre en la rama `change/C-15-cierre`).
 - [x] 11.2 `openspec validate lista-de-espera-automatica` sin errores (en modo estricto solo quedan avisos de longitud, como en las specs vigentes).
-- [ ] 11.3 Antes del archive, reconciliar "Menú según la sesión" de `frontend-navegacion` con un delta MODIFIED sobre el texto vigente (D10).
+- [x] 11.3 Antes del archive, reconciliar "Menú según la sesión" de `frontend-navegacion` con un delta MODIFIED sobre el texto vigente (D10).

@@ -130,6 +130,14 @@ La compatibilidad solo ofrece inicios que caen en la grilla de horarios del prof
   - Corregida (menor): la página del personal no tenía el fondo suave de las demás pantallas del personal. Se agregó `fondoSuave` y un caso en `personal-visual.test.ts`. Con eso también toma el ancho máximo de Configuración, en vez del ancho completo del mockup; queda igual que el resto del personal.
   - Esperada: "Coberturas" no aparece en el menú hasta que se mergee C-49.
   - Sin verificar en la app real: el botón "Anotarme" de `#/reserva`, la sección de `#/mis-turnos` y el plazo editable como administrador. Solo los cubren los tests. Queda como revisión manual.
+- Visual verify, pantallas del paciente (2026-11-25, después de C-17 y C-49): con `docker compose` y un paciente ficticio nuevo (DNI 99150015), a 1440 × 900 y 390 × 844. Capturas `reserva-*` y `mis-turnos-lista-*` en `mockups/verify/`.
+  - Coinciden: el día sin horarios con "Anotarme en la lista de espera", el diálogo (14 días por defecto), "Listo, te anotamos." y la sección "Lista de espera" de `#/mis-turnos`. A 390 px no hay desplazamiento horizontal y los botones del diálogo se apilan.
+  - Coincide: `SIN_CONSENTIMIENTO` deja el diálogo abierto con el mensaje y "Anotarme" habilitado. C-17 le suma el enlace "Aceptar mensajes en Mi cuenta"; después de aceptarlos ahí, la inscripción entra.
+  - Menú: el paciente ve "Reservar turno", "Mis turnos" y "Mi cuenta", como el delta de "Menú según la sesión".
+  - Consola: solo el `409` esperado de `POST /paciente/lista-espera`, que el navegador registra como recurso fallido.
+- Visual verify: manual (2026-11-25) para el plazo editable como administrador y el turno aceptado en la pantalla de la agenda. Hacen falta una sesión del personal; por decisión de la líder quedan como revisión manual y no bloquean el archive. Checklist:
+  1. Como `ADMIN`, en Configuración › Margen, cambiar el plazo de la lista de espera a 3 horas, guardar y ver el aviso; probar 0 y 25 y ver el error de rango.
+  2. Como `RECEPCIONISTA`, abrir la agenda del día del turno aceptado desde una oferta y verlo `RESERVADO` en su horario.
 - Recorrido completo (2026-11-25):
   1. Se canceló online el turno de un paciente ficticio.
   2. Se creó la oferta para el primero de la lista, con vencimiento a 2 h, y el aviso salió por WhatsApp simulado, sin token en el log.
