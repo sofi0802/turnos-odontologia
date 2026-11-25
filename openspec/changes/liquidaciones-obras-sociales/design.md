@@ -47,7 +47,7 @@ CREATE TABLE liquidacion (
     total_solicitado NUMERIC(12,2) NOT NULL DEFAULT 0,
     total_cobrado    NUMERIC(12,2) NOT NULL DEFAULT 0,
     generada_en      TIMESTAMPTZ   NOT NULL,           -- última generación o regeneración
-    generada_por     VARCHAR(120)  NOT NULL,           -- (a confirmar, decisión 6)
+    generada_por     VARCHAR(120)  NOT NULL,           -- (decisión 6, aprobada)
     presentada_en    TIMESTAMPTZ,
     presentada_por   VARCHAR(120),
     cerrada_en       TIMESTAMPTZ,
@@ -109,11 +109,15 @@ CREATE TABLE liquidacion_linea (
     CONSTRAINT liquidacion_linea_monto CHECK (monto_solicitado = round(precio * porcentaje / 100.0, 2)
         AND monto_solicitado > 0),
     CONSTRAINT liquidacion_linea_cobrado CHECK (monto_cobrado >= 0 AND monto_cobrado <= monto_solicitado),
+    -- Con "resultado IS NOT NULL AND monto_cobrado IS NOT NULL" a propósito: un monto cobrado sin resultado daría NULL en
+    -- todas las ramas y una CHECK con NULL se acepta (defecto de la primera versión de este diseño, hallado por la
+    -- prueba de V14 en el apply).
     CONSTRAINT liquidacion_linea_resultado CHECK (
         (resultado IS NULL AND monto_cobrado IS NULL AND conciliada_en IS NULL AND conciliada_por IS NULL)
-     OR (resultado = 'COBRADA'   AND monto_cobrado = monto_solicitado)
-     OR (resultado = 'PARCIAL'   AND monto_cobrado > 0 AND monto_cobrado < monto_solicitado)
-     OR (resultado = 'RECHAZADA' AND monto_cobrado = 0)),
+     OR (resultado IS NOT NULL AND monto_cobrado IS NOT NULL AND (
+            (resultado = 'COBRADA'   AND monto_cobrado = monto_solicitado)
+         OR (resultado = 'PARCIAL'   AND monto_cobrado > 0 AND monto_cobrado < monto_solicitado)
+         OR (resultado = 'RECHAZADA' AND monto_cobrado = 0)))),
     CONSTRAINT liquidacion_linea_conciliada CHECK (resultado IS NULL
         OR (monto_solicitado IS NOT NULL AND conciliada_en IS NOT NULL AND conciliada_por IS NOT NULL)),
     CONSTRAINT liquidacion_linea_motivo CHECK (
@@ -127,7 +131,7 @@ CREATE INDEX liquidacion_linea_plan_idx ON liquidacion_linea (plan_id, obra_soci
 CREATE INDEX liquidacion_linea_prestacion_idx ON liquidacion_linea (prestacion_id);
 CREATE INDEX liquidacion_linea_nomenclador_idx ON liquidacion_linea (nomenclador_id);
 
--- Turnos quitados a mano de un borrador (D7, a confirmar, decisión 2). Solo filas de liquidaciones en BORRADOR.
+-- Turnos quitados a mano de un borrador (D7, decisión 2, aprobada). Solo filas de liquidaciones en BORRADOR.
 CREATE TABLE liquidacion_turno_quitado (
     liquidacion_id BIGINT NOT NULL REFERENCES liquidacion (id),
     turno_id       BIGINT NOT NULL REFERENCES turno (id),
@@ -156,18 +160,18 @@ Mensajes fijos y sin valores, como V13. `TRUNCATE` (tests) no dispara triggers d
    - afiliación de `t.paciente_id` vigente en `(t.inicio AT TIME ZONE 'America/Argentina/Buenos_Aires')::date` con `a.obra_social_id = ?`;
    - `NOT EXISTS` línea de **otra** liquidación con ese turno y `NOT EXISTS` fila en `liquidacion_turno_quitado` de **esta** liquidación;
    - trae paciente (nombre, apellido, DNI), plan, prestación, arancel (puede ser nulo) y, en un `array_agg`, los códigos activos de la prestación con el porcentaje del plan (`LEFT JOIN cobertura_plan`, nulo = 0).
-3. Por candidato, en el dominio (`LineaLiquidacion.desde(...)`): cargo de `CargosDeTurno` (D5) → precio y porcentaje del cargo (si el porcentaje es 0, se descarta); si no, arancel (sin arancel → se cuenta en `turnosSinArancel` y se descarta). Códigos: uno solo activo → ese, y se descarta si el plan lo cubre con 0 %; varios → se descarta si el plan no cubre ninguno con más de 0 %, y si cubre alguno la línea queda **sin código** (PA-38), salvo que la línea existente tenga `codigo_elegido` y ese código siga cubierto (se conserva, D6); ninguno → se descarta.
+3. Por candidato, en el dominio (`LineaLiquidacion.desde(...)`): cargo de `CargosDeTurno` (D5) → precio y porcentaje del cargo (si el porcentaje es 0, se descarta); si no, arancel (sin arancel → se cuenta en `turnosSinArancel` y se descarta). Códigos: uno solo activo → ese, y se descarta si el plan lo cubre con 0 %; varios → se descarta si el plan no cubre ninguno con más de 0 %, y si cubre alguno la línea queda **sin código** (PA-38), salvo que la línea existente tenga `codigo_elegido` y ese código siga cubierto (se conserva, D6); ninguno → se descarta; si el monto redondea a cero (por ejemplo 1 % de $0,04) la línea también se descarta, porque la `CHECK` pide `monto_solicitado > 0` (agregado en el apply).
 4. Regenerar sincroniza: `UPDATE` de las líneas existentes que siguen siendo candidatas (foto completa recalculada, incluido el precio para `origen_precio = 'ARANCEL'`), `INSERT` de las nuevas y `DELETE` de las que ya no son candidatas. Recalcula `total_solicitado` y `generada_en/por`.
 5. Respuesta: el detalle (D9) más `turnosSinArancel`. Nada de esto se loguea.
 
 **Concurrencia.** Dos generaciones de la misma obra social y período: la segunda choca con `liquidacion_periodo_unico` → `409 LIQUIDACION_EXISTENTE` (verificación previa más traducción en `CoberturasExceptionHandler.RESTRICCIONES`). Dos generaciones distintas que se disputan un turno (solo posible si se corrigió una afiliación entre medio) chocan en `liquidacion_linea_turno_unico`: `ServicioLiquidaciones` reintenta la operación entera (hasta 3 veces, como `conReintento`) ante `PessimisticLockingFailureException` **y** ante esa violación puntual; en el reintento el `NOT EXISTS` ya excluye el turno. Toda operación sobre una liquidación existente (regenerar, quitar, elegir código, presentar, conciliar, cerrar) empieza con `SELECT ... FOR UPDATE` de la cabecera: se aplican de a una (escenario "Cerrar mientras se concilia la última línea").
 
-### D5. Cargo de caja de C-22: puerto ahora, adaptador cuando exista (a confirmar, decisión 1)
+### D5. Cargo de caja de C-22: puerto ahora, adaptador cuando exista (decisión 1, aprobada)
 
 **Hallazgo**: C-22 no tiene tabla ni código en `master`. Por eso:
 
 - Puerto `CargosDeTurno` en `coberturas/application`: `Map<Long, CargoTurno> de(Collection<Long> turnoIds)`, con `record CargoTurno(BigDecimal precio, int porcentaje, BigDecimal cobertura)`.
-- Adaptador de C-20: `SinCargosDeCaja` (devuelve un mapa vacío), `@Component` con `@ConditionalOnMissingBean(CargosDeTurno.class)`. Hoy todas las líneas salen con `origen_precio = 'ARANCEL'`.
+- Adaptador de C-20: `SinCargosDeCaja` (devuelve un mapa vacío), una `@Configuration` con un método `@Bean` y `@ConditionalOnMissingBean(CargosDeTurno.class)` (en una clase `@Component` escaneada la condición no se evalúa bien y deja el bean sin registrar; hallado en el apply). Una prueba aporta su propio adaptador con `@Primary`. Hoy todas las líneas salen con `origen_precio = 'ARANCEL'`.
 - Cuando C-22 se mergee, se agrega `CargosDeTurnoJdbc` (lectura de `cargo` por `turno_id`), que reemplaza al nulo sin tocar el resto. Los escenarios de "Precio del cargo de caja del turno" se prueban ahora con un adaptador de prueba (`@TestConfiguration`) que devuelve el cargo ficticio; cuando exista la tabla, se agrega un test de integración con la fila real.
 - Coherencia: con cargo, `monto_solicitado = round(precio × porcentaje / 100, 2)` es la `cobertura` del cargo (misma fórmula en RN-CA-03), así que la `CHECK liquidacion_linea_monto` vale para los dos orígenes; `CargosDeTurnoJdbc` verificará además `cobertura` = monto calculado y, si no, usará el arancel (no inventa montos).
 
@@ -179,14 +183,14 @@ Mensajes fijos y sin valores, como V13. `TRUNCATE` (tests) no dispara triggers d
 - También se puede cambiar el código de una línea que ya tenía uno elegido. Una línea con código único automático no se cambia (mismo `422`): no hay alternativa válida.
 - El detalle de una línea sin código lista `codigosDisponibles` (id, código, porcentaje).
 
-### D7. Quitar líneas (a confirmar, decisión 2)
+### D7. Quitar líneas (decisión 2, aprobada)
 
-`DELETE /lineas/{lineaId}` en `BORRADOR`: borra la línea, inserta `(liquidacion_id, turno_id)` en `liquidacion_turno_quitado` y recalcula el total. La regeneración excluye esos turnos **solo para esa liquidación**; cualquier otra puede tomarlos (RN-LQ-04). *Recomendación*: conservar las quitas con esa tabla. *Alternativa*: sin tabla, regenerar vuelve a agregar los turnos quitados (más simple y más literal con "se agregan los turnos nuevos"), pero el `ADMIN` perdería en silencio una corrección sobre dinero. No hay "deshacer quitar" en C-20 (a confirmar dentro de la decisión 2: si hace falta, un `POST /turnos-quitados/{turnoId}/restaurar` es trivial).
+`DELETE /lineas/{lineaId}` en `BORRADOR`: borra la línea, inserta `(liquidacion_id, turno_id)` en `liquidacion_turno_quitado` y recalcula el total. La regeneración excluye esos turnos **solo para esa liquidación**; cualquier otra puede tomarlos (RN-LQ-04). *Recomendación*: conservar las quitas con esa tabla. *Alternativa*: sin tabla, regenerar vuelve a agregar los turnos quitados (más simple y más literal con "se agregan los turnos nuevos"), pero el `ADMIN` perdería en silencio una corrección sobre dinero. No hay "deshacer quitar" en C-20 (fuera del alcance de C-20; si hace falta, un `POST /turnos-quitados/{turnoId}/restaurar` es trivial).
 
 ### D8. Presentar, conciliar y cerrar
 
 - **Presentar** (`POST /{id}/presentar`): `FOR UPDATE`; `BORRADOR` con ≥ 1 línea y todas con código. Orden de verificación: estado (`LIQUIDACION_PRESENTADA`/`LIQUIDACION_CERRADA`), vacía (`LIQUIDACION_VACIA`), sin código (`LINEA_SIN_CODIGO`). Guarda `presentada_en/por`. No revalida los montos contra el catálogo actual: presenta lo que el `ADMIN` revisó.
-- **Conciliar** (`PUT /{id}/lineas/{lineaId}/conciliacion` con `{ montoCobrado, motivo }`): estado `PRESENTADA` (si no, `LIQUIDACION_NO_PRESENTADA`/`LIQUIDACION_CERRADA`); línea de esa liquidación (`404`); `MontoCobrado` (`422 MONTO_COBRADO_INVALIDO`: nulo, negativo, más de dos decimales o mayor que el solicitado; se recibe como `BigDecimal`, nunca `double`); `ResultadoConciliacion.de(...)`; motivo `btrim` obligatorio si `RECHAZADA` (`MOTIVO_REQUERIDO`), prohibido si no (`DATOS_INVALIDOS`, campo `motivo`), largo 1..200 (`DATOS_INVALIDOS`). Sobrescribe una conciliación previa mientras siga `PRESENTADA` (a confirmar, decisión 4). Recalcula `total_cobrado`.
+- **Conciliar** (`PUT /{id}/lineas/{lineaId}/conciliacion` con `{ montoCobrado, motivo }`): estado `PRESENTADA` (si no, `LIQUIDACION_NO_PRESENTADA`/`LIQUIDACION_CERRADA`); línea de esa liquidación (`404`); `MontoCobrado` (`422 MONTO_COBRADO_INVALIDO`: nulo, negativo, más de dos decimales o mayor que el solicitado; se recibe como `BigDecimal`, nunca `double`); `ResultadoConciliacion.de(...)`; motivo `btrim` obligatorio si `RECHAZADA` (`MOTIVO_REQUERIDO`), prohibido si no (`DATOS_INVALIDOS`, campo `motivo`), largo 1..200 (`DATOS_INVALIDOS`). Sobrescribe una conciliación previa mientras siga `PRESENTADA` (decisión 4, aprobada). Recalcula `total_cobrado`.
 - **Cerrar** (`POST /{id}/cerrar`): `PRESENTADA` y ninguna línea con `resultado IS NULL` (`CONCILIACION_INCOMPLETA`); guarda `cerrada_en/por`.
 - **Totales del detalle**: `totalSolicitado` (suma de las líneas con código), `totalCobrado`, `solicitadoConciliado` (suma de lo solicitado de las líneas con resultado), `diferencia = solicitadoConciliado − totalCobrado`, `lineasPendientes`.
 
@@ -205,11 +209,11 @@ Mensajes fijos y sin valores, como V13. `TRUNCATE` (tests) no dispara triggers d
 | `POST /api/v1/liquidaciones/{id}/cerrar` | — | `200` detalle |
 | `GET /api/v1/liquidaciones/{id}/csv` | — | `200 text/csv` (D10) |
 
-- `periodo` como `YearMonth` (`"yyyy-MM"`); inválido → `422 DATOS_INVALIDOS` campo `periodo`. Importes como números con dos decimales. El actor (`generada_por`, etc.) sale de la sesión (`Authentication.getName()`), nunca del cuerpo.
+- `periodo` como `YearMonth` (`"yyyy-MM"`); inválido → `422 DATOS_INVALIDOS` campo `periodo`. Importes como números con dos decimales. Los instantes (`generadaEn`, `presentadaEn`, `cerradaEn`, `conciliadaEn`) se devuelven siempre en UTC, con el mismo formato al generar y al consultar (agregado en el apply). El actor (`generada_por`, etc.) sale de la sesión (`Authentication.getName()`), nunca del cuerpo.
 - Sin `DELETE /{id}` ni `PUT /{id}`: Spring responde `405`. `SecurityConfig` no cambia; CSRF activo para `POST`/`PUT`/`DELETE` (regla dura 8).
 - Los `@PathVariable` se cruzan siempre: una línea se busca por `id` **y** `liquidacion_id`.
 
-### D10. Exportación CSV (RN-LQ-05; a confirmar, decisión 3)
+### D10. Exportación CSV (RN-LQ-05; decisión 3, aprobada)
 
 - Solo `PRESENTADA` o `CERRADA` (`409 LIQUIDACION_NO_PRESENTADA` en borrador).
 - `Content-Type: text/csv; charset=UTF-8`; `Content-Disposition: attachment; filename="liquidacion-<obraSocialId>-<yyyy-MM>.csv"` (ASCII, sin datos personales); `Cache-Control: no-store`; `X-Content-Type-Options: nosniff` (Spring Security ya lo agrega).
@@ -234,7 +238,7 @@ Unitarios del dominio (`Periodo`, `ResultadoConciliacion`, `MontoCobrado`, `Line
 
 - [C-22 cambia el modelo de `Cargo` antes de mergearse] → El puerto solo pide precio, porcentaje y cobertura por turno; cualquier modelo de cargo puede adaptarse. Aviso a Enzo en la tarea 0.2.
 - [Antes de C-22, una liquidación usa el arancel vigente al generar y el cargo (después) puede usar otro precio] → Ya aceptado en la KB (RN-LQ-03, PA-40). Los turnos ya liquidados no se recalculan.
-- [Generar un mes posterior antes que el anterior arrastra los turnos del anterior] → Es lo que pide RN-LQ-01 (sin límite inferior). El listado muestra las liquidaciones por período; a confirmar si la líder prefiere exigir que exista la del mes anterior (decisión 5, recomendación: no exigir).
+- [Generar un mes posterior antes que el anterior arrastra los turnos del anterior] → Es lo que pide RN-LQ-01 (sin límite inferior). El listado muestra las liquidaciones por período; la líder resolvió no exigir que exista la del mes anterior (decisión 5, aprobada).
 - [La consulta de candidatos recorre `turno` sin índice por estado] → Para un consultorio chico (miles de turnos por año) es inmediata; si hiciera falta, se pide a Sofia un índice parcial en una migración propia.
 - [Triggers con lógica por estado] → Cada rama tiene su test de SQL directo en `V14MigrationIntegrationTest`.
 - [Una corrección de afiliación posterior no cambia una línea presentada] → Es la foto pedida; la corrección se hace en la liquidación del mes siguiente (PA-42) quitando o agregando turnos libres.
@@ -247,7 +251,7 @@ Unitarios del dominio (`Periodo`, `ResultadoConciliacion`, `MontoCobrado`, `Line
 
 ## Open Questions
 
-Decisiones "(a confirmar)" para la líder en la tarea 0.1, cada una con su recomendación:
+Decisiones que se le plantearon a la líder en la tarea 0.1, cada una con su recomendación (todas resueltas, ver "Resolución de decisiones"):
 
 1. **Cargo de C-22** (D5): puerto `CargosDeTurno` con adaptador nulo ahora y `CargosDeTurnoJdbc` en un change de seguimiento de Juan Sebastián cuando C-22 se mergee. *Recomendación*: sí.
 2. **Las quitas sobreviven a la regeneración** (D7) con la tabla `liquidacion_turno_quitado` (no está en la KB). *Recomendación*: sí; la alternativa sin tabla re-agrega en silencio lo que el `ADMIN` quitó.
@@ -258,6 +262,23 @@ Decisiones "(a confirmar)" para la líder en la tarea 0.1, cada una con su recom
 7. **Liquidación vacía**: se genera en `BORRADOR` sin líneas y no se puede presentar (`LIQUIDACION_VACIA`). *Recomendación*: sí; permite regenerar después sin un `409 LIQUIDACION_EXISTENTE` confuso.
 8. **Motivo solo en rechazadas** (`DATOS_INVALIDOS` si viene con un monto mayor que 0). *Recomendación*: sí, como dice RN-LQ-06; si la líder quiere motivo en las parciales, se amplía la `CHECK`.
 9. **Elegir código solo entre los que el plan cubre con más de 0 %** (D6). *Recomendación*: sí; un código al 0 % daría monto 0 y no se liquida (RN-LQ-01).
+
+## Resolución de decisiones (2026-11-24)
+
+Sofia (líder, dueña de `master`) mergeó el propose (PR #122) y, a través de Juan Sebastián (responsable de `coberturas/`), **aceptó las 9 decisiones tal como estaban recomendadas**. No hay cambios en proposal, specs ni tasks. Queda la aprobación como visto bueno para empezar el grupo 1.
+
+1. **Cargo de C-22**: puerto `CargosDeTurno` con adaptador vacío (`SinCargosDeCaja`) ahora; el adaptador real va en un change de seguimiento cuando C-22 esté en `master` (verificado de nuevo: no hay `cargo` en migraciones ni en el código).
+2. **Las quitas sobreviven a la regeneración**, con la tabla `liquidacion_turno_quitado`.
+3. **CSV**: separador `;`, punto decimal, UTF-8 con BOM, `
+`, fila final de total y sin subtotales por plan.
+4. **Corregir una conciliación** es posible mientras la liquidación esté `PRESENTADA`.
+5. **Generar un mes aunque no exista la liquidación del mes anterior**.
+6. **Se registra quién y cuándo** generó, presentó, cerró y concilió.
+7. **Liquidación vacía**: se genera en `BORRADOR` y no se puede presentar (`LIQUIDACION_VACIA`).
+8. **Motivo solo en las líneas `RECHAZADA`**.
+9. **El ADMIN elige el código solo entre los que el plan cubre con más de 0 %**.
+
+El aviso a Sofia, Juan Cruz y Enzo (tarea 0.2) va en la descripción del PR.
 
 ## UI Mockups
 
