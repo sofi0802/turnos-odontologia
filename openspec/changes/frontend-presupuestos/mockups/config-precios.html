@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Configuración · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="presupuestos.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="admin" data-rol="ADMIN" data-activa="configuracion">
+  <div class="pagina-config">
+    <h1 tabindex="-1">Configuración</h1>
+    <div>
+      <div class="pestanas-config" role="tablist" aria-label="Secciones de configuración">
+        <button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Profesionales</button>
+        <button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Sillones</button>
+        <button type="button" class="pestana" role="tab" aria-selected="true" id="tab-p" aria-controls="panel-p">Prestaciones</button>
+        <button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Margen</button>
+        <button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Horarios</button>
+        <button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Ausencias</button>
+        <button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Bloqueos</button>
+        <button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Usuarios</button>
+        <button type="button" class="pestana" role="tab" aria-selected="false" tabindex="-1">Obras sociales</button>
+      </div>
+      <section class="panel-config" role="tabpanel" id="panel-p" aria-labelledby="tab-p">
+        <div class="cabecera-seccion">
+          <h2>Prestaciones</h2>
+          <button type="button" class="btn btn-principal">Agregar prestación</button>
+        </div>
+        <p class="aviso aviso-ok" role="status">Precio guardado.</p>
+        <ul class="lista-config">
+          <li>
+            <div>
+              <div class="item-nombre">Consulta o control</div>
+              <div class="item-datos"><span>30 min</span><span>Precio particular: <span class="pre-precio">$ 15.000,00</span></span></div>
+              <span class="estado-activo">Activo</span>
+            </div>
+            <div class="item-acciones">
+              <button type="button" class="btn btn-chico" aria-label="Cambiar el precio de Consulta o control">Cambiar precio</button>
+              <button type="button" class="btn btn-chico" aria-label="Editar Consulta o control">Editar</button>
+              <button type="button" class="btn btn-chico btn-peligro" aria-label="Desactivar Consulta o control">Desactivar</button>
+            </div>
+          </li>
+          <li>
+            <div>
+              <div class="item-nombre">Limpieza (profilaxis)</div>
+              <div class="item-datos"><span>45 min</span><span>Precio particular: <span class="pre-precio">$ 27.000,50</span></span></div>
+              <span class="estado-activo">Activo</span>
+            </div>
+            <div class="item-acciones">
+              <button type="button" class="btn btn-chico">Cambiar precio</button>
+              <button type="button" class="btn btn-chico">Editar</button>
+              <button type="button" class="btn btn-chico btn-peligro">Desactivar</button>
+            </div>
+          </li>
+          <li>
+            <div>
+              <div class="item-nombre">Tratamiento de conducto</div>
+              <div class="item-datos"><span>60 min</span><span class="pre-sin-precio">Sin precio: no se puede presupuestar</span></div>
+              <span class="estado-activo">Activo</span>
+            </div>
+            <div class="item-acciones">
+              <button type="button" class="btn btn-chico">Cambiar precio</button>
+              <button type="button" class="btn btn-chico">Editar</button>
+              <button type="button" class="btn btn-chico btn-peligro">Desactivar</button>
+            </div>
+          </li>
+          <li>
+            <div>
+              <div class="item-nombre">Extracción simple</div>
+              <div class="item-datos"><span>30 min</span><span>Precio particular: <span class="pre-precio">$ 30.000,00</span></span></div>
+              <span class="estado-activo">Activo</span>
+            </div>
+            <div class="item-acciones">
+              <button type="button" class="btn btn-chico">Cambiar precio</button>
+              <button type="button" class="btn btn-chico">Editar</button>
+              <button type="button" class="btn btn-chico btn-peligro">Desactivar</button>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+
+    <p class="rotulo-estado">"Cambiar precio" de Limpieza (profilaxis)</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="d1-t">
+      <h2 id="d1-t">Cambiar precio</h2>
+      <p class="dialogo-resumen">Limpieza (profilaxis). Los presupuestos ya emitidos no cambian.</p>
+      <form class="formulario cob-form" novalidate>
+        <p class="aviso aviso-error" role="alert"></p>
+        <div class="campo"><label for="d1-p">Precio</label><input id="d1-p" class="control" inputmode="decimal" value="27000,50" aria-describedby="d1-a" /><p class="ayuda" id="d1-a">En pesos, con hasta dos decimales. Ej.: 15000 o 15000,50.</p><p class="campo-error"></p></div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Guardar</button></div>
+      </form>
+    </dialog>
+
+    <p class="rotulo-estado">Precio cero o con tres decimales (no se envía nada)</p>
+    <dialog class="dialogo dialogo-estatico" open aria-labelledby="d2-t">
+      <h2 id="d2-t">Cambiar precio</h2>
+      <p class="dialogo-resumen">Consulta o control. Los presupuestos ya emitidos no cambian.</p>
+      <form class="formulario cob-form" novalidate>
+        <div class="campo"><label for="d2-p">Precio</label><input id="d2-p" class="control" inputmode="decimal" value="15000,005" aria-invalid="true" aria-describedby="d2-e" /><p class="campo-error" id="d2-e">Usá como máximo dos decimales.</p></div>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Guardar</button></div>
+      </form>
+    </dialog>
+
+    <p class="nota-mockup"><b>Mockup C-50.</b> Administrador, pestaña "Prestaciones" (decisión a confirmar, design D2): cada prestación muestra su precio particular o "Sin precio" y suma "Cambiar precio". Sin pestaña nueva. La recepción y el odontólogo no ven precios ni piden los aranceles. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

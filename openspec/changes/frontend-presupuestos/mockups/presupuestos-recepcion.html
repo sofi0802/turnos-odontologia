@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coberturas · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="presupuestos.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="recepcion" data-rol="RECEPCIONISTA" data-activa="coberturas">
+  <div class="pagina-coberturas">
+    <h1 tabindex="-1">Coberturas</h1>
+
+    <section class="panel ficha-paciente" aria-labelledby="p-nombre">
+      <div class="ficha-paciente-datos">
+        <div>
+          <h2 class="ficha-paciente-nombre" id="p-nombre">Paciente Uno</h2>
+          <p class="ficha-paciente-dni">DNI 99000001</p>
+        </div>
+        <button type="button" class="btn">Cambiar de paciente</button>
+      </div>
+    </section>
+
+    <div class="nota-contexto">Sección "Cobertura" (C-49), sin cambios</div>
+
+    <section class="panel ficha-seccion pre-seccion" aria-labelledby="t-pre">
+      <div class="ficha-seccion-cabecera"><h2 id="t-pre">Presupuestos</h2></div>
+      <p class="aviso aviso-info">Solo lectura: los presupuestos los arma el odontólogo.</p>
+      <ul class="pre-lista" aria-label="Presupuestos de Paciente Uno">
+        <li class="pre-presupuesto">
+          <div>
+            <p class="pre-cabecera"><span>Presupuesto del 24/11/2026</span><span class="etiqueta etiqueta-pendiente">Pendiente</span></p>
+            <p class="pre-meta">Vence el 24/12/2026 · Dra. Ana Ejemplo</p>
+            <p class="pre-meta">Obra Social Ejemplo · Plan Base · N.º <span class="cob-numero">OSE-000001</span></p>
+          </div>
+          <div class="pre-acciones"><button type="button" class="btn btn-chico" aria-expanded="false">Ver detalle</button></div>
+          <dl class="pre-totales">
+            <div><dt>Precio</dt><dd>$ 40.000,00</dd></div>
+            <div><dt>Cobertura</dt><dd>$ 27.500,00</dd></div>
+            <div class="pre-copago"><dt>Copago</dt><dd>$ 12.500,00</dd></div>
+          </dl>
+        </li>
+        <li class="pre-presupuesto">
+          <div>
+            <p class="pre-cabecera"><span>Presupuesto del 01/10/2026</span><span class="etiqueta etiqueta-vencido">Vencido</span></p>
+            <p class="pre-meta">Venció el 31/10/2026 · Dra. Ana Ejemplo</p>
+            <p class="pre-meta">Obra Social Ejemplo · Plan Base · N.º <span class="cob-numero">OSE-000001</span></p>
+          </div>
+          <div class="pre-acciones"><button type="button" class="btn btn-chico" aria-expanded="true">Ocultar detalle</button></div>
+          <dl class="pre-totales">
+            <div><dt>Precio</dt><dd>$ 30.000,00</dd></div>
+            <div><dt>Cobertura</dt><dd>$ 0,00</dd></div>
+            <div class="pre-copago"><dt>Copago</dt><dd>$ 30.000,00</dd></div>
+          </dl>
+          <ul class="pre-detalle" aria-label="Ítems del presupuesto del 01/10/2026">
+            <li class="pre-renglon">
+              <div>
+                <p class="pre-renglon-titulo">Extracción simple</p>
+                <p class="pre-renglon-datos"><span class="cob-codigo">N-0301</span> · Cantidad 1 × $ 30.000,00 · 0 %</p>
+              </div>
+              <dl class="pre-totales">
+                <div><dt>Importe</dt><dd>$ 30.000,00</dd></div>
+                <div><dt>Cobertura</dt><dd>$ 0,00</dd></div>
+                <div class="pre-copago"><dt>Copago</dt><dd>$ 30.000,00</dd></div>
+              </dl>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <p class="nota-mockup"><b>Mockup C-50.</b> Recepción en "Coberturas" (decisión a confirmar, design D3): los presupuestos del paciente en solo lectura, sin pieza ni cara (PA-24, RN-CL-01). La página no pide la ficha, el odontograma ni las sugerencias. El administrador ve lo mismo aquí y en la ficha. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

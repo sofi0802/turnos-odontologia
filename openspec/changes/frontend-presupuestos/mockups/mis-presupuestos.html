@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mi cuenta · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="presupuestos.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="paciente.uno@example.com" data-rol="PACIENTE" data-activa="mi-cuenta">
+  <div class="pagina-paciente">
+    <h1 tabindex="-1">Mi cuenta</h1>
+
+    <div class="nota-contexto">"Mi cobertura" (C-49), sin cambios</div>
+
+    <p class="rotulo-estado">1 · Paciente Uno con sus presupuestos</p>
+    <section class="panel mis-presupuestos" aria-labelledby="mp1">
+      <h2 id="mp1">Mis presupuestos</h2>
+      <ul class="pre-lista" aria-label="Mis presupuestos">
+        <li class="pre-presupuesto">
+          <div>
+            <p class="pre-cabecera"><span>Presupuesto del 24/11/2026</span><span class="etiqueta etiqueta-pendiente">Pendiente</span></p>
+            <p class="pre-meta">Vence el 24/12/2026 · Dra. Ana Ejemplo</p>
+            <p class="pre-meta">Obra Social Ejemplo · Plan Base</p>
+          </div>
+          <div class="pre-acciones"><button type="button" class="btn btn-chico" aria-expanded="true">Ocultar detalle</button></div>
+          <dl class="pre-totales">
+            <div><dt>Precio</dt><dd>$ 40.000,00</dd></div>
+            <div><dt>Cobertura</dt><dd>$ 27.500,00</dd></div>
+            <div class="pre-copago"><dt>Copago</dt><dd>$ 12.500,00</dd></div>
+          </dl>
+          <ul class="pre-detalle" aria-label="Ítems del presupuesto del 24/11/2026">
+            <li class="pre-renglon">
+              <div><p class="pre-renglon-titulo">Consulta o control</p><p class="pre-renglon-datos">Pieza 16, cara oclusal · Cantidad 1</p></div>
+              <dl class="pre-totales"><div><dt>Importe</dt><dd>$ 15.000,00</dd></div><div><dt>Cobertura</dt><dd>$ 15.000,00</dd></div><div class="pre-copago"><dt>Copago</dt><dd>$ 0,00</dd></div></dl>
+            </li>
+            <li class="pre-renglon">
+              <div><p class="pre-renglon-titulo">Limpieza (profilaxis)</p><p class="pre-renglon-datos">Cantidad 1</p></div>
+              <dl class="pre-totales"><div><dt>Importe</dt><dd>$ 25.000,00</dd></div><div><dt>Cobertura</dt><dd>$ 12.500,00</dd></div><div class="pre-copago"><dt>Copago</dt><dd>$ 12.500,00</dd></div></dl>
+            </li>
+          </ul>
+        </li>
+        <li class="pre-presupuesto">
+          <div>
+            <p class="pre-cabecera"><span>Presupuesto del 01/10/2026</span><span class="etiqueta etiqueta-vencido">Vencido</span></p>
+            <p class="pre-meta">Venció el 31/10/2026 · Dra. Ana Ejemplo</p>
+          </div>
+          <div class="pre-acciones"><button type="button" class="btn btn-chico" aria-expanded="false">Ver detalle</button></div>
+          <dl class="pre-totales">
+            <div><dt>Precio</dt><dd>$ 30.000,00</dd></div>
+            <div><dt>Cobertura</dt><dd>$ 0,00</dd></div>
+            <div class="pre-copago"><dt>Copago</dt><dd>$ 30.000,00</dd></div>
+          </dl>
+        </li>
+      </ul>
+      <p class="ayuda">Para aceptar un presupuesto o pedir uno nuevo, hablalo con tu odontólogo en el consultorio.</p>
+    </section>
+
+    <p class="rotulo-estado">2 · Paciente Dos, sin presupuestos</p>
+    <section class="panel mis-presupuestos" aria-labelledby="mp2">
+      <h2 id="mp2">Mis presupuestos</h2>
+      <div class="estado-vacio chico"><p class="estado-vacio-texto">Todavía no tenés presupuestos.</p></div>
+    </section>
+
+    <p class="rotulo-estado">3 · Falla al cargar ("Mi cobertura" se sigue viendo)</p>
+    <section class="panel mis-presupuestos" aria-labelledby="mp3">
+      <h2 id="mp3">Mis presupuestos</h2>
+      <p class="aviso aviso-error" role="alert">No pudimos completar la operación. Probá de nuevo en unos minutos.</p>
+      <div><button type="button" class="btn">Reintentar</button></div>
+    </section>
+
+    <p class="nota-mockup"><b>Mockup C-50.</b> Paciente en "Mi cuenta": "Mis presupuestos" debajo de "Mi cobertura" (PA-27), de solo lectura, sobre <code>GET /api/v1/paciente/presupuestos</code> sin ids. Ve la pieza y la cara de sus propios ítems. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>

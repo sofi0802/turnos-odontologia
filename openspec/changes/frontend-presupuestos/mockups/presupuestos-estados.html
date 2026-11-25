@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pacientes · {marca}</title>
+  <link rel="icon" href="data:," />
+  <link rel="stylesheet" href="../../../../design-system/tokens.css" />
+  <link rel="stylesheet" href="../../../../frontend/src/styles.css" />
+  <link rel="stylesheet" href="presupuestos.css" />
+  <script src="../../../../design-system/brand.js"></script>
+</head>
+<body>
+<div id="pagina" data-usuario="ana.ejemplo" data-rol="ODONTOLOGO" data-activa="pacientes">
+  <div class="pagina-ficha">
+    <h1 tabindex="-1">Pacientes</h1>
+
+    <p class="rotulo-estado">1 · Cargando</p>
+    <section class="panel ficha-seccion pre-seccion" aria-labelledby="e1" aria-busy="true">
+      <div class="ficha-seccion-cabecera"><h2 id="e1">Presupuestos</h2></div>
+      <div class="cargando" role="status"><span class="rueda" aria-hidden="true"></span><span>Cargando los presupuestos…</span></div>
+    </section>
+
+    <p class="rotulo-estado">2 · Falla con "Reintentar" (el resto de la ficha se sigue viendo)</p>
+    <section class="panel ficha-seccion pre-seccion" aria-labelledby="e2">
+      <div class="ficha-seccion-cabecera"><h2 id="e2">Presupuestos</h2></div>
+      <p class="aviso aviso-error" role="alert">No pudimos completar la operación. Probá de nuevo en unos minutos.</p>
+      <div><button type="button" class="btn">Reintentar</button></div>
+    </section>
+
+    <p class="rotulo-estado">3 · Sin presupuestos</p>
+    <section class="panel ficha-seccion pre-seccion" aria-labelledby="e3">
+      <div class="ficha-seccion-cabecera"><h2 id="e3">Presupuestos</h2><button type="button" class="btn btn-principal">Nuevo presupuesto</button></div>
+      <div class="estado-vacio chico"><p class="estado-vacio-texto">Este paciente no tiene presupuestos.</p></div>
+    </section>
+
+    <p class="rotulo-estado">4 · Armado sin sugerencias ni prestaciones con precio</p>
+    <dialog class="dialogo dialogo-estatico pre-dialogo" open aria-labelledby="e4">
+      <h2 id="e4">Nuevo presupuesto</h2>
+      <form class="formulario cob-form pre-armado" novalidate>
+        <p class="aviso aviso-ok" role="status">No hay caries ni piezas a tratar en el odontograma.</p>
+        <p class="pre-cobertura-usada">Cobertura de hoy: <strong>Particular</strong> · el paciente paga el importe completo.</p>
+        <div class="pre-acciones">
+          <button type="button" class="btn btn-chico">Agregar piezas sugeridas</button>
+          <button type="button" class="btn btn-chico">Agregar ítem</button>
+        </div>
+        <ol class="pre-items" aria-label="Ítems del presupuesto">
+          <li class="pre-item">
+            <div class="pre-item-cabecera"><p class="pre-item-numero">Ítem 1</p><button type="button" class="btn btn-chico">Quitar</button></div>
+            <div class="pre-item-campos">
+              <div class="campo"><label for="k1-p">Prestación<span class="solo-lectores"> del ítem 1</span></label><select id="k1-p" class="control"><option>Elegí la prestación</option><option>Consulta o control</option></select><p class="campo-error"></p></div>
+              <div class="campo"><label for="k1-pi">Pieza<span class="solo-lectores"> del ítem 1</span></label><input id="k1-pi" class="control" placeholder="Opcional" /><p class="campo-error"></p></div>
+              <div class="campo"><label for="k1-c">Cara<span class="solo-lectores"> del ítem 1</span></label><select id="k1-c" class="control" disabled><option>Sin cara</option></select><p class="campo-error"></p></div>
+              <div class="campo"><label for="k1-q">Cantidad<span class="solo-lectores"> del ítem 1</span></label><input id="k1-q" class="control" value="1" /><p class="campo-error"></p></div>
+            </div>
+          </li>
+        </ol>
+        <p class="ayuda">Las prestaciones sin precio no se pueden presupuestar.</p>
+        <div class="dialogo-acciones"><button type="button" class="btn">Cancelar</button><button type="submit" class="btn btn-principal">Emitir presupuesto</button></div>
+      </form>
+    </dialog>
+
+    <p class="nota-mockup"><b>Mockup C-50.</b> Estados de la sección y del armado: carga aparte, error con "Reintentar" solo en la sección, lista vacía y armado sin sugerencias. Datos ficticios.</p>
+  </div>
+</div>
+<script src="mockup.js"></script>
+</body>
+</html>
