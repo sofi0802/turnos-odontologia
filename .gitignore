@@ -24,6 +24,17 @@ backend/.gradle/
 Thumbs.db
 .vscode/
 .idea/
+*.iml
+.classpath
+.project
+.settings/
+
+# Salidas de compilación de los IDE de Java (Eclipse, VS Code, IntelliJ)
+backend/bin/
+backend/out/
+
+# Logs
+*.log
 
 # Respaldos del orquestador
 *.bak
