@@ -52,6 +52,7 @@ El estado detallado de la fundación está en [`.active-orchestrator-state.json`
 - [Verificación de fuentes del equipo](docs/discovery/verificacion/README.md).
 - [Checklist de Discovery (11 puntos)](docs/discovery/discovery.md): problema, usuarios, reglas de negocio RN-01 a RN-09.
 - [Evidencia por sistema](docs/discovery/sources/relevamiento-fuentes.md).
+- [Reflexión escrita del equipo](docs/reflexion/reflexion.docx).
 
 ## Stack
 
